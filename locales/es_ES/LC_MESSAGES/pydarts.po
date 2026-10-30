@@ -980,6 +980,9 @@ msgstr "¿Realmente quiere salir de la partida?"
 msgid "quit-game-keys"
 msgstr "Escape: salir · Validar o esperar: volver a la partida"
 
+msgid "PIN_MISSDART"
+msgstr "Piezo"
+
 msgid "editor-import"
 msgstr "Importar un fondo"
 

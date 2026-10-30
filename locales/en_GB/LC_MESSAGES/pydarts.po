@@ -3210,6 +3210,9 @@ msgstr "Do you really want to leave the game?"
 msgid "quit-game-keys"
 msgstr "Escape: leave · Validate or wait: back to the game"
 
+msgid "PIN_MISSDART"
+msgstr "Piezo"
+
 msgid "editor-import"
 msgstr "Import a background"
 

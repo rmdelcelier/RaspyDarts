@@ -747,6 +747,10 @@ class Craspberry():
             if self.gpio.mcp1 is not None and miss == 0:
                 if context == 'test':
                     inputs = self.gpio.test_entries()
+                    # The shock sensor : as in a game (a dart just after it wins), MISS if none
+                    shock = self.gpio.buttons_list.get('PIN_MISSDART')
+                    if shock is not None and shock[0] in inputs:
+                        inputs = 'PIN_MISSDART'
                 else:
                     inputs = self.gpio.read_entries()
 

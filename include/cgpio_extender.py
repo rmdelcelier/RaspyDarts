@@ -295,9 +295,10 @@ class Gpio_extender:
         pressed_buttons = []
 
         for button in self.buttons_list:
-            # False/0 si appuie sur le bouton
             with I2C_LOCK:
-                pressed = not self.buttons_list[button][1].value
+                value = self.buttons_list[button][1].value
+            # False/0 si appuie sur le bouton ; True/1 au choc pour le capteur (as read_entries)
+            pressed = value if button == 'PIN_MISSDART' else not value
             if pressed:
                 # Compute A0..B7
                 pressed_buttons.append(self.buttons_list[button][0])

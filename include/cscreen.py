@@ -5627,7 +5627,16 @@ class Screen(pygame.Surface):
             if stroke == 'escape':
                 return
 
-            if stroke and not isinstance(stroke, tuple):
+            if stroke == 'MISS':
+                # The shock sensor (or the key of a missed dart)
+                self.message([self.lang.translate('PIN_MISSDART')], 500, self.colorset['menu-ok'], 'middle', 'big')
+                self.display_background()
+                self.menu_header('test-target', subtxt = 'test-target-msg')
+                self.update_screen()
+
+            # Only the result of the target is a list [code, message] : the name of a pin of the
+            # extension ('B1'), a key... were cut in two and shown in red ('B1' : 1)
+            if isinstance(stroke, list) and len(stroke) >= 2:
                 code = stroke[0]
                 message = stroke[1]
 
