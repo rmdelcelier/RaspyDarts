@@ -1699,7 +1699,7 @@ class Config:
             # The former server of the network games answers no more : left out of the favorite
             # servers, the one of the online games instead if it was the only one
             servers = [server.strip() for server in str(options.get('servers') or '').split(',') if server.strip()]
-            kept = [server for server in servers if server.split(':')[0] != OLD_SERVER]
+            kept = [server for server in servers if server.split(':')[0] not in (OLD_SERVER, '51.210.43.252')]
             if kept != servers:
                 options['servers'] = ','.join(kept or [DefaultConfig['Favorites']['servers']])
                 self.logs.info(f"Favorite servers : {OLD_SERVER} removed ({options['servers']})")
