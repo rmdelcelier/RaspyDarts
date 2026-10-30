@@ -623,8 +623,8 @@ class Game(cgame.Game):
         pygame.draw.line(self.display.screen, self.display.colorset['game-bg'], (pos_x, pos_y), (pos_x, pos_y + height), 2)
         pygame.draw.line(self.display.screen, self.display.colorset['game-bg'], (pos_x + width, pos_y), (pos_x + width, pos_y + height), 2)
         self.display.display_image(self.dart_icon, pos_x + self.margin, pos_y + heading_height + self.margin, width=dart_icon_size, height=dart_icon_size, UseCache=True)
-        self.display.blit_text(name, pos_x, pos_y - self.margin, width, heading_height + self.margin_2, color=self.display.colorset['game-bg'], dafont='Impact', align='Center')
-        self.display.blit_text(score, pos_x, pos_y + heading_height, width, height - heading_height, color=self.display.colorset['game-score'], dafont='Impact', align='Right')
+        self.display.blit_text(name, pos_x, pos_y - self.margin, width, heading_height + self.margin_2, color=self.display.colorset['game-bg'], align='Center')
+        self.display.blit_text(score, pos_x, pos_y + heading_height, width, height - heading_height, color=self.display.colorset['game-score'], align='Right')
 
 
         
@@ -680,8 +680,8 @@ class Game(cgame.Game):
      
         self.display.blit_rect(0, 0, self.display.res['x'], self.display.res['y'], self.display.colorset['game-bg'])
 
-        self.display.blit_text(f"Round", right_x, right_y, int(right_width / 3), right_height, color=self.display.colorset['game-round'], dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{actual_round} / {max_round}", right_x + int(right_width / 2), 0, self.display.res['x'] - right_x - int(right_width / 2), right_height * 2, color=self.display.colorset['game-round'], dafont='Impact', align='Right', valign='top', margin=False)
+        self.display.blit_text(f"Round", right_x, right_y, int(right_width / 3), right_height, color=self.display.colorset['game-round'], align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{actual_round} / {max_round}", right_x + int(right_width / 2), 0, self.display.res['x'] - right_x - int(right_width / 2), right_height * 2, color=self.display.colorset['game-round'], align='Right', valign='top', margin=False)
         right_y += right_height
 
         heading_height = int(self.display.res['y'] / 24)
@@ -697,7 +697,7 @@ class Game(cgame.Game):
         if self.display.game_type == 'online':
             self.display.display_image(self.online_icon, game_x - 40, game_y + self.margin, width=32, height=32, UseCache=True)
 
-        self.display.blit_text(f"{self.display.game_type} game", game_x, game_y, game_width, game_height, color=(255, 0, 0), dafont='Impact', align='Center', valign='top', margin=False)
+        self.display.blit_text(f"{self.display.game_type} game", game_x, game_y, game_width, game_height, color=(255, 0, 0), align='Center', valign='top', margin=False)
 
         hit_x = int(self.display.res['x'] / 4) - self.margin_2
         hit_y = int(self.display.res['y'] / 4) - self.margin_2
@@ -742,8 +742,8 @@ class Game(cgame.Game):
                 else:
                     align = 'Right'
                 pygame.draw.line(self.display.screen, color, (player_x, player_y), (player_x + player_width, player_y), self.margin_2)
-                self.display.blit_text(name, player_x, player_y - self.margin_2, player_width, heading_height + self.margin_2, color=player_color, dafont='Impact', align=align)
-                self.display.blit_text(score, player_x, player_y + heading_height, player_width, player_height - heading_height, color=heading_color, dafont='Impact', align=align)
+                self.display.blit_text(name, player_x, player_y - self.margin_2, player_width, heading_height + self.margin_2, color=player_color, align=align)
+                self.display.blit_text(score, player_x, player_y + heading_height, player_width, player_height - heading_height, color=heading_color, align=align)
             else:
                 # For actual player's infos
                 actual_color = color
@@ -774,11 +774,11 @@ class Game(cgame.Game):
 
             # PPR and PPD
             if index == 1:
-                self.display.blit_text(f'PPR', ppdr_x, right_y, ppdr_width, right_height, color=self.display.colorset['game-score'], dafont='Impact', align='Right')
-                self.display.blit_text(f'{ppr}', ppdr_x + ppdr_width, right_y, right_width - ppdr_width, right_height, color=actual_color, dafont='Impact', align='Left')
+                self.display.blit_text(f'PPR', ppdr_x, right_y, ppdr_width, right_height, color=self.display.colorset['game-score'], align='Right')
+                self.display.blit_text(f'{ppr}', ppdr_x + ppdr_width, right_y, right_width - ppdr_width, right_height, color=actual_color, align='Left')
             elif index == 2:
-                self.display.blit_text(f'PPD', ppdr_x, right_y , ppdr_width, right_height, color=self.display.colorset['game-score'], dafont='Impact', align='Right')
-                self.display.blit_text(f'{ppd}', ppdr_x + ppdr_width, right_y , right_width - ppdr_width, right_height, color=actual_color, dafont='Impact', align='Left')
+                self.display.blit_text(f'PPD', ppdr_x, right_y , ppdr_width, right_height, color=self.display.colorset['game-score'], align='Right')
+                self.display.blit_text(f'{ppd}', ppdr_x + ppdr_width, right_y , right_width - ppdr_width, right_height, color=actual_color, align='Left')
 
             right_y += right_height
             
@@ -853,7 +853,7 @@ class Game(cgame.Game):
                      self.display.display_image(self.display.file_class.get_full_filename(f'voleur/T{s}', 'images'),rect[0], rect[1], rect[2], rect[3], True, False, False)
             
             
-            self.display.blit_text(f'{players[actual_player].round_points}', right_x + self.margin, right_y  - self.margin ,  150, 150, color=(255,255,255), dafont='Impact', align='Center')
+            self.display.blit_text(f'{players[actual_player].round_points}', right_x + self.margin, right_y  - self.margin ,  150, 150, color=(255,255,255), align='Center')
                     
             self.display.update_screen()
         else :

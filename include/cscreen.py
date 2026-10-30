@@ -43,6 +43,7 @@ from include import cpaths
 from include import ccamera
 from include import ccoins
 from include import cmenus
+from include import cfonts
 from include import cmenustyle
 from include import cfavorites
 
@@ -74,6 +75,8 @@ VOLUME_UP_KEYS = ['+', 'BTN_PLUS', 'BTN_VOLUME_UP', 'VOLUME-UP', 'S14']
 VOLUME_DOWN_KEYS = ['-', 'BTN_MINUS', 'BTN_VOLUME_DOWN', 'VOLUME-DOWN', 'S8']
 VOLUME_MUTE = ['BTN_VOLUME_MUTE', 'VOLUME-MUTE', 'S7']
 
+# The game behind a question : its colours multiplied by this
+QUESTION_VEIL = (70, 70, 70)
 BTN_CHECK = 1
 BTN_CHOICE = 2
 # Menus whose background and title are kept (a screen : 4 to 8 MB)
@@ -552,6 +555,7 @@ class Screen(pygame.Surface):
         if font:
             self.defaultfontpath = font
             self.colorset['font'] = font
+        cfonts.path = self.defaultfontpath
 
     def init_resolution(self, newresolution=False):
         '''
@@ -4173,7 +4177,7 @@ class Screen(pygame.Surface):
         Surface.fill(self.colorset['menu-item-black'])
         self.new_blit_rect(pos_x, pos_y, width, height, self.colorset['menu-buttons'], corners='All', border_radius=50, Alpha=228)
 
-        font_file = self.file_class.get_full_filename('FreeSansBold', 'fonts')
+        font_file = self.defaultfontpath
         # Add description
         nb_lines = len(text)
         font = self.font(font_file, 50)
@@ -7025,10 +7029,28 @@ class Screen(pygame.Surface):
             button['game_logo'] = self.file_class.get_full_filename(f"logos_menu/{favorite['game']}", 'images')
         return button
 
-    def ask_yes_no(self, question, explanation=None, cancel=False):
+    def ask_quit_game(self):
+        '''
+        Leave the game ? A dart on the key Escape left it at once : No selected first. The screen
+        kept for this question was the one of another game : drawn again
+        '''
+        for key in [key for key in self.menu_backgrounds if key[0] == 'question']:
+            self.menu_backgrounds.pop(key)
+        # The game darkened behind the question : its texts mixed with those of the question
+        game_background = self.game_background
+        if game_background is not None:
+            self.game_background = game_background.copy()
+            self.game_background.fill(QUESTION_VEIL, special_flags=pygame.BLEND_RGB_MULT)
+        try:
+            return self.ask_yes_no(self.lang.translate('quit-game-question'), initial='no')
+        finally:
+            self.game_background = game_background
+
+    def ask_yes_no(self, question, explanation=None, cancel=False, initial=None):
         '''
         A question answered by Yes or No (menu question of the files : its look), back : No
-        (cancel : None, nothing is done). explanation : under the question (subtitle)
+        (cancel : None, nothing is done). explanation : under the question (subtitle) ;
+        initial : the answer selected first
         '''
         items = [{'id': 'yes', 'action': 'yes', 'text': 'yes', 'shortcut': 'F1'},
                  {'id': 'no', 'action': 'no', 'text': 'no', 'shortcut': 'F2'}]
@@ -7037,7 +7059,7 @@ class Screen(pygame.Surface):
         self.current_look = None
         try:
             answer = self.run_menu('question', items, items + [escape], title=question,
-                                   subtitle=explanation).get('id')
+                                   subtitle=explanation, initial=initial).get('id')
             return None if answer == 'cancel' else answer == 'yes'
         finally:
             self.current_look = previous
@@ -10402,7 +10424,7 @@ class Screen(pygame.Surface):
         '''
         look = show if isinstance(show, dict) else {}
         color = self.menu_painter().color(look.get('color'), None) or self.colorset['menu-text-white']
-        font = self.file_class.get_full_filename(str(look.get('font') or 'Impact'), 'fonts')
+        font = self.menu_painter().font_path(look.get('font'))
         self.blit_text(f"V{self.config.pyDartsVersion[0:3]}", rect.x, rect.y, rect.width, rect.height, tuple(color[:3]), dafont=font)
 
     def display_version(self):
@@ -10950,7 +10972,7 @@ class Screen(pygame.Surface):
         if self.colorset['game-type'] is not None:
             if self.game_type == 'online':
                 self.display_image(self.online_icon, self.res_x / 2 - 110, pos_y + height, width=gt_height, height=gt_height)
-            self.blit_text(f"{self.game_type} game", pos_x, pos_y + height, width, gt_height, color=self.colorset['game-type'], dafont='Impact', align='Center', valign='top', margin=False)
+            self.blit_text(f"{self.game_type} game", pos_x, pos_y + height, width, gt_height, color=self.colorset['game-type'], align='Center', valign='top', margin=False)
 
     def new_display_players(self, players, actual_player, end_of_game=False):
         
@@ -10995,8 +11017,8 @@ class Screen(pygame.Surface):
                     align='Right'
                 skull_icon = self.file_class.get_full_filename('killer_skull', 'images')
                 pygame.draw.line(self.screen, color, (player_x, player_y), (player_x + player_width, player_y), self.margin * 2)
-                self.blit_text(name, player_x, player_y - self.margin * 2, player_width, heading_height + self.margin * 2, color=player_color, dafont='Impact', align=align, valign='Bottom')
-                self.blit_text(score, player_x, player_y + heading_height, player_width, player_height - heading_height, color=heading_color, dafont='Impact', align=align)
+                self.blit_text(name, player_x, player_y - self.margin * 2, player_width, heading_height + self.margin * 2, color=player_color, align=align, valign='Bottom')
+                self.blit_text(score, player_x, player_y + heading_height, player_width, player_height - heading_height, color=heading_color, align=align)
                 if not player.alive:
                     if index < actual_player:
                         self.display_image(skull_icon, player_x + player_width - (player_height - heading_height), player_y + heading_height, player_width, player_height - heading_height)
@@ -11025,11 +11047,11 @@ class Screen(pygame.Surface):
             pygame.draw.line(self.screen, self.colorset['game-bg'], (player_x + player_width, player_y), (player_x + player_width, player_y + player_height), 2)
         self.display_image(dart_icon, player_x + self.margin, player_y + heading_height + self.margin, width=dart_icon_size, height=dart_icon_size)
         if self.colorset['game-bg'] is not None:
-            self.blit_text(actual_name, player_x, player_y - self.margin, player_width, heading_height + self.margin * 2, color=self.colorset['game-bg'], dafont='Impact', align='Center')
+            self.blit_text(actual_name, player_x, player_y - self.margin, player_width, heading_height + self.margin * 2, color=self.colorset['game-bg'], align='Center')
         else:
-            self.blit_text(actual_name, player_x, player_y - self.margin, player_width, heading_height + self.margin * 2, color=(0, 0, 0), dafont='Impact', align='Center')
+            self.blit_text(actual_name, player_x, player_y - self.margin, player_width, heading_height + self.margin * 2, color=(0, 0, 0), align='Center')
 
-        self.blit_text(actual_score, player_x, player_y + heading_height, player_width, player_height - heading_height, color=self.colorset['game-score'], dafont='Impact', align='Right')
+        self.blit_text(actual_score, player_x, player_y + heading_height, player_width, player_height - heading_height, color=self.colorset['game-score'], align='Right')
 
     def display_logo(self, logoimage=False):
         '''
@@ -11136,8 +11158,7 @@ class Screen(pygame.Surface):
                 pos_y = int(self.res['y'] * 3 / 4) - height
                 version = f"V{self.config.pyDartsVersion[0:3]}"
 
-                self.blit_text(version, pos_x , pos_y, width, height, self.colorset['menu-text-white'], \
-                        dafont=self.file_class.get_full_filename('Impact', 'fonts'))
+                self.blit_text(version, pos_x , pos_y, width, height, self.colorset['menu-text-white'])
 
         self.pristine_background = pristine
         if veil:
@@ -11658,9 +11679,9 @@ class Screen(pygame.Surface):
                 txt_option = self.translate_option(game, option)
 
                 if value is True:
-                    self.blit_text(f'{txt_option}', pos_x, pos_y, width, height, color=self.colorset['game-option'], dafont='Impact', align='Right', margin=False)
+                    self.blit_text(f'{txt_option}', pos_x, pos_y, width, height, color=self.colorset['game-option'], align='Right', margin=False)
                 else:
-                    self.blit_text(f'{txt_option} : {value}', pos_x, pos_y, width, height, color=self.colorset['game-option'], dafont='Impact', align='Right', margin=False)
+                    self.blit_text(f'{txt_option} : {value}', pos_x, pos_y, width, height, color=self.colorset['game-option'], align='Right', margin=False)
                 # One option under the other (they were all written at the same place)
                 pos_y += height + self.margin
 
@@ -11862,8 +11883,8 @@ class Screen(pygame.Surface):
                         score = player.scores[actual_round - 1 - index][3]
                         #text2 = f'{sum(scores[actual_round - index - 1] if scores[actual_round - index - 1] is not None else 0)}'
                         text2 = score
-                        self.blit_text(text1, left_x, left_y, int(left_w / 2), text_h, color=self.colorset['menu-text-white'], dafont='Impact', align='Left')
-                        self.blit_text(text2, left_x, left_y, int(left_w / 2), text_h, color=player.color, dafont='Impact', align='Right', margin=False)
+                        self.blit_text(text1, left_x, left_y, int(left_w / 2), text_h, color=self.colorset['menu-text-white'], align='Left')
+                        self.blit_text(text2, left_x, left_y, int(left_w / 2), text_h, color=player.color, align='Right', margin=False)
                     left_y += text_h
             except:
                 self.logs.error(f"No score historized for this game")

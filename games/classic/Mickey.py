@@ -1024,7 +1024,7 @@ class Game(cgame.Game):
         else:
             dart_color = self.display.colorset['game-bronze']
         self.display.blit_rect(dart_x + dart_position * dart_x_increment, dart_y, dart_w, dart_h, self.display.colorset['game-bg'])
-        self.display.blit_text(f"{dart_value}", dart_x + dart_position * dart_x_increment, dart_y, dart_w, dart_h, color=dart_color, dafont='Impact', align='Center')
+        self.display.blit_text(f"{dart_value}", dart_x + dart_position * dart_x_increment, dart_y, dart_w, dart_h, color=dart_color, align='Center')
 
 
     def onscreen_buttons(self):
@@ -1138,17 +1138,17 @@ class Game(cgame.Game):
 
         # Round informations
         self.display.blit_rect(left_x, left_y, left_w, left_h, self.display.colorset['game-bg'])
-        self.display.blit_text(f"Round", left_x, left_y, int(left_w / 3), left_h, color=self.display.colorset['game-round'], dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{actual_round} / {max_round}", left_x + int(left_w / 2), left_y, left_w - int(left_w / 2), int(left_h / 4), color=self.display.colorset['game-round'], dafont='Impact', align='Right', valign='top', margin=False)
+        self.display.blit_text(f"Round", left_x, left_y, int(left_w / 3), left_h, color=self.display.colorset['game-round'], align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{actual_round} / {max_round}", left_x + int(left_w / 2), left_y, left_w - int(left_w / 2), int(left_h / 4), color=self.display.colorset['game-round'], align='Right', valign='top', margin=False)
 
         left_y += int(left_h / 5)
 
         mpr_rectangle = (left_x, left_y, left_w, symbol_h)
-        self.display.blit_text(f'MPR', left_x, left_y, left_w, symbol_h, color=self.display.colorset['game-score'], dafont='Impact', align='Left')
+        self.display.blit_text(f'MPR', left_x, left_y, left_w, symbol_h, color=self.display.colorset['game-score'], align='Left')
         sub = self.display.screen.subsurface(mpr_rectangle)
         screenshot2 = pygame.Surface((mpr_rectangle[2], mpr_rectangle[3]))
         self.display.blit_screen(screenshot2, sub, (0, 0))
-        self.display.blit_text(f'{mpr}', left_x , left_y, left_w, symbol_h, color=players[actual_player].color, dafont='Impact', align='Right')
+        self.display.blit_text(f'{mpr}', left_x , left_y, left_w, symbol_h, color=players[actual_player].color, align='Right')
 
         left_y += int(left_h / 5)
         rect_dart = None
@@ -1158,7 +1158,7 @@ class Game(cgame.Game):
             if actual_round - index > 0:
                 text1 = f'R{actual_round - index}'
                 score = 0
-                self.display.blit_text(text1, left_x, left_y, symbol_w, symbol_h, color=self.display.colorset['game-score'], dafont='Impact', align='Left')
+                self.display.blit_text(text1, left_x, left_y, symbol_w, symbol_h, color=self.display.colorset['game-score'], align='Left')
                 index_s = 1
                 for dartx in scores[actual_round - 1 - index]:
                     if dartx is not None and dartx[1::] in self.headers:
@@ -1187,12 +1187,12 @@ class Game(cgame.Game):
         for target in self.headers:
             if index % 2 == 0:
                 self.display.blit_rect(mid_x + self.margin, target_y + target_h * index, mid_w - self.margin_2, target_h, self.display.colorset['game-bg'])
-            self.display.blit_text(f'{target}', target_x, target_y + target_h * index - adj // 2 , target_w+adj, target_h+adj, color=self.display.colorset['game-score'], dafont='Impact', align='Center')
+            self.display.blit_text(f'{target}', target_x, target_y + target_h * index - adj // 2 , target_w+adj, target_h+adj, color=self.display.colorset['game-score'], align='Center')
             index += 1
         for target in self.headersdt:
             if index % 2 == 0:
                 self.display.blit_rect(mid_x + self.margin, target_y + target_h * index, mid_w - self.margin_2, target_h, self.display.colorset['game-bg'])
-            self.display.blit_text(f'{target}', target_x, target_y + target_h * index - adj // 2, target_w+adj, target_h+adj, color=self.display.colorset['game-score'], dafont='Impact', align='Center')
+            self.display.blit_text(f'{target}', target_x, target_y + target_h * index - adj // 2, target_w+adj, target_h+adj, color=self.display.colorset['game-score'], align='Center')
             index += 1
 
         index = 0
@@ -1250,7 +1250,7 @@ class Game(cgame.Game):
         if not end_of_game:
             if self.display.game_type == 'online':
                 self.display.display_image(self.online_icon, game_x - 40, game_y + self.margin, width=32, height=32, UseCache=True)
-            self.display.blit_text(f"{self.display.game_type} game", game_x, game_y, game_width, game_height, color=(255, 0, 0), dafont='Impact', align='Center', valign='top', margin=False)
+            self.display.blit_text(f"{self.display.game_type} game", game_x, game_y, game_width, game_height, color=(255, 0, 0), align='Center', valign='top', margin=False)
 
         self.display_players(players, actual_player, end_of_game)
 
@@ -1267,13 +1267,13 @@ class Game(cgame.Game):
                 if option == 'theme':
                     continue
                 if value is True:
-                    self.display.blit_text(f'{game}-{option}', right_x, option_y, right_width, option_height, color=self.display.colorset['game-green'], dafont='Impact', align='Right')
+                    self.display.blit_text(f'{game}-{option}', right_x, option_y, right_width, option_height, color=self.display.colorset['game-green'], align='Right')
                 elif value is False:
-                    self.display.blit_text(f'{game}-{option}', right_x, option_y, right_width, option_height, color=self.display.colorset['game-red'], dafont='Impact', align='Right')
+                    self.display.blit_text(f'{game}-{option}', right_x, option_y, right_width, option_height, color=self.display.colorset['game-red'], align='Right')
                 else:
-                    self.display.blit_text(f'{self.display.lang.translate(game + "-" + option)} : {value}', right_x, option_y, right_width, option_height, color=self.display.colorset['game-option'], dafont='Impact', align='Right')
+                    self.display.blit_text(f'{self.display.lang.translate(game + "-" + option)} : {value}', right_x, option_y, right_width, option_height, color=self.display.colorset['game-option'], align='Right')
                 option_y -= option_height
-        self.display.blit_text(f"{game.replace('_', ' ')}", right_x, option_y - option_height, right_width, option_height * 2, color=(255, 0, 0), dafont='Impact', align='Right')
+        self.display.blit_text(f"{game.replace('_', ' ')}", right_x, option_y - option_height, right_width, option_height * 2, color=(255, 0, 0), align='Right')
 
         if self.debug_info:
             self.debug.mickey_cible(affiche=True)
@@ -1347,11 +1347,11 @@ class Game(cgame.Game):
                     pygame.draw.line(self.display.screen, self.display.colorset['game-bg'], (player_x + player_width, player_y), (player_x + player_width, player_y + player_height), 2)
 
                 if index < actual_player:
-                    self.display.blit_text(name, player_x, player_y - self.margin, player_width, heading_height + self.margin_2, color=player_color, dafont='Impact', align='Left')
-                    self.display.blit_text(score, player_x, player_y + heading_height, player_width, player_height - heading_height, color=self.display.colorset['game-score'], dafont='Impact', align='Left')
+                    self.display.blit_text(name, player_x, player_y - self.margin, player_width, heading_height + self.margin_2, color=player_color, align='Left')
+                    self.display.blit_text(score, player_x, player_y + heading_height, player_width, player_height - heading_height, color=self.display.colorset['game-score'], align='Left')
                 else:
-                    self.display.blit_text(name, player_x, player_y - self.margin, player_width, heading_height + self.margin_2, color=player_color, dafont='Impact', align='Right')
-                    self.display.blit_text(score, player_x, player_y + heading_height, player_width, player_height - heading_height, color=self.display.colorset['game-score'], dafont='Impact', align='Right')
+                    self.display.blit_text(name, player_x, player_y - self.margin, player_width, heading_height + self.margin_2, color=player_color, align='Right')
+                    self.display.blit_text(score, player_x, player_y + heading_height, player_width, player_height - heading_height, color=self.display.colorset['game-score'], align='Right')
                 pygame.draw.line(self.display.screen, color, (player_x, player_y), (player_x + player_width, player_y), 8)
             else:
                 # For actual player's infos
@@ -1375,8 +1375,8 @@ class Game(cgame.Game):
             pygame.draw.line(self.display.screen, self.display.colorset['game-bg'], (player_x, player_y), (player_x, player_y + player_height), 2)
             pygame.draw.line(self.display.screen, self.display.colorset['game-bg'], (player_x + player_width, player_y), (player_x + player_width, player_y + player_height), 2)
         self.display.display_image(self.dart_icon, player_x + self.margin, player_y + heading_height + self.margin, width=dart_icon_size, height=dart_icon_size, UseCache=True)
-        self.display.blit_text(actual_name, player_x, player_y - self.margin, player_width, heading_height + self.margin_2, color=self.display.colorset['game-player-name'], dafont='Impact', align='Center')
-        self.display.blit_text(actual_score, player_x, player_y + heading_height, player_width, player_height - heading_height, color=self.display.colorset['game-score'], dafont='Impact', align='Right')
+        self.display.blit_text(actual_name, player_x, player_y - self.margin, player_width, heading_height + self.margin_2, color=self.display.colorset['game-player-name'], align='Center')
+        self.display.blit_text(actual_score, player_x, player_y + heading_height, player_width, player_height - heading_height, color=self.display.colorset['game-score'], align='Right')
 
         return (player_x, player_y, player_width, player_height)
 
@@ -1465,7 +1465,7 @@ class Game(cgame.Game):
             else:
                 act_mpr = round(self.mpr + (mpr - self.mpr) / (nb_steps + 1 - index), 2)
             self.display.blit(screenshot_mpr, (rectangle_mpr[0] , rectangle_mpr[1]))
-            self.display.blit_text(f'{act_mpr}', rectangle_mpr[0] , rectangle_mpr[1], rectangle_mpr[2], rectangle_mpr[3], color=players[actual_player].color, dafont='Impact', align='Right')
+            self.display.blit_text(f'{act_mpr}', rectangle_mpr[0] , rectangle_mpr[1], rectangle_mpr[2], rectangle_mpr[3], color=players[actual_player].color, align='Right')
 
             multiplier = self.get_hit_unit(hit)
             pos_x = int(rectangle_dart[0] + rectangle_dart[2] / 2)

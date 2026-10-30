@@ -4292,6 +4292,9 @@ msgstr "Celui du thème"
 msgid "editor-help-background"
 msgstr "Flèches ou toucher à gauche / à droite : fond précédent / suivant · Valider ou Menu : garder · Retour : annuler"
 
+msgid "quit-game-question"
+msgstr "Voulez-vous quitter la partie ?"
+
 msgid "editor-import"
 msgstr "Importer un fond d'écran"
 

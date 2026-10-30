@@ -15,6 +15,7 @@ RIGHT_KEYS = ['right', 'BTN_RIGHT', 'S6']
 # Fichiers
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # Dans le dossier du joueur (~/.raspydarts), avec ses scores et sa configuration
+from include import cfonts
 from include import cpaths
 from include.ctrophies import average_ppd
 DATA_FILE = cpaths.trophies_file()
@@ -393,9 +394,9 @@ class CategorySelectionScreen:
         scale = width / 1280.0
 
         try:
-            title_font = pygame.font.SysFont("Arial", int(40 * scale), bold=True)
-            text_font = pygame.font.SysFont("Arial", int(22 * scale), bold=True)
-            footer_font = pygame.font.SysFont("Arial", int(16 * scale))
+            title_font = cfonts.font(int(40 * scale), bold=True)
+            text_font = cfonts.font(int(22 * scale), bold=True)
+            footer_font = cfonts.font(int(16 * scale))
         except Exception:
             title_font = pygame.font.Font(None, 40)
             text_font = pygame.font.Font(None, 22)
@@ -520,10 +521,10 @@ class TrophiesScreen:
         scale = width / 1280.0
 
         try:
-            title_font = pygame.font.SysFont("Arial", int(35 * scale), bold=True)
-            text_font = pygame.font.SysFont("Arial", int(14 * scale), bold=True)
-            small_font = pygame.font.SysFont("Arial", int(11 * scale))
-            footer_font = pygame.font.SysFont("Arial", int(16 * scale))
+            title_font = cfonts.font(int(35 * scale), bold=True)
+            text_font = cfonts.font(int(14 * scale), bold=True)
+            small_font = cfonts.font(int(11 * scale))
+            footer_font = cfonts.font(int(16 * scale))
         except Exception:
             title_font = pygame.font.Font(None, 35)
             text_font = pygame.font.Font(None, 14)
@@ -690,10 +691,10 @@ class StatisticsScreen:
         total_trophies_count = len(ALL_TROPHIES)
 
         try:
-            title_font = pygame.font.SysFont("Arial", int(32 * scale), bold=True)
-            text_font = pygame.font.SysFont("Arial", int(13 * scale))     
-            bold_font = pygame.font.SysFont("Arial", int(14 * scale), bold=True)
-            hint_font = pygame.font.SysFont("Arial", int(12 * scale))     
+            title_font = cfonts.font(int(32 * scale), bold=True)
+            text_font = cfonts.font(int(13 * scale))     
+            bold_font = cfonts.font(int(14 * scale), bold=True)
+            hint_font = cfonts.font(int(12 * scale))     
         except Exception:
             title_font = pygame.font.Font(None, 32)
             text_font = pygame.font.Font(None, 13)
@@ -710,7 +711,7 @@ class StatisticsScreen:
             title_surf = title_font.render(main_title_text, True, (255, 255, 255))
             
             try:
-                small_title_font = pygame.font.SysFont("Arial", int(16 * scale), bold=True)
+                small_title_font = cfonts.font(int(16 * scale), bold=True)
             except Exception:
                 small_title_font = pygame.font.Font(None, 20)
                 
@@ -1162,13 +1163,13 @@ class PlayerSelectionScreen:
         scale = width / 1280.0
 
         try:
-            title_font = pygame.font.SysFont("Arial", int(35 * scale), bold=True)
-            text_font = pygame.font.SysFont("Arial", int(22 * scale))
-            bold_font = pygame.font.SysFont("Arial", int(22 * scale), bold=True)
-            footer_font = pygame.font.SysFont("Arial", int(16 * scale))
-            small_font = pygame.font.SysFont("Arial", int(14 * scale))
-            tiny_font = pygame.font.SysFont("Arial", int(11 * scale))
-            error_font = pygame.font.SysFont("Arial", int(20 * scale))
+            title_font = cfonts.font(int(35 * scale), bold=True)
+            text_font = cfonts.font(int(22 * scale))
+            bold_font = cfonts.font(int(22 * scale), bold=True)
+            footer_font = cfonts.font(int(16 * scale))
+            small_font = cfonts.font(int(14 * scale))
+            tiny_font = cfonts.font(int(11 * scale))
+            error_font = cfonts.font(int(20 * scale))
         except Exception:
             title_font = pygame.font.Font(None, 35)
             text_font = pygame.font.Font(None, 22)

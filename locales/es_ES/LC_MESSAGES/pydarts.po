@@ -974,6 +974,9 @@ msgstr "El del tema"
 msgid "editor-help-background"
 msgstr "Flechas o tocar a la izquierda / derecha: fondo anterior / siguiente · Validar o Menú: conservar · Volver: cancelar"
 
+msgid "quit-game-question"
+msgstr "¿Quiere salir de la partida?"
+
 msgid "editor-import"
 msgstr "Importar un fondo"
 

@@ -1130,119 +1130,119 @@ class Game(cgame.Game):
             
 
         #chiffres a jouer  1-6
-        self.display.blit_text(f"{self.target[0]}", 390 * self.ratioX, 20 * self.ratioY, 60 * self.ratioX, 60 * self.ratioY, color=(255, 255, 255), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{self.target[1]}", 525 * self.ratioX, 20 * self.ratioY, 60 * self.ratioX, 60 * self.ratioY, color=(255, 255, 255), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{self.target[2]}", 640 * self.ratioX, 20 * self.ratioY, 60 * self.ratioX, 60 * self.ratioY, color=(255, 255, 255), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{self.target[3]}", 770 * self.ratioX, 20 * self.ratioY, 60 * self.ratioX, 60 * self.ratioY, color=(255, 255, 255), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{self.target[4]}", 895 * self.ratioX, 20 * self.ratioY, 60 * self.ratioX, 60 * self.ratioY, color=(255, 255, 255), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{self.target[5]}", 1015 * self.ratioX, 20 * self.ratioY, 60 * self.ratioX, 60 * self.ratioY, color=(255, 255, 255), dafont='Impact', align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{self.target[0]}", 390 * self.ratioX, 20 * self.ratioY, 60 * self.ratioX, 60 * self.ratioY, color=(255, 255, 255), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{self.target[1]}", 525 * self.ratioX, 20 * self.ratioY, 60 * self.ratioX, 60 * self.ratioY, color=(255, 255, 255), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{self.target[2]}", 640 * self.ratioX, 20 * self.ratioY, 60 * self.ratioX, 60 * self.ratioY, color=(255, 255, 255), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{self.target[3]}", 770 * self.ratioX, 20 * self.ratioY, 60 * self.ratioX, 60 * self.ratioY, color=(255, 255, 255), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{self.target[4]}", 895 * self.ratioX, 20 * self.ratioY, 60 * self.ratioX, 60 * self.ratioY, color=(255, 255, 255), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{self.target[5]}", 1015 * self.ratioX, 20 * self.ratioY, 60 * self.ratioX, 60 * self.ratioY, color=(255, 255, 255), align='Left', valign='top', margin=False)
         
         ### affichage des infos sur les points BONUS, FULL, YAHTZEE, SUITE
-        self.display.blit_text("(Si "+f"{self.points_bonus}"+")", 1260 * self.ratioX, 44 * self.ratioY, 50 * self.ratioX, 50 * self.ratioX, color=(255, 255, 255), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text("("+f"{self.points_full}"+")", 768 * self.ratioX, 559 * self.ratioY, 40 * self.ratioX, 40 * self.ratioX, color=(255, 255, 0), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text("(30-40-50)", 1110 * self.ratioX, 559 * self.ratioY, 100 * self.ratioX, 100 * self.ratioX, color=(255, 255, 0), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text("("+f"{self.points_yahtzydarts}"+")", 1265 * self.ratioX, 559 * self.ratioY, 40 * self.ratioX, 40 * self.ratioX, color=(255, 255, 0), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text("("+f"{self.bonus}"+")", 1265 * self.ratioX, 60 * self.ratioY, 40 * self.ratioX, 35 * self.ratioX, color=(255, 255, 0), dafont='Impact', align='Left', valign='top', margin=False)
+        self.display.blit_text("(Si "+f"{self.points_bonus}"+")", 1260 * self.ratioX, 44 * self.ratioY, 50 * self.ratioX, 50 * self.ratioX, color=(255, 255, 255), align='Left', valign='top', margin=False)
+        self.display.blit_text("("+f"{self.points_full}"+")", 768 * self.ratioX, 559 * self.ratioY, 40 * self.ratioX, 40 * self.ratioX, color=(255, 255, 0), align='Left', valign='top', margin=False)
+        self.display.blit_text("(30-40-50)", 1110 * self.ratioX, 559 * self.ratioY, 100 * self.ratioX, 100 * self.ratioX, color=(255, 255, 0), align='Left', valign='top', margin=False)
+        self.display.blit_text("("+f"{self.points_yahtzydarts}"+")", 1265 * self.ratioX, 559 * self.ratioY, 40 * self.ratioX, 40 * self.ratioX, color=(255, 255, 0), align='Left', valign='top', margin=False)
+        self.display.blit_text("("+f"{self.bonus}"+")", 1265 * self.ratioX, 60 * self.ratioY, 40 * self.ratioX, 35 * self.ratioX, color=(255, 255, 0), align='Left', valign='top', margin=False)
         
         
         #colonne0 (chiffre1)  
-        self.display.blit_text(f"{liste_a_afficher[0][2]}", 380 * self.ratioX, 90 * self.ratioY, 75 * self.ratioX, 75 * self.ratioY, color=(liste_a_afficher[0][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[15][2]}", 380 * self.ratioX, 170 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[15][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[30][2]}", 380 * self.ratioX, 242 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[30][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[45][2]}", 380 * self.ratioX, 312 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[45][4]), dafont='Impact', align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[0][2]}", 380 * self.ratioX, 90 * self.ratioY, 75 * self.ratioX, 75 * self.ratioY, color=(liste_a_afficher[0][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[15][2]}", 380 * self.ratioX, 170 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[15][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[30][2]}", 380 * self.ratioX, 242 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[30][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[45][2]}", 380 * self.ratioX, 312 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[45][4]), align='Left', valign='top', margin=False)
         
         #colonne1 (chiffre2)
-        self.display.blit_text(f"{liste_a_afficher[1][2]}", 510 * self.ratioX, 90 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[1][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[16][2]}", 510 * self.ratioX, 170 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[16][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[31][2]}", 510 * self.ratioX, 242 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[31][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[46][2]}", 510 * self.ratioX, 312 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[46][4]), dafont='Impact', align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[1][2]}", 510 * self.ratioX, 90 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[1][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[16][2]}", 510 * self.ratioX, 170 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[16][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[31][2]}", 510 * self.ratioX, 242 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[31][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[46][2]}", 510 * self.ratioX, 312 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[46][4]), align='Left', valign='top', margin=False)
         
         #colonne2 (chiffre3)
-        self.display.blit_text(f"{liste_a_afficher[2][2]}", 635 * self.ratioX, 90 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[2][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[17][2]}", 635 * self.ratioX, 170 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[17][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[32][2]}", 635 * self.ratioX, 242 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[32][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[47][2]}", 635 * self.ratioX, 312 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[47][4]), dafont='Impact', align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[2][2]}", 635 * self.ratioX, 90 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[2][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[17][2]}", 635 * self.ratioX, 170 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[17][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[32][2]}", 635 * self.ratioX, 242 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[32][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[47][2]}", 635 * self.ratioX, 312 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[47][4]), align='Left', valign='top', margin=False)
         
         #colonne3 (chiffre4)
-        self.display.blit_text(f"{liste_a_afficher[3][2]}", 760 * self.ratioX, 90 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[3][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[18][2]}", 760 * self.ratioX, 170 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[18][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[33][2]}", 760 * self.ratioX, 242 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[33][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[48][2]}", 760 * self.ratioX, 312 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[48][4]), dafont='Impact', align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[3][2]}", 760 * self.ratioX, 90 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[3][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[18][2]}", 760 * self.ratioX, 170 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[18][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[33][2]}", 760 * self.ratioX, 242 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[33][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[48][2]}", 760 * self.ratioX, 312 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[48][4]), align='Left', valign='top', margin=False)
         
         #colonne4 (chiffre5)
-        self.display.blit_text(f"{liste_a_afficher[4][2]}", 885 * self.ratioX, 90 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[4][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[19][2]}", 885 * self.ratioX, 170 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[19][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[34][2]}", 885 * self.ratioX, 242 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[34][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[49][2]}", 885 * self.ratioX, 312 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[49][4]), dafont='Impact', align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[4][2]}", 885 * self.ratioX, 90 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[4][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[19][2]}", 885 * self.ratioX, 170 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[19][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[34][2]}", 885 * self.ratioX, 242 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[34][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[49][2]}", 885 * self.ratioX, 312 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[49][4]), align='Left', valign='top', margin=False)
         
         #colonne5 (chiffre6)
-        self.display.blit_text(f"{liste_a_afficher[5][2]}", 1005 * self.ratioX, 90 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[5][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[20][2]}", 1005 * self.ratioX, 170 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[20][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[35][2]}", 1005 * self.ratioX, 242 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[35][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[50][2]}", 1005 * self.ratioX, 312 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[50][4]), dafont='Impact', align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[5][2]}", 1005 * self.ratioX, 90 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[5][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[20][2]}", 1005 * self.ratioX, 170 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[20][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[35][2]}", 1005 * self.ratioX, 242 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[35][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[50][2]}", 1005 * self.ratioX, 312 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[50][4]), align='Left', valign='top', margin=False)
         
 
         #partie inferieur
         #colonne0 - 1 paire
-        self.display.blit_text(f"{liste_a_afficher[6][2]}", 380 * self.ratioX, 600 * self.ratioY, 75 * self.ratioX, 75 * self.ratioY, color=(liste_a_afficher[6][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[21][2]}", 380 * self.ratioX, 675 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[21][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[36][2]}", 380 * self.ratioX, 747 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[36][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[51][2]}", 380 * self.ratioX, 817 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[51][4]), dafont='Impact', align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[6][2]}", 380 * self.ratioX, 600 * self.ratioY, 75 * self.ratioX, 75 * self.ratioY, color=(liste_a_afficher[6][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[21][2]}", 380 * self.ratioX, 675 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[21][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[36][2]}", 380 * self.ratioX, 747 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[36][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[51][2]}", 380 * self.ratioX, 817 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[51][4]), align='Left', valign='top', margin=False)
         
         #colonne2 - 2 paires
-        self.display.blit_text(f"{liste_a_afficher[7][2]}", 510 * self.ratioX, 600 * self.ratioY, 75 * self.ratioX, 75 * self.ratioY, color=(liste_a_afficher[7][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[22][2]}", 510 * self.ratioX, 675 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[22][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[37][2]}", 510 * self.ratioX, 747 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[37][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[52][2]}", 510 * self.ratioX, 817 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[52][4]), dafont='Impact', align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[7][2]}", 510 * self.ratioX, 600 * self.ratioY, 75 * self.ratioX, 75 * self.ratioY, color=(liste_a_afficher[7][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[22][2]}", 510 * self.ratioX, 675 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[22][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[37][2]}", 510 * self.ratioX, 747 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[37][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[52][2]}", 510 * self.ratioX, 817 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[52][4]), align='Left', valign='top', margin=False)
         
         #colonne3 - brelan
-        self.display.blit_text(f"{liste_a_afficher[8][2]}", 635 * self.ratioX, 600 * self.ratioY, 75 * self.ratioX, 75 * self.ratioY, color=(liste_a_afficher[8][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[23][2]}", 635 * self.ratioX, 675 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[23][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[38][2]}", 635 * self.ratioX, 747 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[38][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[53][2]}", 635 * self.ratioX, 817 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[53][4]), dafont='Impact', align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[8][2]}", 635 * self.ratioX, 600 * self.ratioY, 75 * self.ratioX, 75 * self.ratioY, color=(liste_a_afficher[8][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[23][2]}", 635 * self.ratioX, 675 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[23][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[38][2]}", 635 * self.ratioX, 747 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[38][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[53][2]}", 635 * self.ratioX, 817 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[53][4]), align='Left', valign='top', margin=False)
         
         #colonne4 - full
-        self.display.blit_text(f"{liste_a_afficher[9][2]}", 760 * self.ratioX, 600 * self.ratioY, 75 * self.ratioX, 75 * self.ratioY, color=(liste_a_afficher[9][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[24][2]}", 760 * self.ratioX, 675 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[24][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[39][2]}", 760 * self.ratioX, 747 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[39][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[54][2]}", 760 * self.ratioX, 817 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[54][4]), dafont='Impact', align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[9][2]}", 760 * self.ratioX, 600 * self.ratioY, 75 * self.ratioX, 75 * self.ratioY, color=(liste_a_afficher[9][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[24][2]}", 760 * self.ratioX, 675 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[24][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[39][2]}", 760 * self.ratioX, 747 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[39][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[54][2]}", 760 * self.ratioX, 817 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[54][4]), align='Left', valign='top', margin=False)
         
         #colonne5 - carre
-        self.display.blit_text(f"{liste_a_afficher[10][2]}", 885 * self.ratioX, 600 * self.ratioY, 75 * self.ratioX, 75 * self.ratioY, color=(liste_a_afficher[10][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[25][2]}", 885 * self.ratioX, 675 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[25][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[40][2]}", 885 * self.ratioX, 747 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[40][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[55][2]}", 885 * self.ratioX, 817 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[55][4]), dafont='Impact', align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[10][2]}", 885 * self.ratioX, 600 * self.ratioY, 75 * self.ratioX, 75 * self.ratioY, color=(liste_a_afficher[10][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[25][2]}", 885 * self.ratioX, 675 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[25][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[40][2]}", 885 * self.ratioX, 747 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[40][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[55][2]}", 885 * self.ratioX, 817 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[55][4]), align='Left', valign='top', margin=False)
         
         #colonne6 - bull
-        self.display.blit_text(f"{liste_a_afficher[11][2]}", 1005 * self.ratioX, 600 * self.ratioY, 75 * self.ratioX, 75 * self.ratioY, color=(liste_a_afficher[11][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[26][2]}", 1005 * self.ratioX, 675 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[26][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[41][2]}", 1005 * self.ratioX, 747 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[41][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[56][2]}", 1005 * self.ratioX, 817 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[56][4]), dafont='Impact', align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[11][2]}", 1005 * self.ratioX, 600 * self.ratioY, 75 * self.ratioX, 75 * self.ratioY, color=(liste_a_afficher[11][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[26][2]}", 1005 * self.ratioX, 675 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[26][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[41][2]}", 1005 * self.ratioX, 747 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[41][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[56][2]}", 1005 * self.ratioX, 817 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[56][4]), align='Left', valign='top', margin=False)
         
         #colonne7 - suite
-        self.display.blit_text(f"{liste_a_afficher[12][2]}", 1135 * self.ratioX, 600 * self.ratioY, 75 * self.ratioX, 75 * self.ratioY, color=(liste_a_afficher[12][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[27][2]}", 1135 * self.ratioX, 675 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[27][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[42][2]}", 1135 * self.ratioX, 747 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[42][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[57][2]}", 1135 * self.ratioX, 817 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[57][4]), dafont='Impact', align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[12][2]}", 1135 * self.ratioX, 600 * self.ratioY, 75 * self.ratioX, 75 * self.ratioY, color=(liste_a_afficher[12][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[27][2]}", 1135 * self.ratioX, 675 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[27][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[42][2]}", 1135 * self.ratioX, 747 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[42][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[57][2]}", 1135 * self.ratioX, 817 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[57][4]), align='Left', valign='top', margin=False)
         
         #colonne8 - yahtzee
-        self.display.blit_text(f"{liste_a_afficher[13][2]}", 1255 * self.ratioX, 600 * self.ratioY, 75 * self.ratioX, 75 * self.ratioY, color=(liste_a_afficher[13][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[28][2]}", 1255 * self.ratioX, 675 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[28][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[43][2]}", 1255 * self.ratioX, 747 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[43][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[58][2]}", 1255 * self.ratioX, 817 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[58][4]), dafont='Impact', align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[13][2]}", 1255 * self.ratioX, 600 * self.ratioY, 75 * self.ratioX, 75 * self.ratioY, color=(liste_a_afficher[13][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[28][2]}", 1255 * self.ratioX, 675 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[28][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[43][2]}", 1255 * self.ratioX, 747 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[43][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[58][2]}", 1255 * self.ratioX, 817 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[58][4]), align='Left', valign='top', margin=False)
         
         #colonne9 - chance
-        self.display.blit_text(f"{liste_a_afficher[14][2]}", 1380 * self.ratioX, 600 * self.ratioY, 75 * self.ratioX, 75 * self.ratioY, color=(liste_a_afficher[14][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[29][2]}", 1380 * self.ratioX, 675 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[29][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[44][2]}", 1380 * self.ratioX, 747 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[44][4]), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{liste_a_afficher[59][2]}", 1385 * self.ratioX, 817 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[59][4]), dafont='Impact', align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[14][2]}", 1380 * self.ratioX, 600 * self.ratioY, 75 * self.ratioX, 75 * self.ratioY, color=(liste_a_afficher[14][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[29][2]}", 1380 * self.ratioX, 675 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[29][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[44][2]}", 1380 * self.ratioX, 747 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[44][4]), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{liste_a_afficher[59][2]}", 1385 * self.ratioX, 817 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(liste_a_afficher[59][4]), align='Left', valign='top', margin=False)
         
         #affichage des des
-        self.display.blit_text(f"{self.des_int[0]}", 500 * self.ratioX, 940 * self.ratioY, 125 * self.ratioX, 125 * self.ratioX, color=(0, 0, 0), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{self.des_int[1]}", 710 * self.ratioX, 940 * self.ratioY, 125 * self.ratioX, 125 * self.ratioX, color=(0, 0, 0), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{self.des_int[2]}", 920 * self.ratioX, 940 * self.ratioY, 125 * self.ratioX, 125 * self.ratioX, color=(0, 0, 0), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{self.des_int[3]}", 1130 * self.ratioX, 940 * self.ratioY, 125 * self.ratioX, 125 * self.ratioX, color=(0, 0, 0), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{self.des_int[4]}", 1340 * self.ratioX, 940 * self.ratioY, 125 * self.ratioX, 125 * self.ratioX, color=(0, 0, 0), dafont='Impact', align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{self.des_int[0]}", 500 * self.ratioX, 940 * self.ratioY, 125 * self.ratioX, 125 * self.ratioX, color=(0, 0, 0), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{self.des_int[1]}", 710 * self.ratioX, 940 * self.ratioY, 125 * self.ratioX, 125 * self.ratioX, color=(0, 0, 0), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{self.des_int[2]}", 920 * self.ratioX, 940 * self.ratioY, 125 * self.ratioX, 125 * self.ratioX, color=(0, 0, 0), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{self.des_int[3]}", 1130 * self.ratioX, 940 * self.ratioY, 125 * self.ratioX, 125 * self.ratioX, color=(0, 0, 0), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{self.des_int[4]}", 1340 * self.ratioX, 940 * self.ratioY, 125 * self.ratioX, 125 * self.ratioX, color=(0, 0, 0), align='Left', valign='top', margin=False)
       
 
         ### affichage des scores
@@ -1252,10 +1252,10 @@ class Game(cgame.Game):
         soustotal_j3 = int(self.score_calcul[30][2]) +  int(self.score_calcul[31][2]) + int(self.score_calcul[32][2]) + int(self.score_calcul[33][2]) + int(self.score_calcul[34][2]) + int(self.score_calcul[35][2])
         soustotal_j4 = int(self.score_calcul[45][2]) +  int(self.score_calcul[46][2]) + int(self.score_calcul[47][2]) + int(self.score_calcul[48][2]) + int(self.score_calcul[49][2]) + int(self.score_calcul[50][2])
         
-        self.display.blit_text(f"{soustotal_j1}", 1135 * self.ratioX, 90 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(0, 0, 0), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{soustotal_j2}", 1135 * self.ratioX, 170 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(0, 0, 0), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{soustotal_j3}", 1135 * self.ratioX, 242 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(0, 0, 0), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{soustotal_j4}", 1135 * self.ratioX, 312 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(0, 0, 0), dafont='Impact', align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{soustotal_j1}", 1135 * self.ratioX, 90 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(0, 0, 0), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{soustotal_j2}", 1135 * self.ratioX, 170 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(0, 0, 0), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{soustotal_j3}", 1135 * self.ratioX, 242 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(0, 0, 0), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{soustotal_j4}", 1135 * self.ratioX, 312 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(0, 0, 0), align='Left', valign='top', margin=False)
         
         #colonne7 (bonus)
         if soustotal_j1 >= self.points_bonus :
@@ -1276,10 +1276,10 @@ class Game(cgame.Game):
         if soustotal_j4 < self.points_bonus :
                 bonus_j4 = 0
 
-        self.display.blit_text(f"{bonus_j1}", 1255 * self.ratioX, 90 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(0, 0, 0), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{bonus_j2}", 1255 * self.ratioX, 170 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(0, 0, 0), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{bonus_j3}", 1255 * self.ratioX, 242 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(0, 0, 0), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{bonus_j4}", 1255 * self.ratioX, 312 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(0, 0, 0), dafont='Impact', align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{bonus_j1}", 1255 * self.ratioX, 90 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(0, 0, 0), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{bonus_j2}", 1255 * self.ratioX, 170 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(0, 0, 0), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{bonus_j3}", 1255 * self.ratioX, 242 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(0, 0, 0), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{bonus_j4}", 1255 * self.ratioX, 312 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(0, 0, 0), align='Left', valign='top', margin=False)
         
         #colonne8 (total-sup)
         total_sup_j1 = int(bonus_j1) + int(soustotal_j1)
@@ -1287,10 +1287,10 @@ class Game(cgame.Game):
         total_sup_j3 = int(bonus_j3) + int(soustotal_j3)
         total_sup_j4 = int(bonus_j4) + int(soustotal_j4)
         
-        self.display.blit_text(f"{total_sup_j1}", 1510 * self.ratioX, 90 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(0, 0, 0), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{total_sup_j2}", 1510 * self.ratioX, 170 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(0, 0, 0), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{total_sup_j3}", 1510 * self.ratioX, 242 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(0, 0, 0), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{total_sup_j4}", 1510 * self.ratioX, 312 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(0, 0, 0), dafont='Impact', align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{total_sup_j1}", 1510 * self.ratioX, 90 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(0, 0, 0), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{total_sup_j2}", 1510 * self.ratioX, 170 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(0, 0, 0), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{total_sup_j3}", 1510 * self.ratioX, 242 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(0, 0, 0), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{total_sup_j4}", 1510 * self.ratioX, 312 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(0, 0, 0), align='Left', valign='top', margin=False)
         
         #colonne9 (total-inf)
         total_inf_j1 = int(self.score_calcul[6][2]) +  int(self.score_calcul[7][2]) + int(self.score_calcul[8][2]) + int(self.score_calcul[9][2]) + int(self.score_calcul[10][2]) + int(self.score_calcul[11][2]) + int(self.score_calcul[12][2]) + int(self.score_calcul[13][2]) + int(self.score_calcul[14][2])
@@ -1298,10 +1298,10 @@ class Game(cgame.Game):
         total_inf_j3 = int(self.score_calcul[36][2]) +  int(self.score_calcul[37][2]) + int(self.score_calcul[38][2]) + int(self.score_calcul[39][2]) + int(self.score_calcul[40][2]) + int(self.score_calcul[41][2]) + int(self.score_calcul[42][2]) + int(self.score_calcul[43][2]) + int(self.score_calcul[44][2])
         total_inf_j4 = int(self.score_calcul[51][2]) +  int(self.score_calcul[52][2]) + int(self.score_calcul[53][2]) + int(self.score_calcul[54][2]) + int(self.score_calcul[55][2]) + int(self.score_calcul[56][2]) + int(self.score_calcul[57][2]) + int(self.score_calcul[58][2]) + int(self.score_calcul[59][2])
 
-        self.display.blit_text(f"{total_inf_j1}", 1635 * self.ratioX, 90 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(0, 0, 0), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{total_inf_j2}", 1635 * self.ratioX, 170 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(0, 0, 0), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{total_inf_j3}", 1635 * self.ratioX, 242 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(0, 0, 0), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{total_inf_j4}", 1635 * self.ratioX, 312 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(0, 0, 0), dafont='Impact', align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{total_inf_j1}", 1635 * self.ratioX, 90 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(0, 0, 0), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{total_inf_j2}", 1635 * self.ratioX, 170 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(0, 0, 0), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{total_inf_j3}", 1635 * self.ratioX, 242 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(0, 0, 0), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{total_inf_j4}", 1635 * self.ratioX, 312 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(0, 0, 0), align='Left', valign='top', margin=False)
         
         #colonne10 (score)
         self.score_j1 = int(total_inf_j1) + int(total_sup_j1)
@@ -1309,14 +1309,14 @@ class Game(cgame.Game):
         self.score_j3 = int(total_inf_j3) + int(total_sup_j3)
         self.score_j4 = int(total_inf_j4) + int(total_sup_j4)
         
-        self.display.blit_text(f"{self.score_j1}", 1755 * self.ratioX, 90 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(0, 128, 0), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{self.score_j2}", 1755 * self.ratioX, 170 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(0, 0, 255), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{self.score_j3}", 1755 * self.ratioX, 242 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(255, 0, 0), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{self.score_j4}", 1755 * self.ratioX, 312 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(225,225, 0), dafont='Impact', align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{self.score_j1}", 1755 * self.ratioX, 90 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(0, 128, 0), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{self.score_j2}", 1755 * self.ratioX, 170 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(0, 0, 255), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{self.score_j3}", 1755 * self.ratioX, 242 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(255, 0, 0), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{self.score_j4}", 1755 * self.ratioX, 312 * self.ratioY, 75 * self.ratioX, 75 * self.ratioX, color=(225,225, 0), align='Left', valign='top', margin=False)
 
         # Show round number 
-        self.display.blit_text(f"Round", 100 * self.ratioX, 925 * self.ratioY, 150, 150, color=(246, 85, 41), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{actual_round} / {max_round}", 100 * self.ratioX, 1000 * self.ratioY, 100, 100, color=(246, 85, 41), dafont='Impact', align='Right', valign='top', margin=False)
+        self.display.blit_text(f"Round", 100 * self.ratioX, 925 * self.ratioY, 150, 150, color=(246, 85, 41), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{actual_round} / {max_round}", 100 * self.ratioX, 1000 * self.ratioY, 100, 100, color=(246, 85, 41), align='Right', valign='top', margin=False)
                  
         # Refresh screen
         if end_of_game:

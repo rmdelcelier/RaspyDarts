@@ -968,6 +968,9 @@ msgstr "Der des Themas"
 msgid "editor-help-background"
 msgstr "Pfeile oder links / rechts tippen: vorheriger / nächster Hintergrund · Bestätigen oder Menü: behalten · Zurück: abbrechen"
 
+msgid "quit-game-question"
+msgstr "Möchten Sie das Spiel verlassen?"
+
 msgid "editor-import"
 msgstr "Hintergrund importieren"
 

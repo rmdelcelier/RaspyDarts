@@ -1879,6 +1879,18 @@ try:
                             # Try to override backup button when trying to press a bullseye
                             elif magickey and magickey != 'MAGIC!' and dart_stroke in ['BTN_BACK', 'BACKUPBUTTON', 'BTN_CANCEL']:
                                 magickey += 'B'
+                            elif dart_stroke in ['escape', 'GAMEBUTTON', 'BTN_CANCEL', 'BTN_GAMEBUTTON'] or (
+                                    dart_stroke in ['BTN_BACK', 'BACKUPBUTTON'] and not magickey and
+                                    (back_count == 2 or (actual_round == 1 and actual_player == 0 and player_launch == 1))):
+                                # This key leaves the game : asked here, before a network game sends it
+                                if display.ask_quit_game():
+                                    break
+                                back_count = 0
+                                dart_stroke = None
+                                ClickZones = game.refresh_game_screen(players, actual_round, game.max_round,
+                                                game.nb_darts - player_launch + 1, game.nb_darts,
+                                                game.logo, game.headers, actual_player, OnScreenButtons=config_globals['onscreenbuttons'],
+                                                Set=Set, MaxSet=nb_sets)
                             elif magickey and magickey != 'MAGIC!' and str(dart_stroke) in ['b', 'B', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']:
                                 magickey += str(dart_stroke)
                             else:
@@ -2329,8 +2341,14 @@ try:
                                     dart_stroke = Clicked
 
                             # L'utilisateur demande la fin de la partie sur le joueur ordinateur
-                            if dart_stroke in ('BTN_GAMEBUTTON', 'GAMEBUTTON', 'BTN_CANCEL', 'TIMEOUT'):
+                            if dart_stroke == 'TIMEOUT' or (dart_stroke in ('BTN_GAMEBUTTON', 'GAMEBUTTON', 'BTN_CANCEL')
+                                                            and display.ask_quit_game()):
                                 break
+                            if dart_stroke in ('BTN_GAMEBUTTON', 'GAMEBUTTON', 'BTN_CANCEL'):
+                                # Not left : the game shown again, the same wait
+                                ClickZones = game.refresh_game_screen(players, actual_round, game.max_round, 0, game.nb_darts,
+                                                game.logo, game.headers, actual_player, OnScreenButtons=config_globals['onscreenbuttons'],
+                                                Set=Set, MaxSet=nb_sets)
 
                         if net_status is not None:
                             if net_client.play(actual_round, actual_player, player_launch, 'FINALPLAYERBUTTON') == 'TIMEOUT':

@@ -648,7 +648,7 @@ class Game(cgame.Game):
           ### remplacer par une boucle pour gain de lignes -C'est fait ;)
           elif position >= 10 :
               try:
-                  self.display.blit_text(str(self.grid[position - 10][0]), int((self.display.res['x'] * (self.pos[ligne][colonne][0] - 0 - 16)) /1920), int((self.display.res['y'] * (self.pos[ligne][colonne][1] - 0)) /1080) , self.echelle_pion, self.echelle_pion, color=(120,255,120), dafont='Impact', align='center', valign='center', margin=False)
+                  self.display.blit_text(str(self.grid[position - 10][0]), int((self.display.res['x'] * (self.pos[ligne][colonne][0] - 0 - 16)) /1920), int((self.display.res['y'] * (self.pos[ligne][colonne][1] - 0)) /1080) , self.echelle_pion, self.echelle_pion, color=(120,255,120), align='center', valign='center', margin=False)
               except:
                   print(f"Error DrawCase")
                   print(f"grille: {self.grille}, ligne = {ligne}")

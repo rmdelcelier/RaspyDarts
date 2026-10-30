@@ -569,8 +569,8 @@ class Game(cgame.Game):
         right_width = int(self.display.res['x'] * 3 / 16)
         right_height = int(self.display.res['y'] / 16)
 
-        self.display.blit_text(f"Round", right_x, right_y, int(right_width / 3), right_height, color=(246, 85, 41), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{actual_round} / {max_round}", right_x + int(right_width / 2), 0, self.display.res['x'] - right_x - int(right_width / 2), right_height * 2, color=(246, 85, 41), dafont='Impact', align='Right', valign='top', margin=False)
+        self.display.blit_text(f"Round", right_x, right_y, int(right_width / 3), right_height, color=(246, 85, 41), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{actual_round} / {max_round}", right_x + int(right_width / 2), 0, self.display.res['x'] - right_x - int(right_width / 2), right_height * 2, color=(246, 85, 41), align='Right', valign='top', margin=False)
         
         # Show difficulty level
         self.display.display_image(self.display.file_class.get_full_filename('gooseLvl' + str(self.difficulty), 'images'), 1764 * self.ratioX, right_y + right_height - 20, 160 * self.ratioX, 380 * self.ratioY, True)

@@ -3204,6 +3204,9 @@ msgstr "The theme's one"
 msgid "editor-help-background"
 msgstr "Arrows or touch left / right: previous / next background · Validate or Menu: keep · Back: cancel"
 
+msgid "quit-game-question"
+msgstr "Do you want to leave the game?"
+
 msgid "editor-import"
 msgstr "Import a background"
 

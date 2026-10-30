@@ -299,16 +299,16 @@ class Game(cgame.Game):
         else :
             self.display.display_background('horse/background_master')  
 
-        self.display.blit_text(str(self.grid[0][0]), int((self.display.res['x']*(160) /1920)), int((self.display.res['y']* self.chiffreY /1920)) , self.scale, self.scale, color=(0,0,0), dafont='Impact', align='center', valign='center', margin=False)
-        self.display.blit_text(str(self.grid[1][0]), int((self.display.res['x']*(318) /1920)), int((self.display.res['y']* self.chiffreY /1920)) , self.scale, self.scale, color=(0,0,0), dafont='Impact', align='center', valign='center', margin=False)
-        self.display.blit_text(str(self.grid[2][0]), int((self.display.res['x']*(482) /1920)), int((self.display.res['y']* self.chiffreY /1920)) , self.scale, self.scale, color=(0,0,0), dafont='Impact', align='center', valign='center', margin=False)
-        self.display.blit_text(str(self.grid[3][0]), int((self.display.res['x']*(642) /1920)), int((self.display.res['y']* self.chiffreY /1920)) , self.scale, self.scale, color=(0,0,0), dafont='Impact', align='center', valign='center', margin=False)
-        self.display.blit_text(str(self.grid[4][0]), int((self.display.res['x']*(804) /1920)), int((self.display.res['y']* self.chiffreY /1920)) , self.scale, self.scale, color=(0,0,0), dafont='Impact', align='center', valign='center', margin=False)
-        self.display.blit_text(str(self.grid[5][0]), int((self.display.res['x']*(966) /1920)), int((self.display.res['y']* self.chiffreY /1920)) , self.scale, self.scale, color=(0,0,0), dafont='Impact', align='center', valign='center', margin=False)
-        self.display.blit_text(str(self.grid[6][0]), int((self.display.res['x']*(1127) /1920)), int((self.display.res['y']* self.chiffreY /1920)) , self.scale, self.scale, color=(0,0,0), dafont='Impact', align='center', valign='center', margin=False)
-        self.display.blit_text(str(self.grid[7][0]), int((self.display.res['x']*(1289) /1920)), int((self.display.res['y']* self.chiffreY /1920)) , self.scale, self.scale, color=(0,0,0), dafont='Impact', align='center', valign='center', margin=False)
-        self.display.blit_text(str(self.grid[8][0]), int((self.display.res['x']*(1451) /1920)), int((self.display.res['y']* self.chiffreY /1920)) , self.scale, self.scale, color=(0,0,0), dafont='Impact', align='center', valign='center', margin=False)
-        self.display.blit_text(str(self.grid[9][0]), int((self.display.res['x']*(1613) /1920)), int((self.display.res['y']* self.chiffreY /1920)) , self.scale, self.scale, color=(0,0,0), dafont='Impact', align='center', valign='center', margin=False)
+        self.display.blit_text(str(self.grid[0][0]), int((self.display.res['x']*(160) /1920)), int((self.display.res['y']* self.chiffreY /1920)) , self.scale, self.scale, color=(0,0,0), align='center', valign='center', margin=False)
+        self.display.blit_text(str(self.grid[1][0]), int((self.display.res['x']*(318) /1920)), int((self.display.res['y']* self.chiffreY /1920)) , self.scale, self.scale, color=(0,0,0), align='center', valign='center', margin=False)
+        self.display.blit_text(str(self.grid[2][0]), int((self.display.res['x']*(482) /1920)), int((self.display.res['y']* self.chiffreY /1920)) , self.scale, self.scale, color=(0,0,0), align='center', valign='center', margin=False)
+        self.display.blit_text(str(self.grid[3][0]), int((self.display.res['x']*(642) /1920)), int((self.display.res['y']* self.chiffreY /1920)) , self.scale, self.scale, color=(0,0,0), align='center', valign='center', margin=False)
+        self.display.blit_text(str(self.grid[4][0]), int((self.display.res['x']*(804) /1920)), int((self.display.res['y']* self.chiffreY /1920)) , self.scale, self.scale, color=(0,0,0), align='center', valign='center', margin=False)
+        self.display.blit_text(str(self.grid[5][0]), int((self.display.res['x']*(966) /1920)), int((self.display.res['y']* self.chiffreY /1920)) , self.scale, self.scale, color=(0,0,0), align='center', valign='center', margin=False)
+        self.display.blit_text(str(self.grid[6][0]), int((self.display.res['x']*(1127) /1920)), int((self.display.res['y']* self.chiffreY /1920)) , self.scale, self.scale, color=(0,0,0), align='center', valign='center', margin=False)
+        self.display.blit_text(str(self.grid[7][0]), int((self.display.res['x']*(1289) /1920)), int((self.display.res['y']* self.chiffreY /1920)) , self.scale, self.scale, color=(0,0,0), align='center', valign='center', margin=False)
+        self.display.blit_text(str(self.grid[8][0]), int((self.display.res['x']*(1451) /1920)), int((self.display.res['y']* self.chiffreY /1920)) , self.scale, self.scale, color=(0,0,0), align='center', valign='center', margin=False)
+        self.display.blit_text(str(self.grid[9][0]), int((self.display.res['x']*(1613) /1920)), int((self.display.res['y']* self.chiffreY /1920)) , self.scale, self.scale, color=(0,0,0), align='center', valign='center', margin=False)
       
         ### determine la couleur des chiffres a jouer
         if Players[actual_player].ident == 0 :
@@ -326,7 +326,7 @@ class Game(cgame.Game):
         ### positionne le chiffre a jouer selon la couleur du joueur        
         if self.positions[Players[actual_player].name] <= 9 :
             if self.positions[Players[actual_player].name] == self.grid[self.positions[Players[actual_player].name]][2] :
-                self.display.blit_text(str(self.grid[self.positions[Players[actual_player].name]][0]), int((self.display.res['x']*(self.coords[self.positions[Players[actual_player].name]+1][0]) /1920)), int((self.display.res['y']* self.chiffreY /1920)) , self.scale, self.scale, color=(couleur), dafont='Impact', align='center', valign='center', margin=False)
+                self.display.blit_text(str(self.grid[self.positions[Players[actual_player].name]][0]), int((self.display.res['x']*(self.coords[self.positions[Players[actual_player].name]+1][0]) /1920)), int((self.display.res['y']* self.chiffreY /1920)) , self.scale, self.scale, color=(couleur), align='center', valign='center', margin=False)
       
         ### deplacement joueurs
         for p in Players:
@@ -365,8 +365,8 @@ class Game(cgame.Game):
         right_width = int(self.display.res['x'] * 3 / 16)
         right_height = int(self.display.res['y'] / 16)
 
-        self.display.blit_text(f"Round", right_x, right_y, int(right_width / 3), right_height, color=(246, 85, 41), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{actual_round} / {max_round}", right_x + int(right_width / 2), 0, self.display.res['x'] - right_x - int(right_width / 2), right_height * 2, color=(246, 85, 41), dafont='Impact', align='Right', valign='top', margin=False)
+        self.display.blit_text(f"Round", right_x, right_y, int(right_width / 3), right_height, color=(246, 85, 41), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{actual_round} / {max_round}", right_x + int(right_width / 2), 0, self.display.res['x'] - right_x - int(right_width / 2), right_height * 2, color=(246, 85, 41), align='Right', valign='top', margin=False)
         
         # Refresh screen
         if end_of_game :

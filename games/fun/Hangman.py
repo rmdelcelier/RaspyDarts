@@ -295,8 +295,8 @@ class Game(cgame.Game):
                 nextLetter += 1
                    
         #Affichage indice + score
-        self.display.blit_text(f"{self.hintWord}", 20 * self.ratioX, 870 * self.ratioY, 800 * self.ratioX, 250 * self.ratioY, color=(255, 255, 255), dafont='Impact', align='Center', valign='Center', margin=False)
-        self.display.blit_text("Score: " + f"{self.scoreHangman}", 870 * self.ratioX, 900 * self.ratioY, 400 * self.ratioX, 250 * self.ratioY, color=(255, 255, 0), dafont='Impact', align='Center', valign='Center', margin=False)
+        self.display.blit_text(f"{self.hintWord}", 20 * self.ratioX, 870 * self.ratioY, 800 * self.ratioX, 250 * self.ratioY, color=(255, 255, 255), align='Center', valign='Center', margin=False)
+        self.display.blit_text("Score: " + f"{self.scoreHangman}", 870 * self.ratioX, 900 * self.ratioY, 400 * self.ratioX, 250 * self.ratioY, color=(255, 255, 0), align='Center', valign='Center', margin=False)
         
             
         # Show round number   
@@ -305,8 +305,8 @@ class Game(cgame.Game):
         right_width = int(self.display.res['x'] * 3 / 16)
         right_height = int(self.display.res['y'] / 16)
 
-        self.display.blit_text(f"Round", right_x, right_y, int(right_width / 3), right_height, color=(246, 85, 41), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{actual_round} / {max_round}", right_x + int(right_width / 2), 0, self.display.res['x'] - right_x - int(right_width / 2), right_height * 2, color=(246, 85, 41), dafont='Impact', align='Right', valign='top', margin=False)
+        self.display.blit_text(f"Round", right_x, right_y, int(right_width / 3), right_height, color=(246, 85, 41), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{actual_round} / {max_round}", right_x + int(right_width / 2), 0, self.display.res['x'] - right_x - int(right_width / 2), right_height * 2, color=(246, 85, 41), align='Right', valign='top', margin=False)
                
         # Refresh screen
         if end_of_game :

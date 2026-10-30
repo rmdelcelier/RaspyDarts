@@ -4,6 +4,7 @@ import os
 import pygame
 
 from include import cemoji
+from include import cfonts
 from include import cpaths
 
 # Dans le dossier du joueur (~/.raspydarts), avec ses scores et sa configuration
@@ -94,8 +95,8 @@ def show_trophy_popup(trophy_id):
         pygame.draw.rect(screen, (255, 215, 0), (popup_x, popup_y, popup_w, popup_h), 4)
 
         # Polices de texte ajustées à la taille du pop-up
-        font_title = pygame.font.SysFont("Impact", int(popup_h * 0.30))
-        font_desc = pygame.font.SysFont("Arial", int(popup_h * 0.25), bold=True)
+        font_title = cfonts.font(popup_h * 0.30)
+        font_desc = cfonts.font(popup_h * 0.25, bold=True)
 
         # Les coupes en emoji (police Noto Color Emoji ; sans elle, le titre seul, sans carre)
         title_surf = cemoji.render(font_title, "🏆 NOUVEAU TROPHÉE ! 🏆", (255, 215, 0))

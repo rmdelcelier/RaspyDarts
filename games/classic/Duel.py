@@ -746,14 +746,14 @@ class Game(cgame.Game):
         self.display.blit_text(
             f"DUEL  |  ROUND {actual_round}/{max_round}",
             box_x + int(15 * scale_factor), red_y + int(5 * scale_factor), box_w - int(40 * scale_factor), int(45 * scale_factor),
-            color=(255, 215, 0), dafont='Impact', align='Center'
+            color=(255, 215, 0), align='Center'
         )
 
         txt_color = (255, 120, 120) if is_defending else (120, 255, 120)
         self.display.blit_text(
             f"TOUR DE : {curr_p.name.upper()} ({curr_p.hp}/{self.start_hp} PV){status_label}",
             box_x + int(15 * scale_factor), red_y + int(48 * scale_factor), box_w - int(40 * scale_factor), int(45 * scale_factor),
-            color=txt_color, dafont='Impact', align='Center'
+            color=txt_color, align='Center'
         )
 
         table_y = red_y + red_h + int(current_h * 0.01)
@@ -769,7 +769,7 @@ class Game(cgame.Game):
             w = col_widths[idx]
             self.display.blit_rect(curr_x, table_y, w, row_h, header_bg)
             pygame.draw.rect(self.display.screen, border_col, (curr_x, table_y, w, row_h), 1)
-            self.display.blit_text(h_name, curr_x, table_y, w, row_h, color=(220, 220, 220), dafont="Impact", align="Center")
+            self.display.blit_text(h_name, curr_x, table_y, w, row_h, color=(220, 220, 220), align="Center")
             curr_x += w
 
         for p_idx, p in enumerate(players):
@@ -786,16 +786,16 @@ class Game(cgame.Game):
                 if c_idx == 0:
                     is_alive = getattr(p, "alive", True)
                     txt_col = (255, 255, 255) if is_alive else (100, 100, 100)
-                    self.display.blit_text(f"{p.name}{' (KO)' if not is_alive else ''}", curr_x + int(10 * scale_factor), ry, w - int(20 * scale_factor), row_h, color=txt_col, dafont="Impact", align="Left")
+                    self.display.blit_text(f"{p.name}{' (KO)' if not is_alive else ''}", curr_x + int(10 * scale_factor), ry, w - int(20 * scale_factor), row_h, color=txt_col, align="Left")
                 elif c_idx in [1, 2, 3]:
                     val = p.columns[c_idx - 1][0] if hasattr(p, "columns") and len(p.columns[c_idx - 1]) > 0 else ""
-                    self.display.blit_text(str(val), curr_x, ry, w, row_h, color=(220, 220, 220), dafont="Impact", align="Center")
+                    self.display.blit_text(str(val), curr_x, ry, w, row_h, color=(220, 220, 220), align="Center")
                 elif c_idx == 4:
-                    self.display.blit_text(str(getattr(p, "round_points", 0)), curr_x, ry, w, row_h, color=(255, 255, 100), dafont="Impact", align="Center")
+                    self.display.blit_text(str(getattr(p, "round_points", 0)), curr_x, ry, w, row_h, color=(255, 255, 100), align="Center")
                 elif c_idx == 5:
-                    self.display.blit_text(str(getattr(p, "round_bonus", 0)), curr_x, ry, w, row_h, color=(255, 105, 180), dafont="Impact", align="Center")
+                    self.display.blit_text(str(getattr(p, "round_bonus", 0)), curr_x, ry, w, row_h, color=(255, 105, 180), align="Center")
                 elif c_idx == 6:
-                    self.display.blit_text(f"{getattr(p, 'round_power', 0)} PWR", curr_x, ry, w, row_h, color=(0, 200, 255), dafont="Impact", align="Center")
+                    self.display.blit_text(f"{getattr(p, 'round_power', 0)} PWR", curr_x, ry, w, row_h, color=(0, 200, 255), align="Center")
                 elif c_idx == 7:
                     hp = getattr(p, "hp", 0)
                     pct = max(0.0, min(1.0, hp / float(self.start_hp)))
@@ -807,11 +807,11 @@ class Game(cgame.Game):
                     hp_col = (50, 220, 50) if pct > 0.5 else ((230, 180, 30) if pct > 0.2 else (220, 40, 40))
                     self.display.blit_rect(bar_x, bar_y, bar_w, bar_h, hp_col)
                     pygame.draw.rect(self.display.screen, (200, 200, 200), (curr_x + int(10 * scale_factor), bar_y, w - int(20 * scale_factor), bar_h), 1)
-                    self.display.blit_text(f"{hp}/{self.start_hp}", curr_x, ry, w, row_h, color=(255, 255, 255), dafont="Impact", align="Center")
+                    self.display.blit_text(f"{hp}/{self.start_hp}", curr_x, ry, w, row_h, color=(255, 255, 255), align="Center")
                 elif c_idx == 8:
                     dmg = getattr(p, "pending_damage", 0)
                     txt_col = (255, 60, 60) if dmg > 0 else (120, 120, 120)
-                    self.display.blit_text(f"-{dmg} PV" if dmg > 0 else "AUCUNE", curr_x, ry, w, row_h, color=txt_col, dafont="Impact", align="Center")
+                    self.display.blit_text(f"-{dmg} PV" if dmg > 0 else "AUCUNE", curr_x, ry, w, row_h, color=txt_col, align="Center")
 
                 curr_x += w
 
@@ -852,29 +852,29 @@ class Game(cgame.Game):
         p2_avg = round(p2_dealt / float(actual_round), 1) if actual_round > 0 else 0
 
         x_p1 = box_x + int(20 * scale_factor)
-        self.display.blit_text(f"BILAN : {p1.name.upper()}", x_p1, cyan_y + int(6 * scale_factor), col_w_bilan, int(40 * scale_factor), color=(0, 220, 255), dafont="Impact", align="Left")
-        self.display.blit_text(f"Dégâts infligés : {p1_dealt} PV ({p1_avg}/tour)", x_p1, cyan_y + int(55 * scale_factor), col_w_bilan, int(40 * scale_factor), color=(240, 240, 240), dafont="Impact", align="Left")
-        self.display.blit_text(f"Dégâts parés : {p1_blocked} PV", x_p1, cyan_y + int(100 * scale_factor), col_w_bilan, int(40 * scale_factor), color=(100, 255, 120), dafont="Impact", align="Left")
+        self.display.blit_text(f"BILAN : {p1.name.upper()}", x_p1, cyan_y + int(6 * scale_factor), col_w_bilan, int(40 * scale_factor), color=(0, 220, 255), align="Left")
+        self.display.blit_text(f"Dégâts infligés : {p1_dealt} PV ({p1_avg}/tour)", x_p1, cyan_y + int(55 * scale_factor), col_w_bilan, int(40 * scale_factor), color=(240, 240, 240), align="Left")
+        self.display.blit_text(f"Dégâts parés : {p1_blocked} PV", x_p1, cyan_y + int(100 * scale_factor), col_w_bilan, int(40 * scale_factor), color=(100, 255, 120), align="Left")
 
         sep_x = box_x + (box_w // 2)
         pygame.draw.line(self.display.screen, (0, 150, 180), (sep_x, cyan_y + int(8 * scale_factor)), (sep_x, cyan_y + cyan_h - int(8 * scale_factor)), max(1, int(2 * scale_factor)))
 
         x_p2 = sep_x + int(20 * scale_factor)
-        self.display.blit_text(f"BILAN : {p2.name.upper()}", x_p2, cyan_y + int(8 * scale_factor), col_w_bilan, int(40 * scale_factor), color=(0, 220, 255), dafont="Impact", align="Left")
-        self.display.blit_text(f"Dégâts infligés : {p2_dealt} PV ({p2_avg}/tour)", x_p2, cyan_y + int(55 * scale_factor), col_w_bilan, int(40 * scale_factor), color=(240, 240, 240), dafont="Impact", align="Left")
-        self.display.blit_text(f"Dégâts parés : {p2_blocked} PV", x_p2, cyan_y + int(100 * scale_factor), col_w_bilan, int(40 * scale_factor), color=(100, 255, 120), dafont="Impact", align="Left")
+        self.display.blit_text(f"BILAN : {p2.name.upper()}", x_p2, cyan_y + int(8 * scale_factor), col_w_bilan, int(40 * scale_factor), color=(0, 220, 255), align="Left")
+        self.display.blit_text(f"Dégâts infligés : {p2_dealt} PV ({p2_avg}/tour)", x_p2, cyan_y + int(55 * scale_factor), col_w_bilan, int(40 * scale_factor), color=(240, 240, 240), align="Left")
+        self.display.blit_text(f"Dégâts parés : {p2_blocked} PV", x_p2, cyan_y + int(100 * scale_factor), col_w_bilan, int(40 * scale_factor), color=(100, 255, 120), align="Left")
 
         # --- B. DERNIÈRE ACTION & BONUS COMBOS (ROSE) ---
         self.display.blit_rect(box_x, pink_y, box_w, pink_h, (35, 12, 30))
         pygame.draw.rect(self.display.screen, (255, 20, 147), (box_x, pink_y, box_w, pink_h), max(1, int(2 * scale_factor)))
 
-        self.display.blit_text("DERNIÈRE ACTION & BONUS COMBOS (EN DIRECT)", box_x + int(10 * scale_factor), pink_y + int(8 * scale_factor), box_w - int(40 * scale_factor), int(40 * scale_factor), color=(255, 215, 0), dafont="Impact", align="Center")
+        self.display.blit_text("DERNIÈRE ACTION & BONUS COMBOS (EN DIRECT)", box_x + int(10 * scale_factor), pink_y + int(8 * scale_factor), box_w - int(40 * scale_factor), int(40 * scale_factor), color=(255, 215, 0), align="Center")
 
         combos_txt = getattr(self, "last_combos_str", "AUCUN COMBO")
-        self.display.blit_text(f"COMBOS : {combos_txt}", box_x + int(10 * scale_factor), pink_y + int(55 * scale_factor), box_w - int(40 * scale_factor), int(40 * scale_factor), color=(120, 255, 120), dafont="Impact", align="Center")
+        self.display.blit_text(f"COMBOS : {combos_txt}", box_x + int(10 * scale_factor), pink_y + int(55 * scale_factor), box_w - int(40 * scale_factor), int(40 * scale_factor), color=(120, 255, 120), align="Center")
 
         action_txt = getattr(self, "last_action_msg", "AUCUNE ACTION")
-        self.display.blit_text(action_txt, box_x + int(10 * scale_factor), pink_y + int(105 * scale_factor), box_w - int(40 * scale_factor), int(40 * scale_factor), color=(255, 255, 255), dafont="Impact", align="Center")
+        self.display.blit_text(action_txt, box_x + int(10 * scale_factor), pink_y + int(105 * scale_factor), box_w - int(40 * scale_factor), int(40 * scale_factor), color=(255, 255, 255), align="Center")
 
         # --- C. GUIDE DES BONUS (JAUNE) ---
         self.display.blit_rect(box_x, info_y, box_w, info_h, (25, 22, 10))
@@ -883,7 +883,7 @@ class Game(cgame.Game):
         self.display.blit_text(
             "GUIDE DES BONUS",
             box_x + int(10 * scale_factor), info_y + int(6 * scale_factor), box_w - int(20 * scale_factor), int(40 * scale_factor),
-            color=(255, 215, 0), dafont="Impact", align="Center"
+            color=(255, 215, 0), align="Center"
         )
         
         col_w = box_w // 5
@@ -896,38 +896,38 @@ class Game(cgame.Game):
 
         # 1. INDIVIDUEL
         c1_x = box_x
-        self.display.blit_text("INDIVIDUEL", c1_x, start_text_y, col_w, int(40 * scale_factor), color=(255, 200, 0), dafont="Impact", align="Center")
-        self.display.blit_text("1x Double = +5", c1_x, start_text_y + line_h, col_w, int(40 * scale_factor), color=(240, 240, 200), dafont="Impact", align="Center")
-        self.display.blit_text("1x Triple = +5", c1_x, start_text_y + line_h * 2, col_w, int(40 * scale_factor), color=(240, 240, 200), dafont="Impact", align="Center")
-        self.display.blit_text("1x Single Bull = +2", c1_x, start_text_y + line_h * 3, col_w, int(40 * scale_factor), color=(240, 240, 200), dafont="Impact", align="Center")
-        self.display.blit_text("1x Double Bull = +5", c1_x, start_text_y + line_h * 4, col_w, int(40 * scale_factor), color=(240, 240, 200), dafont="Impact", align="Center")
+        self.display.blit_text("INDIVIDUEL", c1_x, start_text_y, col_w, int(40 * scale_factor), color=(255, 200, 0), align="Center")
+        self.display.blit_text("1x Double = +5", c1_x, start_text_y + line_h, col_w, int(40 * scale_factor), color=(240, 240, 200), align="Center")
+        self.display.blit_text("1x Triple = +5", c1_x, start_text_y + line_h * 2, col_w, int(40 * scale_factor), color=(240, 240, 200), align="Center")
+        self.display.blit_text("1x Single Bull = +2", c1_x, start_text_y + line_h * 3, col_w, int(40 * scale_factor), color=(240, 240, 200), align="Center")
+        self.display.blit_text("1x Double Bull = +5", c1_x, start_text_y + line_h * 4, col_w, int(40 * scale_factor), color=(240, 240, 200), align="Center")
 
         # 2. VOLÉE (avec S-D-T, Suite et Voisins)
         c2_x = box_x + col_w
-        self.display.blit_text("VOLÉE", c2_x, start_text_y, col_w, int(40 * scale_factor), color=(255, 200, 0), dafont="Impact", align="Center")
-        self.display.blit_text("S + D + T = +30", c2_x, start_text_y + line_h, col_w, int(40 * scale_factor), color=(240, 240, 200), dafont="Impact", align="Center")
-        self.display.blit_text("Suite = +20", c2_x, start_text_y + line_h * 2, col_w, int(40 * scale_factor), color=(240, 240, 200), dafont="Impact", align="Center")
-        self.display.blit_text("Voisins = +15", c2_x, start_text_y + line_h * 3, col_w, int(40 * scale_factor), color=(240, 240, 200), dafont="Impact", align="Center")
+        self.display.blit_text("VOLÉE", c2_x, start_text_y, col_w, int(40 * scale_factor), color=(255, 200, 0), align="Center")
+        self.display.blit_text("S + D + T = +30", c2_x, start_text_y + line_h, col_w, int(40 * scale_factor), color=(240, 240, 200), align="Center")
+        self.display.blit_text("Suite = +20", c2_x, start_text_y + line_h * 2, col_w, int(40 * scale_factor), color=(240, 240, 200), align="Center")
+        self.display.blit_text("Voisins = +15", c2_x, start_text_y + line_h * 3, col_w, int(40 * scale_factor), color=(240, 240, 200), align="Center")
 
         # 3. POINTS
         c3_x = box_x + (col_w * 2)
-        self.display.blit_text("POINTS", c3_x, start_text_y, col_w, int(40 * scale_factor), color=(255, 200, 0), dafont="Impact", align="Center")
-        self.display.blit_text("> 30 pts = +2", c3_x, start_text_y + line_h, col_w, int(40 * scale_factor), color=(240, 240, 200), dafont="Impact", align="Center")
-        self.display.blit_text("> 50 pts = +5", c3_x, start_text_y + line_h * 2, col_w, int(40 * scale_factor), color=(240, 240, 200), dafont="Impact", align="Center")
-        self.display.blit_text("> 100 pts = +10", c3_x, start_text_y + line_h * 3, col_w, int(40 * scale_factor), color=(240, 240, 200), dafont="Impact", align="Center")
+        self.display.blit_text("POINTS", c3_x, start_text_y, col_w, int(40 * scale_factor), color=(255, 200, 0), align="Center")
+        self.display.blit_text("> 30 pts = +2", c3_x, start_text_y + line_h, col_w, int(40 * scale_factor), color=(240, 240, 200), align="Center")
+        self.display.blit_text("> 50 pts = +5", c3_x, start_text_y + line_h * 2, col_w, int(40 * scale_factor), color=(240, 240, 200), align="Center")
+        self.display.blit_text("> 100 pts = +10", c3_x, start_text_y + line_h * 3, col_w, int(40 * scale_factor), color=(240, 240, 200), align="Center")
 
         # 4. MÊME CHIFFRE
         c4_x = box_x + (col_w * 3)
-        self.display.blit_text("MÊME CHIFFRE", c4_x, start_text_y, col_w, int(40 * scale_factor), color=(255, 200, 0), dafont="Impact", align="Center")
-        self.display.blit_text("3x Identiques = +30", c4_x, start_text_y + line_h * 2, col_w, int(40 * scale_factor), color=(240, 240, 200), dafont="Impact", align="Center")
+        self.display.blit_text("MÊME CHIFFRE", c4_x, start_text_y, col_w, int(40 * scale_factor), color=(255, 200, 0), align="Center")
+        self.display.blit_text("3x Identiques = +30", c4_x, start_text_y + line_h * 2, col_w, int(40 * scale_factor), color=(240, 240, 200), align="Center")
 
         # 5. HAT-TRICK
         c5_x = box_x + (col_w * 4)
-        self.display.blit_text("HAT TRICK", c5_x, start_text_y, col_w, int(40 * scale_factor), color=(255, 200, 0), dafont="Impact", align="Center")
-        self.display.blit_text("3x Double = +50", c5_x, start_text_y + line_h, col_w, int(40 * scale_factor), color=(240, 240, 200), dafont="Impact", align="Center")
-        self.display.blit_text("3x Triples = +50", c5_x, start_text_y + line_h * 2, col_w, int(40 * scale_factor), color=(240, 240, 200), dafont="Impact", align="Center")
-        self.display.blit_text("3x Bull = +50", c5_x, start_text_y + line_h * 3, col_w, int(40 * scale_factor), color=(240, 240, 200), dafont="Impact", align="Center")
-        self.display.blit_text("3x Double Bull = +75", c5_x, start_text_y + line_h * 4, col_w, int(40 * scale_factor), color=(240, 240, 200), dafont="Impact", align="Center")    
+        self.display.blit_text("HAT TRICK", c5_x, start_text_y, col_w, int(40 * scale_factor), color=(255, 200, 0), align="Center")
+        self.display.blit_text("3x Double = +50", c5_x, start_text_y + line_h, col_w, int(40 * scale_factor), color=(240, 240, 200), align="Center")
+        self.display.blit_text("3x Triples = +50", c5_x, start_text_y + line_h * 2, col_w, int(40 * scale_factor), color=(240, 240, 200), align="Center")
+        self.display.blit_text("3x Bull = +50", c5_x, start_text_y + line_h * 3, col_w, int(40 * scale_factor), color=(240, 240, 200), align="Center")
+        self.display.blit_text("3x Double Bull = +75", c5_x, start_text_y + line_h * 4, col_w, int(40 * scale_factor), color=(240, 240, 200), align="Center")    
         
         click = None
         if not end_of_game and OnScreenButtons:

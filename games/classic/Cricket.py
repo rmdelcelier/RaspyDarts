@@ -969,7 +969,7 @@ class Game(cgame.Game):
         else:
             dart_color = self.display.colorset['game-bronze']
         self.display.blit_rect(dart_x + dart_position * dart_x_increment, dart_y, dart_w, dart_h, self.display.colorset['game-bg'])
-        self.display.blit_text(f"{dart_value}", dart_x + dart_position * dart_x_increment, dart_y, dart_w, dart_h, color=dart_color, dafont='Impact', align='Center')
+        self.display.blit_text(f"{dart_value}", dart_x + dart_position * dart_x_increment, dart_y, dart_w, dart_h, color=dart_color, align='Center')
 
 
     def onscreen_buttons(self):
@@ -1023,7 +1023,7 @@ class Game(cgame.Game):
             title_w = int(self.display.res_x * 0.4)
             title_x = int((self.display.res_x - title_w) / 2)
             title_y = int(self.margin)
-            self.display.blit_text("Cricket", title_x, title_y, title_w, title_h, color=(255, 255, 255), dafont='Impact', align='Center', valign='center', margin=False)
+            self.display.blit_text("Cricket", title_x, title_y, title_w, title_h, color=(255, 255, 255), align='Center', valign='center', margin=False)
 
             left_x = self.margin
             left_y = self.margin + title_h  # On décale le reste pour ne pas chevaucher le titre
@@ -1031,13 +1031,13 @@ class Game(cgame.Game):
             
             round_h = int(self.display.res_y * 0.05)
             self.display.blit_rect(left_x, left_y, left_w, round_h, self.display.colorset['game-bg'])
-            self.display.blit_text(f"Tour : {actual_round}/{max_round}", left_x, left_y, left_w, round_h, color=self.display.colorset['game-round'], dafont='Impact', align='Left', valign='center', margin=False)
+            self.display.blit_text(f"Tour : {actual_round}/{max_round}", left_x, left_y, left_w, round_h, color=self.display.colorset['game-round'], align='Left', valign='center', margin=False)
 
             mpr_y = left_y + round_h + self.margin
             mpr_h = int(self.display.res_y * 0.05)
             mpr_rectangle = (left_x, mpr_y, left_w, mpr_h)
             
-            self.display.blit_text(f'MPR : {mpr}', left_x, mpr_y, left_w, mpr_h, color=players[actual_player].color, dafont='Impact', align='Left', valign='center')
+            self.display.blit_text(f'MPR : {mpr}', left_x, mpr_y, left_w, mpr_h, color=players[actual_player].color, align='Left', valign='center')
             
             sub = self.display.screen.subsurface(mpr_rectangle)
             screenshot2 = pygame.Surface((mpr_rectangle[2], mpr_rectangle[3]))
@@ -1075,7 +1075,7 @@ class Game(cgame.Game):
                             dart_color = self.display.colorset['game-bronze']
                         self.display.display_image(self.dart, b_x, b_y, b_w, b_h, center_x=True, change_colors=[[(0, 0, 0), dart_color]])
                     else:
-                        self.display.blit_text(str(dart), b_x, b_y, b_w, b_h, color=(255, 255, 255), dafont='Impact', align='Center', valign='center')
+                        self.display.blit_text(str(dart), b_x, b_y, b_w, b_h, color=(255, 255, 255), align='Center', valign='center')
 
                     index_d += 1
 
@@ -1109,7 +1109,7 @@ class Game(cgame.Game):
             for target in self.headers:
                 self.display.blit_rect(header_x, grid_y, target_col_w, row_h, header_bg)
                 pygame.draw.rect(self.display.screen, grid_border_color, (header_x, grid_y, target_col_w, row_h), 1)
-                self.display.blit_text(f'{target}', header_x, grid_y, target_col_w, row_h, color=(255, 255, 255), dafont='Impact', align='Center')
+                self.display.blit_text(f'{target}', header_x, grid_y, target_col_w, row_h, color=(255, 255, 255), align='Center')
                 header_x += target_col_w
 
             self.symbol_size = int(row_h * 0.38)
@@ -1123,7 +1123,7 @@ class Game(cgame.Game):
 
                 self.display.blit_rect(grid_x, p_y, name_col_w, row_h, p_color)
                 pygame.draw.rect(self.display.screen, (0, 0, 0), (grid_x, p_y, name_col_w, row_h), 1)
-                self.display.blit_text(player.name, grid_x + 4, p_y, name_col_w - 4, row_h, color=(255, 255, 255), dafont='Impact', align='Left')
+                self.display.blit_text(player.name, grid_x + 4, p_y, name_col_w - 4, row_h, color=(255, 255, 255), align='Left')
 
                 c_x = grid_x + name_col_w
                 index_c = 0
@@ -1145,7 +1145,7 @@ class Game(cgame.Game):
                 score_x = grid_x + name_col_w + (nb_headers * target_col_w)
                 self.display.blit_rect(score_x, p_y, score_col_w, row_h, header_bg)
                 pygame.draw.rect(self.display.screen, grid_border_color, (score_x, p_y, score_col_w, row_h), 1)
-                self.display.blit_text(str(player.score), score_x, p_y, score_col_w - 2, row_h, color=(255, 255, 255), dafont='Impact', align='Right')
+                self.display.blit_text(str(player.score), score_x, p_y, score_col_w - 2, row_h, color=(255, 255, 255), align='Right')
 
                 if is_active:
                     pygame.draw.rect(self.display.screen, p_color, (grid_x, p_y, grid_w, row_h), 3)

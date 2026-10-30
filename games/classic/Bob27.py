@@ -356,7 +356,7 @@ class Game(cgame.Game):
         '''
         Display players's score
         '''
-        font = self.display.file_class.get_full_filename('FreeSansBold', 'fonts')
+        font = self.display.defaultfontpath
 
         # Score
         if score is not None:
@@ -536,7 +536,7 @@ class Game(cgame.Game):
         text_w = int(self.display.res_x / 5)
         text_h = int(self.display.res_y / 36)
 
-        font = self.display.file_class.get_full_filename('comic-sans-ms', 'fonts')
+        font = self.display.defaultfontpath
         
         current_goal = players[actual_player].goals[actual_round - 1]
         display_goal = 'Bull' if str(current_goal) == '50' else f'Double {current_goal}'

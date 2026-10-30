@@ -3658,6 +3658,9 @@ msgstr "Quello del tema"
 msgid "editor-help-background"
 msgstr "Frecce o tocco a sinistra / destra: sfondo precedente / successivo · Conferma o Menu: tieni · Indietro: annulla"
 
+msgid "quit-game-question"
+msgstr "Vuoi uscire dalla partita?"
+
 msgid "editor-import"
 msgstr "Importa uno sfondo"
 

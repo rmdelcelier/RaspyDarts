@@ -607,8 +607,8 @@ class Game(cgame.Game):
             posY = posY + 147
 
         # Show round number 
-        self.display.blit_text(f"Round", 100 * self.ratioX, 925 * self.ratioY, 150, 150, color=(246, 85, 41), dafont='Impact', align='Left', valign='top', margin=False)
-        self.display.blit_text(f"{actual_round} / {max_round}", 100 * self.ratioX, 1000 * self.ratioY, 100, 100, color=(246, 85, 41), dafont='Impact', align='Right', valign='top', margin=False)
+        self.display.blit_text(f"Round", 100 * self.ratioX, 925 * self.ratioY, 150, 150, color=(246, 85, 41), align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{actual_round} / {max_round}", 100 * self.ratioX, 1000 * self.ratioY, 100, 100, color=(246, 85, 41), align='Right', valign='top', margin=False)
         
         # draw dart box
         self.display.blit_text("-".join(Players[actual_player].segments), 1600 * self.ratioX, 975 * self.ratioY, 350 * self.ratioX, 90 * self.ratioY, color=(255, 255, 255))

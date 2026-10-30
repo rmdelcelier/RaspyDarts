@@ -750,7 +750,7 @@ class Game(cgame.Game):
         title_w = int(self.display.res['x'] * 0.4)
         title_x = int((self.display.res['x'] - title_w) / 2)
         title_y = int(self.margin * 2) 
-        self.display.blit_text("DAILY ROUTINE", title_x, title_y, title_w, title_h, color=(255, 255, 255), dafont='Impact', align='Center', valign='center', margin=False)
+        self.display.blit_text("DAILY ROUTINE", title_x, title_y, title_w, title_h, color=(255, 255, 255), align='Center', valign='center', margin=False)
 
         drill = ROUTINES_CONFIG.get(real_drill_id, ROUTINES_CONFIG.get(1, {}))
         drill_name = drill.get("name", "Défi")
@@ -779,7 +779,7 @@ class Game(cgame.Game):
         
         missing = max(0, target_score - current_score)
         text_defi = f"Étape {real_drill_id}: {drill_name} | Cible: {target_score} | Reste: {missing} | Flèches: {darts_thrown_current}/{max_drill_darts}"
-        self.display.blit_text(text_defi, info_x, info_y, info_w, info_h, color=(255, 255, 0), dafont='Impact', align='Center', valign='center', margin=False)
+        self.display.blit_text(text_defi, info_x, info_y, info_w, info_h, color=(255, 255, 0), align='Center', valign='center', margin=False)
 
         nb_players = len(players)
         nb_headers = len(headers)
@@ -812,7 +812,7 @@ class Game(cgame.Game):
             self.display.blit_rect(cx, table_y, current_col_w, row_h, header_bg)
             pygame.draw.rect(self.display.screen, grid_border_color, (cx, table_y, current_col_w, row_h), 1)
             if header:
-                self.display.blit_text(header, cx, table_y, current_col_w, row_h, color=(255, 255, 255), dafont='Impact', align='Center')
+                self.display.blit_text(header, cx, table_y, current_col_w, row_h, color=(255, 255, 255), align='Center')
 
         for p_idx, player in enumerate(players):
             ry = table_y + (p_idx + 1) * row_h
@@ -821,7 +821,7 @@ class Game(cgame.Game):
             
             self.display.blit_rect(table_x, ry, name_col_w, row_h, name_bg_color)
             pygame.draw.rect(self.display.screen, grid_border_color, (table_x, ry, name_col_w, row_h), 1)
-            self.display.blit_text(player.name, table_x + self.margin, ry, name_col_w - self.margin_2, row_h, color=(255, 255, 255), dafont='Impact', align='Left')
+            self.display.blit_text(player.name, table_x + self.margin, ry, name_col_w - self.margin_2, row_h, color=(255, 255, 255), align='Left')
             
             for c_idx in range(nb_headers):
                 if c_idx == 0:
@@ -840,10 +840,10 @@ class Game(cgame.Game):
                 pygame.draw.rect(self.display.screen, grid_border_color, (cx, ry, current_col_w, row_h), 1)
                 
                 if c_idx == nb_headers - 1:
-                    self.display.blit_text(str(player.score), cx, ry, current_col_w, row_h, color=(255, 255, 255), dafont='Impact', align='Center')
+                    self.display.blit_text(str(player.score), cx, ry, current_col_w, row_h, color=(255, 255, 255), align='Center')
                 elif c_idx < len(player.columns):
                     val = player.columns[c_idx][0] if len(player.columns[c_idx]) > 0 else ''
-                    self.display.blit_text(str(val), cx, ry, current_col_w, row_h, color=(255, 255, 255), dafont='Impact', align='Center')
+                    self.display.blit_text(str(val), cx, ry, current_col_w, row_h, color=(255, 255, 255), align='Center')
 
             if is_active:
                 pygame.draw.rect(self.display.screen, player.color, (table_x, ry, table_w, row_h), 3)
@@ -869,7 +869,7 @@ class Game(cgame.Game):
             self.display.blit_rect(bx, by, small_box_w, small_box_h, cell_bg)
             pygame.draw.rect(self.display.screen, grid_border_color, (bx, by, small_box_w, small_box_h), 1)
             if val_dart != '':
-                self.display.blit_text(str(val_dart), bx, by, small_box_w, small_box_h, color=self.display.colorset['game-score'], dafont='Impact', align='Center')
+                self.display.blit_text(str(val_dart), bx, by, small_box_w, small_box_h, color=self.display.colorset['game-score'], align='Center')
  
         statut_msg = players[actual_player].columns[0][0]
         
@@ -888,8 +888,7 @@ class Game(cgame.Game):
             self.display.blit_text(
                 display_text, 
                 status_x, status_y, status_w, status_h, 
-                color=couleur,    
-                dafont='Impact',      
+                color=couleur,      
                 align='Center', 
                 valign='center', 
                 margin=False
@@ -903,11 +902,11 @@ class Game(cgame.Game):
 
             self.display.blit_rect(pred_x, pred_y, pred_w, pred_h, header_bg)
             pygame.draw.rect(self.display.screen, (0, 255, 0), (pred_x, pred_y, pred_w, pred_h), 2)
-            self.display.blit_text(f"Cible: {self.possible_hits}", pred_x, pred_y, pred_w, pred_h, color=(0, 255, 0), dafont='Impact', align='Center', valign='center', margin=False)
+            self.display.blit_text(f"Cible: {self.possible_hits}", pred_x, pred_y, pred_w, pred_h, color=(0, 255, 0), align='Center', valign='center', margin=False)
 
 
         if self.teste or self.max_retries > 0:
-            font = self.display.font(None, 32)
+            font = self.display.font(self.display.defaultfontpath, 32)
             text_parts = []
             
             if self.teste:
