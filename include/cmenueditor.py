@@ -416,16 +416,8 @@ class Editor:
                     return False
                 if choice == 'add':
                     self.add()
-                if choice in ('background', 'import'):
-                    before = self.backdrop
-                    imported = self.import_backdrop() if choice == 'import' else None
-                    if choice == 'import' and imported is None:
-                        continue
-                    self.backdrops = self.backdrop_choices()
-                    self.backdrop_before = before
-                    # Imported : shown at once under the buttons, kept by Validate
-                    self.backdrop = imported or self.backdrop
-                    self.mode = 'backdrop'
+                if choice == 'background':
+                    self.choose_backdrop()
                 if choice == 'arrange' and self.items:
                     # The zone : first the one of all the buttons, then changed by the user
                     self.zone = self.items[0]['rect'].unionall([item['rect'] for item in self.items[1:]])
@@ -544,8 +536,7 @@ class Editor:
                      {'id': 'arrange', 'action': 'arrange', 'text': 'editor-arrange', 'shortcut': 'F4'},
                      {'id': 'snap', 'action': 'snap', 'text': snap, 'shortcut': 'F5'},
                      {'id': 'background', 'action': 'background', 'shortcut': 'F6',
-                      'text': f"{self.translate('editor-background')} : {self.backdrop_name(self.backdrop)}"},
-                     {'id': 'import', 'action': 'import', 'text': 'editor-import', 'shortcut': 'F7'}]
+                      'text': f"{self.translate('editor-background')} : {self.backdrop_name(self.backdrop)}"}]
             back = {'id': 'back', 'action': 'back', 'text': 'editor-continue', 'footer': 'left', 'shortcut': 'escape'}
             title = f"{self.translate('editor-title')} : {self.translate(dict(SCREENS)[self.name])}"
             choice = self.screen.run_menu('editor_menu', items + [back], items + [back], title=title,
@@ -673,6 +664,37 @@ class Editor:
                 cache.pop(key, None)
         painter.images.pop(painter.image_path(image), None)
 
+    def choose_backdrop(self):
+        '''
+        The backgrounds in a list (the last line : an image imported) ; the one chosen shown
+        under the buttons : Validate keeps it, Back gives the one before, right and left the
+        others. A key held down does not repeat there : drawing an image takes up to 1 s on a
+        Pi 3, and the repeats piled up meanwhile went through several backgrounds
+        '''
+        before = self.backdrop
+        choices = self.backdrop_choices()
+        values = [(str(index), self.backdrop_name(block)) for index, block in enumerate(choices)]
+        values.append(('import', self.translate('editor-import')))
+        current = str(choices.index(before)) if before in choices else '0'
+        chosen = self.screen.dropdown(self.size[0] * 4 / 16, 2 * self.screen.res_y_16, values,
+                                      navigate=current, width=self.size[0] / 2)
+        if chosen == 'escape':
+            return
+        if chosen == 'import':
+            block = self.import_backdrop()
+            if block is None:
+                return
+            choices = self.backdrop_choices()
+            if block not in choices:
+                choices.append(block)
+        else:
+            block = choices[int(chosen)]
+        self.backdrops = choices
+        self.backdrop_before = before
+        self.backdrop = block
+        self.mode = 'backdrop'
+        pygame.key.set_repeat()
+
     def backdrop_key(self, key):
         '''
         The backgrounds browsed under the buttons : right and left (or a touch on the right
@@ -699,6 +721,8 @@ class Editor:
             self.forget_backdrop(self.backdrop)
             self.backdrop = self.backdrop_before
             self.mode = 'select'
+        if self.mode == 'select':
+            pygame.key.set_repeat(*REPEAT)
 
     def give_up(self):
         '''
@@ -1231,35 +1255,57 @@ class Editor:
 
 def screens_menu(screen, keys):
     '''
-    Paramètres > Modifier les écrans : the screen chosen, then its editor ; saved or left :
-    the list again, this screen selected (the keys repeated while saving are cleared by the
-    editor : they no longer open it again), until Back
+    Paramètres > Modifier les écrans : the screen chosen, then its editor ; the theme and the
+    font of the game, in lines as those of the customization (their value in a list) ; saved
+    or left : the list again, this line selected (the keys repeated while saving are cleared
+    by the editor : they no longer open it again), until Back
     '''
-    back = {'id': 'back', 'action': 'back', 'text': 'back', 'footer': 'left', 'shortcut': 'escape'}
+    # pylint: disable=import-outside-toplevel
+    from include.cscreen import BTN_CHOICE, BTN_DROPDOWN
     translate = screen.lang.translate
-    choice = None
+    rows = [name for name, _text in SCREENS] + ['theme', 'font']
+    nb_elements = len(rows)
+    selected = 1
     while True:
         globals_ = screen.config.config['SectionGlobals']
-        items = [{'id': name, 'action': name, 'text': text, 'shortcut': f'F{number}'}
-                 for number, (name, text) in enumerate(SCREENS, 1)]
-        items += [{'id': 'theme', 'action': 'theme', 'shortcut': f'F{len(items) + 1}',
-                   'text': f"{translate('colorset')} : {globals_.get('colorset')}"},
-                  {'id': 'font', 'action': 'font', 'shortcut': f'F{len(items) + 2}',
-                   'text': f"{translate('font')} : {str(globals_.get('font') or '').replace('.ttf', '')}"}]
-        choice = screen.run_menu('edit_screens', items + [back], items + [back],
-                                 title=translate('edit-screens'), initial=choice).get('id')
-        if choice == 'theme':
+        values = {'theme': str(globals_.get('colorset') or ''),
+                  'font': str(globals_.get('font') or '').replace('.ttf', '')}
+        click_zones = {}
+        screen.display_background()
+        screen.menu_header(translate('edit-screens'))
+        for index, name in enumerate(rows, 1):
+            if name in values:
+                line = (f'F{index}', translate('colorset' if name == 'theme' else 'font'), BTN_DROPDOWN, values[name])
+            else:
+                line = (f'F{index}', translate(dict(SCREENS)[name]), BTN_CHOICE)
+            click_zones[f'F{index}'] = screen.menu_item((index, nb_elements, selected), line, align='Full', tabs=True)
+        click_zones['escape'] = screen.display_button(nb_elements + 1 == selected, 'back', special='escape')
+        screen.update_screen()
+
+        key = screen.rpi.listen_inputs(['arrows', 'fx'], ['escape', 'enter', 'space', 'single-click',
+                                                          'PLAYERBUTTON', 'BACKUPBUTTON', 'GAMEBUTTON'])
+        clicked = screen.is_clicked(click_zones, key)
+        if clicked:
+            key = clicked
+        if isinstance(key, str) and key.startswith('F') and key[1:].isdigit() and 1 <= int(key[1:]) <= nb_elements:
+            selected = int(key[1:])
+            key = 'enter'
+        else:
+            selected = screen.navigate(selected, key, nb_elements, 1, 1, left_right=True)
+        if key in keys['escape'] or (key in keys['enter'] and selected == nb_elements + 1):
+            return
+        if key not in keys['enter'] + ['space'] or not 1 <= selected <= nb_elements:
+            continue
+        name = rows[selected - 1]
+        if name == 'theme':
             chosen = screen.dropdown(screen.res['x'] * 6 / 16, 3 * screen.res_y_16, screen.theme_choices(),
                                      navigate=globals_.get('colorset'))
             if chosen != 'escape':
                 screen.apply_look(theme=chosen)
-            continue
-        if choice == 'font':
+        elif name == 'font':
             chosen = screen.dropdown(screen.res['x'] * 6 / 16, 3 * screen.res_y_16, screen.font_choices(),
                                      special='font', navigate=globals_.get('font'))
             if chosen != 'escape':
                 screen.apply_look(font=chosen)
-            continue
-        if choice not in dict(SCREENS):
-            return
-        Editor(screen, choice, keys).run()
+        else:
+            Editor(screen, name, keys).run()
