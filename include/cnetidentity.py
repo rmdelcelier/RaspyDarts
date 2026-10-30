@@ -7,6 +7,9 @@ import threading
 import time
 import urllib.request
 
+# Guests of an account on a borne
+MOST_GUESTS = 15
+
 
 def server_user(session):
     from include.caccount import BASE, COOKIE
@@ -52,7 +55,7 @@ def wait_user(display, session):
         display._lobby_auth_open = previous
 
 
-def network_players(display, players_bank=None, players_color=None):
+def network_players(display, players_bank=None, players_color=None, colors_available=None):
     from include import caccount as accounts
     from include.cchat import ensure_session
     session = getattr(display, '_lobby_account_session', None) or accounts.load_session()
@@ -92,20 +95,11 @@ def network_players(display, players_bank=None, players_color=None):
         return 1, 'escape', False
     label = '{:03d} · {}'.format(user['id'], user['username'])
     display.message([display.lang.translate('online-network-player') + ' ' + label], wait=1000)
-    # ChtiDarts : un compte authentifie et des joueurs invites.
-    # Le premier joueur reste toujours l'identite verifiee par le VPS.
-    sets, selected, _, colors = display.players_menu(
-        [label],
-        context='netcreate',
-        bank=players_bank,
-        sets=None,
-        players_color=players_color
-    )
-
+    # Guests with the account : it stays the first player, checked by the server
+    sets, selected, _, _colors = display.players_menu([label], context='netcreate', bank=players_bank, sets=None,
+                                                      colors_available=colors_available, players_color=players_color)
     if selected == 'escape':
         return 1, 'escape', False
-
-    # Les invites ne peuvent pas remplacer le compte authentifie.
     guests = []
     for name in selected:
         if not isinstance(name, str):
@@ -113,8 +107,6 @@ def network_players(display, players_bank=None, players_color=None):
         name = name.strip()
         if not name or name.casefold() == label.casefold():
             continue
-        if name.casefold() not in [g.casefold() for g in guests]:
+        if name.casefold() not in [guest.casefold() for guest in guests]:
             guests.append(name)
-    guests = guests[:15]
-
-    return 1, [label] + guests, False
+    return 1, [label] + guests[:MOST_GUESTS], False
