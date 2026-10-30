@@ -143,6 +143,7 @@ class Screen(pygame.Surface):
         self.gamepath = os.getcwd()
         self.backupscript = f"{self.gamepath}/scripts/Backup.sh"
         self.background = None
+        self.theme_font = None
         self.file_class = File
 
         self.ips = self.get_ips()
@@ -463,6 +464,8 @@ class Screen(pygame.Surface):
         '''
 
         self.choosen_colorset = self.config.get_value('SectionGlobals', 'colorset')
+        # The font the theme asks for itself (not the one it gets from the clear theme)
+        theme_has_font = False
 
         try:
             self.colorset = ColorSet[self.choosen_colorset]
@@ -475,6 +478,7 @@ class Screen(pygame.Surface):
                 self.logs.info(f"Use {colorset_file} for color's customization")
                 ColorSet['Colorset'] = self.config.read_colorset(colorset_file)
                 self.colorset = ColorSet['Colorset']
+                theme_has_font = bool(self.colorset.get('font'))
                 for key, value in ColorSet['clear'].items():
                     if key not in self.colorset:
                         self.colorset[key] = value
@@ -525,17 +529,19 @@ class Screen(pygame.Surface):
                 self.colorset['font'] = self.defaultfontpath
         except Exception as e:
             self.logs.info("No font defined in your colorset")
+        self.theme_font = self.defaultfontpath if theme_has_font and os.path.isfile(str(self.defaultfontpath)) else None
         self.use_chosen_font()
 
     def font_file(self, font):
         '''
-        File of a font of the settings : in the fonts of the game and of ~/.raspydarts, or in the
-        folder font of the theme
+        File of a font of the settings : the one of the theme, or in the fonts of the game and of
+        ~/.raspydarts
         '''
         if not font:
             return None
-        in_theme = os.path.join(str(getattr(self.file_class, 'theme_dir', '')), 'font', str(font))
-        return in_theme if os.path.isfile(in_theme) else self.file_class.get_full_filename(str(font), 'fonts')
+        if self.theme_font and os.path.basename(self.theme_font) == str(font):
+            return self.theme_font
+        return self.file_class.get_full_filename(str(font), 'fonts')
 
     def use_chosen_font(self):
         '''
@@ -2610,7 +2616,11 @@ class Screen(pygame.Surface):
                     else:
                         FirstLast = None
 
-                    if special in ['font', 'pattern']:
+                    if special == 'font':
+                        # Its file, and its name to show (the font of the theme says it is)
+                        click_zones[str(i)] = self.dropdown_item(i_rect, selected == i, value[0], special=special, FirstLast=FirstLast,
+                                                                 label=value[1])
+                    elif special == 'pattern':
                         click_zones[str(i)] = self.dropdown_item(i_rect, selected == i, value[1], special=special, FirstLast=FirstLast)
                     elif special == 'colors':
                         click_zones[str(i)] = self.dropdown_item(i_rect, selected == i, value[0], special=special, FirstLast=FirstLast,
@@ -2700,7 +2710,7 @@ class Screen(pygame.Surface):
             rect2 = rect.copy()
             rect2.y += minus
             rect2.height -= 2 * minus
-            self.blit_text2(value, rect2, text_color, font=f'{value}')
+            self.blit_text2(label, rect2, text_color, font=self.font_file(value))
         elif special == 'pattern':
             self.blit_text2(value, rect, text_color, image=f'patterns/{value}')
         else:
@@ -11261,14 +11271,19 @@ class Screen(pygame.Surface):
 
     def font_choices(self):
         '''
-        The fonts : those of the game, of ~/.raspydarts/fonts and of the theme
+        The fonts : the one the theme asks for, if it does, then those of the game and of
+        ~/.raspydarts/fonts
         '''
         choices = []
-        theme_fonts = os.path.join(str(getattr(self.file_class, 'theme_dir', '')), 'font')
-        for folder in ('fonts', f'{self.config.user_dir}/fonts', theme_fonts):
+        for folder in ('fonts', f'{self.config.user_dir}/fonts'):
             if os.path.isdir(folder):
                 choices += [(name, name[:-4]) for name in os.listdir(folder) if name.endswith('.ttf')]
-        return sorted(set(choices))
+        choices = sorted(set(choices))
+        if self.theme_font:
+            name = os.path.basename(self.theme_font)
+            label = f"{os.path.splitext(name)[0]} ({self.lang.translate('colorset').lower()})"
+            choices = [(name, label)] + [choice for choice in choices if choice[0] != name]
+        return choices
 
     def apply_look(self, theme=None, font=None):
         '''
@@ -11330,7 +11345,7 @@ class Screen(pygame.Surface):
             except :    # 1st define
                 self.defaultfontpath = self.file_class.get_full_filename('MaPolice', 'fonts')
         else:
-            self.defaultfontpath = self.font_file(Font)
+            self.defaultfontpath = self.font_file(Font) or self.defaultfontpath
 
         # Animation time (in ms)
         self.animation = 5
