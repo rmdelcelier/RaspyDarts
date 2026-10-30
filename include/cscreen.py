@@ -6482,11 +6482,6 @@ class Screen(pygame.Surface):
         avoid = []
         refresh = True
 
-        try:
-            themes = [os.path.basename(f.path) for f in os.scandir(self.config.themes_dir) if f.is_dir() ]
-        except:
-            themes = []
-
         nb_elements = 0
         for option in customization:
             min_value = 1
@@ -6496,7 +6491,7 @@ class Screen(pygame.Surface):
             if option in ('startpercent', 'nbcol', 'resx', 'resy', 
                     'masterserver', 'endgamestats', 'videosound_multiplier', 'pnj_time',
                     'exhibition_mode', 'exhibition_items', 'illumination_mode', 'illumination_color',
-                    'idle_light_color'):
+                    'idle_light_color', 'colorset', 'font'):
                 avoid.append([option, customization[option], '', 0, []])
                 continue
 
@@ -6557,21 +6552,6 @@ class Screen(pygame.Surface):
                 option_values = []
                 for l in [name for name in os.listdir('locales') if os.path.isdir(os.path.join('locales', name)) ]:
                     option_values.append((l, self.lang.translate(l)))
-            elif option == 'font':
-                option_type = 'dropdown'
-                option_values = []
-                for element in [name for name in os.listdir('fonts') if name.endswith('.ttf') ]:
-                    option_values.append((element, element.replace('.ttf', '')))
-                if os.path.isdir(f'{self.config.user_dir}/fonts'):
-                    for element in [name for name in os.listdir(f'{self.config.user_dir}/fonts') if name.endswith('.ttf') ]:
-                        option_values.append((element, element.replace('.ttf', '')))
-
-                option_values.sort()
-            elif option == 'colorset':
-                option_type = 'dropdown'
-                option_values = [('clear', 'clear')]
-                for theme in themes:
-                    option_values.append((theme, theme))
             elif option == 'debuglevel':
                 option_type = 'dropdown'
                 option_values = [('0', 'Debug'), ('1', 'Warnings'), ('2', 'Errors'), ('3', 'Fatal errors'), ('4', 'Infos'), ('5', 'No logs')]
@@ -6787,14 +6767,9 @@ class Screen(pygame.Surface):
                     refresh = True
                     
                 elif selected_customization[selected - 1][2] == 'dropdown':
-                    if selected_customization[selected - 1][0] == 'font':
-                        tmp = self.dropdown(self.res['x'] * 6 / 16, 3 * self.res_y_16,
-                                selected_customization[selected - 1][4],
-                                special='font', navigate=selected_customization[selected - 1][1])
-                    else:
-                        tmp = self.dropdown(self.res['x'] * 6 / 16, 3 * self.res_y_16,
-                                selected_customization[selected - 1][4],
-                                navigate=selected_customization[selected - 1][1])
+                    tmp = self.dropdown(self.res['x'] * 6 / 16, 3 * self.res_y_16,
+                            selected_customization[selected - 1][4],
+                            navigate=selected_customization[selected - 1][1])
                     if tmp != 'escape':
                         selected_customization[selected - 1][1] = tmp
                     # Force refresh off screen
@@ -11225,6 +11200,42 @@ class Screen(pygame.Surface):
             self.blit_screen(scaled_image, (pos_x, pos_y), area=rect)
 
         return (scaled_width, scaled_height)
+
+    def theme_choices(self):
+        '''
+        The themes : clear, and the folders of ~/.raspydarts/themes
+        '''
+        try:
+            themes = sorted(entry.name for entry in os.scandir(self.config.themes_dir) if entry.is_dir())
+        except OSError:
+            themes = []
+        return [('clear', 'clear')] + [(theme, theme) for theme in themes if theme != 'clear']
+
+    def font_choices(self):
+        '''
+        The fonts : those of the game and of ~/.raspydarts/fonts
+        '''
+        choices = []
+        for folder in ('fonts', f'{self.config.user_dir}/fonts'):
+            if os.path.isdir(folder):
+                choices += [(name, name[:-4]) for name in os.listdir(folder) if name.endswith('.ttf')]
+        return sorted(set(choices))
+
+    def apply_look(self, theme=None, font=None):
+        '''
+        A theme or a font chosen (Modifier les écrans) : written, and shown at once on every
+        screen (the menus of the theme read again)
+        '''
+        globals_ = self.config.config['SectionGlobals']
+        if theme is not None:
+            globals_['colorset'] = theme
+        if font is not None:
+            globals_['font'] = font
+        self.config.write_file()
+        self.file_class.reset_theme(globals_['colorset'])
+        self.init_colorset()
+        self.menus_read = None
+        self.apply_font(globals_['font'])
 
     def apply_font(self, font):
         '''

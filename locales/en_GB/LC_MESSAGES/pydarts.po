@@ -3204,6 +3204,24 @@ msgstr "The theme's one"
 msgid "editor-help-background"
 msgstr "Arrows or touch left / right: previous / next background · Validate or Menu: keep · Back: cancel"
 
+msgid "editor-import"
+msgstr "Import a background"
+
+msgid "editor-import-usb"
+msgstr "USB key"
+
+msgid "editor-import-home"
+msgstr "Home folder"
+
+msgid "editor-import-root"
+msgstr "Whole card"
+
+msgid "editor-import-up"
+msgstr "Parent folder"
+
+msgid "editor-import-failed"
+msgstr "Image not imported"
+
 msgid "category-classic"
 msgstr "Classics"
 

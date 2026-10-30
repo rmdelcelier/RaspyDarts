@@ -1109,6 +1109,8 @@ try:
                     # EDITOR OF THE SCREENS : buttons of the menus moved, resized, added, deleted
                     dispatcher.publish('menu', limit=['TARGET', 'STRIP', 'OTHER'])
                     display.edit_screens()
+                    # Its theme and its font : those of the screens to come (end of a game...)
+                    config_globals = Config.read_file("SectionGlobals")
 
                 elif menu == 'usb-pads':
                     # USB PADS : their keys and knobs, programmed, tested, given a button

@@ -974,6 +974,24 @@ msgstr "El del tema"
 msgid "editor-help-background"
 msgstr "Flechas o tocar a la izquierda / derecha: fondo anterior / siguiente · Validar o Menú: conservar · Volver: cancelar"
 
+msgid "editor-import"
+msgstr "Importar un fondo"
+
+msgid "editor-import-usb"
+msgstr "Llave USB"
+
+msgid "editor-import-home"
+msgstr "Carpeta personal"
+
+msgid "editor-import-root"
+msgstr "Toda la tarjeta"
+
+msgid "editor-import-up"
+msgstr "Carpeta superior"
+
+msgid "editor-import-failed"
+msgstr "Imagen no importada"
+
 msgid "category-classic"
 msgstr "Clásicos"
 

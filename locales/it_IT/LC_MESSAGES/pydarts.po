@@ -3658,6 +3658,24 @@ msgstr "Quello del tema"
 msgid "editor-help-background"
 msgstr "Frecce o tocco a sinistra / destra: sfondo precedente / successivo · Conferma o Menu: tieni · Indietro: annulla"
 
+msgid "editor-import"
+msgstr "Importa uno sfondo"
+
+msgid "editor-import-usb"
+msgstr "Chiavetta USB"
+
+msgid "editor-import-home"
+msgstr "Cartella personale"
+
+msgid "editor-import-root"
+msgstr "Tutta la scheda"
+
+msgid "editor-import-up"
+msgstr "Cartella superiore"
+
+msgid "editor-import-failed"
+msgstr "Immagine non importata"
+
 msgid "category-classic"
 msgstr "Classici"
 

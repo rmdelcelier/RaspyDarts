@@ -11,6 +11,7 @@ theme (themes/<theme>/menu/menus.yaml), the previous file kept as menus.yaml.bak
 """
 
 import copy
+import filecmp
 import os
 import re
 import shutil
@@ -62,6 +63,10 @@ VERSION_ID = '__version__'
 # and those of the game named background...
 BACKGROUND_FOLDERS = (os.path.join('images', 'background'), os.path.join('images', 'menus'))
 IMAGES = ('.png', '.jpg', '.jpeg')
+# An image imported (from a USB key...) : copied there (in ~/.raspydarts), then offered with the others
+IMPORTED = os.path.join('images', 'menus')
+# Where the images to import are looked for : the USB keys mounted in these folders
+MOUNTS = ('/media', '/mnt')
 # Buttons arranged in a zone : the spaces between them (parts of the screen), the zone drawn
 GAPS = (0, 0.005, 0.01, 0.02, 0.03, 0.05)
 FIRST_GAP = 2
@@ -411,9 +416,15 @@ class Editor:
                     return False
                 if choice == 'add':
                     self.add()
-                if choice == 'background':
+                if choice in ('background', 'import'):
+                    before = self.backdrop
+                    imported = self.import_backdrop() if choice == 'import' else None
+                    if choice == 'import' and imported is None:
+                        continue
                     self.backdrops = self.backdrop_choices()
-                    self.backdrop_before = self.backdrop
+                    self.backdrop_before = before
+                    # Imported : shown at once under the buttons, kept by Validate
+                    self.backdrop = imported or self.backdrop
                     self.mode = 'backdrop'
                 if choice == 'arrange' and self.items:
                     # The zone : first the one of all the buttons, then changed by the user
@@ -533,7 +544,8 @@ class Editor:
                      {'id': 'arrange', 'action': 'arrange', 'text': 'editor-arrange', 'shortcut': 'F4'},
                      {'id': 'snap', 'action': 'snap', 'text': snap, 'shortcut': 'F5'},
                      {'id': 'background', 'action': 'background', 'shortcut': 'F6',
-                      'text': f"{self.translate('editor-background')} : {self.backdrop_name(self.backdrop)}"}]
+                      'text': f"{self.translate('editor-background')} : {self.backdrop_name(self.backdrop)}"},
+                     {'id': 'import', 'action': 'import', 'text': 'editor-import', 'shortcut': 'F7'}]
             back = {'id': 'back', 'action': 'back', 'text': 'editor-continue', 'footer': 'left', 'shortcut': 'escape'}
             title = f"{self.translate('editor-title')} : {self.translate(dict(SCREENS)[self.name])}"
             choice = self.screen.run_menu('editor_menu', items + [back], items + [back], title=title,
@@ -577,6 +589,75 @@ class Editor:
         if self.backdrop not in choices:
             choices.insert(1, self.backdrop)
         return choices
+
+    def import_places(self):
+        '''
+        Where an image is looked for first : the USB keys, the home, the whole card
+        '''
+        places = []
+        for base in MOUNTS:
+            for root, folders, _files in os.walk(base):
+                if root.count(os.sep) - base.count(os.sep) >= 2:
+                    folders.clear()
+                if os.path.ismount(root) and root != base:
+                    places.append((f'd:{root}', f"{self.translate('editor-import-usb')} : {os.path.basename(root)}"))
+        places.append((f"d:{os.path.expanduser('~')}", self.translate('editor-import-home')))
+        places.append(('d:/', self.translate('editor-import-root')))
+        return places
+
+    def import_backdrop(self):
+        '''
+        An image of the Raspberry (a USB key...) chosen folder by folder (Back : the folder
+        above), copied in ~/.raspydarts/images/menus : its background, None if none chosen
+        '''
+        screen = self.screen
+        folder = None
+        while True:
+            if folder is None:
+                values = self.import_places()
+            else:
+                try:
+                    entries = sorted((entry for entry in os.scandir(folder) if not entry.name.startswith('.')),
+                                     key=lambda entry: entry.name.lower())
+                except OSError:
+                    entries = []
+                values = [('up', self.translate('editor-import-up'))]
+                values += [(f'd:{entry.path}', f'{entry.name}/') for entry in entries if entry.is_dir()]
+                values += [(f'f:{entry.path}', entry.name) for entry in entries
+                           if entry.is_file() and entry.name.lower().endswith(IMAGES)]
+            chosen = screen.dropdown(screen.res['x'] * 4 / 16, 2 * screen.res_y_16, values, width=screen.res['x'] / 2)
+            if chosen in ('escape', 'up'):
+                if folder is None:
+                    return None
+                parent = os.path.dirname(folder.rstrip(os.sep))
+                folder = None if folder == os.sep or not parent else parent
+                continue
+            if chosen.startswith('d:'):
+                folder = chosen[2:]
+                continue
+            return self.imported(chosen[2:])
+
+    def imported(self, path):
+        '''
+        The image copied with the others (a name already taken by another image : numbered)
+        '''
+        try:
+            pygame.image.load(path)
+            target_dir = os.path.join(cpaths.user_dir(), IMPORTED)
+            os.makedirs(target_dir, exist_ok=True)
+            stem, extension = os.path.splitext(os.path.basename(path))
+            name, number = f'{stem}{extension}', 1
+            while os.path.exists(os.path.join(target_dir, name)) and \
+                    not filecmp.cmp(path, os.path.join(target_dir, name), shallow=False):
+                number += 1
+                name = f'{stem}_{number}{extension}'
+            shutil.copyfile(path, os.path.join(target_dir, name))
+        except Exception as error:    # pylint: disable=broad-except
+            self.screen.logs.error(f"Menus : image {path} not imported ({error})")
+            self.screen.message([self.translate('editor-import-failed')], 2500, 'menu-ko', 'middle', 'big')
+            return None
+        self.screen.logs.info(f"Menus : image {path} imported as {name}")
+        return {'image': f"{IMPORTED.replace(os.sep, '/')}/{name}", 'fit': 'cover'}
 
     def forget_backdrop(self, block):
         '''
@@ -1155,12 +1236,30 @@ def screens_menu(screen, keys):
     editor : they no longer open it again), until Back
     '''
     back = {'id': 'back', 'action': 'back', 'text': 'back', 'footer': 'left', 'shortcut': 'escape'}
-    items = [{'id': name, 'action': name, 'text': text, 'shortcut': f'F{number}'}
-             for number, (name, text) in enumerate(SCREENS, 1)]
+    translate = screen.lang.translate
     choice = None
     while True:
+        globals_ = screen.config.config['SectionGlobals']
+        items = [{'id': name, 'action': name, 'text': text, 'shortcut': f'F{number}'}
+                 for number, (name, text) in enumerate(SCREENS, 1)]
+        items += [{'id': 'theme', 'action': 'theme', 'shortcut': f'F{len(items) + 1}',
+                   'text': f"{translate('colorset')} : {globals_.get('colorset')}"},
+                  {'id': 'font', 'action': 'font', 'shortcut': f'F{len(items) + 2}',
+                   'text': f"{translate('font')} : {str(globals_.get('font') or '').replace('.ttf', '')}"}]
         choice = screen.run_menu('edit_screens', items + [back], items + [back],
-                                 title=screen.lang.translate('edit-screens'), initial=choice).get('id')
+                                 title=translate('edit-screens'), initial=choice).get('id')
+        if choice == 'theme':
+            chosen = screen.dropdown(screen.res['x'] * 6 / 16, 3 * screen.res_y_16, screen.theme_choices(),
+                                     navigate=globals_.get('colorset'))
+            if chosen != 'escape':
+                screen.apply_look(theme=chosen)
+            continue
+        if choice == 'font':
+            chosen = screen.dropdown(screen.res['x'] * 6 / 16, 3 * screen.res_y_16, screen.font_choices(),
+                                     special='font', navigate=globals_.get('font'))
+            if chosen != 'escape':
+                screen.apply_look(font=chosen)
+            continue
         if choice not in dict(SCREENS):
             return
         Editor(screen, choice, keys).run()

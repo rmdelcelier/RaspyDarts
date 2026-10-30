@@ -968,6 +968,24 @@ msgstr "Der des Themas"
 msgid "editor-help-background"
 msgstr "Pfeile oder links / rechts tippen: vorheriger / nächster Hintergrund · Bestätigen oder Menü: behalten · Zurück: abbrechen"
 
+msgid "editor-import"
+msgstr "Hintergrund importieren"
+
+msgid "editor-import-usb"
+msgstr "USB-Stick"
+
+msgid "editor-import-home"
+msgstr "Persönlicher Ordner"
+
+msgid "editor-import-root"
+msgstr "Ganze Karte"
+
+msgid "editor-import-up"
+msgstr "Übergeordneter Ordner"
+
+msgid "editor-import-failed"
+msgstr "Bild nicht importiert"
+
 msgid "category-classic"
 msgstr "Klassiker"
 
