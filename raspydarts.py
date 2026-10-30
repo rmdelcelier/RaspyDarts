@@ -1157,7 +1157,8 @@ try:
                         display.wait_event_time = int(Config.get_value('SectionGlobals', 'waitevent_time'))
                         display.file_class.reset_theme(Config.get_value('SectionGlobals', 'colorset'))
                         display.init_colorset()
-                        #display.define_constants(True, Font=cust['font'])
+                        # The font chosen, over the one of the theme (as at the start), at once
+                        display.apply_font(config_globals['font'])
 
                 elif menu == 'animations':
                     # LEDS ANIMATIONS

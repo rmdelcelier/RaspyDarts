@@ -3195,6 +3195,24 @@ msgstr "Snapping"
 msgid "editor-help-zone"
 msgstr "Area of the buttons · Arrows: move the handle (step {step}) · Validate: next handle · + / -: step · Mouse: drag the area or its handles · Back or Menu: arrange"
 
+msgid "editor-background"
+msgstr "Background"
+
+msgid "editor-background-theme"
+msgstr "The theme's one"
+
+msgid "editor-help-background"
+msgstr "Arrows or touch left / right: previous / next background · Validate or Menu: keep · Back: cancel"
+
+msgid "category-classic"
+msgstr "Classics"
+
+msgid "category-fun"
+msgstr "Fun"
+
+msgid "category-sport"
+msgstr "Sports"
+
 msgid "editor-shape"
 msgstr "Shape"
 

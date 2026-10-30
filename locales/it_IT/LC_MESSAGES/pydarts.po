@@ -3649,6 +3649,24 @@ msgstr "Aggancio magnetico"
 msgid "editor-help-zone"
 msgstr "Zona dei pulsanti · Frecce: sposta la maniglia (passo {step}) · Conferma: maniglia successiva · + / -: passo · Mouse: trascina la zona o le sue maniglie · Indietro o Menu: disponi"
 
+msgid "editor-background"
+msgstr "Sfondo"
+
+msgid "editor-background-theme"
+msgstr "Quello del tema"
+
+msgid "editor-help-background"
+msgstr "Frecce o tocco a sinistra / destra: sfondo precedente / successivo · Conferma o Menu: tieni · Indietro: annulla"
+
+msgid "category-classic"
+msgstr "Classici"
+
+msgid "category-fun"
+msgstr "Divertenti"
+
+msgid "category-sport"
+msgstr "Sport"
+
 msgid "editor-shape"
 msgstr "Forma"
 

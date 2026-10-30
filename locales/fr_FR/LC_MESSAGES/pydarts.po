@@ -4283,6 +4283,24 @@ msgstr "Aimantation"
 msgid "editor-help-zone"
 msgstr "Zone des boutons · Flèches : déplacer la poignée (pas {step}) · Valider : poignée suivante · + / - : pas · Souris : glisser la zone ou ses poignées · Retour ou Menu : disposer"
 
+msgid "editor-background"
+msgstr "Fond d'écran"
+
+msgid "editor-background-theme"
+msgstr "Celui du thème"
+
+msgid "editor-help-background"
+msgstr "Flèches ou toucher à gauche / à droite : fond précédent / suivant · Valider ou Menu : garder · Retour : annuler"
+
+msgid "category-classic"
+msgstr "Classiques"
+
+msgid "category-fun"
+msgstr "Fun"
+
+msgid "category-sport"
+msgstr "Sports"
+
 msgid "editor-shape"
 msgstr "Forme"
 

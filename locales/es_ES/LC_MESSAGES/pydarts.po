@@ -965,6 +965,24 @@ msgstr "Imantado"
 msgid "editor-help-zone"
 msgstr "Zona de los botones · Flechas: mover el tirador (paso {step}) · Validar: tirador siguiente · + / -: paso · Ratón: arrastrar la zona o sus tiradores · Volver o Menú: disponer"
 
+msgid "editor-background"
+msgstr "Fondo de pantalla"
+
+msgid "editor-background-theme"
+msgstr "El del tema"
+
+msgid "editor-help-background"
+msgstr "Flechas o tocar a la izquierda / derecha: fondo anterior / siguiente · Validar o Menú: conservar · Volver: cancelar"
+
+msgid "category-classic"
+msgstr "Clásicos"
+
+msgid "category-fun"
+msgstr "Divertidos"
+
+msgid "category-sport"
+msgstr "Deportes"
+
 msgid "editor-shape"
 msgstr "Forma"
 

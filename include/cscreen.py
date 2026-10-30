@@ -3724,11 +3724,11 @@ class Screen(pygame.Surface):
             self.menu_header('favorites-games')
 
             #Tabs
-            click_zones['F-2'] = self.display_button(-2 == selected, 'Classics', special='tab1')
+            click_zones['F-2'] = self.display_button(-2 == selected, 'category-classic', special='tab1')
             shortcuts.append(f'F-2')
-            click_zones['F-1'] = self.display_button(-1 == selected, 'Fun', special='tab2')
+            click_zones['F-1'] = self.display_button(-1 == selected, 'category-fun', special='tab2')
             shortcuts.append(f'F-1')
-            click_zones['F0'] = self.display_button(0 == selected, 'Sports', special='tab3')
+            click_zones['F0'] = self.display_button(0 == selected, 'category-sport', special='tab3')
             shortcuts.append(f'F0')
 
             for game in game_list:
@@ -8895,26 +8895,36 @@ class Screen(pygame.Surface):
 
     def coins_games(self, settings, prices):
         '''
-        Prices by game : the price of its type, or one of its own (free, 1, 2...)
+        Prices by game : the price of its type, or one of its own (free, 1, 2...). The games of a
+        type in a tab (as Classics / Fun / Sports of the favorites), in two columns of the same
+        height
         '''
         translate = self.lang.translate
         games_dir = os.path.join(cpaths.ROOT_DIR, 'games')
-        names = sorted(name[:-3] for category in ('classic', 'fun', 'sport')
-                       for name in (os.listdir(os.path.join(games_dir, category)) if os.path.isdir(os.path.join(games_dir, category)) else [])
-                       if name.endswith('.py') and not name.startswith('_'))
+        categories = []
+        for category in ('classic', 'fun', 'sport'):
+            folder = os.path.join(games_dir, category)
+            categories.append(sorted(name[:-3] for name in (os.listdir(folder) if os.path.isdir(folder) else [])
+                                     if name.endswith('.py') and not name.startswith('_')))
+        tabs = (('category-classic', 'tab1'), ('category-fun', 'tab2'), ('category-sport', 'tab3'))
         own = settings.setdefault('games', {})
+        # The tabs are -2, -1 and 0 (the type shown : the tab where the selection went last)
+        tab = -2
         selected = 1
         values = [('type', 'coins-price-type')] + prices
         while True:
+            names = categories[tab + 2]
             nb_elements = len(names)
             self.display_background()
-            self.menu_header(translate('coins-price-games'), translate('coins-price-games-sub'))
+            # No subtitle : the tabs are under the title (Prix du type says where a price comes from)
+            self.menu_header(translate('coins-price-games'))
             click_zones = {}
+            for number, (text, special) in enumerate(tabs, -2):
+                click_zones[f'F{number}'] = self.display_button(number == selected, text, special=special)
             half = (nb_elements + 1) // 2
             for index, name in enumerate(names, 1):
                 column = (0, half, index) if index <= half else (1, half, index - half)
-                value = translate('coins-price-type') if name not in own else \
-                    (translate('coins-free') if int(own[name]) == 0 else str(own[name]))
+                value = translate('coins-price-type') if name not in own else                     (translate('coins-free') if int(own[name]) == 0 else str(own[name]))
                 click_zones[f'F{index}'] = self.menu_item((index, nb_elements, selected), ('', name.replace('_', ' '), BTN_DROPDOWN, value),
                                                           align='Full', tabs=True, column=column)
             click_zones['escape'] = self.display_button(selected == nb_elements + 1, 'back', special='escape')
@@ -8924,12 +8934,17 @@ class Screen(pygame.Surface):
             clicked = self.is_clicked(click_zones, key)
             if clicked:
                 key = clicked
-            if key in [f'F{index}' for index in range(1, nb_elements + 1)]:
+            if key in [f'F{index}' for index in range(-2, nb_elements + 1)]:
                 selected = int(key[1:])
-                key = 'enter'
-            selected = self.navigate(selected, key, nb_elements, 1, 1, left_right=True)
+                key = 'enter' if selected > 0 else None
+            else:
+                selected = self.navigate(selected, key, nb_elements, 1, 1, left_right=True, zero=-2, tab=tab)
             if key in ESCAPE_KEYS or (key in ENTER_KEYS and selected == nb_elements + 1):
                 return
+            if selected <= 0:
+                # On a tab : its games shown at once (as the tabs of the customization)
+                tab = selected
+                continue
             if key in ENTER_KEYS and 1 <= selected <= nb_elements:
                 name = names[selected - 1]
                 chosen = self.dropdown(self.res['x'] * 6 / 16, 3 * self.res_y_16, values,
@@ -11210,6 +11225,19 @@ class Screen(pygame.Surface):
             self.blit_screen(scaled_image, (pos_x, pos_y), area=rect)
 
         return (scaled_width, scaled_height)
+
+    def apply_font(self, font):
+        '''
+        The font of the game (Personnalisation du jeu > Général > Police) used at once on every
+        screen : after the font of the theme (init_colorset), as at the start ; the menus drawn
+        with the former one forgotten (kept drawn, they kept it until a game)
+        '''
+        self.define_constants(Font=font)
+        self.menu_backgrounds.clear()
+        self.menu_composites.clear()
+        # The drawer of the styled menus keeps its buttons drawn too
+        self.painter = None
+        self.logs.info(f"Font of the game : {self.defaultfontpath}")
 
     def define_constants(self, nb_players=None, Font=None):
         '''

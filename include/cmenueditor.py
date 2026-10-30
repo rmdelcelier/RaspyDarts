@@ -19,6 +19,7 @@ import time
 import pygame
 
 from include import cmenus
+from include import cpaths
 from include import cmenustyle
 
 try:
@@ -57,6 +58,10 @@ SHAPES = ('rectangle', 'rounded', 'pill')
 # The version (V4.6) of the menus which show it : an element placed as the buttons, kept in
 # show_version of the menu (not in its buttons)
 VERSION_ID = '__version__'
+# Images a menu can have as background : in these folders of the theme and of ~/.raspydarts,
+# and those of the game named background...
+BACKGROUND_FOLDERS = (os.path.join('images', 'background'), os.path.join('images', 'menus'))
+IMAGES = ('.png', '.jpg', '.jpeg')
 # Buttons arranged in a zone : the spaces between them (parts of the screen), the zone drawn
 GAPS = (0, 0.005, 0.01, 0.02, 0.03, 0.05)
 FIRST_GAP = 2
@@ -102,6 +107,11 @@ class Editor:
             self.items.append({'button': {'id': VERSION_ID, 'version': True},
                                'rect': screen.menu_version_rect(self.version_shown)})
         self.selected = 1
+        # Its background : the one of the files (None : the one of the theme), and the one
+        # given back by Back while they are browsed
+        self.backdrop = self.menu.get('background')
+        self.backdrop_before = None
+        self.backdrops = []
 
     @staticmethod
     def clean(button):
@@ -127,7 +137,7 @@ class Editor:
         The background of the menu (its own image, or the one of the theme) and its title
         '''
         screen = self.screen
-        block = self.menu.get('background')
+        block = self.backdrop
         # On black : a background with transparency let the screen before show through
         screen.screen.fill((0, 0, 0))
         if block is not None:
@@ -150,6 +160,9 @@ class Editor:
         return 1 if step == 0 else max(1, int(round(step * self.size[0 if axis == 'x' else 1])))
 
     def help_text(self):
+        if self.mode == 'backdrop':
+            number = self.backdrops.index(self.backdrop) + 1 if self.backdrop in self.backdrops else 1
+            return f"{self.translate(dict(SCREENS)[self.name])} · {self.backdrop_name(self.backdrop)} "                 f"({number}/{len(self.backdrops)}) · {self.translate('editor-help-background')}"
         key = {'move': 'editor-help-move', 'resize': 'editor-help-resize', 'zone': 'editor-help-zone'}.get(
             self.mode, 'editor-help-select')
         return f"{self.translate(dict(SCREENS)[self.name])} · {self.translate(key).replace('{step}', self.step_text())}"
@@ -227,7 +240,7 @@ class Editor:
             screen.screen.blit(veil, self.zone.topleft)
             pygame.draw.rect(screen.screen, MOVING, self.zone, 4)
             self.draw_handles(self.zone)
-        elif 1 <= self.selected <= len(self.items):
+        elif 1 <= self.selected <= len(self.items) and self.mode != 'backdrop':
             rect = self.items[self.selected - 1]['rect']
             # The button chosen framed : green, gold while it is moved or resized
             color = screen.colorset['menu-ok'] if self.mode == 'select' else MOVING
@@ -366,6 +379,9 @@ class Editor:
         while True:
             self.draw()
             key = self.listen()
+            if self.mode == 'backdrop':
+                self.backdrop_key(key)
+                continue
             if isinstance(key, tuple):
                 choice = self.clicked(key)
                 if choice is not None:
@@ -395,6 +411,10 @@ class Editor:
                     return False
                 if choice == 'add':
                     self.add()
+                if choice == 'background':
+                    self.backdrops = self.backdrop_choices()
+                    self.backdrop_before = self.backdrop
+                    self.mode = 'backdrop'
                 if choice == 'arrange' and self.items:
                     # The zone : first the one of all the buttons, then changed by the user
                     self.zone = self.items[0]['rect'].unionall([item['rect'] for item in self.items[1:]])
@@ -511,7 +531,9 @@ class Editor:
                      {'id': 'save', 'action': 'save', 'text': 'editor-save-quit', 'shortcut': 'F2'},
                      {'id': 'quit', 'action': 'quit', 'text': 'editor-quit', 'shortcut': 'F3'},
                      {'id': 'arrange', 'action': 'arrange', 'text': 'editor-arrange', 'shortcut': 'F4'},
-                     {'id': 'snap', 'action': 'snap', 'text': snap, 'shortcut': 'F5'}]
+                     {'id': 'snap', 'action': 'snap', 'text': snap, 'shortcut': 'F5'},
+                     {'id': 'background', 'action': 'background', 'shortcut': 'F6',
+                      'text': f"{self.translate('editor-background')} : {self.backdrop_name(self.backdrop)}"}]
             back = {'id': 'back', 'action': 'back', 'text': 'editor-continue', 'footer': 'left', 'shortcut': 'escape'}
             title = f"{self.translate('editor-title')} : {self.translate(dict(SCREENS)[self.name])}"
             choice = self.screen.run_menu('editor_menu', items + [back], items + [back], title=title,
@@ -520,6 +542,82 @@ class Editor:
                 return choice
             self.snap = not self.snap
             initial = 'snap'
+
+    # ------------------------------------------------------------------ background
+    def backdrop_name(self, block):
+        if block is None:
+            return self.translate('editor-background-theme')
+        # Its folder kept (background.png of the theme and of the game) : images/ left out
+        name = str(block.get('image') or block.get('color') or '') if isinstance(block, dict) else str(block)
+        return name[7:] if name.startswith('images/') else name
+
+    def backdrop_choices(self):
+        '''
+        The backgrounds offered : the one of the theme, then the images of the folders of the
+        theme, of ~/.raspydarts and of the game (written as the menus find them : from the
+        folder of the theme, of ~/.raspydarts or of the game) ; the one of the menu kept first
+        if it is none of them
+        '''
+        theme_dir = getattr(self.screen.file_class, 'theme_dir', None)
+        places = []
+        if theme_dir:
+            places += [(theme_dir, folder, '') for folder in BACKGROUND_FOLDERS]
+        places += [(cpaths.user_dir(), folder, '') for folder in BACKGROUND_FOLDERS]
+        places.append((cpaths.ROOT_DIR, 'images', 'background'))
+        choices = [None]
+        for base, folder, start in places:
+            path = os.path.join(base, folder)
+            if not os.path.isdir(path):
+                continue
+            for name in sorted(os.listdir(path), key=str.lower):
+                if name.lower().endswith(IMAGES) and name.lower().startswith(start):
+                    block = {'image': f'{folder}/{name}'.replace(os.sep, '/'), 'fit': 'cover'}
+                    if block not in choices:
+                        choices.append(block)
+        if self.backdrop not in choices:
+            choices.insert(1, self.backdrop)
+        return choices
+
+    def forget_backdrop(self, block):
+        '''
+        The drawings of a background left while they are browsed forgotten : a full screen
+        image is 8 MB in 1920 x 1080, the painter keeps 128 of them (a Pi 3 has 1 GB)
+        '''
+        if not isinstance(block, dict) or not block.get('image') or block == self.backdrop_before:
+            return
+        painter = self.screen.menu_painter()
+        image = block['image']
+        for cache in (painter.backgrounds, painter.fills):
+            for key in [key for key in cache if image in str(key[0])]:
+                cache.pop(key, None)
+        painter.images.pop(painter.image_path(image), None)
+
+    def backdrop_key(self, key):
+        '''
+        The backgrounds browsed under the buttons : right and left (or a touch on the right
+        or the left of the screen) the next one or the one before, Enter (or Menu) kept, Back
+        the one before given back
+        '''
+        step = 0
+        if isinstance(key, tuple):
+            if self.menu_rect.collidepoint(key):
+                key = 'menu'
+            else:
+                step = 1 if key[0] >= self.size[0] / 2 else -1
+        direction = self.direction_of(key)
+        if direction is not None:
+            step = 1 if direction in ('right', 'down') else -1
+        if step:
+            index = self.backdrops.index(self.backdrop) if self.backdrop in self.backdrops else 0
+            self.forget_backdrop(self.backdrop)
+            self.backdrop = self.backdrops[(index + step) % len(self.backdrops)]
+        elif self.key_in(key, 'validate') or key == 'menu':
+            self.changed = self.changed or self.backdrop != self.backdrop_before
+            self.mode = 'select'
+        elif self.key_in(key, 'back'):
+            self.forget_backdrop(self.backdrop)
+            self.backdrop = self.backdrop_before
+            self.mode = 'select'
 
     def give_up(self):
         '''
@@ -1020,6 +1118,12 @@ class Editor:
                 at += 1
             menu['buttons'] = buttons
             menu.pop('button_changes', None)
+            if self.backdrop != self.menu.get('background'):
+                # Its background : its own image, or none (the one of the theme)
+                if self.backdrop is None:
+                    menu.pop('background', None)
+                else:
+                    menu['background'] = self.backdrop
             removed = [str(ident) for ident in cmenus.as_list(menu.get('removed'))]
             menu['removed'] = sorted(set(removed + self.removed)) if set(removed + self.removed) else None
             if menu['removed'] is None:

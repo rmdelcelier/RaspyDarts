@@ -959,6 +959,24 @@ msgstr "Magnetisches Ausrichten"
 msgid "editor-help-zone"
 msgstr "Bereich der Schaltflächen · Pfeile: Griff verschieben (Schritt {step}) · Bestätigen: nächster Griff · + / -: Schritt · Maus: Bereich oder Griffe ziehen · Zurück oder Menü: anordnen"
 
+msgid "editor-background"
+msgstr "Hintergrund"
+
+msgid "editor-background-theme"
+msgstr "Der des Themas"
+
+msgid "editor-help-background"
+msgstr "Pfeile oder links / rechts tippen: vorheriger / nächster Hintergrund · Bestätigen oder Menü: behalten · Zurück: abbrechen"
+
+msgid "category-classic"
+msgstr "Klassiker"
+
+msgid "category-fun"
+msgstr "Fun"
+
+msgid "category-sport"
+msgstr "Sport"
+
 msgid "editor-shape"
 msgstr "Form"
 
