@@ -1591,7 +1591,7 @@ try:
             intro_done = False
             played_video = None
             played_sound = None
-            cupdate.send_infos(logs, Game, players_count, game_options, Config.rpi_version, Config.rpi_serial, "start", competition_mode, play_id, version=version)
+            cupdate.send_infos(logs, Game, players_count, game_options, Config.rpi_version, "start", competition_mode, play_id, version, set_number=Set + 1, network=game_type in ('netjoin', 'netcreate'))
 
         else:
             match_done = True
@@ -1954,7 +1954,7 @@ try:
                         set_done = True
                         interrupted = True
                         last_game_screen = None
-                        cupdate.send_infos(logs, Game, players_count, game_options, Config.rpi_version, Config.rpi_serial, "canceled", competition_mode, play_id, version=version)
+                        cupdate.send_infos(logs, Game, players_count, game_options, Config.rpi_version, "canceled", competition_mode, play_id, version, set_number=Set + 1, network=game_type in ('netjoin', 'netcreate'))
                         continue
 
                     # CANCEL button ppressed : back to 1st dart of same player
@@ -2428,9 +2428,9 @@ try:
                         actual_round += 1
 
                 elif not interrupted:
-                    cupdate.send_infos(logs, Game, players_count, game_options, Config.rpi_version, Config.rpi_serial, "finished", competition_mode, play_id, version=version)
+                    cupdate.send_infos(logs, Game, players_count, game_options, Config.rpi_version, "finished", competition_mode, play_id, version, set_number=Set + 1, network=game_type in ('netjoin', 'netcreate'))
                 else:
-                    cupdate.send_infos(logs, Game, players_count, game_options, Config.rpi_version, Config.rpi_serial, "interrupt", competition_mode, play_id, version=version)
+                    cupdate.send_infos(logs, Game, players_count, game_options, Config.rpi_version, "interrupted", competition_mode, play_id, version, set_number=Set + 1, network=game_type in ('netjoin', 'netcreate'))
                     last_game_screen = None
 
             # Set Done

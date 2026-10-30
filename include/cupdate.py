@@ -11,9 +11,12 @@ import zlib
 import shutil
 import filecmp
 import tarfile
+import json
+import hashlib
 import requests
 
 from threading import Thread
+from datetime import datetime
 
 from include import cpaths
 
@@ -293,35 +296,95 @@ def apply_update(logs, update):
 
     return get_version(logs)
 
-def send_infos(logs, game, nb_players, options, rpi_version, rpi_serial, action, competition_mode, play_id, version):
+# Statistics of the games : the server of raspyhub (contract : README of the project
+# « Raspy2DMD Serveur Télémétrie », section Statistiques RaspyDarts). The second address, in http,
+# only after a failure of the network (the clock not set yet at boot : the certificate refused)
+STATS_URLS = ('https://raspystats.raspyhub.fr/api/v1/raspydarts/plays',
+              'http://raspystats.raspyhub.fr/api/v1/raspydarts/plays')
+STATS_API_KEY = 'raspydarts_stats_2026'
+STATS_TIMEOUT = 5
+# The same identifier as Raspy2DMD (its recipe exactly) : a borne with both is one installation
+MACHINE_ID_SALT = 'raspy2dmd_telemetry_salt_v1'
+_machine_id = None
+
+
+def machine_id():
     '''
-    Statistics of a game, sent in the background : the game never waits for the network.
+    Identifier of the Raspberry : the serial of /proc/cpuinfo hashed (never sent as it is),
+    as Raspy2DMD computes it. '' if unknown
+    '''
+    global _machine_id
+    if _machine_id is None:
+        _machine_id = ''
+        try:
+            with open('/proc/cpuinfo', encoding='utf-8') as file:
+                found = re.search(r'Serial\s*:\s*([0-9a-fA-F]+)', file.read())
+            if found:
+                combined = f"{MACHINE_ID_SALT}:{found.group(1).strip()}:{MACHINE_ID_SALT}"
+                _machine_id = hashlib.sha256(combined.encode()).hexdigest()[:16]
+        except OSError:
+            pass
+    return _machine_id
+
+
+def stats_options(options):
+    '''
+    The options of a game as the server takes them : a flat object of texts, numbers and
+    booleans, 4 KB at most (the last ones left out beyond)
+    '''
+    flat = {}
+    for key, value in (options or {}).items():
+        if not isinstance(value, (str, int, float, bool)) or value is None:
+            value = str(value)
+        flat[str(key)] = value
+        if len(json.dumps(flat)) > 4000:
+            del flat[str(key)]
+            break
+    return flat
+
+
+def send_infos(logs, game, nb_players, options, rpi_model, event, competition_mode, play_id, version,
+               set_number=1, network=False):
+    '''
+    Statistics of a game (event : start, finished at the end of a set, canceled, interrupted),
+    sent in the background : the game never waits for the network.
     (A test of the connection made when this module was imported held the start of the
     game up to 10 s at boot, the Wi-Fi not being connected yet : the desktop was seen
     after the intro)
     '''
-    if competition_mode:
-        mode = 'competition'
-    else:
-        mode = 'loisir'
+    data = {'machine_id': machine_id(),
+            'play_id': str(play_id),
+            'event': event,
+            'set': max(1, min(99, int(set_number))),
+            'game': str(game)[:40],
+            'game_type': 'network' if network else 'local',
+            'nb_players': max(1, min(12, int(nb_players))),
+            'play_mode': 'competition' if competition_mode else 'loisir',
+            'options': stats_options(options),
+            'version': str(version)[:40],
+            'rpi_model': str(rpi_model)[:60],
+            'sent_at': datetime.now().astimezone().isoformat(timespec='seconds')}
+    Thread(target=post_infos, args=(logs, data), daemon=True).start()
 
-    data_1 = {"game": f"{game}", "nb_players":nb_players, "options": f"{options}", \
-            "rpi_version": f"{rpi_version}", "rpi_serial": f"{rpi_serial}", "action": f"{action}", \
-            "play_id": f"{play_id}", "play_mode": f"{mode}", "version": f"{version}"}
-    Thread(target=post_infos, args=(logs, data_1), daemon=True).start()
 
-def post_infos(logs, data_1):
+def post_infos(logs, data):
     '''
-    Send the statistics of a game (see send_infos)
+    Send the statistics of a game (see send_infos). An answer of the server, whatever it is,
+    ends the sending ; a failure of the network only goes on with the next address
     '''
-    url= 'http://raspydarts.fr:8080/api/plays'
-
-    headers = {"Content-Type": "application/json", "accept": "*/*"}
-
-    try:
-        res = requests.post(url, json=data_1, headers=headers, timeout=(1,1))
-        response_code = res.status_code
-        logs.debug(f"Response code is {response_code}")
-    except Exception as exception:
-        logs.error(f"Unable to reach {url}")
-        logs.error(f"Exception is {exception}")
+    headers = {'Content-Type': 'application/json; charset=utf-8', 'X-API-Key': STATS_API_KEY}
+    if not data['machine_id']:
+        logs.debug("Statistics not sent : no serial number")
+        return
+    for url in STATS_URLS:
+        try:
+            res = requests.post(url, json=data, headers=headers, timeout=STATS_TIMEOUT)
+        except requests.exceptions.RequestException as exception:
+            logs.debug(f"Statistics : {url} unreachable ({exception})")
+            continue
+        if res.status_code == 200:
+            logs.debug(f"Statistics sent ({data['event']}, {url})")
+        else:
+            logs.warning(f"Statistics refused by {url} : {res.status_code} {res.text[:200]}")
+        return
+    logs.debug("Statistics not sent : server unreachable")
