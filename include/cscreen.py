@@ -7150,6 +7150,17 @@ class Screen(pygame.Surface):
             text = text.get(language) or text.get('en') or next(iter(text.values()), '')
         return str(text)
 
+    def styled_text(self, button):
+        '''
+        Text of a button drawn by the files : a setting has only one part there, its value with it
+        '''
+        text = self.lang.translate(self.button_text(button))
+        if 'value' not in button:
+            return text
+        value = button['value']
+        value = 'yes' if value is True else 'no' if value is False else str(value)
+        return f"{text} : {self.lang.translate(value)}"
+
     @staticmethod
     def button_label(button, menu=None):
         '''
@@ -7426,6 +7437,9 @@ class Screen(pygame.Surface):
         with_details = any(button.get('details') for button in listed)
         details_area = None
         details_shown = None
+        # A setting (a button with a value) : the line in two parts, as in the pages of settings,
+        # all the lines of the menu as wide
+        with_values = any('value' in button for button in listed)
 
         def look(index):
             # Selected or not (with 10 buttons or more, the corners of the neighbours change)
@@ -7443,9 +7457,14 @@ class Screen(pygame.Surface):
                                               limit_height=self.res['y'] / 3, menu=True)
             else:
                 # More than 8 buttons go up : under a subtitle, one line lower (tabs)
+                kind, value = BTN_CHOICE, None
+                if 'value' in button:
+                    kind = BTN_CHECK if isinstance(button['value'], bool) else BTN_DROPDOWN
+                    value = button['value'] if kind == BTN_CHECK else self.lang.translate(str(button['value']))
                 rects[index] = self.menu_item((index, nb_listed, selected), (self.button_label(button, menu), self.button_text(button),
-                                              BTN_CHOICE, None), space=spaces[index - 1], exit=False,
-                                              valid=not button.get('unavailable'), tabs=bool(subtitle) and nb_listed > 8)
+                                              kind, value), space=spaces[index - 1], exit=False,
+                                              valid=not button.get('unavailable'), tabs=bool(subtitle) and nb_listed > 8,
+                                              align='Full' if with_values else None)
             drawn[index] = look(index)
 
         while True:
@@ -7796,7 +7815,7 @@ class Screen(pygame.Surface):
             patch = pristine.subsurface(target).copy()
             painter.draw_button(patch, rect.move(-target.x, -target.y), styles[index - 1],
                                 '' if button.get('text', True) is None or ('text' not in button and button.get('logo')) else
-                                self.lang.translate(self.button_text(button)),
+                                self.styled_text(button),
                                 self.button_icon(button), look, units,
                                 shortcut=self.button_label(button, menu) if shortcuts.get('show') else None, shortcuts=shortcuts)
             return patch
@@ -8583,9 +8602,17 @@ class Screen(pygame.Surface):
             click_zones['escape'] = self.display_button(selected == (3, 0), 'back', special='escape')
             return click_zones
 
-        def cell(rect, text, color, text_color, zone):
+        def cell(rect, text, color, text_color, zone, value=None):
             self.new_blit_rect2(pygame.Rect(rect), color, corners='All', border_radius=int(rect[3] / 4))
-            self.blit_text(text, rect[0], rect[1], rect[2], rect[3], text_color)
+            if value is None:
+                self.blit_text(text, rect[0], rect[1], rect[2], rect[3], text_color)
+            else:
+                # A setting : in two parts, its value first, as in the pages of settings
+                part = rect[2] * 0.25
+                self.new_blit_rect2(pygame.Rect(rect[0], rect[1], part, rect[3]), self.colorset['menu-alternate'],
+                                    corners='All', border_radius=int(rect[3] / 4))
+                self.blit_text(value, rect[0], rect[1], part, rect[3], text_color)
+                self.blit_text(text, rect[0] + part, rect[1], rect[2] - part, rect[3], text_color)
             if zone:
                 click_zones[zone] = tuple(int(value) for value in rect)
 
@@ -8596,14 +8623,14 @@ class Screen(pygame.Surface):
 
         # Line of the pad
         translate = self.lang.translate
-        texts = [f"{translate('usb-pads-pad')} {plugged.index(port) + 1}/{len(plugged)} (USB {port})",
-                 f"{translate('usb-pads-keys')} : {pad['keys']}",
-                 f"{translate('usb-pads-knobs')} : {pad['knobs']}",
-                 translate('usb-pads-program')]
+        texts = [(f"{translate('usb-pads-pad')} {plugged.index(port) + 1}/{len(plugged)} (USB {port})", None),
+                 (translate('usb-pads-keys'), str(pad['keys'])),
+                 (translate('usb-pads-knobs'), str(pad['knobs'])),
+                 (translate('usb-pads-program'), None)]
         width = (14 * unit_x - 3 * gap) / 4
-        for index, text in enumerate(texts):
+        for index, (text, value) in enumerate(texts):
             cell((unit_x + index * (width + gap), 3 * unit_y, width, unit_y), text, *colors(selected == (0, index)),
-                 f'cell:0:{index}')
+                 f'cell:0:{index}', value)
         if status is not None:
             self.blit_text(translate(status[0]), unit_x, 4.1 * unit_y, 14 * unit_x, 0.8 * unit_y, status[1])
 

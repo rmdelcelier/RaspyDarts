@@ -529,14 +529,13 @@ class Editor:
         # left without saving)
         initial = 'save' if self.changed else 'quit'
         while True:
-            snap = f"{self.translate('editor-snap')} : {self.translate('yes' if self.snap else 'no')}"
             items = [{'id': 'add', 'action': 'add', 'text': 'editor-add-title', 'shortcut': 'F1'},
                      {'id': 'save', 'action': 'save', 'text': 'editor-save-quit', 'shortcut': 'F2'},
                      {'id': 'quit', 'action': 'quit', 'text': 'editor-quit', 'shortcut': 'F3'},
                      {'id': 'arrange', 'action': 'arrange', 'text': 'editor-arrange', 'shortcut': 'F4'},
-                     {'id': 'snap', 'action': 'snap', 'text': snap, 'shortcut': 'F5'},
-                     {'id': 'background', 'action': 'background', 'shortcut': 'F6',
-                      'text': f"{self.translate('editor-background')} : {self.backdrop_name(self.backdrop)}"}]
+                     {'id': 'snap', 'action': 'snap', 'text': 'editor-snap', 'value': self.snap, 'shortcut': 'F5'},
+                     {'id': 'background', 'action': 'background', 'shortcut': 'F6', 'text': 'editor-background',
+                      'value': self.backdrop_name(self.backdrop)}]
             back = {'id': 'back', 'action': 'back', 'text': 'editor-continue', 'footer': 'left', 'shortcut': 'escape'}
             title = f"{self.translate('editor-title')} : {self.translate(dict(SCREENS)[self.name])}"
             choice = self.screen.run_menu('editor_menu', items + [back], items + [back], title=title,
@@ -748,10 +747,10 @@ class Editor:
         while True:
             items = [{'id': 'move', 'action': 'move', 'text': 'editor-move', 'shortcut': 'F1'},
                      {'id': 'resize', 'action': 'resize', 'text': 'editor-resize', 'shortcut': 'F2'},
-                     {'id': 'shortcut', 'action': 'shortcut', 'shortcut': 'F3',
-                      'text': f"{self.translate('editor-shortcut')} : {self.shortcut_text(item['button'])}"},
-                     {'id': 'shape', 'action': 'shape', 'shortcut': 'F4',
-                      'text': f"{self.translate('editor-shape')} : {self.translate(self.shape_text(item['button']))}"},
+                     {'id': 'shortcut', 'action': 'shortcut', 'shortcut': 'F3', 'text': 'editor-shortcut',
+                      'value': self.shortcut_text(item['button'])},
+                     {'id': 'shape', 'action': 'shape', 'shortcut': 'F4', 'text': 'editor-shape',
+                      'value': self.shape_text(item['button'])},
                      {'id': 'delete', 'action': 'delete', 'text': 'editor-delete', 'shortcut': 'F5'}]
             if item['button'].get('version'):
                 # The version : no shortcut nor shape, it is only a text
@@ -995,7 +994,7 @@ class Editor:
                       ('gap', 'editor-arrange-gap', f"{settings['gap'] * 100:g} %"),
                       ('inside', 'editor-arrange-buttons',
                        f"{translate('editor-arrange-inside' if settings['inside'] else 'editor-arrange-all')} ({len(chosen)})")]
-            items = [{'id': ident, 'action': ident, 'text': f"{translate(text)} : {value}", 'shortcut': f'F{number}'}
+            items = [{'id': ident, 'action': ident, 'text': text, 'value': value, 'shortcut': f'F{number}'}
                      for number, (ident, text, value) in enumerate(values, 1)]
             items += [{'id': 'apply', 'action': 'apply', 'text': 'editor-arrange-apply', 'shortcut': 'F5'},
                       {'id': 'zone', 'action': 'zone', 'text': 'editor-arrange-zone', 'shortcut': 'F6'}]
