@@ -8601,7 +8601,10 @@ class Screen(pygame.Surface):
         unit_x, unit_y = self.res_x_16, self.res_y_16
         gap = max(2, int(unit_x / 10))
         if pad is None:
-            self.blit_text(self.lang.translate('usb-pads-none'), 0, 6 * unit_y, self.res['x'], unit_y, self.colorset['menu-text-white'])
+            # As the messages of error : red on the band of the messages (white)
+            band = pygame.Rect(0, 6 * unit_y, self.res['x'], unit_y)
+            self.new_blit_rect2(band, self.colorset['message-bg'])
+            self.blit_text(self.lang.translate('usb-pads-none'), band.x, band.y, band.width, band.height, self.colorset['menu-ko'])
             click_zones['escape'] = self.display_button(selected == (3, 0), 'back', special='escape')
             return click_zones
 
