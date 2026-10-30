@@ -3659,7 +3659,10 @@ msgid "editor-help-background"
 msgstr "Frecce o tocco a sinistra / destra: sfondo precedente / successivo · Conferma o Menu: tieni · Indietro: annulla"
 
 msgid "quit-game-question"
-msgstr "Vuoi uscire dalla partita?"
+msgstr "Vuoi davvero uscire dalla partita?"
+
+msgid "quit-game-keys"
+msgstr "Esc: esci · Conferma o attendi: torna alla partita"
 
 msgid "editor-import"
 msgstr "Importa uno sfondo"

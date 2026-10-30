@@ -3205,7 +3205,10 @@ msgid "editor-help-background"
 msgstr "Arrows or touch left / right: previous / next background · Validate or Menu: keep · Back: cancel"
 
 msgid "quit-game-question"
-msgstr "Do you want to leave the game?"
+msgstr "Do you really want to leave the game?"
+
+msgid "quit-game-keys"
+msgstr "Escape: leave · Validate or wait: back to the game"
 
 msgid "editor-import"
 msgstr "Import a background"

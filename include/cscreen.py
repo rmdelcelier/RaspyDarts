@@ -75,8 +75,8 @@ VOLUME_UP_KEYS = ['+', 'BTN_PLUS', 'BTN_VOLUME_UP', 'VOLUME-UP', 'S14']
 VOLUME_DOWN_KEYS = ['-', 'BTN_MINUS', 'BTN_VOLUME_DOWN', 'VOLUME-DOWN', 'S8']
 VOLUME_MUTE = ['BTN_VOLUME_MUTE', 'VOLUME-MUTE', 'S7']
 
-# The game behind a question : its colours multiplied by this
-QUESTION_VEIL = (70, 70, 70)
+# Leaving a game : without an answer in this time (ms), back to the game
+QUIT_GAME_TIME = 5000
 BTN_CHECK = 1
 BTN_CHOICE = 2
 # Menus whose background and title are kept (a screen : 4 to 8 MB)
@@ -872,9 +872,9 @@ class Screen(pygame.Surface):
                     'space', 'single-click'])
         return press
 
-    def wait_validation(self, text):
+    def validation_band(self, text, second='press-enter'):
         '''
-        Wait for validation
+        The band of a question, over what is on the screen
         '''
         rect = pygame.Rect(0, int(self.res['y'] * 9 / 20), self.res['x'], self.res['y'] / 5)
 
@@ -882,9 +882,6 @@ class Screen(pygame.Surface):
             border_radius = int(rect.h / 2)
         else:
             border_radius = int(self.colorset['border-radius']) * 4
-
-        self.save_background()
-        self.display_background(image=True)
 
         minus = 10
 
@@ -894,9 +891,17 @@ class Screen(pygame.Surface):
         rect2.height /= 2
         self.blit_text2(text, rect2, self.colorset['message-text'])
         rect2.y = rect2.bottom
-        self.blit_text2("press-enter", rect2, self.colorset['message-text'])
+        self.blit_text2(second, rect2, self.colorset['message-text'])
 
         self.update_screen()
+
+    def wait_validation(self, text):
+        '''
+        Wait for validation
+        '''
+        self.save_background()
+        self.display_background(image=True)
+        self.validation_band(text)
         if self.wait_touch() in ENTER_KEYS:
             self.restore_background()
             self.reset_background()
@@ -7031,26 +7036,25 @@ class Screen(pygame.Surface):
 
     def ask_quit_game(self):
         '''
-        Leave the game ? A dart on the key Escape left it at once : No selected first. The screen
-        kept for this question was the one of another game : drawn again
+        Leave the game ? A dart on the key Escape left it at once : the same band as to shut down
+        the borne, over the game. Escape again (or the buttons which leave) : True ; validated,
+        or nothing in QUIT_GAME_TIME : None, back to the game ; anything else (the next dart) :
+        back to the game too, with it to play
         '''
-        for key in [key for key in self.menu_backgrounds if key[0] == 'question']:
-            self.menu_backgrounds.pop(key)
-        # The game darkened behind the question : its texts mixed with those of the question
-        game_background = self.game_background
-        if game_background is not None:
-            self.game_background = game_background.copy()
-            self.game_background.fill(QUESTION_VEIL, special_flags=pygame.BLEND_RGB_MULT)
-        try:
-            return self.ask_yes_no(self.lang.translate('quit-game-question'), initial='no')
-        finally:
-            self.game_background = game_background
+        self.validation_band(self.lang.translate('quit-game-question'), 'quit-game-keys')
+        key = self.rpi.listen_inputs([], ['PLAYERBUTTON', 'GAMEBUTTON', 'BACKUPBUTTON', 'MISS', 'CHEAT', 'enter', 'space',
+                                          'single-click', 'escape'], context='game', timeout=QUIT_GAME_TIME)
+        if key in ESCAPE_KEYS + ['GAMEBUTTON', 'BTN_GAMEBUTTON', 'BACKUPBUTTON']:
+            return True
+        # (a bull validates in the menus : here it is a dart)
+        if key is False or isinstance(key, tuple) or (key in ENTER_KEYS and key not in ('SB', 'DB')):
+            return None
+        return key
 
-    def ask_yes_no(self, question, explanation=None, cancel=False, initial=None):
+    def ask_yes_no(self, question, explanation=None, cancel=False):
         '''
         A question answered by Yes or No (menu question of the files : its look), back : No
-        (cancel : None, nothing is done). explanation : under the question (subtitle) ;
-        initial : the answer selected first
+        (cancel : None, nothing is done). explanation : under the question (subtitle)
         '''
         items = [{'id': 'yes', 'action': 'yes', 'text': 'yes', 'shortcut': 'F1'},
                  {'id': 'no', 'action': 'no', 'text': 'no', 'shortcut': 'F2'}]
@@ -7059,7 +7063,7 @@ class Screen(pygame.Surface):
         self.current_look = None
         try:
             answer = self.run_menu('question', items, items + [escape], title=question,
-                                   subtitle=explanation, initial=initial).get('id')
+                                   subtitle=explanation).get('id')
             return None if answer == 'cancel' else answer == 'yes'
         finally:
             self.current_look = previous

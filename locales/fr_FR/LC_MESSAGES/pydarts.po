@@ -4293,7 +4293,10 @@ msgid "editor-help-background"
 msgstr "Flèches ou toucher à gauche / à droite : fond précédent / suivant · Valider ou Menu : garder · Retour : annuler"
 
 msgid "quit-game-question"
-msgstr "Voulez-vous quitter la partie ?"
+msgstr "Voulez-vous vraiment quitter la partie ?"
+
+msgid "quit-game-keys"
+msgstr "Échap : quitter · Valider ou attendre : reprendre la partie"
 
 msgid "editor-import"
 msgstr "Importer un fond d'écran"

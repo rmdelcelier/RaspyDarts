@@ -1702,6 +1702,7 @@ try:
 
                 ##############
                 # pre_dart - Is a game method that prepares game before each dart
+                next_stroke = None
                 ##############
                 pre_dart = game.pre_dart_check(players, actual_round, actual_player, player_launch)
                 publish_match()
@@ -1782,7 +1783,10 @@ try:
                                 ktype = []
 
                             ##### INPUT #######
-                            if players[actual_player].computer:
+                            if next_stroke is not None:
+                                # Played while the question to leave was shown
+                                dart_stroke, next_stroke = next_stroke, None
+                            elif players[actual_player].computer:
                                 # PNJ
                                 dart_stroke = rpi.listen_inputs(ktype,
                                      ['PLAYERBUTTON', 'GAMEBUTTON', 'BACKUPBUTTON',
@@ -1883,7 +1887,8 @@ try:
                                     dart_stroke in ['BTN_BACK', 'BACKUPBUTTON'] and not magickey and
                                     (back_count == 2 or (actual_round == 1 and actual_player == 0 and player_launch == 1))):
                                 # This key leaves the game : asked here, before a network game sends it
-                                if display.ask_quit_game():
+                                next_stroke = display.ask_quit_game()
+                                if next_stroke is True:
                                     break
                                 back_count = 0
                                 dart_stroke = None
@@ -2342,7 +2347,7 @@ try:
 
                             # L'utilisateur demande la fin de la partie sur le joueur ordinateur
                             if dart_stroke == 'TIMEOUT' or (dart_stroke in ('BTN_GAMEBUTTON', 'GAMEBUTTON', 'BTN_CANCEL')
-                                                            and display.ask_quit_game()):
+                                                            and display.ask_quit_game() is True):
                                 break
                             if dart_stroke in ('BTN_GAMEBUTTON', 'GAMEBUTTON', 'BTN_CANCEL'):
                                 # Not left : the game shown again, the same wait
