@@ -592,6 +592,46 @@ if game_type not in ('restart', 'quit', 'shutdown'):
 
 versionGame = ''
 
+def _chti_match_presence(playing=False):
+    try:
+        from include.cchat import set_game_activity
+        ctx = globals()
+        online = bool(
+            playing
+            and ctx.get('net_status') == 'YOUAREMASTER'
+            and ctx.get('game_type') in ('netcreate', 'netjoin')
+        )
+        set_game_activity(
+            display,
+            online,
+            room=ctx.get('netgamename', '') if online else '',
+            game=ctx.get('Game', '') if online else '',
+            server='{}:{}'.format(ctx.get('servername', ''), ctx.get('serverport', '')) if online else '',
+            players=[p.name for p in ctx.get('players', [])] if online else ()
+        )
+        print('[CHTI SPECTATEUR 4.6] Presence :', online, flush=True)
+    except Exception as error:
+        print('[CHTI SPECTATEUR 4.6 ERREUR]', repr(error), flush=True)
+
+# CHTI SPECTATEUR 4.6 - Publication des scores
+def _chti_publish_match():
+    try:
+        from include.chti_spectateur import publish
+        publish(display, globals())
+        ctx = globals()
+        client = getattr(display, '_lobby_chat_client', None)
+        print('[CHTI LIVE DIAG]',
+              'status=', ctx.get('net_status'),
+              'type=', ctx.get('game_type'),
+              'client=', client is not None,
+              'playing=', client.game_activity.get('playing') if client else None,
+              'scores=', client.match_live is not None if client else None,
+              flush=True)
+    except Exception as error:
+        if not globals().get('_chti_live_error'):
+            print('[CHTI SPECTATEUR ERREUR]', repr(error), flush=True)
+            globals()['_chti_live_error'] = True
+
 # The game is loaded : show its window, hidden if the intro video was playing
 display.show()
 
@@ -810,7 +850,7 @@ try:
 
                 if game_type in ('netjoin', 'netcreate'):
                     from include.cnetidentity import network_players
-                    nb_sets, players_list, competition_mode = network_players(display)
+                    nb_sets, players_list, competition_mode = network_players(display, players_bank, players_favorite_color)
                     nb_sets = 1
                 else:
                     nb_sets, players_list, competition_mode, players_favorite_color = \
@@ -1556,6 +1596,7 @@ try:
                     display.game_type = 'local'
             except:
                 pass
+            _chti_match_presence(True)
             # Dart Stroke Init
             dart_stroke = None
             # Increment the number of Match done
@@ -1668,6 +1709,7 @@ try:
                 # pre_dart - Is a game method that prepares game before each dart
                 ##############
                 pre_dart = game.pre_dart_check(players, actual_round, actual_player, player_launch)
+                _chti_publish_match()
 
                 if player_launch == 1 and len(magickey) == 0 and pre_dart != 4:
                     dmd.send_text(players[actual_player].name)
@@ -1768,6 +1810,7 @@ try:
                                 if dart_stroke is False:
                                     logs.debug(f"Timeout {game.time}")
                                     pre_dart = game.pre_dart_check(players, actual_round, actual_player, player_launch)
+                                    _chti_publish_match()
                                     ClickZones = game.refresh_game_screen(players, actual_round, game.max_round, game.nb_darts - player_launch + 1,
                                                 game.nb_darts, game.logo, game.headers, actual_player, OnScreenButtons=config_globals['onscreenbuttons'],
                                                 Set=Set, MaxSet=nb_sets)
@@ -2031,6 +2074,7 @@ try:
                         logs.debug("You pushed Playerbutton early... Hum !")
                         try:
                             early_player_button = game.early_player_button(players, actual_player, actual_round)
+                            _chti_publish_match()
                         except Exception as error:
                             logs.error(f"EARLYPLAYERBUTTON is not handled properly by this game. Error was {error}")
                             early_player_button = 1
@@ -2072,6 +2116,7 @@ try:
                         #handler = {'return_code': 0, 'message': None, 'show': None, 'sound': None, 'lights': None,
                         #           'strobe': None, 'speech': None, 'speech_speed': None, 'announcement': None, 'take_shot': None}
                         handler = game.post_dart_check(dart_stroke.upper(), players, actual_round, actual_player, player_launch)
+                        _chti_publish_match()
                         logs.debug(f"handler received : {handler}")
 
                         if not hasattr(game, "refresh_game_screen"):
@@ -2203,6 +2248,7 @@ try:
                         try:
                             players[actual_player].count_dart()
                             missed_dart = game.miss_button(players, actual_player, actual_round, player_launch)
+                            _chti_publish_match()
                             if hasattr(game, "display_hit") and callable(game.display_hit):
                                 game.display_hit(ClickZones, players, actual_player, player_launch, 'MISS')
 
@@ -2210,6 +2256,7 @@ try:
                                 for i in range(1, game.nb_darts - player_launch + 1):
                                     players[actual_player].count_dart()
                                     game.miss_button(players, actual_player, actual_round, player_launch + i)
+                                    _chti_publish_match()
                                     if hasattr(game, "display_hit") and callable(game.display_hit):
                                         game.display_hit(ClickZones, players, actual_player, player_launch, 'MISS')
                                 player_launch = game.nb_darts
@@ -2335,6 +2382,7 @@ try:
                 if actual_player + 1 >= players_count and (player_launch >= game.nb_darts or pre_dart == 4):
                     # post_round_check return id of winner
                     post_round_handler = game.post_round_check(players, actual_round, actual_player)
+                    _chti_publish_match()
                     logs.debug(f"At this stage, post_round returns {post_round_handler}")
                     if type(post_round_handler) is int:
                         post_round = post_round_handler
@@ -2581,6 +2629,7 @@ try:
         display.define_constants(True, Font=config_globals['font'])
         display.init_colorset()
         display.reset_background()
+        _chti_match_presence(False)
         # Match Done
         if game_type not in ('restart', 'quit', 'shutdown'):
             ###############

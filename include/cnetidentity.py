@@ -52,7 +52,7 @@ def wait_user(display, session):
         display._lobby_auth_open = previous
 
 
-def network_players(display):
+def network_players(display, players_bank=None, players_color=None):
     from include import caccount as accounts
     from include.cchat import ensure_session
     session = getattr(display, '_lobby_account_session', None) or accounts.load_session()
@@ -92,4 +92,29 @@ def network_players(display):
         return 1, 'escape', False
     label = '{:03d} · {}'.format(user['id'], user['username'])
     display.message([display.lang.translate('online-network-player') + ' ' + label], wait=1000)
-    return 1, [label], False
+    # ChtiDarts : un compte authentifie et des joueurs invites.
+    # Le premier joueur reste toujours l'identite verifiee par le VPS.
+    sets, selected, _, colors = display.players_menu(
+        [label],
+        context='netcreate',
+        bank=players_bank,
+        sets=None,
+        players_color=players_color
+    )
+
+    if selected == 'escape':
+        return 1, 'escape', False
+
+    # Les invites ne peuvent pas remplacer le compte authentifie.
+    guests = []
+    for name in selected:
+        if not isinstance(name, str):
+            continue
+        name = name.strip()
+        if not name or name.casefold() == label.casefold():
+            continue
+        if name.casefold() not in [g.casefold() for g in guests]:
+            guests.append(name)
+    guests = guests[:15]
+
+    return 1, [label] + guests, False
