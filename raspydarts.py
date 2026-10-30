@@ -1195,7 +1195,7 @@ try:
                         display.file_class.reset_theme(Config.get_value('SectionGlobals', 'colorset'))
                         display.init_colorset()
                         # The font chosen, over the one of the theme (as at the start), at once
-                        display.apply_font(config_globals['font'])
+                        display.apply_font()
 
                 elif menu == 'animations':
                     # LEDS ANIMATIONS

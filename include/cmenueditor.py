@@ -383,6 +383,11 @@ class Editor:
     def loop(self):
         while True:
             self.draw()
+            # While it was drawn (up to 1 s with a new background) the release of a key was not
+            # read : pygame went on repeating it, and one press went through several backgrounds
+            # or validated what came next. Reading the events here sees the release, and the
+            # presses piled up are dropped
+            pygame.event.clear(pygame.KEYDOWN)
             key = self.listen()
             if self.mode == 'backdrop':
                 self.backdrop_key(key)
@@ -667,8 +672,7 @@ class Editor:
         '''
         The backgrounds in a list (the last line : an image imported) ; the one chosen shown
         under the buttons : Validate keeps it, Back gives the one before, right and left the
-        others. A key held down does not repeat there : drawing an image takes up to 1 s on a
-        Pi 3, and the repeats piled up meanwhile went through several backgrounds
+        others
         '''
         before = self.backdrop
         choices = self.backdrop_choices()
@@ -692,7 +696,6 @@ class Editor:
         self.backdrop_before = before
         self.backdrop = block
         self.mode = 'backdrop'
-        pygame.key.set_repeat()
 
     def backdrop_key(self, key):
         '''
@@ -720,8 +723,6 @@ class Editor:
             self.forget_backdrop(self.backdrop)
             self.backdrop = self.backdrop_before
             self.mode = 'select'
-        if self.mode == 'select':
-            pygame.key.set_repeat(*REPEAT)
 
     def give_up(self):
         '''

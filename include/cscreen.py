@@ -525,6 +525,27 @@ class Screen(pygame.Surface):
                 self.colorset['font'] = self.defaultfontpath
         except Exception as e:
             self.logs.info("No font defined in your colorset")
+        self.use_chosen_font()
+
+    def font_file(self, font):
+        '''
+        File of a font of the settings : in the fonts of the game and of ~/.raspydarts, or in the
+        folder font of the theme
+        '''
+        if not font:
+            return None
+        in_theme = os.path.join(str(getattr(self.file_class, 'theme_dir', '')), 'font', str(font))
+        return in_theme if os.path.isfile(in_theme) else self.file_class.get_full_filename(str(font), 'fonts')
+
+    def use_chosen_font(self):
+        '''
+        The font of the settings, over the one of the theme : each init_colorset (at the start,
+        after a game) put back the font of the theme on the menus, the games using this one
+        '''
+        font = self.font_file(self.config.get_value('SectionGlobals', 'font', False))
+        if font:
+            self.defaultfontpath = font
+            self.colorset['font'] = font
 
     def init_resolution(self, newresolution=False):
         '''
@@ -2591,7 +2612,7 @@ class Screen(pygame.Surface):
 
                     if special in ['font', 'pattern']:
                         click_zones[str(i)] = self.dropdown_item(i_rect, selected == i, value[1], special=special, FirstLast=FirstLast)
-                    if special == 'colors':
+                    elif special == 'colors':
                         click_zones[str(i)] = self.dropdown_item(i_rect, selected == i, value[0], special=special, FirstLast=FirstLast,
                                                                  label=value[1])
                     else:
@@ -11240,10 +11261,11 @@ class Screen(pygame.Surface):
 
     def font_choices(self):
         '''
-        The fonts : those of the game and of ~/.raspydarts/fonts
+        The fonts : those of the game, of ~/.raspydarts/fonts and of the theme
         '''
         choices = []
-        for folder in ('fonts', f'{self.config.user_dir}/fonts'):
+        theme_fonts = os.path.join(str(getattr(self.file_class, 'theme_dir', '')), 'font')
+        for folder in ('fonts', f'{self.config.user_dir}/fonts', theme_fonts):
             if os.path.isdir(folder):
                 choices += [(name, name[:-4]) for name in os.listdir(folder) if name.endswith('.ttf')]
         return sorted(set(choices))
@@ -11262,15 +11284,16 @@ class Screen(pygame.Surface):
         self.file_class.reset_theme(globals_['colorset'])
         self.init_colorset()
         self.menus_read = None
-        self.apply_font(globals_['font'])
+        self.apply_font()
 
-    def apply_font(self, font):
+    def apply_font(self):
         '''
         The font of the game (Personnalisation du jeu > Général > Police) used at once on every
         screen : after the font of the theme (init_colorset), as at the start ; the menus drawn
         with the former one forgotten (kept drawn, they kept it until a game)
         '''
-        self.define_constants(Font=font)
+        self.define_constants()
+        self.use_chosen_font()
         self.menu_backgrounds.clear()
         self.menu_composites.clear()
         # The drawer of the styled menus keeps its buttons drawn too
@@ -11307,7 +11330,7 @@ class Screen(pygame.Surface):
             except :    # 1st define
                 self.defaultfontpath = self.file_class.get_full_filename('MaPolice', 'fonts')
         else:
-            self.defaultfontpath = self.file_class.get_full_filename(f'{Font}', 'fonts')
+            self.defaultfontpath = self.font_file(Font)
 
         # Animation time (in ms)
         self.animation = 5
