@@ -191,12 +191,29 @@ def update_player_stat_and_check(player_name, stat_name, increment=1, thresholds
 
     return newly_unlocked
 
+'''
 def check_cricket_mickey_mark(player, darts, game):
-    """Vérifie les marques au Cricket/Mickey pour toute la volée."""
+    """Vérifie les marques au Cricket/Mickey : tous les trophées de la volée enregistrés proprement en une seule fois."""
     if not darts or not game:
         return []
 
-    clean_darts = [str(d).upper() for d in darts if d is not None]
+    def clean_dart_format(d):
+        if d is None:
+            return 'MISS'
+        s = str(d).upper().strip()
+        if s in ['SB', '25']:
+            return 'SB'
+        if s in ['DB', '50']:
+            return 'DB'
+        if s in ['MISS', '0', '-1', '']:
+            return 'MISS'
+        if s.startswith(('S', 'D', 'T', 'MISS')):
+            return s
+        if s.isdigit():
+            return f"S{s}"
+        return s
+
+    clean_darts = [clean_dart_format(d) for d in darts[:3]]
     if not clean_darts:
         return []
 
@@ -210,10 +227,10 @@ def check_cricket_mickey_mark(player, darts, game):
         marks = 0
         target_name = ""
 
-        if dart in ('SB', 'DB', 'B', '25', '50'):
+        if dart in ('SB', 'DB'):
             if 'B' in valid_targets or '25' in valid_targets or '50' in valid_targets:
                 target_name = "BULL"
-                marks = 2 if dart in ('DB', '50') else 1
+                marks = 2 if dart == 'DB' else 1
         else:
             for prefix, multiplier in [('T', 3), ('D', 2), ('S', 1)]:
                 if dart.startswith(prefix):
@@ -226,35 +243,177 @@ def check_cricket_mickey_mark(player, darts, game):
         if marks > 0 and target_name:
             volley_marks[target_name] = volley_marks.get(target_name, 0) + marks
 
-    unlocked_trophies = []
     prefix_stat = "cricket" if "CRICKET" in game_logo else "mickey"
-    
-    thresholds = {
-        3: f"3_MARK_{game_logo}",
-        4: f"4_MARK_{game_logo}",
-        5: f"5_MARK_{game_logo}",
-        6: f"6_MARK_{game_logo}",
-        7: f"7_MARK_{game_logo}",
-        8: f"8_MARK_{game_logo}",
-        9: f"9_MARK_{game_logo}"
-    }
+    p_name = getattr(player, "name", str(player))
+
+    print(f"[DEBUG CRICKET] Vollee analysée : {clean_darts} -> Marks par cible : {volley_marks}")
+
+    trophies_to_unlock = []
 
     for target_name, total_marks in volley_marks.items():
         stat_key = f"{prefix_stat}_marks_{target_name}"
-        new_trophies = update_player_stat_and_check(
-            player.name, 
-            stat_name=stat_key, 
-            increment=total_marks, 
-            thresholds=thresholds
-        )
-        if new_trophies:
-            if isinstance(new_trophies, list):
-                unlocked_trophies.extend(new_trophies)
-            else:
-                unlocked_trophies.append(new_trophies)
+        update_player_stat_and_check(p_name, stat_name=stat_key, increment=total_marks, thresholds=None)
+        
+        if 3 <= total_marks <= 9:
+            trophy_id = f"{total_marks}_MARK_{game_logo}"
+            print(f"[DEBUG CRICKET] Trophée éligible pour la cible {target_name} ({total_marks} marks) : {trophy_id}")
+            if trophy_id not in trophies_to_unlock:
+                trophies_to_unlock.append(trophy_id)
 
-    return unlocked_trophies
+    print(f"[DEBUG CRICKET] Liste finale des trophées à débloquer : {trophies_to_unlock}")
 
+    if trophies_to_unlock:
+        if not os.path.exists(DATA_FILE):
+            data = {}
+        else:
+            try:
+                with open(DATA_FILE, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+            except Exception:
+                data = {}
+
+        if p_name not in data:
+            data[p_name] = {"trophies": [], "stats": {}}
+        if "trophies" not in data[p_name]:
+            data[p_name]["trophies"] = []
+
+        new_added = False
+        for trophy_id in trophies_to_unlock:
+            if trophy_id not in data[p_name]["trophies"]:
+                data[p_name]["trophies"].append(trophy_id)
+                new_added = True
+
+        if new_added:
+            try:
+                with open(DATA_FILE, "w", encoding="utf-8") as f:
+                    json.dump(data, f, indent=4, ensure_ascii=False)
+                print(f"[TROPHÉES] Nouveaux trophées enregistrés pour {p_name} : {trophies_to_unlock}")
+                
+                for trophy_id in trophies_to_unlock:
+                    play_trophy_sound()
+                    show_trophy_popup(trophy_id)
+            except Exception as e:
+                print(f"[ERREUR] Impossible d'enregistrer les trophées de marques : {e}")
+
+    return trophies_to_unlock
+'''
+
+def check_cricket_mickey_mark(player, darts, game):
+    """Vérifie les marques au Cricket/Mickey : tous les trophées de la volée enregistrés proprement en une seule fois."""
+    if not darts or not game:
+        return []
+
+    def clean_dart_format(d):
+        if d is None:
+            return 'MISS'
+        s = str(d).upper().strip()
+        if s in ['SB', '25']:
+            return 'SB'
+        if s in ['DB', '50']:
+            return 'DB'
+        if s in ['MISS', '0', '-1', '']:
+            return 'MISS'
+        if s.startswith(('S', 'D', 'T', 'MISS')):
+            return s
+        if s.isdigit():
+            return f"S{s}"
+        return s
+
+    clean_darts = [clean_dart_format(d) for d in darts[:3]]
+    if not clean_darts:
+        return []
+
+    game_headers = getattr(game, "headers", [])
+    valid_targets = {str(h).upper() for h in game_headers}
+    game_logo = getattr(game, "logo", "Cricket").upper()
+    
+    volley_marks = {}
+
+    for dart in clean_darts:
+        marks = 0
+        target_name = ""
+
+        if dart in ('SB', 'DB'):
+            if 'B' in valid_targets or '25' in valid_targets or '50' in valid_targets:
+                target_name = "BULL"
+                marks = 2 if dart == 'DB' else 1
+        else:
+            for prefix, multiplier in [('T', 3), ('D', 2), ('S', 1)]:
+                if dart.startswith(prefix):
+                    num_str = dart.replace(prefix, '')
+                    if num_str in valid_targets:
+                        target_name = num_str
+                        marks = multiplier
+                    break
+
+        if marks > 0 and target_name:
+            volley_marks[target_name] = volley_marks.get(target_name, 0) + marks
+
+    prefix_stat = "cricket" if "CRICKET" in game_logo else "mickey"
+    p_name = getattr(player, "name", str(player))
+
+    print(f"[DEBUG CRICKET] Vollee analysée : {clean_darts} -> Marks par cible : {volley_marks}")
+
+    trophies_to_unlock = []
+
+    # 1. Vérification des trophées de marques classiques (3 marks, 6 marks, etc.)
+    for target_name, total_marks in volley_marks.items():
+        stat_key = f"{prefix_stat}_marks_{target_name}"
+        update_player_stat_and_check(p_name, stat_name=stat_key, increment=total_marks, thresholds=None)
+        
+        if 3 <= total_marks <= 9:
+            trophy_id = f"{total_marks}_MARK_{game_logo}"
+            print(f"[DEBUG CRICKET] Trophée éligible pour la cible {target_name} ({total_marks} marks) : {trophy_id}")
+            if trophy_id not in trophies_to_unlock:
+                trophies_to_unlock.append(trophy_id)
+
+    # 2. Vérification spécifique du WHITE HORSE au Cricket/Mickey (3 triples distincts dans la volée)
+    triples = [d for d in clean_darts if d and d.startswith('T')]
+    if len(triples) == 3:
+        triple_nums = [d[1:] for d in triples]
+        if len(set(triple_nums)) == 3:  # 3 triples avec des numéros différents
+            if "WHITE_HORSE" not in trophies_to_unlock:
+                trophies_to_unlock.append("WHITE_HORSE")
+                print(f"[DEBUG CRICKET] Trophée White Horse éligible !")
+
+    print(f"[DEBUG CRICKET] Liste finale des trophées à débloquer : {trophies_to_unlock}")
+
+    if trophies_to_unlock:
+        if not os.path.exists(DATA_FILE):
+            data = {}
+        else:
+            try:
+                with open(DATA_FILE, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+            except Exception:
+                data = {}
+
+        if p_name not in data:
+            data[p_name] = {"trophies": [], "stats": {}}
+        if "trophies" not in data[p_name]:
+            data[p_name]["trophies"] = []
+
+        new_added = False
+        for trophy_id in trophies_to_unlock:
+            if trophy_id not in data[p_name]["trophies"]:
+                data[p_name]["trophies"].append(trophy_id)
+                new_added = True
+
+        if new_added:
+            try:
+                with open(DATA_FILE, "w", encoding="utf-8") as f:
+                    json.dump(data, f, indent=4, ensure_ascii=False)
+                print(f"[TROPHÉES] Nouveaux trophées enregistrés pour {p_name} : {trophies_to_unlock}")
+                
+                for trophy_id in trophies_to_unlock:
+                    play_trophy_sound()
+                    show_trophy_popup(trophy_id)
+            except Exception as e:
+                print(f"[ERREUR] Impossible d'enregistrer les trophées de marques : {e}")
+
+    return trophies_to_unlock
+
+    
 def check_ho_one_finish_trophies(player, game_type, total_darts_used, winning_dart=None):
     """Vérifie les trophées spécifiques de fin de partie Ho-One."""
     if winning_dart and winning_dart.startswith('D'):
@@ -342,7 +501,7 @@ def check_and_unlock_trophies(player, darts):
     elif sorted_darts == ['S5', 'S12', 'S20']:
         save_unlocked_trophy(p_name, "NOT_OLD")
     elif all(x == 'MISS' for x in clean_darts):
-        save_unlocked_trophy(p_name, "WHITE_HORSE")
+        save_unlocked_trophy(p_name, "MISS")
     elif all(x == 'DB' for x in clean_darts):
         save_unlocked_trophy(p_name, "BLACK_HAT_THREE_IN_THE_BLACK")
     elif all(x == 'SB' for x in clean_darts):

@@ -1,6 +1,7 @@
 import pygame
 import os
 import json
+import re
 from include import craspberry
 
 # --- MAPPING DES TOUCHES MATÉRIELLES / CLAVIER ---
@@ -11,6 +12,8 @@ UP_KEYS = ['up', 'BTN_UP', 'S20']
 DOWN_KEYS = ['down', 'BTN_DOWN', 'S3']
 LEFT_KEYS = ['left', 'BTN_LEFT', 'S11']
 RIGHT_KEYS = ['right', 'BTN_RIGHT', 'S6']
+DELETE_KEYS = ['delete', 'BTN_MINUS', 'VOLUME-DOWN', 'BTN_VOLUME_DOWN']
+INSERT_KEYS = ['insert', 'BTN_PLUS', 'VOLUME-UP', 'BTN_VOLUME_UP']
 
 # Fichiers
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -36,7 +39,8 @@ ALL_TROPHIES = [
     {"id": "ROUND_OF_TERMS", "name": "Round of Terms", "desc": "Toucher n'importe quel Triple 3x", "img": "round of term", "category": "Combinaisons et figures"},
     {"id": "THREE_IN_A_BED", "name": "Three in a Bed", "desc": "3 fois le même chiffre", "img": "three on the bed", "category": "Combinaisons et figures"},
     {"id": "TRIPLE_DEVIL", "name": "Triple Devil", "desc": "Toucher T6, T6, T6", "img": "devil_triple", "category": "Combinaisons et figures"},
-    {"id": "WHITE_HORSE", "name": "White Horse", "desc": "Toucher 3 Triples différents au cricket", "img": "white horse", "category": "Combinaisons et figures"},
+    {"id": "WHITE_HORSE", "name": "White Horse", "desc": "Toucher 3 Triples différents au Cricket ou à Mickey", "img": "white horse", "category": "Combinaisons et figures"},
+    {"id": "MISS", "name": "3 Miss", "desc": "Rater ses 3 flèches (3 Miss)", "img": "miss", "category": "Combinaisons et figures"},
 
     # --- 2. Scores spécifiques de volée / Tons ---
     {"id": "2_FAT_LADIES", "name": "2 Fat Ladies", "desc": "Marquer 88 points", "img": "2fat ladies", "category": "Scores spécifiques"},
@@ -291,24 +295,196 @@ def get_level_from_mpr(mpr_value):
     elif mpr_value <= 5.73: return 28
     elif mpr_value <= 5.99: return 29
     else: return 30
-    
 
+
+def get_base_name_from_online(online_name):
+    """
+    Extrait le pseudo de base en supprimant le préfixe numérique et les symboles/séparateurs
+    (dont l'espace, l'étoile, le tiret, le point médian '·' / '\u00b7', etc.).
+    """
+    cleaned = re.sub(r'^[0-9\s\*\-\.\_\/·\u00b7]+', '', online_name).strip()
+    return cleaned if cleaned else online_name
+
+def merge_online_player_to_base(online_name):
+    """
+    Fusionne les stats et trophées d'un joueur en ligne vers son pseudo de base
+    en recalculant correctement les moyennes PPD et MPR.
+    """
+    data = load_player_data()
+    
+    online_key = None
+    for k in data.keys():
+        if k.strip().lower() == online_name.strip().lower():
+            online_key = k
+            break
+            
+    if not online_key or online_key == "_global_stats":
+        return False
+
+    base_name = get_base_name_from_online(online_key)
+    if not base_name:
+        return False
+
+    base_key = None
+    for k in data.keys():
+        if k.strip().lower() == base_name.strip().lower() and k != online_key:
+            base_key = k
+            break
+
+    if not base_key:
+        # Le profil de base n'existe pas encore, on renomme simplement la clé
+        data[base_name] = data.pop(online_key)
+        try:
+            with open(DATA_FILE, "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=4, ensure_ascii=False)
+            return True
+        except Exception as e:
+            print("[ERREUR RENOMMAGE JOUEUR] :", e)
+            return False
+
+    online_data = data[online_key]
+    base_data = data[base_key]
+
+    # 1. Fusion des trophées
+    online_trophies = online_data.get("trophies", [])
+    base_trophies = base_data.get("trophies", [])
+    base_data["trophies"] = list(set(base_trophies + online_trophies))
+
+    # 2. Fusion des statistiques
+    online_stats = online_data.get("stats", {})
+    base_stats = base_data.get("stats", {})
+
+    # Addition simple pour les compteurs bruts (darts, scores, parties, wins, etc.)
+    for stat_key, val in online_stats.items():
+        # On traite à part les clés de moyennes pour les recalculer proprement après
+        if "moyenne_" in stat_key or "cumul_" in stat_key or "parties_ppd_" in stat_key:
+            continue
+            
+        if isinstance(val, (int, float)):
+            base_stats[stat_key] = base_stats.get(stat_key, 0) + val
+        elif isinstance(val, dict):
+            if stat_key not in base_stats:
+                base_stats[stat_key] = {}
+            for sub_k, sub_v in val.items():
+                if isinstance(sub_v, (int, float)):
+                    base_stats[stat_key][sub_k] = base_stats[stat_key].get(sub_k, 0) + sub_v
+
+    # Recalcul spécifique pour chaque type de jeu (PPD et MPR)
+    # On cherche dynamiquement tous les jeux présents dans online_stats ou base_stats
+    all_stat_keys = set(list(online_stats.keys()) + list(base_stats.keys()))
+    
+    # Identifier les jeux en se basant sur les suffixes ou préfixes de moyennes
+    for key in all_stat_keys:
+        if key.startswith("moyenne_ppd_"):
+            game_name = key.replace("moyenne_ppd_", "")
+            cumul_key = f"cumul_ppd_{game_name}"
+            parties_key = f"parties_ppd_{game_name}"
+            
+            base_cumul = base_stats.get(cumul_key, 0.0) + online_stats.get(cumul_key, 0.0)
+            base_parties = base_stats.get(parties_key, 0) + online_stats.get(parties_key, 0)
+            
+            base_stats[cumul_key] = base_cumul
+            base_stats[parties_key] = base_parties
+            
+            if base_parties > 0:
+                base_stats[key] = round(base_cumul / base_parties, 2)
+            else:
+                base_stats[key] = 0.0
+                
+        elif key.startswith("moyenne_mpr_") or key.startswith("mpr_moyen_"):
+            # Gestion similaire pour le Cricket / Mickey
+            game_name = key.replace("moyenne_mpr_", "").replace("mpr_moyen_", "")
+            cumul_key = f"cumul_mpr_{game_name}"
+            parties_key = f"parties_mpr_{game_name}"
+            
+            if cumul_key in online_stats or cumul_key in base_stats:
+                base_cumul = base_stats.get(cumul_key, 0.0) + online_stats.get(cumul_key, 0.0)
+                base_parties = base_stats.get(parties_key, 0) + online_stats.get(parties_key, 0)
+                base_stats[cumul_key] = base_cumul
+                base_stats[parties_key] = base_parties
+                if base_parties > 0:
+                    base_stats[key] = round(base_cumul / base_parties, 2)
+                else:
+                    base_stats[key] = 0.0
+            else:
+                # Fallback si pas de cumul explicite (moyenne simple pondérée par les parties totales du jeu)
+                p_base = base_stats.get(f"parties_jouees_{game_name}", 1)
+                p_online = online_stats.get(f"parties_jouees_{game_name}", 1)
+                m_base = base_stats.get(key, 0.0)
+                m_online = online_stats.get(key, 0.0)
+                if (p_base + p_online) > 0:
+                    base_stats[key] = round((m_base * p_base + m_online * p_online) / (p_base + p_online), 2)
+
+    base_data["stats"] = base_stats
+    del data[online_key]
+
+    # Sauvegarde finale
+    try:
+        with open(DATA_FILE, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=4, ensure_ascii=False)
+        return True
+    except Exception as e:
+        print("[ERREUR FUSION JOUEUR] :", e)
+        return False
+
+    
 def delete_player(name):
     data = load_player_data()
     target_key = None
+    
+    # 1. Trouver la clé exacte du joueur (insensible à la casse)
     for k in data.keys():
         if k.lower() == name.lower():
             target_key = k
             break
             
     if target_key and target_key in data:
+        player_data = data[target_key]
+        player_stats = player_data.get("stats", {})
+        
+        # 2. Récupérer _global_stats s'il existe
+        global_stats = data.get("_global_stats", {})
+        
+        if global_stats:
+            # A. Décrémenter le nombre total de parties jouées par le joueur
+            # (On regarde soit le total direct, soit la somme des parties par jeu)
+            total_player_parties = player_stats.get('total_parties_jouees', 0)
+            
+            # S'il y a des clés de parties par jeu dans les stats du joueur
+            game_keys = set()
+            for key in player_stats.keys():
+                if key.startswith("parties_jouees_"):
+                    game_keys.add(key.replace("parties_jouees_", ""))
+            
+            # Si le total global n'est pas explicite, on le somme depuis les jeux du joueur
+            if total_player_parties == 0 and game_keys:
+                total_player_parties = sum(player_stats.get(f"parties_jouees_{g}", 0) for g in game_keys)
+            
+            # Soustraire du total général des parties de la machine
+            if 'total_machine_parties' in global_stats and total_player_parties > 0:
+                global_stats['total_machine_parties'] = max(0, global_stats['total_machine_parties'] - total_player_parties)
+
+            # B. Décrémenter les compteurs spécifiques par jeu (ex: parties_reelles_highscore, etc.)
+            for g in game_keys:
+                p_count = player_stats.get(f"parties_jouees_{g}", 0)
+                if p_count > 0:
+                    # Dans _global_stats, les clés sont souvent préfixées par 'parties_reelles_'
+                    global_key = f"parties_reelles_{g}"
+                    if global_key in global_stats:
+                        global_stats[global_key] = max(0, global_stats[global_key] - p_count)
+                        # Si le compteur tombe à 0, on peut éventuellement nettoyer ou le laisser à 0
+        
+        # 3. Supprimer le joueur du dictionnaire
         del data[target_key]
+        
+        # 4. Sauvegarder les modifications dans le fichier JSON
         try:
             with open(DATA_FILE, "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=4, ensure_ascii=False)
             return True
         except Exception as e:
             print("[ERREUR SUPPRESSION JOUEUR] :", e)
+            
     return False
 
 
@@ -462,6 +638,7 @@ class CategorySelectionScreen:
                         navigation = -1
                     elif event.key == pygame.K_RETURN:
                         action_pressed = "SELECT"
+                    
 
             if self.rpi and hasattr(self.rpi, "listen_inputs"):
                 try:
@@ -476,12 +653,14 @@ class CategorySelectionScreen:
                             action_pressed = "SELECT"
                         elif key_str in ESCAPE_KEYS:
                             back_pressed = True
+
                 except Exception as e:
                     print("[ERREUR LISTEN_INPUTS] :", e)
 
             if navigation != 0:
                 self.selected_index = (self.selected_index + navigation) % total_cats
 
+            
             if back_pressed:
                 return "BACK", None
 
@@ -1170,6 +1349,7 @@ class PlayerSelectionScreen:
             small_font = cfonts.font(int(14 * scale))
             tiny_font = cfonts.font(int(11 * scale))
             error_font = cfonts.font(int(20 * scale))
+            confirm_font = cfonts.font(int(24 * scale), bold=True)
         except Exception:
             title_font = pygame.font.Font(None, 35)
             text_font = pygame.font.Font(None, 22)
@@ -1177,9 +1357,15 @@ class PlayerSelectionScreen:
             footer_font = pygame.font.Font(None, 16)
             tiny_font = pygame.font.Font(None, 11)
             small_font = pygame.font.Font(None, 14)
+            confirm_font = pygame.font.Font(None, 24)
 
         max_visible_items = 6
         running = True
+        
+        screen_state = "NORMAL"
+        player_target = None
+        target_base_name = None
+        confirm_choice = 0  # 0 = Annuler, 1 = Confirmer
 
         while running:
             players = load_favorite_names()
@@ -1196,6 +1382,8 @@ class PlayerSelectionScreen:
             title_rect = title_text.get_rect(center=(width // 2, int(45 * scale)))
             self.screen.blit(title_text, title_rect)
             
+            player_rects = []
+
             if total_players == 0:
                 err_surf = error_font.render(f"Erreur : Aucun joueur trouvé dans '{DATA_FILE}'.", True, (255, 100, 100))
                 err_rect = err_surf.get_rect(center=(width // 2, height // 2))
@@ -1250,6 +1438,8 @@ class PlayerSelectionScreen:
                     is_highlighted = (real_index == self.selected_index)
                     
                     r_rect = pygame.Rect(table_x, row_y, table_width, row_height)
+                    player_rects.append((r_rect, real_index))
+
                     bg_color = (55, 70, 105) if is_highlighted else (30, 36, 48)
                     border_color = (100, 150, 255) if is_highlighted else (50, 60, 80)
                     border_w = int(3 * scale) if is_highlighted else 1
@@ -1306,9 +1496,7 @@ class PlayerSelectionScreen:
                     rank_name_hs = NAMES_LEVELS.get(lvl_num_hs, "Débutant")
                     
                     score_hs_surf = small_font.render(f"{ppd_hs_val:.2f}".replace('.', ','), True, (0, 220, 255))
-                    
                     level_text_hs_surf = tiny_font.render(rank_name_hs, True, (180, 190, 210))
-                    
                     
                     logo_hs = get_player_logo(player_name, scale, game_type="highscore", all_players_data=all_data)
                     if ppd_hs_val == 0.0:
@@ -1337,7 +1525,6 @@ class PlayerSelectionScreen:
                         self.screen.blit(no_logo_text, (col_highscore_center - no_logo_text.get_width() // 2, fallback_y))
                         self.screen.blit(score_hs_surf, (col_highscore_center - score_hs_surf.get_width() // 2, fallback_y + no_logo_text.get_height() + fallback_spacing))
                     
-                    
                     # --- 4. Cricket ---
                     mpr_val = p_st.get('moyenne_mpr_cricket', p_st.get('mpr_moyen_cricket', 0.0))
                     lvl_num_c = get_level_from_mpr(mpr_val)
@@ -1362,7 +1549,6 @@ class PlayerSelectionScreen:
                         self.screen.blit(level_text_c_surf, (text_x, logo_y + logo_cricket.get_height() + int(3 * scale)))
                     else:
                         self.screen.blit(score_cricket_surf, (col_cricket_center - score_cricket_surf.get_width() // 2, row_y + (row_height - score_cricket_surf.get_height()) // 2))
-                    
                     
                     # --- 5. Mickey ---
                     mpr_m_val = p_st.get('moyenne_mpr_mickey', p_st.get('mpr_moyen_mickey', 0.0))
@@ -1397,7 +1583,99 @@ class PlayerSelectionScreen:
                     scroll_rect = scroll_surf.get_rect(center=(width // 2, height - int(75 * scale)))
                     self.screen.blit(scroll_surf, scroll_rect)
             
-            footer_text = footer_font.render("HAUT / BAS (ou S20 / S3) pour naviguer | ENTRÉE (ou Bull) pour valider | Échap pour quitter", True, (150, 150, 150))
+            btn_cancel_rect = None
+            btn_conf_rect = None
+
+            # --- POP-UP DE CONFIRMATION DE SUPPRESSION ---
+            if screen_state == "CONFIRM_DELETE":
+                overlay = pygame.Surface((width, height), pygame.SRCALPHA)
+                overlay.fill((0, 0, 0, 160))
+                self.screen.blit(overlay, (0, 0))
+
+                box_w = int(600 * scale)
+                box_h = int(250 * scale)
+                box_x = (width - box_w) // 2
+                box_y = (height - box_h) // 2
+                box_rect = pygame.Rect(box_x, box_y, box_w, box_h)
+
+                pygame.draw.rect(self.screen, (35, 42, 60), box_rect, border_radius=12)
+                pygame.draw.rect(self.screen, (220, 80, 80), box_rect, 3, border_radius=12)
+
+                msg_text = f"Effacer le joueur '{player_target}' ?" if player_target else "Effacer le joueur ?"
+                msg_surf = confirm_font.render(msg_text, True, (255, 255, 255))
+                self.screen.blit(msg_surf, (box_x + (box_w - msg_surf.get_width()) // 2, box_y + int(35 * scale)))
+
+                sub_msg = small_font.render("Cette action est irréversible (stats & trophées perdus).", True, (200, 180, 180))
+                self.screen.blit(sub_msg, (box_x + (box_w - sub_msg.get_width()) // 2, box_y + int(75 * scale)))
+
+                btn_w = int(220 * scale)
+                btn_h = int(50 * scale)
+                btn_y = box_y + int(145 * scale)
+
+                btn_cancel_rect = pygame.Rect(box_x + int(50 * scale), btn_y, btn_w, btn_h)
+                c_bg = (70, 85, 110) if confirm_choice == 0 else (45, 55, 75)
+                c_border = (120, 160, 220) if confirm_choice == 0 else (70, 85, 110)
+                pygame.draw.rect(self.screen, c_bg, btn_cancel_rect, border_radius=8)
+                pygame.draw.rect(self.screen, c_border, btn_cancel_rect, 2, border_radius=8)
+                txt_cancel = bold_font.render("ANNULER (Échap)", True, (255, 255, 255))
+                self.screen.blit(txt_cancel, txt_cancel.get_rect(center=btn_cancel_rect.center))
+
+                btn_conf_rect = pygame.Rect(box_x + box_w - btn_w - int(50 * scale), btn_y, btn_w, btn_h)
+                f_bg = (200, 60, 60) if confirm_choice == 1 else (120, 40, 40)
+                f_border = (255, 120, 120) if confirm_choice == 1 else (180, 60, 60)
+                pygame.draw.rect(self.screen, f_bg, btn_conf_rect, border_radius=8)
+                pygame.draw.rect(self.screen, f_border, btn_conf_rect, 2, border_radius=8)
+                txt_conf = bold_font.render("EFFACER", True, (255, 255, 255))
+                self.screen.blit(txt_conf, txt_conf.get_rect(center=btn_conf_rect.center))
+
+            # --- POP-UP DE CONFIRMATION DE FUSION ---
+            elif screen_state == "CONFIRM_MERGE":
+                overlay = pygame.Surface((width, height), pygame.SRCALPHA)
+                overlay.fill((0, 0, 0, 160))
+                self.screen.blit(overlay, (0, 0))
+
+                box_w = int(750 * scale)
+                box_h = int(260 * scale)
+                box_x = (width - box_w) // 2
+                box_y = (height - box_h) // 2
+                box_rect = pygame.Rect(box_x, box_y, box_w, box_h)
+
+                pygame.draw.rect(self.screen, (35, 42, 60), box_rect, border_radius=12)
+                pygame.draw.rect(self.screen, (100, 180, 255), box_rect, 3, border_radius=12)
+
+                msg_text = f"pseudo : {player_target} va etre fusionne"
+                msg_surf = confirm_font.render(msg_text, True, (255, 255, 255))
+                self.screen.blit(msg_surf, (box_x + (box_w - msg_surf.get_width()) // 2, box_y + int(30 * scale)))
+
+                msg_text2 = f"avec pseudo : {target_base_name}"
+                msg_surf2 = confirm_font.render(msg_text2, True, (0, 220, 255))
+                self.screen.blit(msg_surf2, (box_x + (box_w - msg_surf2.get_width()) // 2, box_y + int(70 * scale)))
+
+                btn_w = int(220 * scale)
+                btn_h = int(50 * scale)
+                btn_y = box_y + int(155 * scale)
+
+                btn_cancel_rect = pygame.Rect(box_x + int(50 * scale), btn_y, btn_w, btn_h)
+                c_bg = (70, 85, 110) if confirm_choice == 0 else (45, 55, 75)
+                c_border = (120, 160, 220) if confirm_choice == 0 else (70, 85, 110)
+                pygame.draw.rect(self.screen, c_bg, btn_cancel_rect, border_radius=8)
+                pygame.draw.rect(self.screen, c_border, btn_cancel_rect, 2, border_radius=8)
+                txt_cancel = bold_font.render("ANNULER", True, (255, 255, 255))
+                self.screen.blit(txt_cancel, txt_cancel.get_rect(center=btn_cancel_rect.center))
+
+                btn_conf_rect = pygame.Rect(box_x + box_w - btn_w - int(50 * scale), btn_y, btn_w, btn_h)
+                f_bg = (60, 160, 100) if confirm_choice == 1 else (40, 100, 60)
+                f_border = (120, 220, 160) if confirm_choice == 1 else (60, 140, 90)
+                pygame.draw.rect(self.screen, f_bg, btn_conf_rect, border_radius=8)
+                pygame.draw.rect(self.screen, f_border, btn_conf_rect, 2, border_radius=8)
+                txt_conf = bold_font.render("FUSIONNER", True, (255, 255, 255))
+                self.screen.blit(txt_conf, txt_conf.get_rect(center=btn_conf_rect.center))
+
+            footer_text_str = "HAUT/BAS (ou S20/S3) pour naviguer | ENTRÉE (ou Bull) pour valider | F (ou Vol +) : Fusionner Stats Joueur en ligne | S (ou Vol -) : Supprimer Stats du Joueur | Échap ( ou Escape): Quitter"
+            if screen_state in ("CONFIRM_DELETE", "CONFIRM_MERGE"):
+                footer_text_str = "GAUCHE/DROITE (ou S11/S6) : Choisir | ENTRÉE (ou Bull) : Valider | ÉCHAP : Annuler"
+
+            footer_text = footer_font.render(footer_text_str, True, (150, 150, 150))
             footer_rect = footer_text.get_rect(center=(width // 2, height - int(35 * scale)))
             self.screen.blit(footer_text, footer_rect)
             
@@ -1405,19 +1683,58 @@ class PlayerSelectionScreen:
             
             action_pressed = None
             navigation = 0
+            horizontal_nav = 0
+            trigger_delete_popup = False
+            trigger_merge_popup = False
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return "QUIT", None
+                elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                    mouse_pos = event.pos
+                    if screen_state == "NORMAL":
+                        for r_rect, r_idx in player_rects:
+                            if r_rect.collidepoint(mouse_pos):
+                                if self.selected_index == r_idx:
+                                    action_pressed = "SELECT"
+                                else:
+                                    self.selected_index = r_idx
+                                break
+                    elif screen_state in ("CONFIRM_DELETE", "CONFIRM_MERGE"):
+                        if btn_cancel_rect and btn_cancel_rect.collidepoint(mouse_pos):
+                            screen_state = "NORMAL"
+                        elif btn_conf_rect and btn_conf_rect.collidepoint(mouse_pos):
+                            if screen_state == "CONFIRM_DELETE":
+                                delete_player(player_target)
+                                if self.selected_index >= len(players) - 1:
+                                    self.selected_index = max(0, len(players) - 2)
+                            elif screen_state == "CONFIRM_MERGE":
+                                merge_online_player_to_base(player_target)
+                            screen_state = "NORMAL"
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        return "QUIT", None
+                        if screen_state in ("CONFIRM_DELETE", "CONFIRM_MERGE"):
+                            screen_state = "NORMAL"
+                        else:
+                            return "QUIT", None
                     elif event.key in (pygame.K_DOWN, pygame.K_RIGHT):
-                        navigation = 1
+                        if screen_state == "NORMAL":
+                            navigation = 1
+                        else:
+                            horizontal_nav = 1
                     elif event.key in (pygame.K_UP, pygame.K_LEFT):
-                        navigation = -1
+                        if screen_state == "NORMAL":
+                            navigation = -1
+                        else:
+                            horizontal_nav = -1
                     elif event.key == pygame.K_RETURN:
                         action_pressed = "SELECT"
+                    elif event.key == pygame.K_s:
+                        if screen_state == "NORMAL" and total_players > 0:
+                            trigger_delete_popup = True
+                    elif event.key == pygame.K_f:
+                        if screen_state == "NORMAL" and total_players > 0:
+                            trigger_merge_popup = True
 
             if self.rpi and hasattr(self.rpi, "listen_inputs"):
                 try:
@@ -1425,26 +1742,68 @@ class PlayerSelectionScreen:
                     if inp:
                         key_str = str(inp).strip()
                         if key_str in DOWN_KEYS + RIGHT_KEYS:
-                            navigation = 1
+                            if screen_state == "NORMAL":
+                                navigation = 1
+                            else:
+                                horizontal_nav = 1
                         elif key_str in UP_KEYS + LEFT_KEYS:
-                            navigation = -1
+                            if screen_state == "NORMAL":
+                                navigation = -1
+                            else:
+                                horizontal_nav = -1
                         elif key_str in ENTER_KEYS:
                             action_pressed = "SELECT"
                         elif key_str in ESCAPE_KEYS:
-                            return "QUIT", None
+                            if screen_state in ("CONFIRM_DELETE", "CONFIRM_MERGE"):
+                                screen_state = "NORMAL"
+                            else:
+                                return "QUIT", None
+                        elif key_str in DELETE_KEYS:
+                            if screen_state == "NORMAL" and total_players > 0:
+                                trigger_delete_popup = True
+                        elif key_str in INSERT_KEYS:
+                            if screen_state == "NORMAL" and total_players > 0:
+                                trigger_merge_popup = True
                 except Exception as e:
                     print("[ERREUR LISTEN_INPUTS] :", e)
 
-            if navigation != 0 and total_players > 0:
-                self.selected_index = (self.selected_index + navigation) % total_players
+            if trigger_delete_popup:
+                screen_state = "CONFIRM_DELETE"
+                player_target = players[self.selected_index]
+                confirm_choice = 0
 
-            if action_pressed == "SELECT" and total_players > 0:
-                chosen_player = players[self.selected_index]
-                return "SELECT", chosen_player
+            if trigger_merge_popup:
+                screen_state = "CONFIRM_MERGE"
+                player_target = players[self.selected_index]
+                target_base_name = get_base_name_from_online(player_target)
+                confirm_choice = 0
+
+            if screen_state == "NORMAL":
+                if navigation != 0 and total_players > 0:
+                    self.selected_index = (self.selected_index + navigation) % total_players
+
+                if action_pressed == "SELECT" and total_players > 0:
+                    chosen_player = players[self.selected_index]
+                    return "SELECT", chosen_player
+
+            elif screen_state in ("CONFIRM_DELETE", "CONFIRM_MERGE"):
+                if horizontal_nav != 0:
+                    confirm_choice = 1 - confirm_choice
+
+                if action_pressed == "SELECT":
+                    if confirm_choice == 1:
+                        if screen_state == "CONFIRM_DELETE":
+                            delete_player(player_target)
+                            if self.selected_index >= len(players) - 1:
+                                self.selected_index = max(0, len(players) - 2)
+                        elif screen_state == "CONFIRM_MERGE":
+                            merge_online_player_to_base(player_target)
+                    screen_state = "NORMAL"
 
             clock.tick(30)
             
         return "QUIT", None
+
         
 # --- FONCTION PRINCIPALE ---
 def main(rpi=None):

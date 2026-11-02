@@ -1,188 +1,119 @@
 msgid ""
 msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"Project-Id-Version: pyDarts\n"
-"POT-Creation-Date: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: @Diego2 <qwertyfishrobot@gmail.com>\n"
-"Language-Team: @Diego2\n"
+"Project-Id-Version: RaspyDarts\n"
+"POT-Creation-Date:\n"
+"PO-Revision-Date:\n"
+"Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: es_ES\n"
 "X-Generator: Poedit 1.8.11\n"
 
-msgid "game-list"
-msgstr "Por favor seleccione un juego de la lista"
+######## GENERALITES ########
 
-msgid "game-options"
-msgstr "Opciones de Juego"
+msgid "yes"
+msgstr "Sí"
 
-msgid "game-options-binary"
-msgstr ""
-"Utilice las teclas de funciones especiales Fx/Fn para modificar las opciones."
+msgid "no"
+msgstr "No"
+
+msgid "True"
+msgstr "Sí"
+
+msgid "False"
+msgstr "No"
+
+msgid "trophees"
+msgstr "Trofeos y progreso"
+
+msgid "player-name"
+msgstr "Nombre del jugador"
 
 msgid "players-names"
-msgstr "Por favor escriba el nombre de los juegadores:"
+msgstr "Nombres de los jugadores"
 
-msgid "players-names-subtitle"
-msgstr "Presione tecla + para añadir, - para eliminar, <Tab> aleatorio."
-
-msgid "press-player"
-msgstr "Por favor pulse boton de siguiente jugador..."
-
-msgid "press-player-remote"
-msgstr "Esperando a tu amigo..."
-
-msgid "release-darts"
-msgstr "Retire los dardos"
-
-msgid "game-stats"
-msgstr "Estadisticas de Juego"
-
-msgid "master-client-title"
-msgstr "¿Preparado para patear culos?"
-
-msgid "master-client-empty"
-msgstr "No hay ninguna partida disponible en el Servidor Maestro"
-
-msgid "master-client-no-connection"
-msgstr "Imposible conectar al Servidor Maestro"
-
-msgid "master-client-connecting"
-msgstr "Estamos conectando con el Servidor Maestro... Por favor sea paciente."
-
-msgid "game-client-connecting"
-msgstr "Conectando al servidor del juego... Espere unos segundos..."
-
-msgid "game-client-no-connection"
-msgstr "¡¡No se pudo conectar al juego!!"
-
-msgid "master-client-refresh"
-msgstr "Presione la barra espaciadora para refrescar"
-
-msgid "master-player-has-left"
-msgstr ""
-"El jugador que mantenia la partida ha abandonado el juego.Partida "
-"finalizada. Presione ENTER"
-
-msgid "getting-info-from-server"
-msgstr ""
-"Obteniendo informacion del servidor. Por favor, espere unos instantes..."
-
-msgid "get-ready"
-msgstr "¡Preparad@!"
-
-msgid "version-mismatch"
-msgstr ""
-"Lo sentimos, la version que estas ejecutando de pydarts no es compatible' "
-"version.¡Por favor, actualizala!"
-
-msgid "game-no-desc"
-msgstr "No hay informacion disponible"
-
-msgid "game-type"
-msgstr "¡Bienvenid@! Por favor, seleccione el tipo de juego que desee"
-
-msgid "game-type-local"
-msgstr "Juego local"
-
-msgid "game-type-master"
-msgstr "Unirse a partida online"
-
-msgid "game-type-manual"
-msgstr "Crear o conectarse manualmente a una partida online"
-
-msgid "net-options"
-msgstr "Por favor configure los datos de su conexion"
-
-msgid "net-options-netgamename"
-msgstr "Nombre de Juego"
-
-msgid "net-options-servername"
-msgstr "Nombre del Servidor del juego o Ip"
-
-msgid "net-options-serveralias"
-msgstr ""
-"Ip del Servidor del juego o direccion DNS (Solo si quieres crear una partida)"
-
-msgid "net-options-serverport"
-msgstr "Puerto del Servidor del juego"
-
-msgid "players-ready-masterplayer"
-msgstr "¡Atentos jugadores!¡Presione ENTER para comenzar!"
-
-msgid "players-ready-slaveplayer"
-msgstr "Jugadores preparados... Esperando al Jugador Maestro"
-
-msgid "net-client-refresh-players"
-msgstr "Refrescando la lista de jugadores..."
-
-msgid "net-client-randomizing"
-msgstr "¡Aleatorio!"
-
-msgid "serial-issue-1"
-msgstr "Problema al cargar la conexion de la diana"
-
-msgid "serial-issue-2"
-msgstr "Este juego necesita una diana compatible"
-
-msgid "serial-issue-3"
-msgstr "Por favor, consulte la wiki en la web oficial del proyecto"
-
-msgid "serial-issue-4"
-msgstr "¡Nos vemos!"
-
-msgid "last-round-reached"
-msgstr "Ultima ronda alcanzada!!!"
-
-msgid "hi-score"
-msgstr "Puntuaciones Maximas"
-
-msgid "remaining-darts"
-msgstr "Dardos Restantes"
+msgid "players"
+msgstr "Jugadores"
 
 msgid "round"
 msgstr "Ronda"
 
+msgid "rounds"
+msgstr "Rondas"
+
 msgid "over"
-msgstr "Fin"
+msgstr "de"
 
 msgid "exit"
 msgstr "Salir"
 
+msgid "add"
+msgstr "Añadir"
+
+msgid "back"
+msgstr "Atrás"
+
+msgid "reset"
+msgstr "Restablecer"
+
+msgid "reseting"
+msgstr "Restableciendo..."
+
+msgid "Updating_librairies"
+msgstr "Actualizando bibliotecas, por favor espere..."
+
+msgid "Install_additional_librairies"
+msgstr "Instalando nuevas bibliotecas, por favor espere..."
+
+msgid "continue"
+msgstr "Continuar"
+
+msgid "save"
+msgstr "Guardar"
+
+msgid "clean"
+msgstr "Limpiar"
+
+msgid "shake"
+msgstr "Mezclar"
+
+msgid "refresh"
+msgstr "Actualizar"
+
+msgid "remaining-darts"
+msgstr "Dardos"
+
+msgid "back-to-menu"
+msgstr "Menú"
+
+msgid "game-no-desc"
+msgstr "Sin descripción"
+
+msgid "back-to-desktop"
+msgstr "Volver al escritorio"
+
 msgid "start-again"
 msgstr "Empezar de nuevo"
 
-msgid "Player"
-msgstr "Jugador"
-
-msgid "select-port"
-msgstr "Se detectaron varios puertos serie"
-
-msgid "board-calibration"
-msgstr "Calibracion de la Diana"
-
-msgid "press-on-parts"
-msgstr "Presione cada porcion de la diana"
-
 msgid "left"
-msgstr "Faltan"
+msgstr "Quedan"
 
 msgid "press-on"
-msgstr "Presione"
+msgstr "Pulse {}"
 
 msgid "Ok"
-msgstr "Ok"
+msgstr "Aceptar"
 
 msgid "Next"
-msgstr "Proximo"
+msgstr "Siguiente"
 
 msgid "Previous"
 msgstr "Anterior"
 
 msgid "Refresh"
-msgstr "Refrescar"
+msgstr "Actualizar"
 
 msgid "Welcome"
 msgstr "Bienvenido"
@@ -190,294 +121,698 @@ msgstr "Bienvenido"
 msgid "network-error"
 msgstr "Error de red"
 
+msgid "sets"
+msgstr "Sets"
+
+msgid "set"
+msgstr "Set"
+
+msgid "none"
+msgstr "Ninguno"
+
+msgid "darts"
+msgstr "Dardos"
+
+msgid "winner"
+msgstr "Ganador"
+
+msgid "nowinner"
+msgstr "Empate"
+
+msgid "duration"
+msgstr "Duración"
+
+msgid "Player"
+msgstr "Jugador"
+
+msgid "favorites-games"
+msgstr "Juegos favoritos"
+
 msgid "Game type"
 msgstr "Tipo de juego"
 
 msgid "Game name"
 msgstr "Nombre del juego"
 
-msgid "Autorefresh in %sec seconds"
-msgstr "Autorefrescar en %(sec)s segundos"
+msgid "simple"
+msgstr "Simple"
 
-msgid "select-port-subtxt"
-msgstr "Seleccione el puerto deseado con las teclas Fx"
+msgid "double"
+msgstr "Doble"
 
-msgid "serverlist-header-STATUS"
-msgstr "Estado"
+msgid "triple"
+msgstr "Triple"
 
-msgid "serverlist-header-GAMENAME"
-msgstr "Nombre del Juego"
-
-msgid "serverlist-header-PLAYERS"
-msgstr "Jugadores"
-
-msgid "serverlist-header-SERVERIP"
-msgstr "Servidor"
-
-msgid "serverlist-header-SERVERPORT"
-msgstr "Puerto"
-
-msgid "serverlist-header-GAMECREATOR"
-msgstr "Maestro"
-
-msgid "serverlist-header-GAMETYPE"
-msgstr "Tipo de Juego"
-
-msgid "Description-Killer"
-msgstr ""
-"¡Practica tu punteria apuntando\n"
-"y ve eliminando a tus oponentes uno a uno!\n"
-"Consigue los 4 puntos y conviertete en un KILLER\n"
-"*NOTA: Elimina a tus oponentes alcanzando su puntuacion"
-
-msgid "Killer-max_round"
-msgstr "Numero de rondas"
-
-msgid "Description-Practice"
-msgstr ""
-"Practica lo que necesites\n"
-"apuntando a donde Pydarts decida aleatoriamente\n"
-"Modo Master: Apunta a dobles y triples"
-
-msgid "Practice-max_round"
-msgstr "Numero de rondas"
-
-msgid "Practice-master"
-msgstr "Opcion Master"
-
-msgid "Description-Sample_game"
-msgstr ""
-"Este juego es una prueba por si quieres\n"
-"aprender a como crear tu propio juego\n"
-"Mira el codigo fuente y no te olvides de\n"
-"compartirlo con otros usuarios en la web del proyecto\n"
-"*NOTA: Requiere conocimientos de Pyton"
-
-msgid "Sample_game-max_round"
-msgstr "Numero de rondas"
-
-msgid "Description-321_Zlip"
-msgstr ""
-"Una especie de 301 al reves...\n"
-"pero un poco mas divertido :)\n"
-"Empieza con 0 y alcanza 321 puntos antes que tus oponentes\n"
-"Si alcanzas la puntuacion de alguno de tus oponentes' score\n"
-"¡Mala suerte para ell@s! ¡Les tocara volver a empezar!\n"
-"Master: Es obligatorio en esta opcion alcanzar la\n"
-"la puntuacion de al menos un oponente"
-
-msgid "321_Zlip-master"
-msgstr "Opcion Master"
-
-msgid "321_Zlip-advanced"
-msgstr "Opcion Avanzada"
-
-msgid "321_Zlip-max_round"
-msgstr "Numero de rondas"
-
-msgid "Description-Ho_One"
-msgstr ""
-"¡El famoso 301, 501, 1001...!\n"
-"O elije la puntuacion con la que quieras empezar!\n"
-"La forma mas facil de empezar a jugar\n"
-"¡Comienza con la puntuacion elegida\n"
-"y el primer jugador en alcanzar 0 puntos, GANARA!"
-
-msgid "Ho_One-startingat"
-msgstr "Empezar con"
-
-msgid "Ho_One-max_round"
-msgstr "Numero de rondas"
-
-msgid "Ho_One-double_in"
-msgstr "Opcion Double-In"
-
-msgid "Ho_One-double_out"
-msgstr "Opcion Double-Out"
-
-msgid "Ho_One-master_in"
-msgstr "Opcion Master-In"
-
-msgid "Ho_One-master_out"
-msgstr "Opcion Master-Out"
-
-msgid "Description-Cricket"
-msgstr ""
-"El Cricket mas famoso\n"
-"¡Juega al modo simple, o a la opcion crazy!\n"
-"¡Golpea todos los numeros mostrados tres veces para ganar!\n"
-"Opcion Crazy : Los numeros cambian cada ronda.\n"
-"Cut throat : Los puntos se suman a tu oponente\n"
-"DrinkScore : Juegate una ronda\n"
-"si un jugador alcanza esta puntuacion en Cut Throat"
-
-msgid "Cricket-optioncutthroat"
-msgstr "Opcion Cut throat"
-
-msgid "Cricket-drinkscore"
-msgstr "¡Pagas una ronda si llegas a esta puntuacion!"
-
-msgid "Cricket-max_round"
-msgstr "Numero de rondas"
-
-msgid "Cricket-optioncrazy"
-msgstr "Opcion Crazy Cricket"
-
-msgid "Description-Kapital"
-msgstr ""
-"Mas conocido como Burma Road\n"
-"Debes hacer al menos una marca por ronda,\n"
-"o toda tu punuacion se vera dividida por 2.\n"
-"Juega en 15 rondas. La maxima puntuacion gana.\n"
-"Algunos de las propuestas son realmente dificiles:\n"
-"dobles, triples,uno de cada color, una secuencia...\n"
-"¡ESTE ES TU JUEGO SI TE GUSTAN LOS RETOS!!."
-
-msgid "Description-Kinito"
-msgstr ""
-"Empieza en 0 y alcanza 210\n"
-"Nunca hagas una marca menor que la anterior de la que te den\n"
-"Si marcas un T7, una puntuacion aleatoria se te asignara\n"
-"Si llegas a esta nueva puntuacion, la de tu oponente\n"
-"se vera dividida entre 2\n"
-"*NOTA: Es preferible pasar turno, que perder una ronda"
-
-msgid "Kinito-max_round"
-msgstr "Numero de rondas"
-
-msgid "Kinito-master"
-msgstr "Opcion Master"
-
-msgid "Kinito-kinito"
-msgstr "Puntuacion Kinito"
-
-msgid "Kinito-winscore"
-msgstr "Puntuacion Victoria"
-
-msgid "Description-Shanghai"
-msgstr ""
-"Una version de la famosa Ronda del Reloj\n"
-"Primera ronda, juega 1, segunda, juega 2, etc.\n"
-"Despues de 7 rondas, la maxima puntuacion gana."
-
-msgid "Shanghai-max_round"
-msgstr "Numero de rondas"
-
-msgid "Description-Football"
-msgstr ""
-"El clasico juego de futbol!\n"
-"Si haces BULL, seras el portero.\n"
-"Dale a los triples y los dobles para marcar,\n"
-"el primero en marcar 3 goles gana."
-
-msgid "Football-max_round"
-msgstr "Numero de rondas"
-
-msgid "Football-master"
-msgstr "Numero de rondas"
-
-msgid "Football-goals"
-msgstr "Numero de goles para ganar"
-
-msgid "Description-Bermuda_Triangle"
-msgstr ""
-"Don't get lost in the Bermuda Triangle!\n"
-"Start at 12 and play until Bullseyes\n"
-"Score as many points on shown number in 3 darts\n"
-"If no mark on shown number, score is cut in half!\n"
-"Hit any double or triple when shown\n"
-"High score wins!"
-
-msgid "Bermuda_Triangle-Double_bull"
-msgstr "Double Bullseye"
-
-msgid "Description-By_Fives"
-msgstr ""
-"Make your round score divisible by 5!\n"
-"If your score is not divisible by 5, no point is scored\n"
-"Play to designated score!"
-
-msgid "By_Fives-startingat"
-msgstr "Play to?"
-
-msgid "Description-Scram_Cricket"
-msgstr ""
-"2 or 4 players only!\n"
-"First player has all numbers open and\n"
-"shoots to get the highest score possible.\n"
-"Second player tries to close all numbers\n"
-"as fast as possible.\n"
-"Once complete, players switch and\n"
-"highest score wins!"
-
-msgid "Scram_Cricket-optioncrazy"
-msgstr "Crazy mode"
-
-msgid "Scram_Cricket-drinkscore"
-msgstr "Drink at this score (cutthroat only)"
-
-msgid "Scram_Cricket-Teaming"
-msgstr "Team Mode (4 players only)"
-
-msgid "Scram_Cricket-optionteamscore"
-msgstr "Mark teammate with same marks"
-
-msgid "Cricket-optionteamscore"
-msgstr "Mark teammate with same marks"
-
-msgid "Scram_Cricket-optioncutthroat"
-msgstr "Cutthroat Mode"
-
-msgid "Scram_Cricket-optionscram"
-msgstr "Scram Mode"
-
-msgid "Ho_One-league"
-msgstr "League Play! (Enables freeze mode and handicap, 4 players only!)"
-
-msgid "Cricket-optionhandicap"
-msgstr "Handicap Option!"
-
-msgid "this-game-stats"
-msgstr "Hi Score for this game"
-
-msgid "local-db-stats"
-msgstr "Your position in global Hi-Score table"
-
-msgid "ranking"
-msgstr "Ranking"
-
-msgid "Points Per Dart"
-msgstr "Points Per Dart"
-
-msgid "Points Per Round"
-msgstr "Points Per Round"
-
-msgid "Score"
-msgstr "Score"
-
-msgid "Hits per round"
-msgstr "Hits per round"
-
-msgid "GiveOut"
-msgstr "Give Out"
-
-msgid "Reached Score"
-msgstr "Reached Score"
-
-msgid "Hits"
-msgstr "Hits"
+msgid "tire"
+msgstr "Fuera de diana"
+
+msgid "test"
+msgstr "Probar"
+
+msgid "reverse"
+msgstr "Invertir"
+
+msgid "extended"
+msgstr "Tarjeta de expansión"
+
+msgid "up"
+msgstr "Arriba"
+
+msgid "down"
+msgstr "Abajo"
+
+msgid "right"
+msgstr "Derecha"
+
+msgid "plus"
+msgstr "Más"
+
+msgid "minus"
+msgstr "Menos"
+
+msgid "validate"
+msgstr "Confirmar"
+
+msgid "try"
+msgstr "Prueba"
+
+msgid "cancel"
+msgstr "Cancelar"
+
+msgid "and"
+msgstr "y"
+
+msgid "Loading"
+msgstr "Cargando..."
+
+######## VIDEOS #######
+
+msgid "videos"
+msgstr "Vídeos"
+
+msgid "videos-none"
+msgstr "Ninguno"
+
+msgid "videos-special"
+msgstr "Tiros especiales"
+
+msgid "videos-all"
+msgstr "Todos"
+
+######## LANGUES #######
+
+msgid "fr_FR"
+msgstr "Francés"
+
+msgid "es_ES"
+msgstr "Español"
+
+msgid "en_GB"
+msgstr "Inglés"
+
+msgid "de_DE"
+msgstr "Alemán"
+
+msgid "it_IT"
+msgstr "Italiano"
+
+######## PARAMETRAGE ########
+
+msgid "extension1"
+msgstr "Extensión 1"
+
+msgid "extension2"
+msgstr "Extensión 2"
+
+msgid "general"
+msgstr "General"
+
+msgid "game"
+msgstr "Juego"
+
+msgid "locale"
+msgstr "Idioma"
+
+msgid "scoreonlogo"
+msgstr "Puntuación en el logotipo"
+
+msgid "onscreenbuttons"
+msgstr "Botones en pantalla durante la partida"
+
+msgid "blinktime"
+msgstr "Duración de visualización de mensajes"
+
+msgid "releasedartstime"
+msgstr "Tiempo permitido para retirar los dardos"
+
+msgid "pnj_time"
+msgstr "Tiempo de turno de la IA"
+
+msgid "resx"
+msgstr "Resolución horizontal"
+
+msgid "resy"
+msgstr "Resolución vertical"
+
+msgid "fullscreen"
+msgstr "Modo pantalla completa"
+
+msgid "colorset"
+msgstr "Tema"
+
+msgid "debuglevel"
+msgstr "Nivel de registro"
+
+msgid "font"
+msgstr "Fuente"
+
+msgid "startpercent"
+msgstr "Hándicap"
+
+msgid "exhibition_mode"
+msgstr "Modo exposición (bloquea los menús contra pulsaciones accidentales)"
+
+msgid "mode"
+msgstr "Modo"
+
+msgid "competition_mode"
+msgstr "Modo competición (sin animaciones, solo juego)"
+
+msgid "leisure"
+msgstr "Casual"
+
+msgid "competition"
+msgstr "Competición"
+
+msgid "sound_multiplier"
+msgstr "Multiplicador de volumen de sonido (0-1)"
+
+msgid "preferedcategory"
+msgstr "Categoría de juego preferida"
+
+msgid "illumination_mode"
+msgstr "Tira LED de color único"
+
+msgid "illumination_color"
+msgstr "Color de la tira LED"
+
+msgid "fast_games_mode"
+msgstr "Omitir el menú principal (selección directa de jugador)"
+
+msgid "only_favorites_games_mode"
+msgstr "Mostrar solo juegos favoritos"
+
+msgid "check_for_updates"
+msgstr "Comprobar actualizaciones al iniciar"
+
+msgid "no-update-available"
+msgstr "No hay actualizaciones disponibles"
+
+msgid "btn_update"
+msgstr "Comprobar actualizaciones"
+
+######## EVENEMENTS ########
+
+msgid "event-simple"
+msgstr "Simple"
+
+msgid "event-double"
+msgstr "Doble"
+
+msgid "event-triple"
+msgstr "Triple"
+
+msgid "event-launch"
+msgstr "Iniciar juego"
+
+msgid "event-wait"
+msgstr "Esperando"
+
+msgid "event-menu"
+msgstr "Menú abierto"
+
+msgid "event-newgame"
+msgstr "Nueva partida"
+
+msgid "event-nextplayer"
+msgstr "Siguiente jugador"
+
+msgid "event-target"
+msgstr "Segmento objetivo"
+
+msgid "event-touch"
+msgstr "Segmento alcanzado"
+
+msgid "event-SB"
+msgstr "Buldseyes simple"
+
+msgid "event-DB"
+msgstr "Buldsseye doble"
+
+msgid "event-180"
+msgstr "180"
+
+msgid "event-pressure"
+msgstr "¡Presión!"
+
+msgid "event-release"
+msgstr "Retirar los dardos"
+
+msgid "event-miss"
+msgstr "Diana fallada"
+
+msgid "event-setwinner"
+msgstr "Set ganado"
+
+msgid "event-winner"
+msgstr "Ganador"
+
+msgid "event-gameover"
+msgstr "Juego terminado (sin ganador)"
+
+msgid "event-buttonpressed"
+msgstr "Botón pulsado"
+
+msgid "event-interrupt"
+msgstr "Partida interrumpida"
+
+msgid "event-quit"
+msgstr "Salir del juego"
+
+msgid "no-favs-games"
+msgstr "¡Por favor, seleccione juegos favoritos!"
+
+######## DMD ########
+
+msgid "dmd-player-choice"
+msgstr "Selección de jugadores"
+
+msgid "dmd-player-bank"
+msgstr "Banco de jugadores"
+
+msgid "dmd-player-favorites"
+msgstr "Jugadores favoritos"
+
+msgid "dmd-server-favorites"
+msgstr "Servidores favoritos"
+
+msgid "dmd-game-choice"
+msgstr "Selección de juego"
+
+msgid "dmd-game-classic"
+msgstr "Juegos clásicos"
+
+msgid "dmd-game-fun"
+msgstr "Juegos divertidos"
+
+msgid "dmd-game-sport"
+msgstr "Juegos de deportes"
+
+msgid "dmd-game-favorites"
+msgstr "Juegos favoritos"
+
+msgid "dmd-backup-menu"
+msgstr "Copias de seguridad"
+
+msgid "dmd-bestwin"
+msgstr "¡Que gane el mejor!"
+
+######## MENUS ########
+
+msgid "technical-informations"
+msgstr "Información técnica"
+
+msgid "game-cat"
+msgstr "Categoría de juego"
+
+msgid "game-list"
+msgstr "Selección de juego"
+
+msgid "game-options"
+msgstr "Opciones de juego"
+
+msgid "players-bank"
+msgstr "Banco de nombres"
+
+msgid "master-client-title"
+msgstr "Seleccione la partida a la que unirse"
+
+msgid "game-type-menu"
+msgstr "Raspydarts"
+
+msgid "main-menu"
+msgstr "Menú principal"
+
+msgid "game-type-local"
+msgstr "Partida individual"
+
+msgid "game-type-master"
+msgstr "Unirse a partida en red"
+
+msgid "game-type-manual"
+msgstr "Crear partida en red"
+
+msgid "net-options"
+msgstr "Especifique las opciones de su servidor Raspydarts"
+
+msgid "net-options-netgamename"
+msgstr "Nombre de la partida"
+
+msgid "net-options-servername"
+msgstr "Nombre o dirección IP del servidor"
+
+msgid "net-options-serveralias"
+msgstr "Alias del servidor (solo para creación)"
+
+msgid "net-options-serverport"
+msgstr "Puerto del servidor"
+
+######## REINITIALISATION ########
+
+msgid "reinit-question"
+msgstr "¿Seguro que desea restablecer su juego?"
+
+######## MISE A JOUR ########
+
+msgid "config-restart"
+msgstr "Reiniciando el juego para aplicar la configuración"
+
+msgid "update-check"
+msgstr "Buscando actualizaciones"
+
+msgid "update-download"
+msgstr "Descargando..."
+
+msgid "update-failed"
+msgstr "La descarga ha fallado, por favor inténtelo de nuevo"
+
+msgid "update-available"
+msgstr "Hay una actualización disponible. ¿Desea instalarla?"
+
+msgid "updating"
+msgstr "Instalando..."
+
+######## CONFIGURATION ########
+
+msgid "menu-NBR_STRIPLED"
+msgstr "Número de LEDs en su tira"
+
+msgid "menu-PIN_STRIPLED"
+msgstr "Pin de la tira LED (recomendado: 12)"
+
+msgid "menu-TYP_STRIPLED"
+msgstr "Tipo de tira LED utilizada"
+
+msgid "menu-PIN_TARGETLED"
+msgstr "Pin de los LEDs de la diana (recomendado: 21)"
+
+msgid "menu-BRI_STRIPLED"
+msgstr "Brillo de la tira LED (1 a 100)"
+
+msgid "menu-BRI_TARGETLED"
+msgstr "Brillo de los LEDs de la diana (1 a 100)"
+
+msgid "menu-TYP_TARGETLED"
+msgstr "Tipo de LEDs utilizados en la diana"
+
+msgid "menu-config-already"
+msgstr "Este pin ya está en uso"
+
+msgid "menu-leds-conflict"
+msgstr "Los pines utilizados para la diana y las tiras DEBEN ser diferentes"
+
+msgid "TYP_TARGETLED"
+msgstr "el tipo de LEDs utilizados en la diana"
+
+msgid "TYP_STRIPLED"
+msgstr "el tipo de LEDs utilizados en la(s) tira(s)"
+
+msgid "NBR_STRIPLED"
+msgstr "el número de LEDs de su tira"
+
+msgid "PIN_STRIPLED"
+msgstr "el pin de la tira LED"
+
+msgid "PIN_TARGETLED"
+msgstr "el pin de los LEDs de la diana"
+
+msgid "BRI_STRIPLED"
+msgstr "el brillo de la tira LED (1 a 100)"
+
+msgid "BRI_TARGETLED"
+msgstr "el brillo de los LEDs de la diana (1 a 100)"
+
+msgid "conf-esc1"
+msgstr "cancelar configuración"
+
+msgid "conf-esc2"
+msgstr "volver atrás"
+
+msgid "conf-pin1"
+msgstr "Por favor, indique {}. Esc para {}, Enter para omitir o validar."
+
+msgid "conf-pin2"
+msgstr "Por favor, indique {}. Esc para {}, Enter para validar."
+
+msgid "conf-leds"
+msgstr "Configuración de LEDs"
+
+msgid "conf-fillin"
+msgstr "Indique"
+
+msgid "PIN_UP"
+msgstr "Arriba"
+
+msgid "PIN_DOWN"
+msgstr "Abajo"
+
+msgid "PIN_LEFT"
+msgstr "Izquierda"
+
+msgid "PIN_RIGHT"
+msgstr "Derecha"
+
+msgid "PIN_MINUS"
+msgstr "Jugador -"
+
+msgid "PIN_PLUS"
+msgstr "Jugador +"
+
+msgid "PIN_VALIDATE"
+msgstr "Confirmar"
+
+msgid "PIN_CANCEL"
+msgstr "Cancelar"
+
+msgid "PIN_NEXTPLAYER"
+msgstr "Siguiente jugador"
+
+msgid "PIN_BACK"
+msgstr "Atrás"
+
+msgid "PIN_GAMEBUTTON"
+msgstr "Juego"
+
+msgid "PIN_VOLUME_UP"
+msgstr "Volumen +"
+
+msgid "PIN_VOLUME_DOWN"
+msgstr "Volumen -"
+
+msgid "PIN_VOLUME_MUTE"
+msgstr "Silenciar"
+
+msgid "PIN_CPTPLAYER"
+msgstr "Ordenador"
+
+msgid "PIN_MISSDART"
+msgstr "Piezo"
+
+msgid "LIGHT_NEXTPLAYER"
+msgstr "LED del botón de siguiente jugador"
+
+msgid "LIGHT_VALIDATE"
+msgstr "LED del botón confirmar"
+
+msgid "LIGHT_BACK"
+msgstr "LED del botón atrás"
+
+msgid "LIGHT_NAVIGATE"
+msgstr "LED de los botones de navegación"
+
+msgid "LIGHT_PLAYERS"
+msgstr "LEDs de los botones de jugador +/-"
+
+msgid "LIGHT_LASER"
+msgstr "Láser"
+
+msgid "LIGHT_LIGHT"
+msgstr "Iluminación"
+
+msgid "LIGHT_FLASH"
+msgstr "Flash"
+
+msgid "LIGHT_CELEBRATION"
+msgstr "Celebración 1"
+
+msgid "LIGHT_CELEBRATION2"
+msgstr "Celebración 2"
+
+msgid "paramled_text1"
+msgstr "Configuración de LEDs para"
+
+msgid "paramled_text2"
+msgstr "Los simples deben introducirse desde el centro hacia el exterior"
+
+msgid "paramled_text3"
+msgstr "Los dobles exteriores deben introducirse en sentido horario."
+
+msgid "paramled_text4"
+msgstr "Espacio borra el área."
+
+msgid "nogpio"
+msgstr "¡Ningún MCP conectado!"
+
+msgid "notoyset"
+msgstr "Ningún toy configurado"
+
+msgid "config-interface"
+msgstr "Seleccionar placa de interfaz"
+
+msgid "config-pin"
+msgstr "Configuración de entrada"
+
+msgid "config-pin-sub"
+msgstr "Elija el botón conectado al pin"
+
+msgid "config-toy"
+msgstr "Configuración de salida"
+
+msgid "config-toy-sub"
+msgstr "Elija el toy conectado al pin"
+
+msgid "card-other"
+msgstr "Otro o cableado personalizado"
+
+msgid "config-leds_choice"
+msgstr "Selección de LEDs"
+
+msgid "config-leds_question"
+msgstr "¿Utiliza raspyleds?"
+
+msgid "config-buttons_choice"
+msgstr "Configuración de botones"
+
+msgid "config-buttons_question"
+msgstr "¿Desea configurar los botones? Debe conocer el mapeo de E/S"
+
+msgid "config-cancel"
+msgstr "cancelar configuración"
+
+msgid "config-back"
+msgstr "volver atrás"
+
+msgid "config-pin_out"
+msgstr "Configuración de pines de salida de la diana"
+
+msgid "config-already"
+msgstr "Este pin ya ha sido introducido"
+
+msgid "config-noMCP"
+msgstr "No se encontró ninguna placa de expansión"
+
+msgid "config-toysfound"
+msgstr "Toys encontrados en las siguientes salidas: "
+
+msgid "noCconfig-toysfound"
+msgstr "No se encontraron Toys"
+
+msgid "buttons"
+msgstr "Botones"
+
+msgid "toys"
+msgstr "Toys"
+
+msgid "conf-cam"
+msgstr "Configuración de cámara"
+
+msgid "test-cam"
+msgstr "Prueba de cámara"
+
+msgid "camera_id"
+msgstr "¿Cámara no detectada? (haga clic aquí)"
+
+msgid "picture_path"
+msgstr "Ruta de guardado de imágenes"
+
+msgid "video_path"
+msgstr "Ruta de guardado de vídeos"
+
+msgid "take_a_shot"
+msgstr "Tomar una foto"
+
+msgid "take_a_video"
+msgstr "Grabar un vídeo"
+
+msgid "picture_res_width*picture_res_height"
+msgstr "Resolución de imagen"
+
+msgid "video_res_width*video_res_height"
+msgstr "Resolución de vídeo"
+
+msgid "flip_horizontal"
+msgstr "Voltear imagen horizontalmente"
+
+msgid "flip_vertical"
+msgstr "Voltear imagen verticalmente"
+
+msgid "nb_picture"
+msgstr "Número de fotos por evento"
+
+msgid "video_duration"
+msgstr "Duración de grabación de vídeo del evento (s)"
+
+msgid "fps"
+msgstr "Fotogramas por segundo (fps)"
+
+msgid "directory_order"
+msgstr "Estructura de carpetas de fotos y vídeos"
+
+msgid "choice_of_memories"
+msgstr "Selección de recuerdos"
+
+msgid "events"
+msgstr "Activadores de captura de recuerdos (separados por comas)"
+
+msgid "upload_cloud"
+msgstr "Subir a la nube"
+
+msgid "path_google_drive"
+msgstr "Directorio de Google Drive (si está vacío, se sube a la raíz)"
+
+msgid "dir-dont-exist-create"
+msgstr "La ruta no existe, ¿desea crearla?"
+
+msgid "abstracted"
+msgstr "¡No olvide guardar la configuración!"
+
+msgid "fullscreen_pop"
+msgstr "Mostrar recuerdos en el centro de la pantalla"
+
+msgid "duree_ms"
+msgstr "Duración de visualización de la foto"
 
 msgid "gallery"
 msgstr "Galería"
 
 msgid "gallery_password"
-msgstr "Contraseña de la galería (vacía : ninguna)"
+msgstr "Contraseña de la galería (vacío: ninguna)"
 
 msgid "gallery-scan"
-msgstr "Escanee para ver, descargar, imprimir o borrar las fotos y vídeos de las partidas"
+msgstr "Escanee para ver, descargar, imprimir o eliminar fotos y vídeos de las partidas"
 
 msgid "gallery-no-password"
-msgstr "Sin contraseña : cualquiera en la red puede borrar los recuerdos"
+msgstr "Sin contraseña: cualquier persona en la red puede eliminar los recuerdos"
 
 msgid "gallery-password"
 msgstr "Contraseña"
@@ -495,10 +830,10 @@ msgid "gallery-all"
 msgstr "Todas las partidas"
 
 msgid "gallery-none"
-msgstr "Todavía no hay recuerdos."
+msgstr "No hay recuerdos todavía."
 
 msgid "gallery-empty"
-msgstr "Sin recuerdos."
+msgstr "No hay recuerdos."
 
 msgid "gallery-gone"
 msgstr "Este recuerdo ya no existe."
@@ -510,7 +845,7 @@ msgid "gallery-error"
 msgstr "Error"
 
 msgid "gallery-warning"
-msgstr "Sin contraseña : cualquiera en esta red puede borrar los recuerdos (se configura en la pantalla « Galería » de la máquina)."
+msgstr "Sin contraseña: cualquier persona en esta red puede eliminar los recuerdos (ajuste disponible en el menú «Galería» de la máquina)."
 
 msgid "gallery-counts"
 msgstr "{photos} foto(s), {videos} vídeo(s)"
@@ -522,22 +857,22 @@ msgid "gallery-print"
 msgstr "Imprimir"
 
 msgid "gallery-delete"
-msgstr "Borrar"
+msgstr "Eliminar"
 
 msgid "gallery-delete-one"
-msgstr "¿Borrar este recuerdo?"
+msgstr "¿Eliminar este recuerdo?"
 
 msgid "gallery-download-all"
-msgstr "Descargar todo, uno a uno"
+msgstr "Descargar todo, uno por uno"
 
 msgid "gallery-zip"
 msgstr "Descargar todo (ZIP)"
 
 msgid "gallery-delete-game"
-msgstr "Borrar la partida"
+msgstr "Eliminar partida"
 
 msgid "gallery-delete-all"
-msgstr "¿Borrar todos los recuerdos de esta partida?"
+msgstr "¿Eliminar todos los recuerdos de esta partida?"
 
 msgid "gallery-password-label"
 msgstr "Contraseña de la galería:"
@@ -549,16 +884,2876 @@ msgid "gallery-wrong"
 msgstr "Contraseña incorrecta."
 
 msgid "gallery-delete-selection"
-msgstr "Borrar la selección"
+msgstr "Eliminar selección"
 
 msgid "gallery-delete-selected"
-msgstr "¿Borrar todas las partidas seleccionadas?"
+msgstr "¿Eliminar todas las partidas seleccionadas?"
 
 msgid "gallery-delete-password"
 msgstr "Contraseña de la galería:"
 
 msgid "gallery-back"
-msgstr "Volver"
+msgstr "Atrás"
+
+######## MESSAGES ########
+
+msgid "Loading logos..."
+msgstr "Cargando logotipos..."
+
+msgid "Ready to kick ass ?"
+msgstr "¿Listo para dar caña?"
+
+msgid "Game interrupted"
+msgstr "Partida interrumpida"
+
+msgid "end-of-game"
+msgstr "Partida terminada"
+
+msgid "end-of-set"
+msgstr "Set terminado"
+
+msgid "master-client-empty"
+msgstr "No hay partidas en curso en este servidor"
+
+msgid "master-client-no-connection"
+msgstr "Imposible conectar con el servidor"
+
+msgid "game-client-connecting"
+msgstr "Conectando al servidor de juego... Por favor, espere"
+
+msgid "game-client-no-connection"
+msgstr "Imposible conectar con el servidor de juego"
+
+msgid "master-client-connecting"
+msgstr "Conectando al servidor. Por favor, espere..."
+
+msgid "master-client-refresh"
+msgstr "Pulse Espacio para actualizar"
+
+msgid "master-player-has-left"
+msgstr "El jugador principal ha abandonado la partida. Partida cancelada. Pulse Enter"
+
+msgid "getting-info-from-server"
+msgstr "Descargando información..."
+
+msgid "get-ready"
+msgstr "¡Prepárate!"
+
+msgid "game-options-binary"
+msgstr "Use las teclas Fx para cambiar las opciones."
+
+msgid "players-names-subtitle"
+msgstr "Pulse + para añadir, - para eliminar, / para jugador IA, * para el color del jugador, <Tab> para mezclar"
+
+msgid "press-player"
+msgstr "Pulse el botón Player"
+
+msgid "press-player-remote"
+msgstr "Esperando al jugador remoto"
+
+msgid "release-darts"
+msgstr "Retire los dardos"
+
+msgid "release-darts-and-press-player"
+msgstr "Retire los dardos y pulse el botón \"Player\""
+
+msgid "version-mismatch"
+msgstr "¡Atención! Su versión de Raspydarts no coincide con la del servidor."
+
+msgid "bad-numberofplayers"
+msgstr "Número de jugadores incorrecto para este juego y opciones"
+
+msgid "players-ready-masterplayer"
+msgstr "Esperando a los jugadores. Continúe cuando sus oponentes estén listos."
+
+msgid "players-ready-slaveplayer"
+msgstr "Jugadores listos... Esperando al anfitrión"
+
+msgid "net-client-refresh-players"
+msgstr "Actualizando la lista de jugadores..."
+
+msgid "net-client-randomizing"
+msgstr "Mezclando en el servidor, ¡por favor espere!"
+
+msgid "last-round-reached"
+msgstr "Última ronda alcanzada..."
+
+msgid "need-restart"
+msgstr "¿Desea reiniciar?"
+
+msgid "press-enter"
+msgstr "Pulse Intro, el botón de confirmar o toque la pantalla para confirmar"
+
+msgid "are-you-sure"
+msgstr "¿Está seguro?"
+
+msgid "options-saved"
+msgstr "Sus opciones han sido guardadas."
+
+msgid "options-old"
+msgstr "¡¡¡Opción antigua encontrada!!! Por favor, guarde sus opciones."
+
+######## STATISTIQUES ########
+
+msgid "game-stats"
+msgstr "Estadísticas de la partida"
+
+msgid "stats-multiplier"
+msgstr "Multiplicador"
+
+msgid "stats-touch"
+msgstr "Número de aciertos"
+
+msgid "stats-percent"
+msgstr "Porcentaje"
+
+msgid "hi-score"
+msgstr "Puntuación máxima"
+
+msgid "this-game-stats"
+msgstr "Récords de esta partida"
+
+msgid "local-db-stats"
+msgstr "Tabla general de récords"
+
+msgid "ranking"
+msgstr "Clasificación"
+
+msgid "Points Per Dart"
+msgstr "Puntos Por Dardo"
+
+msgid "Points Per Round"
+msgstr "Puntos Por Ronda"
+
+msgid "Score"
+msgstr "Puntuación"
+
+msgid "Hits per round"
+msgstr "Aciertos por ronda"
+
+######## BACKUP / RESTORE ########
+
+msgid "backup"
+msgstr "Guardar"
+
+msgid "backups"
+msgstr "Gestión de copias de seguridad"
+
+msgid "backup-clean"
+msgstr "Solo se conservarán las 3 últimas copias de seguridad"
+
+msgid "backup-choice"
+msgstr "Ha elegido restaurar la "
+
+msgid "backup-done"
+msgstr "Copia de seguridad completada"
+
+msgid "backing-up"
+msgstr "Realizando copia de seguridad..."
+
+msgid "restoring"
+msgstr "Restaurando..."
+
+msgid "restore-done"
+msgstr "Restauración completada"
+
+msgid "cleaning"
+msgstr "Limpiando..."
+
+msgid "clean-done"
+msgstr "Limpieza completada"
+
+######## CONFIGURATION ########
+
+msgid "server-unreachable"
+msgstr "Servidor inalcanzable"
+
+msgid "server-menu"
+msgstr "Selección de servidor"
+
+msgid "check-server"
+msgstr "Comprobando servidores..."
+
+msgid "enter-valid-url"
+msgstr "Introduzca la URL del servidor en formato <servidor>:<puerto>"
+
+msgid "board-calibration"
+msgstr "¡Calibración de la diana!"
+
+msgid "press-on-parts"
+msgstr "Por favor, pulse uno a uno cada segmento de la diana. Esc para volver."
+
+msgid "setwinneris"
+msgstr "Set ganado por "
+
+msgid "Autorefresh in %sec seconds"
+msgstr "Actualización automática en %(sec)s segundos"
+
+msgid "serverlist-header-STATUS"
+msgstr "Estado"
+
+msgid "serverlist-header-GAMENAME"
+msgstr "Nombre de la partida"
+
+msgid "serverlist-header-PLAYERS"
+msgstr "Jugadores"
+
+msgid "serverlist-header-SERVERIP"
+msgstr "Servidor"
+
+msgid "serverlist-header-SERVERPORT"
+msgstr "Puerto"
+
+msgid "serverlist-header-GAMECREATOR"
+msgstr "Creador"
+
+msgid "serverlist-header-GAMETYPE"
+msgstr "Tipo de partida"
+
+msgid "favorites-players"
+msgstr "Jugadores favoritos"
+
+msgid "favorites-servers"
+msgstr "Servidores favoritos"
+
+######## JEUX ########
+
+msgid "AllGame-colorised"
+msgstr "Diana colorizada"
+
+msgid "AllGame-master"
+msgstr "Master"
+
+msgid "AllGame-max_round"
+msgstr "Número de rondas"
+
+######## BALL TRAP ########
+
+msgid "Description-Balltrap"
+msgstr "Un juego donde la precisión y la velocidad van de la mano.\n"
+"\n"
+"Golpee el segmento iluminado en 1 o 2 dardos para ganar\n"
+"1 o 2 tiros de bonificación en el Bull.\n"
+"\n"
+"El ganador es el jugador con más puntos al final de la partida.\n"
+"\n"
+"-----\n"
+"Si acierta el segmento iluminado con su 1er dardo, gana 2 puntos.\n"
+"Si acierta el segmento iluminado con su 2º dardo, gana 1 punto.\n"
+"* Si falla el segmento iluminado con sus primeros 2 dardos, \n"
+"  pierde su 3er dardo.\n"
+"\n"
+"Si acierta el segmento iluminado con su 1er dardo, apunte al bull 2 veces.\n"
+"Si acierta el segmento iluminado con su 2º dardo, apunte al bull 1 vez.\n"
+"\n"
+"- Un SB otorga 2 puntos de bonificación adicionales.\n"
+"- Un DB otorga 3 puntos de bonificación adicionales.\n"
+"\n"
+"En las rondas 3-6-9-12, se lanzarán 2 dianas al mismo tiempo.\n"
+"\n"
+"Las dianas pueden superponerse; si las acierta simultáneamente con\n"
+"- su 1er dardo, obtiene 2*2 puntos y una bonificación X2.\n"
+"- su 2º dardo, obtiene 2*1 punto y una bonificación X2.\n"
+"de lo contrario, obtiene 2 puntos por diana acertada al 1er intento.\n"
+"\n"
+"Opciones:\n"
+"- Time: Velocidad de movimiento de la diana.\n"
+" "
+
+msgid "Balltrap-Repetition"
+msgstr "Número de repeticiones"
+
+msgid "Balltrap-Time"
+msgstr "Velocidad de la diana"
+
+######## BASEBALL ########
+
+msgid "Description-Baseball"
+msgstr "El objetivo es anotar el máximo de puntos en cada entrada.\n"
+"Antes de anotar puntos, debe conquistar\n"
+"3 bases o conectar un Home Run.\n"
+"\n"
+"El ganador es el jugador con más puntos al final.\n"
+"\n"
+"-----\n"
+"Antes de anotar puntos, conquiste las 3 primeras bases\n"
+"acertando su número (S = 1 base, D = 2 bases, T = 3 bases).\n"
+"\n"
+"Conserva las bases conseguidas durante todo el juego, pero sus oponentes\n"
+"pueden quitarle una o más bases acertando su número.\n"
+"\n"
+"Anota puntos cuando ocupa 3 bases y acierta su número.\n"
+"\n"
+"Aciertar SB da un Home Run (+1 punto), y DB da un\n"
+"Super Home Run (2 puntos), además de sus bases adquiridas.\n"
+"\n"
+"Opciones:\n"
+"- 7ª entrada: Divide su puntuación por la mitad si falla su segmento.\n"
+"- Sin empate: Juega entradas extra en caso de empate.\n"
+" "
+
+msgid "Baseball-max_players"
+msgstr "4 máx"
+
+msgid "Baseball-7eme_manche"
+msgstr "7ª entrada"
+
+msgid "Baseball-noequal"
+msgstr "Sin empate"
+
+msgid "Baseball-egalite"
+msgstr "EMPATE - ENTRADA EXTRA"
+
+msgid "Baseball-septieme"
+msgstr "Acierta tu número o tu puntuación se dividirá por 2"
+
+msgid "Baseball-team"
+msgstr "Juego en equipo"
+
+######## BATARD ########
+
+msgid "Batard-name"
+msgstr "Bastardo"
+
+msgid "Description-Batard"
+msgstr "El primer dardo del turno abre la puntuación. Cada punto\n"
+"siguiente debe ser igual o superior al dardo anterior.\n"
+"\n"
+"Si es inferior al dardo anterior, se descuenta.\n"
+"\n"
+"Gana la puntuación más alta.\n"
+"-----\n"
+"Se juega en 10 rondas de 3 dardos.\n"
+"\n"
+"El primer dardo abre la puntuación del turno. Cada dardo siguiente\n"
+"debe puntuar igual o más que el dardo anterior.\n"
+"\n"
+"Si la puntuación es inferior al dardo anterior, se resta.\n"
+"\n"
+"Cada turno restablece el requisito de puntuación con el primer dardo.\n"
+"\n"
+"Un fallo o fuera de diana incurre en una penalización de -10 puntos.\n"
+"\n"
+"Gana la puntuación más alta.\n"
+"\n"
+"Opciones:\n"
+"- 1er dardo: El 1er dardo establece la puntuación mínima requerida.\n"
+"- Bull simple: SB vale 50 puntos.\n"
+"- Penalización: Valor de la penalización\n"
+" "
+
+msgid "Batard-simple50"
+msgstr "Bull simple"
+
+msgid "Batard-penality"
+msgstr "Penalización"
+
+msgid "Batard-first_dart"
+msgstr "1er dardo"
+
+######## BERMUDE TRIANGLE ########
+
+msgid "Bermuda_Triangle-name"
+msgstr "Triángulo de las Bermudas"
+
+msgid "Description-Bermuda_Triangle"
+msgstr "No se pierda en el Triángulo de las Bermudas.\n"
+"\n"
+"Complete varios contratos a lo largo de la partida.\n"
+"-----\n"
+"Apunte al número o segmento especificado en cada ronda para acumular\n"
+"el máximo de puntos.\n"
+"\n"
+"Si no acierta el objetivo requerido, su puntuación total\n"
+"se reducirá a la mitad.\n"
+"\n"
+"Acierta cualquier doble o triple cuando se le solicite.\n"
+"\n"
+"Gana la partida la puntuación más alta.\n"
+"\n"
+"Opción:\n"
+"- Bull doble: Activa/desactiva la ronda 13 (DB).\n"
+" "
+
+msgid "Bermuda_Triangle-Double_bull"
+msgstr "Activar/Desactivar bull doble"
+
+######## BIG 6 ########
+
+msgid "Big6-name"
+msgstr "Big 6"
+
+msgid "Description-Big6"
+msgstr "Los jugadores se turnan para apuntar al segmento fijado por el jugador anterior.\n"
+"\n"
+"Comienza con 3 vidas; el primer objetivo a alcanzar es el segmento S6.\n"
+"\n"
+"Si falla el objetivo con los 3 dardos, pierde una vida.\n"
+"\n"
+"Para ganar, sea el último jugador con vidas restantes o tenga\n"
+"la puntuación más alta al cabo de 10 rondas.\n"
+"-----\n"
+"Se juega en 10 rondas de 3 dardos.\n"
+"\n"
+"Debe acertar el segmento objetivo con uno de sus 3 dardos.\n"
+"\n"
+"- Si acierta el segmento objetivo:\n"
+"  se apaga. Ahora acierte cualquier segmento para puntuar\n"
+"  y seleccionar el segmento objetivo para el siguiente jugador;\n"
+"  cuanto más difícil sea el segmento, mayor será la probabilidad de que su oponente pierda una vida.\n"
+"\n"
+"- Si falla el segmento objetivo, no anota puntos.\n"
+"\n"
+"- Si falla con los 3 dardos, pierde una vida y\n"
+"  el objetivo se reinicia a S6.\n"
+"\n"
+"Opciones:\n"
+"- Número de rondas: Rondas máximas.\n"
+"- Bull simple: SB vale 50 puntos.\n"
+"- Segmento completo: Acierta todo el segmento (Simple-Doble-Triple).\n"
+" "
+
+msgid "Big6-lives"
+msgstr "Número de vidas"
+
+msgid "Big6-simple50"
+msgstr "Bull simple"
+
+msgid "Big6-segment"
+msgstr "Segmento completo"
+
+######## BINGO ######
+
+msgid "Description-Bingo"
+msgstr "Alinee 5 fichas completas de su color en horizontal,\n"
+"vertical o diagonal para ganar un punto.\n"
+"\n"
+"Acierta un número dos veces (2 simples, 1 doble o 1 triple)\n"
+"para reclamar una ficha completa.\n"
+"\n"
+"Gana la partida la puntuación más alta.\n"
+"\n"
+"Opciones:\n"
+"- Puntos para ganar: Puntuación objetivo para ganar\n"
+"- Fichas blancas: Establezca el número (0-5) de fichas de penalización.\n"
+"- Bloqueo: Bloquear fichas tras acertar su ficha completa 3 veces.\n"
+"-----\n"
+"Casillas de bonificación: Representadas por una ficha de su color con estrella,\n"
+"compartidas por todos los jugadores.\n"
+"\n"
+"Casillas de penalización: Representadas por fichas blancas con una X,\n"
+"que no pueden formar una línea.\n"
+"\n"
+"- Acierta Bull simple: Mezcla el tablero\n"
+"\n"
+"- Acierta Bull doble: Mezcla el tablero y otorga media ficha\n"
+"  de su color en el tablero.\n"
+" "
+
+msgid "Bingo-max_players"
+msgstr "4 máx"
+
+msgid "Bingo-win_points"
+msgstr "Puntos para ganar"
+
+msgid "Bingo-master"
+msgstr "Ficha blanca"
+
+msgid "Bingo-block"
+msgstr "Bloqueo"
+
+######## BOB'S 27 ######
+
+msgid "Bob27-name"
+msgstr "Bob '27"
+
+msgid "Description-Bob27"
+msgstr "Juego inventado por el exjugador profesional Bob Anderson.\n"
+"\n"
+"Cada jugador empieza con 27 puntos. El objetivo es\n"
+"recorrer la diana acertando solo dobles.\n"
+"\n"
+"Lanza 3 dardos al doble 1, luego al doble 2, doble 3,\n"
+"y así sucesivamente hasta el bullseye.\n"
+"\n"
+"Gana la partida la puntuación más alta.\n"
+"-----\n"
+"Acertar el doble objetivo suma sus puntos a su puntuación.\n"
+"\n"
+"Fallar los 3 dardos resta los puntos del doble fallado\n"
+"(ej., fallar D1 resta 2 puntos, bajando la puntuación a 25).\n"
+"\n"
+"Puede ganar hasta 3x el valor del doble, pero solo pierde puntos una vez por turno.\n"
+"\n"
+"Si la puntuación de un jugador llega a cero o menos, queda eliminado.\n"
+"\n"
+"La puntuación máxima posible es 1437 acertando cada doble 3 veces.\n"
+"\n"
+"Opciones:\n"
+"- Números: Jugar los números en orden numérico.\n"
+"- Bulls: Terminar en el bullseye.\n"
+" "
+
+msgid "Bob27-Bull"
+msgstr "Terminar en Bull"
+
+msgid "Bob27-Numbers"
+msgstr "Orden numérico"
+
+msgid "bob27-nextnumber"
+msgstr "El siguiente número es"
+
+msgid "bob27-touchit"
+msgstr " Acierta con 3 dardos"
+
+msgid "bob27-yourscore"
+msgstr "Tu puntuación"
+
+######## BOWLING ######
+
+msgid "Description-Bowling"
+msgstr "Igual que los bolos reales, se juega en 10 marcos.\n"
+"\n"
+"Cada marco permite 3 dardos: el 1º determina su pista\n"
+"para el turno, los 2 restantes suman puntos.\n"
+"\n"
+"Opciones:\n"
+"- Rondas: Número de marcos.\n"
+"- Master: Para lograr un Spare, acierta un simple y un doble.\n"
+"-----\n"
+"Elija una pista con su 1er dardo.\n"
+"- Aciertar una pista ya ocupada pierde su turno.\n"
+"\n"
+"Acierta su pista con el 2º y 3er dardo para puntuar.\n"
+"- Simple = 5 puntos (4 en Master)\n"
+"- Doble = 9 puntos (7 en Master)\n"
+"- Triple = 10 puntos\n"
+"\n"
+"STRIKE:\n"
+"- Acierta el triple de la pista con su 2º dardo.\n"
+"SPARE:\n"
+"- Los puntos totales del 2º y 3er dardo suman 10 o más.\n"
+"\n"
+"Bonificación STRIKE:\n"
+"- Duplica los puntos del 2º y 3er dardo en el siguiente marco.\n"
+"Bonificación SPARE:\n"
+"- Duplica los puntos del 2º dardo en el siguiente marco.\n"
+"\n"
+"El jugador con la puntuación total más alta tras el último marco gana.\n"
+" "
+
+msgid "Bowling-choix"
+msgstr "Elija una pista"
+
+msgid "Bowling-miss"
+msgstr "Pista fallada"
+
+msgid "Bowling-rate"
+msgstr "Ningún bolo acertado"
+
+msgid "Bowling-double-strike"
+msgstr "Bonificación 'Doble' concedida"
+
+msgid "Bowling-triple-strike"
+msgstr "Bonificación 'Triple' concedida"
+
+######## BULLS ######
+
+msgid "Description-Bulls"
+msgstr "Acierta a los bulls.\n"
+"\n"
+"El modo de entrenamiento perfecto para practicar el bullseye.\n"
+"\n"
+"Anote 100 puntos para ganar usando solo bullseyes;\n"
+"cualquier otro segmento resta puntos.\n"
+"-----\n"
+"SB = 25 puntos.\n"
+"DB = 50 puntos.\n"
+"\n"
+"Acertar cualquier otro segmento resta su valor en puntos.\n"
+"\n"
+"OPCIONES:\n"
+"- Rondas: Número máximo de rondas.\n"
+"- Puntuación: Puntos necesarios para ganar.\n"
+"- Negativo /2: Divide por la mitad los puntos negativos.\n"
+" "
+
+msgid "Bulls-max_round"
+msgstr "Número de rondas"
+
+msgid "Bulls-winscore"
+msgstr "Puntuación ganadora"
+
+msgid "Bulls-negatif_div2"
+msgstr "Negativo /2"
+
+######## BY FIVE ######
+
+msgid "By_Fives-name"
+msgstr "By 5"
+
+msgid "Description-By_Fives"
+msgstr "¡Saquen las calculadoras!\n"
+"\n"
+"Asegúrese de que la puntuación de su ronda sea divisible por 5.\n"
+"-----\n"
+"Asegúrese de que la puntuación de su ronda sea divisible por 5.\n"
+"\n"
+"- Divisible por 5 = 1 punto.\n"
+"- No divisible por 5 = 0 puntos.\n"
+"\n"
+"Gana la puntuación más alta.\n"
+"\n"
+"Opciones:\n"
+"- Puntuación: Puntuación objetivo para ganar.\n"
+"- 51 by 5's: Anotar 51 puntos en total para ganar. La puntuación aumenta\n"
+"  cuando la puntuación de la ronda es múltiplo de 5 en (Puntuación de ronda) / 5.\n"
+"  Ejemplo: S20 + S20 + S20 = 60 -> 12 puntos.\n"
+" "
+
+msgid "By_Fives-winscore"
+msgstr "Puntuación ganadora"
+
+msgid "By_Fives-score51"
+msgstr "51 by 5's"
+
+######## CASTLE ######
+
+msgid "Description-Castle"
+msgstr "Construya su castillo antes que sus oponentes.\n"
+"\n"
+"Frene la progresión enemiga tirando al\n"
+"número de objetivo asignado a ellos.\n"
+"-----\n"
+"¡El primero en llegar a 15 plantas gana!\n"
+"\n"
+"Simple = +1 planta.\n"
+"Doble = +2 plantas.\n"
+"Triple = +3 plantas.\n"
+"SB = +1 planta propia, -1 a todos los oponentes.\n"
+"DB = +2 plantas propias, -2 a todos los oponentes.\n"
+"\n"
+"Opciones:\n"
+"- Rondas: Número máximo de rondas.\n"
+"- Plantas: 15 plantas.\n"
+"- Modo aleatorio: Los números objetivo cambian en cada ronda.\n"
+" "
+
+msgid "Castle-max_players"
+msgstr "4 máx"
+
+msgid "Castle-number_of_lives"
+msgstr "Número de plantas"
+
+msgid "Castle-mode_random"
+msgstr "Modo aleatorio"
+
+######## CHALLENGE ######
+
+msgid "Description-Challenge"
+msgstr "8 minijuegos (por defecto) seleccionados aleatoriamente de 27 disponibles.\n"
+"\n"
+"Gane 2 puntos por la puntuación más alta en un desafío.\n"
+"\n"
+"Gane 1 punto por la 2ª puntuación más alta.\n"
+"\n"
+"Gane 0 puntos por fallar o puntuar por debajo del 2º puesto.\n"
+"-----\n"
+"Resumen de minijuegos:\n"
+"\n"
+"- 777: Acierta puntuación exacta de 777.\n"
+"- Animal: Encuentra animal oculto entre 3 números.\n"
+"- Azul / Blanco: Acierta solo segmentos Azules o Blancos.\n"
+"- Bomba: Evita 10 bombas ocultas entre 20 segmentos.\n"
+"- Doble / Triple / Bull: Acierta cualquier doble, triple o bull.\n"
+"- Entre dos: Puntuación entre límites mínimo y máximo.\n"
+"- Fortuna: Multiplica puntos para el mejor total de 3 dardos.\n"
+"- Menor / Debajo: Puntuación por encima o debajo del umbral fijado.\n"
+"- Múltiplo: Acierta múltiplo de 3, 4, 5 o 6.\n"
+"- Par / Impar: Acierta solo segmentos Pares o Impares.\n"
+"- Puntuación: Puntuación más alta en 1 o 3 dardos.\n"
+"- Simple: Acierta simple solicitado en 1 o 3 dardos.\n"
+"- Secuencia / Vecino: Acierta secuencia de 3 números o vecinos.\n"
+"- Mayor / Menor: Los dardos deben puntuar más/menos que el anterior.\n"
+" "
+
+msgid "Challenge-max_round"
+msgstr "Número de desafíos"
+
+msgid "Challenge-only3"
+msgstr "Solo desafíos de 3 dardos"
+
+######## CHAOS ######
+
+msgid "Description-Chaos"
+msgstr "Consiga la puntuación más alta al final de la partida.\n"
+"\n"
+"Al inicio de cada turno, a cada dardo se le asigna un operador matemático:\n"
+"POSITIVO, NEGATIVO, MULTIPLICADOR (*2,*3,*4) o DIVISOR (/2,/3,/4)\n"
+"que modifica su puntuación.\n"
+"\n"
+"Fallar un dardo (MISSDARTS) deduce 20 puntos independientemente del operador.\n"
+"\n"
+"Gana la puntuación final más alta.\n"
+"-----\n"
+"Consiga la puntuación más alta al final de la partida.\n"
+"\n"
+"Al inicio de cada turno, a cada dardo se le asigna un operador matemático:\n"
+"POSITIVO, NEGATIVO, MULTIPLICADOR (*2,*3,*4) o DIVISOR (/2,/3,/4)\n"
+"que modifica su puntuación.\n"
+"\n"
+"Fallar un dardo (MISSDARTS) deduce 20 puntos independientemente del operador.\n"
+"\n"
+"Gana la puntuación final más alta.\n"
+"\n"
+"Opciones:\n"
+"- Rondas: Número máximo de rondas.\n"
+"- Bull simple: SB vale 50 puntos.\n"
+"- Símbolos matemáticos únicos: Todos los operadores son diferentes.\n"
+" "
+
+msgid "Chaos-max_round"
+msgstr "Número de rondas"
+
+msgid "Chaos-oper1"
+msgstr "Símbolos matemáticos únicos"
+
+msgid "Chaos-simple50"
+msgstr "SB vale 50 puntos"
+
+######## COLOR ######
+
+msgid "Description-Color"
+msgstr "Acierta los segmentos verdes para sumar puntos.\n"
+"\n"
+"Acertar un segmento rojo da 0 puntos, o según opciones,\n"
+"deduce puntos y/o da puntos a los oponentes.\n"
+"\n"
+"MISSDARTS penaliza con 20 puntos.\n"
+"\n"
+"El ganador alcanza el 'winscore' primero o tiene la puntuación más alta al final.\n"
+"-----\n"
+"Consiga los puntos máximos acertando segmentos verdes.\n"
+"\n"
+"Acertar segmentos rojos no da puntos, y puede deducir puntos o\n"
+"dar puntos a los oponentes según las opciones activas.\n"
+"\n"
+"MISSDARTS penaliza con 20 puntos.\n"
+"\n"
+"Todas las opciones se acumulan.\n"
+"\n"
+"Opciones:\n"
+"- Rondas: Número máximo de rondas.\n"
+"- Bull simple: SB vale 50 puntos.\n"
+"- Puntuación: Puntuación objetivo para ganar.\n"
+"- Puntos fijos: Todos los números valen 10 puntos.\n"
+"- Puntos al oponente: Puntos de segmentos rojos dados a oponentes.\n"
+"- Penalización: Acertar segmentos rojos deduce puntos.\n"
+" "
+
+msgid "Color-simple50"
+msgstr "Bull simple"
+
+msgid "Color-winscore"
+msgstr "Puntuación ganadora"
+
+msgid "Color-points"
+msgstr "Todos los números valen 10 puntos"
+
+msgid "Color-points_advs"
+msgstr "Puntos al oponente"
+
+msgid "Color-penalite"
+msgstr "Penalización"
+
+msgid "Color-miss"
+msgstr "Penalización MISSDARTS"
+
+######## CONQUER ######
+
+msgid "Description-Conquer"
+msgstr "Conquiste el territorio más grande.\n"
+"\n"
+"El ganador conecta suficientes territorios adyacentes\n"
+"o controla más territorios en total al final.\n"
+"-----\n"
+"Conquiste el territorio más grande.\n"
+"\n"
+"El ganador conecta suficientes territorios adyacentes\n"
+"o controla más territorios en total al final.\n"
+"\n"
+"Capture territorios neutrales con 1 acierto.\n"
+"\n"
+"Acierta tu propio territorio para fortificarlo (máx 3 refuerzos).\n"
+"\n"
+"Acierta territorio oponente para debilitarlo, o capturarlo si\n"
+"no está fortificado.\n"
+"\n"
+"Opciones:\n"
+"- Territorios: Número de territorios a conectar.\n"
+"- Rondas: Número máximo de rondas.\n"
+" "
+
+msgid "Conquer-max_players"
+msgstr "4 máx"
+
+msgid "Conquer-max_territory"
+msgstr "Número de territorios"
+
+######## CRICKET ######
+
+msgid "Description-Cricket"
+msgstr "Cricket clásico.\n"
+"\n"
+"Cierre los números objetivo antes que sus oponentes y logre\n"
+"la puntuación más alta.\n"
+"-----\n"
+"Acierta los números 15-20 y el Bull 3 veces para abrirlos/cerrarlos.\n"
+"Puntúa en números abiertos hasta que todos los jugadores los cierren.\n"
+"\n"
+"Opciones:\n"
+"- Loco: Los números objetivo cambian una vez abiertos.\n"
+"- Degollina (Cut-Throat): Puntos sumados a las puntuaciones de los oponentes.\n"
+"- Pagar ronda (Drink score): Puntuación >= 200 en Degollina invita a una ronda.\n"
+"- Orden estricto: Debe cerrar objetivos en orden (del 20 al Bull);\n"
+"  los objetivos incorrectos deducen puntos.\n"
+"- Juego en equipo: Formato 2 vs 2.\n"
+"- Puntuaciones compartidas: Los compañeros comparten la tabla de puntuación.\n"
+"- Hándicap: Añade hándicap al equipo más fuerte.\n"
+"- MPR: Muestra el MPR junto a los nombres de los jugadores.\n"
+" "
+
+msgid "Cricket-max_players"
+msgstr "8 máx"
+
+msgid "Cricket-optioncutthroat"
+msgstr "Degollina (Cut-Throat)"
+
+msgid "Cricket-drinkscore"
+msgstr "Puntuación para \"pagar ronda\""
+
+msgid "Cricket-optioncrazy"
+msgstr "¡Loco!"
+
+msgid "Cricket-Teaming"
+msgstr "Juego en equipo"
+
+msgid "Cricket-optionteamscore"
+msgstr "Puntuaciones compartidas"
+
+msgid "Cricket-optionhandicap"
+msgstr "Hándicap"
+
+msgid "Cricket-mpr"
+msgstr "MPR"
+
+msgid "Cricket-enculette"
+msgstr "Orden estricto"
+
+######## DRAGON ########
+
+msgid "Description-Dragon"
+msgstr "Acierta al dragón para sumar puntos.\n"
+"\n"
+"El dragón consta de 5 LEDs adyacentes rotando alrededor\n"
+"de la diana; el LED parpadeante es la cabeza.\n"
+"\n"
+"Acierta la cabeza para obtener la máxima puntuación.\n"
+"\n"
+"El jugador con la puntuación total más alta gana.\n"
+"-----\n"
+"El dragón abarca 5 LEDs rotando alrededor de la diana; la cabeza parpadea.\n"
+"\n"
+"Acierto a la cabeza = 10 puntos.\n"
+"Acierto al 2º segmento = 5 puntos.\n"
+"Acierto al 3er segmento = 3 puntos.\n"
+"Acierto al 4º segmento = 2 puntos.\n"
+"Acierto al 5º segmento = 1 punto.\n"
+"\n"
+"Los dobles y triples multiplican los valores del segmento iluminado.\n"
+"\n"
+"OPCIONES:\n"
+"Rondas: Número total de rondas.\n"
+"Tiempo: Velocidad de rotación del dragón.\n"
+" "
+
+msgid "Dragon-max_round"
+msgstr "Número de rondas"
+
+msgid "Dragon-Time"
+msgstr "Velocidad del dragón (ms)"
+
+######## DUEL ######
+
+msgid "Description-Duel"
+msgstr "Duelo de eliminación directa 1v1.\n"
+"\n"
+"Los jugadores empiezan con 100 PV. Reduzca los PV del oponente a cero\n"
+"usando tiros de precisión, bonificaciones de turno, defensa y contraataques.\n"
+"\n"
+"La puntuación de turno (ataque) + bonificaciones crean una pila de penalización\n"
+"enviada a su oponente.\n"
+"\n"
+"El defensor intenta una respuesta de turno antes de recibir daño,\n"
+"lanzando 3 dardos para bloquear o contraatacar.\n"
+"-----\n"
+"Parada:\n"
+"El defensor iguala la puntuación del atacante, recibiendo 0 de daño.\n"
+"\n"
+"Contraataque:\n"
+"El defensor supera la puntuación del atacante, creando una pila de penalización de contraataque.\n"
+"\n"
+"Daño:\n"
+"Si falla, el ataque restante menos la puntuación de defensa se deduce de los PV.\n"
+"\n"
+"El juego termina cuando un jugador llega a 0 PV.\n"
+"\n"
+"Cuadrícula de bonificación:\n"
+"- Acierto simple: Doble +5, Triple +5, Bull simple +2, Bull doble +5.\n"
+"- Combo de turno: S-D-T +20, Escalera +20.\n"
+"- Vecinos: Sectores adyacentes +15.\n"
+"- Mismo número: 3x Mismo sector +30.\n"
+"- Hat-Trick: 3x Dobles +50, 3x Triples +50, 3x Bulls +50, 3x Bulls dobles +75.\n"
+" "
+
+msgid "Duel-start_hp"
+msgstr "PV iniciales"
+
+msgid "Duel-penality"
+msgstr "Penalización por MISS"
+
+msgid "Duel-speed"
+msgstr "Velocidad de voz"
+
+######## Dungeon ########
+
+msgid "Description-Dungeon"
+msgstr "Juego de mazmorras cooperativo inspirado en RPGs.\n"
+"Los jugadores se unen para derrotar jefes en 1 a 7 plantas.\n"
+"\n"
+"4 clases de personajes aleatorias:\n"
+"\n"
+"- Guerrero: +1 de bonificación de daño en objetivos de jefe simples y triples.\n"
+"\n"
+"- Mago: Aciertar Doble/Triple activa curación de grupo (+1-2 PV a todos).\n"
+"\n"
+"- Ladrón: 40% de probabilidad de esquiva en fallos para evitar daño.\n"
+"\n"
+"- Alquimista: +1 de daño y +2 de bonificación de puntuación en triples.\n"
+"-----\n"
+"Los monstruos tienen de 3 a 5 números de acierto seleccionados aleatoriamente por ronda.\n"
+"\n"
+"Simple: El monstruo pierde 1 PV.\n"
+"Doble: El monstruo pierde 2 PV.\n"
+"Triple: El monstruo pierde 3 PV.\n"
+"\n"
+"El bullseye cura a los jugadores:\n"
+"SB: +1 PV.\n"
+"DB: +2 PV.\n"
+"\n"
+"Derrotar a un monstruo otorga 50 puntos divididos por el daño infligido.\n"
+"\n"
+"Opciones:\n"
+"- Jefes: Número de jefes.\n"
+"- Vidas: PV de los jugadores.\n"
+"- Objetivos: Segmentos objetivo por jefe.\n"
+"- PV de jefe: Salud del 1er jefe.\n"
+"- Bonificación de jefe: PV adicionales por cada nuevo jefe.\n"
+"- Mostrar poderes: Resalta los segmentos de poder en amarillo.\n"
+" "
+
+msgid "Dungeon-number_of_targets"
+msgstr "Recuento de objetivos (3 - 5)"
+
+msgid "Dungeon-number_of_lives"
+msgstr "Número de vidas"
+
+msgid "Dungeon-nb_boss"
+msgstr "Recuento de jefes (1-7)"
+
+msgid "Dungeon-vie_premier_boss"
+msgstr "PV del jefe"
+
+msgid "Dungeon-palier_pv_boss"
+msgstr "Bonificación de PV de jefe (0-99)"
+
+msgid "Dungeon-target_jaune"
+msgstr "Mostrar LEDs de poder"
+
+######## FIGHTERS ########
+
+msgid "Description-Fighters"
+msgstr "Noquee a sus oponentes.\n"
+"\n"
+"Comienza con vidas predeterminadas y 0 puntos.\n"
+"\n"
+"Gana el último jugador en pie o el que tenga más puntos tras la ronda final.\n"
+"-----\n"
+"Los monstruos tienen 3 números de acierto; el jugador activo tiene 1 número de curación.\n"
+"Los números se eligen aleatoriamente al inicio del turno y pueden solaparse.\n"
+"\n"
+"Simple: Oponente -1 vida, Jugador +1 punto.\n"
+"Doble: Oponente -2 vidas, Jugador +2 puntos.\n"
+"Triple: Oponente -3 vidas, Jugador +3 puntos.\n"
+"\n"
+"Segmento CURACIÓN (HEAL) restaura vida:\n"
+"SB: -1 vida a todos los oponentes, +X puntos al jugador (X = número de jugadores).\n"
+"DB: -2 vidas a todos los oponentes, +X puntos al jugador (X = número de jugadores).\n"
+"\n"
+"Premio KO: 5 puntos (o +30 PV si la opción PUNTOS está activada).\n"
+"\n"
+"Opciones:\n"
+"- Puntos: Empieza con 300 PV; los valores de los segmentos restan PV.\n"
+" "
+
+msgid "Fighters-max_players"
+msgstr "5 máx"
+
+msgid "Fighters-number_of_lives"
+msgstr "Número de vidas"
+
+msgid "Fighters-points"
+msgstr "Deduzca puntos de segmento"
+
+######## FOOTBALL ######
+
+msgid "Description-Football"
+msgstr "Intercepte el balón y marque en la portería contraria.\n"
+"\n"
+"El primer jugador en anotar 3 goles gana.\n"
+"-----\n"
+"Debe poseer el balón para marcar.\n"
+"\n"
+"- Si no tiene el balón, acierte a un bull para robárselo al rival.\n"
+"- Si tiene el balón, acierte un doble o triple para marcar.\n"
+"\n"
+"Opciones:\n"
+"- Rondas: Rondas máximas.\n"
+"- Master: Debe acertar DB para robar el balón.\n"
+"- Goles objetivo: Puntuación para ganar.\n"
+"- Defensa: Bloquea los tiros del oponente.\n"
+" "
+
+msgid "Football-goals"
+msgstr "Goles objetivo"
+
+msgid "Football-defense"
+msgstr "Defensa"
+
+msgid "Football-defend"
+msgstr "¡Defiéndete!"
+
+msgid "Football-def2"
+msgstr "Apunte al"
+
+msgid "Football-def3"
+msgstr "para bloquear el ataque"
+
+msgid "Football-stopped"
+msgstr "Ataque bloqueado. ¡Bien hecho!"
+
+######## GAME OF GOOSE ######
+
+msgid "GameOfGoose-name"
+msgstr "El juego de la Oca"
+
+msgid "Description-GameOfGoose"
+msgstr "¡Tire los dados!\n"
+"\n"
+"Llegue al final del tablero antes que sus oponentes.\n"
+"-----\n"
+"Llegue el primero al final del tablero.\n"
+"\n"
+"- 2 dardos por turno. Solo cuentan los segmentos 1 al 6.\n"
+"- Fallar anula el turno.\n"
+"- 5+4 o 6+3 en el 1er turno otorga un impulso (no en Master).\n"
+"- Sigue la distribución clásica del tablero de la Oca.\n"
+"- En modo de 1 jugador, Hotel, Pozo y Prisión están desactivados.\n"
+"\n"
+"El ganador debe acertar exactamente la casilla 63.\n"
+"\n"
+"Dificultad:\n"
+"- 1 = Segmento completo.\n"
+"- 2 = Solo simples.\n"
+"- 3 = Solo dobles.\n"
+"- 4 = Solo triples.\n"
+"\n"
+"Opción Master: Sustituye el impulso del 1er turno por +1.\n"
+"Opción Prisión/Pozo: Las trampas saltan turnos en lugar de bloquear.\n"
+"Opción Niños: Utiliza segmentos aleatorios.\n"
+" "
+
+msgid "GameOfGoose-max_players"
+msgstr "4 máx"
+
+msgid "GameOfGoose-level"
+msgstr "Dificultad"
+
+msgid "GameOfGoose-tour"
+msgstr "Prisión/Pozo = perder 2 turnos"
+
+msgid "GameOfGoose-alea"
+msgstr "Niños"
+
+######## GOLF ######
+
+msgid "Description-Golf"
+msgstr "3 dardos por ronda.\n"
+"\n"
+"Puede parar antes si está satisfecho con un tiro;\n"
+"solo el último dardo lanzado cuenta para la puntuación.\n"
+"\n"
+"Gana la puntuación total más baja.\n"
+"\n"
+"Opciones:\n"
+"- BULL: Habilita BULL\n"
+"- MASTER: Solo cuenta el Bull doble (requiere BULL habilitado)\n"
+"- 9 hoyos: Jugar 9 hoyos en lugar de 18\n"
+"-----\n"
+"Objetivo 1 en el turno 1, 2 en el turno 2, etc.\n"
+"\n"
+"Solo cuenta el último dardo lanzado. Pulse Siguiente Jugador para confirmar.\n"
+"\n"
+"- Simple = 4 golpes (BOGEY)\n"
+"- Triple = 2 golpes (BIRDIE)\n"
+"- Doble = 1 golpe (EAGLE)\n"
+"- Fallo = 5 golpes (DOUBLE BOGEY)\n"
+"\n"
+"Con la opción BULL:\n"
+"- SB = 0 golpes (ALBATROSS)\n"
+"- DB = -1 golpe (CONDOR)\n"
+"Sin la opción BULL, SB/DB = 5 golpes (DOUBLE BOGEY).\n"
+"\n"
+"Con las opciones BULL y MASTER:\n"
+"- SB = 5 golpes (DOUBLE BOGEY)\n"
+"- DB = -1 golpe (CONDOR)\n"
+" "
+
+msgid "Golf-nine_holes"
+msgstr "9 hoyos"
+
+msgid "Golf-bulls"
+msgstr "Habilitar Bull"
+
+msgid "Golf-master"
+msgstr "Master - Solo DB activo"
+
+msgid "Golf-save"
+msgstr "¡Guardado ;)"
+
+###### HIGH SCORE ######
+
+msgid "Description-High_Score"
+msgstr "El juego de dardos más simple.\n"
+"\n"
+"Una regla: anotar el máximo de puntos.\n"
+"\n"
+"Gana la puntuación más alta.\n"
+"-----\n"
+"El juego de dardos más simple.\n"
+"\n"
+"Gana la puntuación más alta.\n"
+"\n"
+"Opciones:\n"
+"- Bull simple: Bull exterior vale 50 puntos.\n"
+"- Muerte súbita: El jugador con menor puntuación es eliminado cada ronda.\n"
+"- Multiplicador (x1-x2-x3): Multiplica las puntuaciones por 1, 2 o 3.\n"
+" "
+
+msgid "High_Score-lives"
+msgstr "Número de vidas"
+
+msgid "High_Score-simple50"
+msgstr "Bull simple"
+
+msgid "High_Score-suddendeath"
+msgstr "Muerte súbita"
+
+msgid "High_Score-multix123"
+msgstr "Multi x1-x2-x3"
+
+msgid "High_Score-shoot_out"
+msgstr "Shoot out"
+
+msgid "High_Score-super_shoot_out"
+msgstr "Super shoot out"
+
+msgid "High_Score-segment"
+msgstr "Segmento"
+
+######## HO ONE ######
+
+msgid "Ho_One-name"
+msgstr "'01"
+
+msgid "Description-Ho_One"
+msgstr "Clásico 301, 501, 701, 1001...\n"
+"\n"
+"El juego de dardos por excelencia.\n"
+"\n"
+"El primer jugador en llegar exactamente a 0 gana.\n"
+"-----\n"
+"Empieza en 301 (501, 701, etc.); llegue exactamente a 0 para ganar.\n"
+"\n"
+"Pasarse restablece la puntuación al inicio del turno.\n"
+"\n"
+"Opciones:\n"
+"- Entrar con doble (Double in): Empieza con doble.\n"
+"- Salir con doble (Double out): Termina con doble.\n"
+"- Entrar con master (Master in): Empieza con doble, triple o bull.\n"
+"- Salir con master (Master out): Termina con doble, triple o bull.\n"
+"- Modo liga: Habilita el modo congelación y hándicap.\n"
+"- Bull simple 25: SB vale 25 puntos (50 en otro caso).\n"
+"- Modo Zap: Igualar la puntuación del oponente lo reinicia.\n"
+"- Igual (Equal): Asegura un recuento de turnos igual.\n"
+" "
+
+msgid "Ho_One-max_players"
+msgstr "8 máx"
+
+msgid "Ho_One-startingat"
+msgstr "Puntuación inicial"
+
+msgid "Ho_One-double_in"
+msgstr "Entrada con doble"
+
+msgid "Ho_One-double_out"
+msgstr "Salida con doble"
+
+msgid "Ho_One-master_in"
+msgstr "Entrada con master"
+
+msgid "Ho_One-master_out"
+msgstr "Salida con master"
+
+msgid "Ho_One-split_bull"
+msgstr "Bull simple 25"
+
+msgid "Ho_One-zap"
+msgstr "Modo Zap"
+
+msgid "Ho_One-equal"
+msgstr "Permitir que todos los jugadores terminen su turno"
+
+msgid "Ho_One-league"
+msgstr "Modo Liga (4 jugadores máx)"
+
+######## HORSE ######
+
+msgid "Description-Horse"
+msgstr "Prepárate para una loca carrera de caballos.\n"
+"\n"
+"Sé el primero en cruzar la línea de meta.\n"
+"-----\n"
+"Acierta los números asignados para avanzar por la pista.\n"
+"\n"
+"3 dificultades de recorrido:\n"
+"- Estándar: 2 obstáculos.\n"
+"- Intermedio: 4 obstáculos.\n"
+"- Experto: Numerosos obstáculos.\n"
+"\n"
+"Acierta el bullseye para cruzar la línea de meta.\n"
+"\n"
+"Opciones:\n"
+"- Intermedio: Pista de 4 obstáculos.\n"
+"- Master: Pista de gran cantidad de obstáculos.\n"
+" "
+
+msgid "Horse-max_players"
+msgstr "4 máx"
+
+msgid "Horse-max_round"
+msgstr "Número de rondas"
+
+msgid "Horse-inter"
+msgstr "Intermedio"
+
+msgid "Horse-master"
+msgstr "Master"
+
+######## Incendie ########
+
+msgid "Description-Incendie"
+msgstr "Juego cooperativo de rescate contra incendios.\n"
+"Los jugadores se unen por plantas para derrotar incendios.\n"
+"\n"
+"4 clases de personajes aleatorias:\n"
+"\n"
+"- Bombero: Daño mínimo de 2 por tiro.\n"
+"\n"
+"- Explorador: El daño escala con el segmento (S-D-T) + Efecto salpicadura\n"
+"  reduciendo en 1 la intensidad del fuego adyacente activo.\n"
+"\n"
+"- Especialista: Inflige daño masivo 2 niveles por encima de lo normal.\n"
+"\n"
+"- Logística: Extingue fuegos amarillos/naranjas de 1 golpe;\n"
+"  los triples activan el efecto salpicadura del explorador.\n"
+"\n"
+"La tabla final clasifica a los jugadores por puntuación individual.\n"
+"-----\n"
+"3 tipos de fuego:\n"
+"- Simple (Amarillo): Intensidad 1.\n"
+"- Moderado (Naranja): Intensidad 2.\n"
+"- Extremo (Rojo): Intensidad 3.\n"
+"\n"
+"Los fuegos tienen 1 número de acierto elegido aleatoriamente por ronda.\n"
+"Simple = -1 intensidad.\n"
+"Doble = -2 intensidad.\n"
+"Triple = -3 intensidad.\n"
+"\n"
+"El bullseye activa reserva de agua:\n"
+"SB = Extingue 1 fuego rojo o aleatorio.\n"
+"DB = Extingue 2 fuegos rojos o aleatorios.\n"
+"\n"
+"Opciones:\n"
+"- Fuegos iniciales: Conteo de fuegos iniciales.\n"
+"- PV del edificio: Salud estructural.\n"
+"- Objetivos: Número de segmentos objetivo.\n"
+" "
+
+msgid "Incendie-nb_feux_depart"
+msgstr "Conteo de fuegos iniciales"
+
+msgid "Incendie-number_of_lives"
+msgstr "PV del edificio"
+
+msgid "Incendie-target_jaune"
+msgstr "Mostrar LEDs de poder"
+
+######## KAPITAL ######
+
+msgid "Description-Kapital"
+msgstr "Gana el Kapital más alto.\n"
+"\n"
+"Complete contratos únicos cada ronda.\n"
+"-----\n"
+"Contratos:\n"
+"\n"
+"K: Puntos máximos en 3 dardos.\n"
+"TRIP: Acierta al menos 1 triple.\n"
+"DOUB: Acierta al menos 1 doble.\n"
+"KOLR: Acierta 3 colores de segmento diferentes en 3 dardos.\n"
+"57: Anota 57 puntos en 1-3 dardos.\n"
+"KKOT: Acierta 3 números vecinos (el Bull es comodín).\n"
+"SUIT: Acierta 3 números secuenciales (el Bull es comodín).\n"
+"20, 19, 18, 17, 16, 15, 14: Acierta el número asignado al menos una vez.\n"
+" "
+
+######## KILLER ######
+
+msgid "Description-Killer"
+msgstr "¡Elimina a tus oponentes antes de que te eliminen!\n"
+"Conviértete en Asesino (Killer) anotando al menos 5 puntos en tu número asignado.\n"
+"\n"
+"Pierdes el estado de Killer si tu puntuación cae por debajo de 5.\n"
+"-----\n"
+"Alcanzar 5 puntos otorga el estado de Killer.\n"
+"Caer por debajo de 5 elimina el estado de Killer.\n"
+"\n"
+"Caer a -1 puntos elimina a un jugador.\n"
+"\n"
+"Si NO eres Killer:\n"
+"- Aciertas tu propio número = +puntos.\n"
+"- Aciertas el número del oponente = -puntos.\n"
+"\n"
+"Si eres KILLER:\n"
+"- Aciertas el número del oponente = -puntos del oponente.\n"
+"- Aciertas tu propio número = -puntos propios.\n"
+" "
+
+msgid "Killer-random"
+msgstr "Los segmentos cambian cada ronda"
+
+msgid "Killer-vie"
+msgstr "Vidas iniciales"
+
+msgid "Killer-killer"
+msgstr "Puntos requeridos para Killer"
+
+msgid "Killer-bulls"
+msgstr "Bull activo"
+
+msgid "Killer-max"
+msgstr "No exceder el máximo de killer"
+
+msgid "Killer-suicide"
+msgstr "Acertar objetivo incorrecto deduce puntos"
+
+######## KINITO ######
+
+msgid "Description-Kinito"
+msgstr "Llega a 221 puntos haciendo que cada dardo puntúe\n"
+"igual o más que el dardo anterior.\n"
+"-----\n"
+"Ronda 1: El jugador 1 debe igualar o superar la puntuación del ordenador.\n"
+"Los jugadores siguientes deben igualar/superar la mitad de la puntuación\n"
+"del 3er dardo del jugador anterior (ej., 20 / 2 = 10).\n"
+"\n"
+"Acierta los 3 dardos para puntuar.\n"
+"Falla cualquier dardo para puntuar 0.\n"
+"\n"
+"Acertar Kinito (puntuación Kinito de un solo dardo) te permite\n"
+"reducir a la mitad la puntuación de un oponente acertando su objetivo.\n"
+"\n"
+"Opciones:\n"
+"- Kinito: Valor de Kinito (1-60).\n"
+"- WinScore: Puntuación objetivo para ganar.\n"
+" "
+
+msgid "Kinito-kinito"
+msgstr "Puntuación Kinito"
+
+msgid "Kinito-winscore"
+msgstr "Puntuación ganadora"
+
+######## LOW SCORE ######
+
+msgid "Description-Low_Score"
+msgstr "Una regla: lograr la puntuación más baja para ganar.\n"
+"\n"
+"¡¡¡Cuidado con las penalizaciones!!!\n"
+"-----\n"
+"Anota los puntos mínimos para ganar.\n"
+"\n"
+"Apunta al bullseye o números más bajos.\n"
+"\n"
+"SB = -25 puntos.\n"
+"DB = -50 puntos.\n"
+"Fuera de diana = +50 puntos de penalización.\n"
+"\n"
+"Opción:\n"
+"- Penalización: Establece la cantidad de penalización.\n"
+" "
+
+msgid "Low_Score-penality"
+msgstr "Cantidad de penalización"
+
+######## MICKEY ######
+
+msgid "Description-Mickey"
+msgstr "Cricket coreano.\n"
+"\n"
+"Idéntico al Cricket, más 5 zonas adicionales incluyendo\n"
+"casillas de Triple 'T' y Doble 'D'.\n"
+"\n"
+"Cierra los números objetivo antes que los oponentes y consigue la puntuación más alta.\n"
+"-----\n"
+"Acierta números o Bull 3 veces para abrir/cerrar.\n"
+"Anota puntos en objetivos abiertos hasta que los oponentes los cierren.\n"
+"\n"
+"Opciones:\n"
+"- Loco: Los objetivos cambian aleatoriamente una vez abiertos.\n"
+"- Degollina (Cut-Throat): Gana la puntuación más baja.\n"
+"- Orden estricto: Debe cerrar objetivos en secuencia (del 20 al Bull);\n"
+"  los objetivos incorrectos deducen puntos.\n"
+"- Juego en equipo: Formato 2v2 (hasta 4 equipos).\n"
+"- Puntuaciones compartidas: Los compañeros comparten la tabla de puntuación.\n"
+"- Hándicap: Equilibra equipos con hándicap.\n"
+"- MPR: Muestra el MPR junto a los nombres de los jugadores.\n"
+" "
+
+msgid "Mickey-max_players"
+msgstr "8 máx"
+
+msgid "Mickey-optioncutthroat"
+msgstr "Degollina (Cut-Throat)"
+
+msgid "Mickey-optioncrazy"
+msgstr "¡Loco!"
+
+msgid "Mickey-Teaming"
+msgstr "Juego en equipo"
+
+msgid "Mickey-optionteamscore"
+msgstr "Puntuaciones compartidas"
+
+msgid "Mickey-optionhandicap"
+msgstr "Hándicap"
+
+msgid "Mickey-mpr"
+msgstr "MPR"
+
+msgid "Mickey-max_round"
+msgstr "Número de rondas"
+
+msgid "Mickey-colorised"
+msgstr "Diana colorizada"
+
+msgid "Mickey-enculette"
+msgstr "Orden estricto"
+
+######## MORPION ######
+
+msgid "Description-Morpion"
+msgstr "Alinea 3 fichas de color (horizontal, vertical, diagonal)\n"
+"para ganar un punto.\n"
+"\n"
+"El primer jugador en llegar a 3 puntos gana.\n"
+"-----\n"
+"Simple en espacio abierto: Reclama el espacio.\n"
+"Doble en espacio abierto: Reclama el espacio con escudo de plata.\n"
+"Triple en espacio abierto: Reclama el espacio con escudo de oro.\n"
+"\n"
+"SB otorga espacio abierto aleatorio con escudo de plata.\n"
+"DB elimina 1 espacio de cada oponente.\n"
+"\n"
+"Detalles:\n"
+"Dobles/triples cuentan como simple en espacios ocupados.\n"
+"El escudo de plata requiere 2 aciertos para despejarse.\n"
+"El escudo de oro hace que el espacio sea imprenable.\n"
+"\n"
+"Opciones:\n"
+"- Puntos para ganar: Cuadrículas requeridas para la victoria.\n"
+"- Master: Doble da escudo de ORO - Triple da escudo de PLATA.\n"
+"- Variante: Acierta el número 4 veces para reclamarlo. 3 espacios adyacentes otorgan 1 pt.\n"
+" "
+
+msgid "Morpion-max_players"
+msgstr "4 máx"
+
+msgid "Morpion-variante"
+msgstr "Variante"
+
+msgid "Morpion-win_points"
+msgstr "Puntos para ganar"
+
+######## OTHELLO ######
+
+msgid "Description-Othello"
+msgstr "Flanquea piezas oponentes para voltear todas las fichas atrapadas\n"
+"entre tu color.\n"
+"\n"
+"El jugador que controle más piezas al final gana.\n"
+"¡El liderazgo cambia frecuentemente hasta el último movimiento...\n"
+"-----\n"
+"Flanquea piezas oponentes para voltear fichas atrapadas.\n"
+"\n"
+"El jugador que controle más piezas gana.\n"
+"\n"
+"Acierta el objetivo solicitado para colocar pieza.\n"
+"\n"
+"El juego termina cuando no quedan movimientos válidos o la cuadrícula está llena.\n"
+"\n"
+"Opción:\n"
+"- Tamaño del tablero: Elige dimensión de cuadrícula (4 - 6 - 8).\n"
+" "
+
+msgid "Othello-max_players"
+msgstr "2 o 4 (Equipo)"
+
+msgid "Othello-xgrille"
+msgstr "Tablero"
+
+######## PINGPONG ######
+
+msgid "Pingpong-name"
+msgstr "Pin-pon"
+
+msgid "Description-Pingpong"
+msgstr "La puntuación más alta por turno gana el punto.\n"
+"\n"
+"El primer jugador en llegar a 6 puntos gana.\n"
+"\n"
+"Debe ganar por al menos 2 puntos de diferencia.\n"
+"-----\n"
+"La puntuación más alta del turno gana el punto.\n"
+"\n"
+"Juego ganado al alcanzar 6 puntos (por defecto).\n"
+"\n"
+"Debe ganar por 2 puntos.\n"
+"\n"
+"En empate 6-6, el juego continúa hasta que un jugador aventaje en 2\n"
+"(ej., 8-6 mínimo).\n"
+"\n"
+"Opciones:\n"
+"- Puntuación: Puntos necesarios para ganar.\n"
+"- Bull simple: SB vale 50 puntos.\n"
+" "
+
+msgid "Pingpong-win"
+msgstr "Puntuación"
+
+msgid "Pingpong-simple50"
+msgstr "Bull simple"
+
+######## PRACTICE ######
+
+msgid "Description-Practice"
+msgstr "¡Hora de entrenar!\n"
+"\n"
+"Practica acertando números seleccionados por el ordenador.\n"
+"-----\n"
+"Practica apuntando a objetivos generados por ordenador.\n"
+"\n"
+"La mejor manera de mejorar la precisión con los dardos.\n"
+"\n"
+"Opciones:\n"
+"- Rondas: Recuento de rondas antes de que termine el juego.\n"
+"- Master: Se incluyen dobles y triples.\n"
+"- Doble: Acierta cualquier doble.\n"
+"- Triple: Acierta cualquier triple.\n"
+"- Bull: Acierta cualquier bull.\n"
+"- Tres en la cama (Three on the bed): Acierta el número objetivo 3 veces (S-D-T).\n"
+"- Secuencia: Acierta secuencia de 3 números.\n"
+"- Vecino: Acierta 3 números vecinos.\n"
+" "
+
+msgid "Practice-split_bull"
+msgstr "Bull simple 25"
+
+msgid "Practice-finish"
+msgstr "Finish"
+
+msgid "Practice-double"
+msgstr "Doble"
+
+msgid "Practice-triple"
+msgstr "Triple"
+
+msgid "Practice-bulls"
+msgstr "Bulls"
+
+msgid "Practice-threeonthebed"
+msgstr "Three on the bed"
+
+msgid "Practice-suite"
+msgstr "Secuencia"
+
+msgid "Practice-voisin"
+msgstr "Vecino"
+
+msgid "Practice-pourcent"
+msgstr "Completaste el desafío "
+
+######## PUNCH OUT ######
+
+msgid "Punch-Out"
+msgstr "¡Punch out!"
+
+msgid "Description-Punch-Out"
+msgstr "Noquee a sus oponentes.\n"
+"\n"
+"Comienza con vidas predeterminadas y 0 puntos.\n"
+"\n"
+"Gana el último jugador en pie o el que tenga más puntos tras la ronda final.\n"
+"-----\n"
+"Cada oponente tiene 3 números de acierto; el jugador activo tiene 1 número de curación.\n"
+"Los números se eligen aleatoriamente al inicio del turno y pueden solaparse.\n"
+"\n"
+"Simple: Oponente -1 vida, Jugador +1 punto.\n"
+"Doble: Oponente -2 vidas, Jugador +2 puntos.\n"
+"Triple: Oponente -3 vidas, Jugador +3 puntos.\n"
+"\n"
+"Segmento CURACIÓN (HEAL) restaura vida:\n"
+"SB: -1 vida a todos los oponentes, +X puntos al jugador (X = número de jugadores).\n"
+"DB: -2 vidas a todos los oponentes, +X puntos al jugador (X = número de jugadores).\n"
+"\n"
+"Premio KO: 5 puntos (o +30 PV si la opción PUNTOS está activada).\n"
+"\n"
+"Opciones:\n"
+"- Puntos: Empieza con 300 PV; los valores de los segmentos restan PV.\n"
+" "
+
+msgid "Punch-Out-max_players"
+msgstr "7 máx"
+
+msgid "Punch-Out-number_of_lives"
+msgstr "Número de vidas"
+
+msgid "Punch-Out-points"
+msgstr "Deduzca puntos de segmento"
+
+######## PUISSANCE 4 ######
+
+msgid "Puissance4-name"
+msgstr "Conecta 4"
+
+msgid "Description-Puissance4"
+msgstr "Acierta un segmento para soltar una ficha en la columna de la cuadrícula.\n"
+"\n"
+"Tomen turnos hasta que un jugador conecte 4 fichas\n"
+"en horizontal, vertical o diagonal.\n"
+"\n"
+"¡El primero en alinear 4 fichas gana!\n"
+"-----\n"
+"Acierta segmentos para soltar fichas en la cuadrícula.\n"
+"Tomen turnos alineando 4 fichas.\n"
+"\n"
+"Juega hasta 3 fichas por turno (2 por defecto).\n"
+"\n"
+"Los números cambian cada ronda (excepto el bull).\n"
+"\n"
+"Opciones:\n"
+"- Puntos para ganar: Puntuación objetivo.\n"
+"- Fichas: Fichas por turno.\n"
+"- Regenerar: Cambiar números en cada turno.\n"
+" "
+
+msgid "Puissance4-max_players"
+msgstr "2 o 4 (Equipo)"
+
+msgid "Puissance4-win_points"
+msgstr "Puntos para ganar"
+
+msgid "Puissance4-fleche"
+msgstr "Número de fichas"
+
+msgid "Puissance4-regenere"
+msgstr "Regenerar"
+
+######## PURSUIT ######
+
+msgid "Description-Pursuit"
+msgstr "3, 2, 1, prepárate para una persecución rápida.\n"
+"\n"
+"Atrapa o supera a los jugadores oponentes en la pista.\n"
+"\n"
+"Gana el último jugador en pie.\n"
+"-----\n"
+"Acierta el objetivo asignado cada turno para avanzar.\n"
+"\n"
+"Simple = +1 espacio.\n"
+"Doble = +2 espacios.\n"
+"Triple = +3 espacios.\n"
+"\n"
+"Gana el corredor restante.\n"
+"\n"
+"Opciones:\n"
+"- Master: No se puede rebasar a los oponentes.\n"
+"- Invertir: Cambio de dirección.\n"
+" "
+
+msgid "Pursuit-max_players"
+msgstr "4 máx"
+
+msgid "Pursuit-reverse"
+msgstr "Cambio de dirección"
+
+######## RISK ######
+
+msgid "Description-Risk"
+msgstr "Empieza con 5 territorios y 3 tropas de refuerzo.\n"
+"\n"
+"Destruye territorios enemigos evitando el fuego amigo.\n"
+"-----\n"
+"Acierta territorio enemigo o territorio propio reforzado:\n"
+"- Simple: Elimina 1 refuerzo.\n"
+"- Doble: Elimina 2 refuerzos.\n"
+"- Triple: Elimina 3 refuerzos.\n"
+"\n"
+"Acertar un territorio sin refuerzos lo destruye, volviéndolo neutral.\n"
+"\n"
+"Bonificaciones de bullseye:\n"
+"- SB: +1 refuerzo en todos los territorios propios, más 1 nuevo\n"
+"  territorio sin refuerzos si hay espacio neutral disponible.\n"
+"- DB: +1 refuerzo en todos los territorios propios, más 1 nuevo\n"
+"  territorio con refuerzos si hay espacio neutral disponible.\n"
+"\n"
+"Gana el primer jugador en eliminar todos los territorios enemigos.\n"
+"\n"
+"Opciones:\n"
+"- Refuerzos: Conteo de tropas (0 a 3).\n"
+"- Puntos de bonificación por destruir territorio enemigo.\n"
+"- Puntos de penalización por destruir territorio propio.\n"
+" "
+
+msgid "Risk-max_players"
+msgstr "5 máx"
+
+msgid "Risk-bouclier"
+msgstr "Recuento de refuerzos"
+
+msgid "Risk-miss"
+msgstr "Penalización por destruir territorio aliado"
+
+msgid "Risk-bonus"
+msgstr "Bonificación por destruir territorio enemigo"
+
+######## ROBIN DRINK ######
+
+msgid "Robin_Drink-name"
+msgstr "Robin Bebidas"
+
+msgid "Description-Robin_Drink"
+msgstr "Haz beber a tus oponentes, ¡pero cuidado con la venganza!\n"
+"\n"
+"Gana el jugador que menos bebe.\n"
+"-----\n"
+"1 dardo por jugador.\n"
+"\n"
+"Gana el jugador con menos bebidas.\n"
+"\n"
+"Simple = 1 bebida, Doble = 2 bebidas, Triple = 3 bebidas.\n"
+"Oponente objetivo elegido aleatoriamente o seleccionado por el jugador.\n"
+"\n"
+"Segmento verde = Oponente objetivo bebe (elegido por el 2º lanzamiento).\n"
+"Segmento azul = Oponente aleatorio bebe.\n"
+"Segmento rojo / Fallo = El lanzador bebe.\n"
+"Bull simple = Todos los oponentes beben.\n"
+"\n"
+"Opciones:\n"
+"- Aleatorio: Los segmentos de selección de jugador son aleatorios.\n"
+"- Caos: Los segmentos cambian aleatoriamente cada 3 segundos.\n"
+" "
+
+msgid "Robin_Drink-max_players"
+msgstr "10 máx"
+
+msgid "Robin_Drink-mode_random"
+msgstr "Modo aleatorio"
+
+msgid "Robin_Drink-chaos"
+msgstr "Modo caos"
+
+msgid "robin-opponent"
+msgstr "¡Toma! #PlayerName# debe beber\n#drink#"
+
+msgid "robin-targetOpponent"
+msgstr "¿Y bien? ¿Quién bebe?\n¡Si fallas, mala suerte!"
+
+msgid "robin-player"
+msgstr "Qué pena... Debes beber\n#drink#"
+
+msgid "robin-all"
+msgstr "¡Salud! Todos los oponentes beben\n#drink#"
+
+msgid "robin-pass"
+msgstr "Qué suerte esta vez...\n ¡siguiente jugador!"
+
+msgid "robin-glass"
+msgstr "bebida"
+
+msgid "robin-glasses"
+msgstr "bebidas"
+
+######## ROBIN STRIP ######
+
+msgid "Robin_Strip-name"
+msgstr "Robin's Strip-tease"
+
+msgid "Description-Robin_Strip"
+msgstr "Desnuda a tus oponentes, ¡pero cuidado con la venganza!\n"
+"\n"
+"Gana el jugador que quita menos ropa.\n"
+"-----\n"
+"1 a 2 dardos por jugador.\n"
+"\n"
+"Gana el jugador que obliga a los oponentes a quitarse más ropa.\n"
+"\n"
+"Simple, Doble o Triple obliga al oponente a quitarse 1 prenda.\n"
+"Oponente objetivo seleccionado aleatoriamente o elegido por el jugador.\n"
+"\n"
+"Acierto:\n"
+"- Segmento verde = El oponente se quita 1 prenda (elegido por el 2º lanzamiento).\n"
+"- Segmento azul = Oponente aleatorio se quita 1 prenda.\n"
+"- Segmento rojo / Fallo = El lanzador se quita 1 prenda.\n"
+"- Segmento blanco = Los oponentes se vuelven a poner 1 prenda.\n"
+"- SB = Todos los oponentes se quitan 1 prenda.\n"
+"\n"
+"Opciones:\n"
+"- Aleatorio: Los segmentos de selección de jugador son aleatorios.\n"
+"- Caos: Los segmentos cambian aleatoriamente cada 3 segundos.\n"
+" "
+
+msgid "Robin_Strip-max_players"
+msgstr "10 máx"
+
+msgid "Robin_Strip-mode_random"
+msgstr "Modo aleatorio"
+
+msgid "Robin_Strip-chaos"
+msgstr "Modo caos"
+
+msgid "robin_strip-opponent"
+msgstr "¡Toma! #PlayerName# debe quitarse\n#drink#"
+
+msgid "robin_strip-targetOpponent"
+msgstr "¿Y bien? ¿Quién se quita una prenda?\n¡Si fallas, nadie!"
+
+msgid "robin_strip-player"
+msgstr "Qué pena... Debes quitarte\n#drink#"
+
+msgid "robin_strip-all"
+msgstr "¡Venga! Todos los oponentes se quitan\n#drink#"
+
+msgid "robin_strip-pass"
+msgstr "Los oponentes se vuelven a poner 1\n#drink#, ¡siguiente jugador!"
+
+msgid "robin_strip-glass"
+msgstr "prenda de ropa"
+
+msgid "robin_strip-glasses"
+msgstr "prendas de ropa"
+
+######## ROUND THE CLOCK ######
+
+msgid "Description-Round_the_clock"
+msgstr "Recorre el reloj en orden numérico\n"
+"o de segmentos.\n"
+"-----\n"
+"Sé el primer jugador en viajar alrededor de la diana.\n"
+"Cada acierto hace avanzar el reloj.\n"
+"\n"
+"Opciones:\n"
+"- Doble: Solo cuentan los dobles.\n"
+"- Triple: Solo cuentan los triples.\n"
+"- Número: Orden numérico secuencial.\n"
+"- Salto: El doble avanza 2 pasos, el triple 3.\n"
+"- Bull: Terminar en el Bullseye.\n"
+"- Tiempo: El segmento objetivo cambia periódicamente (500 a 10000 ms).\n"
+" "
+
+msgid "Round_the_clock-Double"
+msgstr "Solo cuentan los dobles"
+
+msgid "Round_the_clock-Triple"
+msgstr "Solo cuentan los triples"
+
+msgid "Round_the_clock-Bull"
+msgstr "Terminar en Bull"
+
+msgid "Round_the_clock-Numbers"
+msgstr "Objetivos ordenados por número"
+
+msgid "Round_the_clock-Jump"
+msgstr "El reloj avanza más rápido con dobles y triples"
+
+msgid "Round_the_clock-Time"
+msgstr "El objetivo cambia periódicamente (en ms)"
+
+######## ROUTINE ######
+
+msgid "Description-Routine"
+msgstr "Mejora tus habilidades en los dardos completando a diario\n"
+"los 35 ejercicios.\n"
+"\n"
+"1: Check-out 32 en 1 dardo - Acierta D16.\n"
+"2: Check-out 40 en 3 dardos - Termina en Doble.\n"
+"3: Check-out 50 en 3 dardos - No se permite Bull.\n"
+"4: Check-out 60 en 2 dardos - Termina en Doble.\n"
+"5: Check-out 80 en 2 dardos - Termina en Doble.\n"
+"6: Check-out 120 en 3 dardos - Termina en Doble.\n"
+"7: Check-out 110 en 6 dardos - Termina en Doble.\n"
+"8: Check-out 121 en 6 dardos - Termina en Doble.\n"
+"9: Check-out 180 en 9 dardos - Termina en Doble.\n"
+"10: Check-out 201 en 12 dardos - Termina en Doble.\n"
+"11: Check-out 301 en 12 dardos - Termina en Doble.\n"
+"12: Check-out 401 en 10 dardos - Termina en Doble.\n"
+"13: Check-out 501 en 15 dardos - Termina en Doble.\n"
+"14: Acierta 1 Simple, 1 Doble, 1 Bull en 3 dardos.\n"
+"15: Acierta 2 Bulls dobles (DB) en 6 dardos.\n"
+"16: Acierta 3 Bulls en 9 dardos.\n"
+"-----\n"
+"17: Anota 10 pts acertando bull (SB=1, DB=2) en 10 dardos.\n"
+"18: Anota 15 pts acertando bull (SB=1, DB=2) en 15 dardos.\n"
+"19: Acierta 3 números idénticos en 3 dardos.\n"
+"20: Acierta 2 Dobles diferentes en 3 dardos.\n"
+"21: Acierta D20 y D1 en 6 dardos.\n"
+"22: Acierta D20, D19 y D18 en orden en 9 dardos.\n"
+"23: Acierta 3 Dobles diferentes en 9 dardos.\n"
+"24: Acierta D16, D8, D4 y D2 en orden en 12 dardos.\n"
+"25: Acierta D3, D5, D7, D9 y D11 en 15 dardos.\n"
+"26: Acierta 2 Triples diferentes en 3 dardos.\n"
+"27: Acierta S10, D10 y T10 en 3 dardos.\n"
+"28: Acierta S20, T20 y D20 en 3 dardos.\n"
+"29: Acierta 3 Simples, 2 Dobles, 1 Triple en el mismo número en 6 dardos.\n"
+"30: Acierta 3x 1 número y 1 bull en 4 dardos.\n"
+"31: Acierta 3x 2 números y 1 bull en 7 dardos.\n"
+"32: Acierta 3 Triples diferentes en 9 dardos.\n"
+"33: Acierta Triple 20 3 veces en 9 dardos.\n"
+"34: Acierta 3x T20, 3x T19 y 3x T18 en 9 dardos.\n"
+"35: Finisher progresivo (+5 por éxito)\n"
+" "
+
+msgid "Routine-max_retries"
+msgstr "Reintentos máx por ejercicio"
+
+msgid "Routine-start_drill"
+msgstr "Seleccionar ejercicio"
+
+msgid "Routine-teste"
+msgstr "Probar un solo ejercicio"
+
+msgid "Routine-nb_repetition"
+msgstr "Repeticiones máximas"
+
+######## SABOTAGE #########
+
+msgid "Description-Sabotage"
+msgstr "Anote el máximo de puntos mientras sabotea las puntuaciones\n"
+"de sus oponentes.\n"
+"\n"
+"Anota lo más alto posible en tu 3er dardo (por defecto);\n"
+"aumenta tus puntos y deduce los de los oponentes.\n"
+"\n"
+"Gana la puntuación más alta tras 10 rondas.\n"
+"\n"
+"Opciones:\n"
+"- Dardos: Total de ronda dividido por 3 deducido de los oponentes.\n"
+"- Aleatorio: Deduce puntos de un oponente aleatorio.\n"
+"-----\n"
+"Anote el máximo de puntos mientras sabotea las puntuaciones\n"
+"de sus oponentes.\n"
+"\n"
+"Anota lo más alto posible en tu 3er dardo (por defecto);\n"
+"aumenta tus puntos y deduce los de los oponentes.\n"
+"\n"
+"En caso de fallo, pulse el botón nextplayer para omitir un dardo.\n"
+"\n"
+"Gana la puntuación más alta tras 10 rondas.\n"
+"\n"
+"Opciones:\n"
+"- Dardos: Total de ronda dividido por 3 deducido de los oponentes.\n"
+"- Aleatorio: Deduce puntos de un oponente aleatorio.\n"
+" "
+
+msgid "Sabotage-flch3"
+msgstr "Total de ronda /3"
+
+msgid "Sabotage-alea"
+msgstr "Aleatorio"
+
+msgid "Sabotage-simple50"
+msgstr "SB vale 50 puntos"
+
+######## SAMPLE GAME ######
+
+msgid "Description-Sample_game"
+msgstr "Este ejemplo sirve como plantilla\n"
+"para aprender a crear tus propios juegos.\n"
+"Requiere conocimientos de Python.\n"
+"¡Revisa el código fuente!"
+
+######## SCRAM CRICKET ######
+
+msgid "Description-Scram_Cricket"
+msgstr "Variante clásica de Cricket jugada en 2 fases.\n"
+"\n"
+"Fase 1: Anota el máximo de puntos mientras los oponentes\n"
+"cierran todos los segmentos.\n"
+"Fase 2: Los papeles se invierten.\n"
+"\n"
+"Gana el equipo con más puntos totales.\n"
+"\n"
+"Solo 2 equipos.\n"
+"-----\n"
+"El Equipo 1 anota puntos mientras el Equipo 2 cierra todos los objetivos.\n"
+"Una vez que el Equipo 2 cierra todos los números, los papeles se invierten.\n"
+"\n"
+"Opciones:\n"
+"- Loco: Los objetivos cambian al abrirlos.\n"
+"- Degollina: Puntos sumados a los oponentes.\n"
+"- Pagar ronda: Anotar 200 invita a una ronda (solo Degollina).\n"
+" "
+
+msgid "Scram_Cricket-optioncrazy"
+msgstr "Modo Loco"
+
+msgid "Scram_Cricket-drinkscore"
+msgstr "¡Pagar una ronda a esta puntuación (Degollina)!"
+
+msgid "Scram_Cricket-teaming"
+msgstr "Modo Equipo (4 jugadores máx)"
+
+msgid "Scram_Cricket-optionteamscore"
+msgstr "Puntuaciones de equipo compartidas"
+
+msgid "Scram_Cricket-cutthroat"
+msgstr "Modo Degollina"
+
+msgid "Scram_Cricket-optionscram"
+msgstr "Modo Carrera"
+
+######## SHANGHAI ######
+
+msgid "Description-Shanghai"
+msgstr "Variante de Round the Clock donde un jugador gana\n"
+"instantáneamente al acertar un simple, doble y triple\n"
+"en el número activo en un solo turno (en cualquier orden).\n"
+"-----\n"
+"El primer jugador en acertar simple, doble y triple en el mismo\n"
+"número con 3 dardos gana al instante.\n"
+"\n"
+"El número objetivo cambia cada ronda.\n"
+"\n"
+"Opciones:\n"
+"- Master: Debe acertar simple, doble, triple en orden exacto para ganar.\n"
+"- Puntos: Si no se cumple el contrato en la ronda final,\n"
+"  gana la puntuación más alta.\n"
+" "
+
+msgid "Shanghai-Points"
+msgstr "Puntos"
+
+msgid "Shanghai-maitre"
+msgstr "Master"
+
+######## SHOOT OUT ######
+
+msgid "Description-Shoot-out"
+msgstr "Juego High Score con multiplicadores de puntos.\n"
+"\n"
+"Una regla: anotar el máximo de puntos.\n"
+"\n"
+"El multiplicador aumenta cada vez que aciertas un segmento iluminado.\n"
+"Acertar un segmento apagado da 0 puntos y congela el multiplicador.\n"
+"\n"
+"Gana la puntuación total más alta.\n"
+"-----\n"
+"Juego High Score con multiplicadores de puntos.\n"
+"\n"
+"Una regla: anotar el máximo de puntos.\n"
+"\n"
+"Gana la puntuación más alta.\n"
+"\n"
+"Opciones:\n"
+"- Super Shoot-out: Mismas reglas que el Shoot-out clásico, con un\n"
+"  multiplicador secundario que aumenta en aciertos iluminados. Los aciertos apagados\n"
+"  reinician el multiplicador secundario a 1 (el multiplicador principal se mantiene).\n"
+"- Segmento: Desactiva el segmento exacto acertado (Simple, Doble, Triple)\n"
+"  en lugar de toda la sección numérica.\n"
+" "
+
+msgid "Shoot-out-lives"
+msgstr "Número de vidas"
+
+msgid "Shoot-out-simple50"
+msgstr "Bull simple"
+
+msgid "Shoot-out-suddendeath"
+msgstr "Muerte súbita"
+
+msgid "Shoot-out-multix123"
+msgstr "Multi x1-x2-x3"
+
+msgid "Shoot-out-shoot_out"
+msgstr "Shoot out"
+
+msgid "Shoot-out-super_shoot_out"
+msgstr "Super shoot out"
+
+msgid "Shoot-out-segment"
+msgstr "Segmento"
+
+######## SIMON ######
+
+msgid "Description-Simon"
+msgstr "Repite la secuencia en orden.\n"
+"\n"
+"Memoriza y repite la secuencia de colores mostrada por el juego.\n"
+"\n"
+"Se añade un color a la secuencia en cada ronda.\n"
+"\n"
+"Gana el jugador que reproduce la secuencia más larga.\n"
+"\n"
+"El número de dardos coincide con la longitud de la secuencia.\n"
+"-----\n"
+"Gana el jugador que repite la secuencia más larga.\n"
+"\n"
+"Opciones:\n"
+"- Rondas: Número máximo de rondas.\n"
+"- Dardos de bonificación: Errores permitidos por ronda.\n"
+" "
+
+msgid "Simon-nb_bonus_darts"
+msgstr "Número de dardos de bonificación"
+
+msgid "Simon-nb_segment"
+msgstr "Número de segmentos (1-5)"
+
+######## SLIDER ######
+
+msgid "Description-Slider"
+msgstr "El primer jugador en acertar el 20 (o Bull) gana.\n"
+"\n"
+"Empieza en el número 10 (por defecto); avanza al siguiente número superior\n"
+"al acertar el objetivo.\n"
+"\n"
+"Fallar el objetivo con los 3 dardos baja el objetivo 1 número\n"
+"en tu próximo turno.\n"
+"\n"
+"Gana la puntuación más alta.\n"
+"-----\n"
+"Acierta el número requerido durante tu turno.\n"
+"- Acierto = Avanza al siguiente número superior.\n"
+"- Fallo con 3 dardos = Baja 1 número en el próximo turno.\n"
+"\n"
+"Acierta 20 (o Bull) para ganar.\n"
+"\n"
+"Opciones:\n"
+"- Rondas máx: Límite de recuento de rondas.\n"
+"- Inicio: Número de inicio.\n"
+"- Bull: Terminar en el bullseye.\n"
+"- Master: El fallo baja al jugador inmediatamente.\n"
+" "
+
+msgid "Slider-start"
+msgstr "Número de inicio"
+
+msgid "Slider-master"
+msgstr "Baja 1 número en fallo"
+
+msgid "Slider-bull"
+msgstr "Terminar en Bull"
+
+msgid "Slider-double"
+msgstr "Jugar dobles"
+
+msgid "Slider-triple"
+msgstr "Jugar triples"
+
+msgid "Slider-jump"
+msgstr "Saltar números"
+
+######## SNOOKER ######
+
+msgid "Description-Snooker"
+msgstr "Snooker adaptado a la diana de dardos.\n"
+"\n"
+"Acierta bola roja y luego bola de color.\n"
+"\n"
+"Acertar la bola incorrecta causa una falta,\n"
+"otorgando 4 puntos de bonificación a los oponentes.\n"
+"\n"
+"Gana la puntuación más alta.\n"
+"-----\n"
+"Acierta bola roja y luego bola de color.\n"
+"\n"
+"Fallar la bola correcta comete falta, cede el turno y\n"
+"da 4 puntos a todos los oponentes.\n"
+"\n"
+"Una vez metidas todas las rojas, despeja las bolas de color en orden ascendente.\n"
+"\n"
+"- Amarillo = 2 pts, Verde = 3 pts, Marrón = 4 pts, Azul = 5 pts,\n"
+"- Rosa = 6 pts, Negro = 7 pts.\n"
+"\n"
+"Opciones:\n"
+"- Rondas: Rondas máx.\n"
+"- Bolas rojas: Conteo de bolas rojas (máx 15).\n"
+"- Roja aleatoria: Bolas rojas colocadas aleatoriamente.\n"
+"- Mesa compartida: Jugar en una sola mesa compartida.\n"
+" "
+
+msgid "Snooker-max_players"
+msgstr "4 máx"
+
+msgid "Snooker-rouge"
+msgstr "Número de bolas rojas"
+
+msgid "Snooker-penalite"
+msgstr "Falta - 4 puntos de bonificación al/los oponente(s)"
+
+msgid "Snooker-table1"
+msgstr "Mesa compartida"
+
+msgid "Snooker-break"
+msgstr "Le hiciste un SNOOKER a tu oponente"
+
+msgid "Snooker-alea"
+msgstr "Colocación aleatoria de bolas rojas"
+
+msgid "Snooker-billerouge"
+msgstr "Acierta una bola roja"
+
+msgid "Snooker-couleur"
+msgstr "Acierta una bola de color"
+
+msgid "Snooker-jaune"
+msgstr "Acierta bola amarilla"
+
+msgid "Snooker-verte"
+msgstr "Acierta bola verde"
+
+msgid "Snooker-brun"
+msgstr "Acierta bola marrón"
+
+msgid "Snooker-bleu"
+msgstr "Acierta bola azul"
+
+msgid "Snooker-rose"
+msgstr "Acierta bola rosa"
+
+msgid "Snooker-noir"
+msgstr "Acierta bola negra"
+
+######## SWITCH_OFF #########
+
+msgid "Description-Switch"
+msgstr "Apaga todos los LEDs acertando los números correspondientes.\n"
+"Cuidado de no volver a encenderlos al acertar de nuevo.\n"
+"\n"
+"Apaga todos los LEDs para ganar, o consigue la puntuación más alta tras 12 rondas.\n"
+"\n"
+"Opciones:\n"
+"- Rondas: Número de rondas.\n"
+"- Numérico: Mostrar en orden numérico.\n"
+"-----\n"
+"- Acierto SIMPLE: Alterna el LED del número.\n"
+"- Acierto DOBLE: Alterna el LED del número y el siguiente.\n"
+"- Acierto TRIPLE: Alterna el LED del número, el siguiente y el anterior.\n"
+"\n"
+"- Acierto SB (si está apagado): Enciende SB.\n"
+"- Acierto SB (si está encendido): Enciende DB.\n"
+"- Acierto SB (si SB y DB encendidos): Apaga SB.\n"
+"- Acierto DB (si SB y DB apagados): Enciende DB y SB.\n"
+"- Acierto DB (si DB encendido y SB apagado): Enciende SB.\n"
+"- Acierto DB (si SB y DB encendidos): Apaga DB.\n"
+" "
+
+msgid "Switch-numerique"
+msgstr "Orden numérico"
+
+######## TARGET #########
+
+msgid "Description-Target"
+msgstr "Anota el objetivo solicitado en los mínimos dardos.\n"
+"\n"
+"Todas las puntuaciones (de 30 a 60) se aciertan en 1 dardo.\n"
+"\n"
+"- Objetivo en 1 dardo = 3 puntos.\n"
+"- Objetivo en 2 dardos = 2 puntos.\n"
+"- Objetivo en 3 dardos = 1 punto.\n"
+"\n"
+"Primer jugador en 10 puntos (por defecto) gana.\n"
+"\n"
+"Opciones:\n"
+"- Puntuación: Puntos requeridos para ganar.\n"
+"-----\n"
+"Anota el objetivo solicitado en los mínimos dardos.\n"
+"\n"
+"Todas las puntuaciones (de 30 a 60) se aciertan en 1 dardo.\n"
+"\n"
+"- Objetivo en 1 dardo = 3 puntos.\n"
+"- Objetivo en 2 dardos = 2 puntos.\n"
+"- Objetivo en 3 dardos = 1 punto.\n"
+"\n"
+"Primer jugador en 10 puntos (por defecto) gana.\n"
+"\n"
+"Opciones:\n"
+"- Puntuación: Puntos requeridos para ganar.\n"
+" "
+
+msgid "Target-score"
+msgstr "Puntos para ganar"
+
+msgid "Target-simple50"
+msgstr "SB vale 50 puntos"
+
+msgid "Target-winscore"
+msgstr "Puntos ganadores"
+
+######## TENNIS ######
+
+msgid "Description-Tennis"
+msgstr "Cada jugador saca durante su turno.\n"
+"\n"
+"Gana el juego acertando el segmento objetivo;\n"
+"de lo contrario el oponente anota puntos.\n"
+"\n"
+"Opciones:\n"
+"- Sets: 1 a 3 sets para ganar.\n"
+"- Lado: Red en posición vertical.\n"
+"-----\n"
+"En el 1er tiro, seleccione el segmento preferido.\n"
+"- Acierto DOBLE = Gana el juego al instante.\n"
+"- Acierto TRIPLE = Anota 3 puntos.\n"
+"- Acierto SIMPLE = Anota 1 punto.\n"
+"\n"
+"Tras el 1er tiro, acierta el segmento para puntuar:\n"
+"- SIMPLE = 1 punto.\n"
+"- DOBLE = 2 puntos.\n"
+"- TRIPLE = 3 puntos.\n"
+"\n"
+"Durante el TIEBREAK, los aciertos del ganador otorgan solo 1 punto\n"
+"incluso en dobles o triples.\n"
+"\n"
+"Se permiten dardos ilimitados para terminar el juego.\n"
+"\n"
+"El jugador que gane más sets gana el encuentro.\n"
+" "
+
+msgid "Tennis-max_players"
+msgstr "2 o 4 (Equipo)"
+
+msgid "Tennis-service"
+msgstr "Sirviendo"
+
+msgid "Tennis-set"
+msgstr "Sets para ganar"
+
+msgid "Tennis-cote"
+msgstr "Red vertical"
+
+msgid "Tennis-set1"
+msgstr "Al mejor de 1 set"
+
+msgid "Tennis-set3"
+msgstr "Al mejor de 3 sets"
+
+msgid "Tennis-set5"
+msgstr "Al mejor de 5 sets"
+
+msgid "Tennis-retour"
+msgstr "Resto"
+
+######## TOWER ######
+
+msgid "Description-Tower"
+msgstr "¡Salva a tu princesa!\n"
+"\n"
+"Rescata a una princesa encerrada en una torre\n"
+"protegida por un dragón.\n"
+"Demuestra tu valía completando 3 misiones:\n"
+"- Derrotar al dragón.\n"
+"- Traer el ramo de flores.\n"
+"- Encontrar la tiara perdida en la planta asignada.\n"
+"\n"
+"Completa las misiones en cualquier orden.\n"
+"\n"
+"Gana el caballero que complete las 3 misiones y llegue a la cima de la torre.\n"
+"-----\n"
+"Gana el caballero que complete las 3 misiones y llegue a la cima.\n"
+"\n"
+"Escala la torre acertando el segmento en la base de la torre:\n"
+"simple=1 planta, doble=2 plantas, triple=3 plantas.\n"
+"\n"
+"Lucha contra el dragón: Acierta ambos segmentos solicitados en el mismo turno.\n"
+"Recoge flores: Acierta el segmento solicitado dos veces en el mismo turno.\n"
+"Encuentra la tiara: Acierta cualquier doble/triple en la planta asignada.\n"
+"Acierto SB: Baja a todos los oponentes 1 planta.\n"
+"Acierto DB: Cancela 1 misión del oponente (flores, luego dragón).\n"
+"\n"
+"Fallo: El jugador baja 1 planta.\n"
+"\n"
+"Opción:\n"
+"- Dragón difícil: Se requieren 3 aciertos para derrotar al dragón.\n"
+" "
+
+msgid "Tower-max_players"
+msgstr "6 máx"
+
+msgid "Tower-dragon_hard"
+msgstr "Dragón difícil"
+
+######### TREASURE HUNT #########
+
+msgid "Description-Treasure"
+msgstr "Saca los detectores y busca grandes tesoros,\n"
+"pero cuidado con las maldiciones.\n"
+"\n"
+"Gana la puntuación más alta.\n"
+"-----\n"
+"15 tesoros ocultos aleatoriamente en el tablero al inicio de cada turno.\n"
+"\n"
+"Acierta números para descubrir tesoros:\n"
+"\n"
+"Cofre X2, X3, X4, X5, X10: Multiplica el valor del segmento por X.\n"
+"Diamante: El valor del segmento equivale a 1000 puntos.\n"
+"Lingote: Duplica la puntuación total.\n"
+"Calavera amarilla: El valor del segmento equivale a -100 puntos.\n"
+"Calavera morada: El valor del segmento equivale a -300 puntos.\n"
+"Calavera roja: El valor del segmento equivale a -500 puntos.\n"
+"Calavera azul: Pierde el turno actual.\n"
+"Granada: El valor del segmento equivale a -1000 puntos.\n"
+"Cuchillo: Roba 300 puntos a un oponente.\n"
+"Espada: Roba 600 puntos a un oponente.\n"
+"Escudo: Bloquea todos los efectos negativos durante 1 turno.\n"
+"\n"
+"Opciones:\n"
+"- Rondas: Número máximo de rondas.\n"
+"- Bull simple: SB vale 50 puntos.\n"
+" "
+
+msgid "Treasure-simple50"
+msgstr "Bull simple"
+
+msgid "Treasure-protect"
+msgstr "Protegido por tu escudo"
+
+msgid "Treasure-protect2"
+msgstr "Oponente protegido por su escudo"
+
+######## UP DOWN COUNT UP ######
+
+msgid "Description-Up_Down_Count_Up"
+msgstr "El juego alterna entre rondas positivas y negativas.\n"
+"\n"
+"Gana la puntuación más alta.\n"
+"-----\n"
+"Ronda positiva: Los puntos acertados se suman.\n"
+"Ronda negativa: Los puntos acertados se restan;\n"
+" los fallos penalizan con 50 puntos.\n"
+"\n"
+"Opciones:\n"
+"- Penalización: Valor de penalización por fallo.\n"
+"- Inicio negativo: Inicia el juego en ronda negativa.\n"
+" "
+
+msgid "Up_Down_Count_Up-penalty"
+msgstr "Penalización"
+
+msgid "Up_Down_Count_Up-start_negative"
+msgstr "Inicio negativo"
+
+msgid "UDCP-tourpos"
+msgstr "Ronda positiva"
+
+msgid "UDCP-tourneg"
+msgstr "Ronda negativa"
+
+######## VOLEUR ######
+
+msgid "Voleur-name"
+msgstr "El Ladrón"
+
+msgid "Description-Voleur"
+msgstr "Roba segmentos a los oponentes para bloquearlos\n"
+"de jugar esos números.\n"
+"\n"
+"Gana la puntuación más alta.\n"
+"-----\n"
+"Solo en el primer turno del jugador:\n"
+"- El jugador pierde aleatoriamente de 1 a 3 segmentos.\n"
+"\n"
+"Luego:\n"
+"- El jugador activo roba segmentos al siguiente jugador.\n"
+"- El último jugador roba segmentos al primer jugador.\n"
+"\n"
+"- Acertar segmento iluminado puntúa y elimina el segmento\n"
+"  para el siguiente jugador (excepto Bull).\n"
+"- Acertar segmento apagado da 0 puntos pero elimina el segmento\n"
+"  para el siguiente jugador.\n"
+"\n"
+"Opciones:\n"
+"- Rondas: Conteo máx de rondas.\n"
+"- Bull simple: SB vale 50 pts.\n"
+" "
+
+msgid "Voleur-simple50"
+msgstr "Bull simple vale 50 pts"
+
+######## 321 ZLIP ######
+
+msgid "Description-321_Zlip"
+msgstr "Variante de 'Ho One' invertida que te permite reiniciar\n"
+"la puntuación del oponente a 0 igualando su puntuación\n"
+"(ejecutando un \"Zlip\").\n"
+"\n"
+"Anota exactamente 321 puntos para ganar.\n"
+"-----\n"
+"Igualar la puntuación del oponente restablece su puntuación a 0 (\"Zlip\").\n"
+"\n"
+"Pasarse de 321 resta el exceso de 321.\n"
+"También puedes hacer un \"Zlip\" de esta manera.\n"
+"\n"
+"Al alcanzar 321:\n"
+"Clásico: Ganas.\n"
+"Master (sin Zlip): La puntuación se reinicia a 0.\n"
+"Master (con Zlip): Ganas.\n"
+"Avanzado (sin Zlip): La puntuación se reinicia a 0 + 1 Zlip.\n"
+"Avanzado (con Zlip): Ganas.\n"
+" "
+
+msgid "321_Zlip-advanced"
+msgstr "Avanzado"
+
+###############################################
+##################           ##################
+#################  TO SORT   #################
+##################           ##################
+###############################################
+
+msgid "GiveOut"
+msgstr "Distribuido"
+
+msgid "Reached Score"
+msgstr "Puntuación Alcanzada"
+
+msgid "Hits"
+msgstr "Aciertos"
+
+msgid "Missed !"
+msgstr "¡Fallado!"
+
+msgid "Missed"
+msgstr "Fallado"
+
+msgid "Exit"
+msgstr "Salir"
+
+msgid "Backup"
+msgstr "Turno anterior"
+
+msgid "Next Player"
+msgstr "Siguiente Jugador"
+
+msgid "Backup Turn !"
+msgstr "¡Volver al turno anterior!"
+
+msgid "Not available !"
+msgstr "¡Función no disponible!"
+
+msgid "Bounce out !"
+msgstr "¡Dardo cancelado!"
+
+msgid "Please wait"
+msgstr "Por favor, espere"
+
+msgid "Username"
+msgstr "Usuario"
+
+msgid "Password"
+msgstr "Contraseña"
+
+msgid "animations-menu"
+msgstr "Personalización de animaciones LED"
+
+msgid "animations"
+msgstr "Animaciones LED"
+
+msgid "menu-event"
+msgstr "Configuración de eventos"
+
+msgid "setup"
+msgstr "Configuración"
+
+msgid "parameters"
+msgstr "Parámetros"
+
+msgid "sets-count"
+msgstr "Sets necesarios para ganar"
+
+msgid "setup-pinsleds"
+msgstr "Configuración de LEDs"
+
+msgid "setup-leds"
+msgstr "Asignación de LEDs"
+
+msgid "setup-buttons"
+msgstr "Configuración de botones y toys"
+
+msgid "setup-couleurs-segments"
+msgstr "Configuración de colores originales de segmentos"
+
+msgid "setup-cam"
+msgstr "Configuración de cámara"
+
+msgid "test-target"
+msgstr "Prueba de diana"
+
+msgid "test-toys"
+msgstr "Prueba de toys"
+
+msgid "test-target-msg"
+msgstr "Pulse Esc o espere 10 segundos para salir."
+
+msgid "test-buttons"
+msgstr "Prueba de botones"
+
+msgid "test-button-msg"
+msgstr "Pulse Esc, 3 botones simultáneamente o espere 10 segundos para salir"
+
+msgid "Support menu"
+msgstr "Menú de soporte"
+
+msgid "soundvolume"
+msgstr "Volumen"
+
+msgid "light_target"
+msgstr "Iluminar todos los segmentos con colores originales"
+
+msgid "light_strip"
+msgstr "Iluminar LEDs con el color del jugador"
+
+msgid "nextplayer_sound_duration"
+msgstr "Duración de sonidos y música"
+
+msgid "waitevent_time"
+msgstr "Retraso antes de activar evento 'Esperando'"
+
+msgid "customization"
+msgstr "Personalización del juego"
+
+msgid "bypass-stats"
+msgstr "Ocultar estadísticas al terminar la partida"
+
+msgid "endgamestats"
+msgstr "Puntuaciones de fin de partida"
+
+msgid "keeporder"
+msgstr "Mantener el orden de jugadores al reiniciar"
+
+msgid "statistics"
+msgstr "Estadísticas"
+
+msgid "netgamecreator"
+msgstr "Anfitrión para partidas online"
+
+msgid "creator"
+msgstr "Creador"
+
+msgid "game-type"
+msgstr "Juego"
+
+msgid "game-name"
+msgstr "Partida"
+
+msgid "pnjtime"
+msgstr "Retraso de turno de IA (ms - máx 10000)"
+
+msgid "solo"
+msgstr "Retraso entre dardos. 0 obliga a pulsar el botón SIGUIENTE JUGADOR al final del turno"
+
+msgid "play_firstname"
+msgstr "Anunciar jugador al inicio del turno"
+
+msgid "print_dartstroke"
+msgstr "Mostrar segmento acertado en pantalla"
+
+msgid "nextplayer"
+msgstr "Siguiente jugador"
+
+msgid "newplayer"
+msgstr "Nuevo jugador"
+
+msgid "gamebutton"
+msgstr "Juego"
+
+msgid "volume_up"
+msgstr "Volumen +"
+
+msgid "volume_down"
+msgstr "Volumen -"
+
+msgid "volume_mute"
+msgstr "Silenciar"
+
+msgid "cptplayer"
+msgstr "?? cptplayer ??"
+
+msgid "notattributed"
+msgstr "Sin asignar"
+
+msgid "menu-restart"
+msgstr "Reiniciar partida"
+
+msgid "restart"
+msgstr "Jugar de nuevo"
+
+msgid "timeout"
+msgstr "Tiempo de espera excedido"
+
+msgid "miscellaneous"
+msgstr "Varios (Favoritos, ajustes...)"
+
+msgid "realy-stop"
+msgstr "¿Realmente desea salir?"
+
+msgid "restarting"
+msgstr "Reiniciando juego"
+
+msgid "news"
+msgstr "Novedades"
+
+msgid "target-simple1"
+msgstr "Simple 1,4,6,..."
+
+msgid "target-simple2"
+msgstr "Simple 20,18,13,..."
+
+msgid "target-double1"
+msgstr "Doble 1,4,6,..."
+
+msgid "target-double2"
+msgstr "Doble 20,18,13,..."
+
+msgid "target-triple1"
+msgstr "Triple 1,4,6,..."
+
+msgid "target-triple2"
+msgstr "Triple 20,18,13,..."
+
+msgid "target-sb"
+msgstr "Bull simple"
+
+msgid "target-db"
+msgstr "Bull doble"
+
+######## Hangman ######
+
+msgid "Description-Hangman"
+msgstr ""
+"JUEGO DEL AHORCADO\n"
+"\n"
+"\n"
+"¡Adivina la palabra!\n"
+"\n"
+"¿Podrás acertar las letras correctas?\n"
+"\n"
+"\n"
+"Solo 1 jugador.\n"
+"\n"
+"-----\n"
+"¡Adivina la palabra!\n"
+"\n"
+"Adivina la palabra acertando los segmentos correctos.\n"
+"Juego de entrenamiento, ¡consigue la puntuación más alta!\n"
+"\n"
+"Longitud de palabras:\n"
+"- 6 = Solo 6 letras.\n"
+"- 7 = Solo 7 letras.\n"
+"- 8 = Solo 8 letras.\n"
+"- 9 = 6, 7 u 8 letras.\n"
+"\n"
+"Opción Master: El ahorcado no se reinicia tras cada palabra.\n"
+"\n"
+" "
+
+msgid "Hangman-master"
+msgstr "Master"
+
+msgid "Hangman-word_length"
+msgstr "Longitud de la palabra"
+
+######## YAHTZYDARTS ######
+
+msgid "Yahtzydarts-name"
+msgstr "Yahtzydarts"
+
+msgid "Yahtzydarts-video"
+msgstr "Vídeo"
+
+msgid "Yahtzydarts-wrong"
+msgstr "Seleccione un segmento parpadeante"
+
+msgid "Description-Yahtzydarts"
+msgstr "Yahtzee adaptado a Yahtzydarts.\n"
+"Juego dividido en dos partes como el Yahtzee clásico:\n"
+"\n"
+"Sección superior: Acierta números dedicados para puntuar.\n"
+"Gana puntos de bonificación si la puntuación alcanza o supera\n"
+"el umbral objetivo en la casilla de bonificación.\n"
+"\n"
+"Sección inferior: Completa combinaciones (trío,\n"
+"póker, etc.) para puntuar.\n"
+"-----\n"
+"Lanza 2 a 5 dardos para formar combinación según el segmento acertado:\n"
+"\n"
+"- Simple = 1 dado del número acertado.\n"
+"- Doble = 2 dados del número acertado.\n"
+"- Triple = 3 dados del número acertado.\n"
+"\n"
+"NOTA: Si tienes 3 dados y aciertas triple,\n"
+"solo obtienes 2 dados (límite máximo de 5 dados).\n"
+"\n"
+"Fallar números requeridos otorga un dado de valor 0;\n"
+"aunque sea un fallo, aún puede completar combinaciones.\n"
+"\n"
+"Para validar la combinación, toca manualmente el segmento parpadeante\n"
+"(¡o apunta a él!)\n"
+"\n"
+"Opciones:\n"
+"- Vídeos: Mostrar/ocultar animaciones de vídeo."
 
 msgid "exhibition"
 msgstr "Modo exposición"
@@ -567,19 +3762,19 @@ msgid "exhibition-sub"
 msgstr "Botones del menú principal visibles en modo exposición"
 
 msgid "config-skip"
-msgstr "Saltar"
+msgstr "Omitir"
 
 msgid "deposit-title"
-msgstr "Nueva configuración encontrada"
+msgstr "Nueva configuración enviada"
 
 msgid "deposit-sub"
-msgstr "Valores distintos de la configuración actual, por categoría"
+msgstr "Los valores difieren de la configuración actual, por categoría"
 
 msgid "deposit-apply"
 msgstr "Actualizar estos valores"
 
 msgid "deposit-drop"
-msgstr "Borrar el archivo nuevo"
+msgstr "Eliminar archivo enviado"
 
 msgid "deposit-SectionGlobals"
 msgstr "Ajustes generales"
@@ -591,7 +3786,7 @@ msgid "deposit-SectionKeys"
 msgstr "Segmentos de la diana"
 
 msgid "deposit-Raspberry"
-msgstr "Botones de la tarjeta de extensión"
+msgstr "Botones de la placa de expansión"
 
 msgid "deposit-Raspberry_Leds"
 msgstr "LED"
@@ -603,16 +3798,16 @@ msgid "deposit-Raspberry_BoardPinsOuts"
 msgstr "Pines de salida de la diana"
 
 msgid "deposit-LEDTarget"
-msgstr "LED de la diana"
+msgstr "LED de diana"
 
 msgid "deposit-Camera"
-msgstr "Webcam"
+msgstr "Cámara web"
 
 msgid "deposit-Gallery"
 msgstr "Galería"
 
 msgid "deposit-Events"
-msgstr "Eventos luminosos"
+msgstr "Eventos de luces"
 
 msgid "deposit-Favorites"
 msgstr "Favoritos"
@@ -621,10 +3816,10 @@ msgid "deposit-Server"
 msgstr "Servidor de juego en red"
 
 msgid "vk-delete"
-msgstr "Borrar"
+msgstr "Eliminar"
 
 msgid "vk-ok"
-msgstr "Aceptar"
+msgstr "Confirmar"
 
 msgid "vk-cancel"
 msgstr "Cancelar"
@@ -639,22 +3834,22 @@ msgid "favorite-save"
 msgstr "Guardar como favorito"
 
 msgid "favorite-save-sub"
-msgstr "Elija su número (un favorito ya guardado solo se reemplaza tras confirmar)"
+msgstr "Elija el número de favorito (el favorito existente requiere confirmación para sobrescribir)"
 
 msgid "favorite-players"
-msgstr "Jugadores del favorito"
+msgstr "Jugadores favoritos"
 
 msgid "favorite-players-sub"
-msgstr "¿Con qué jugadores empezar?"
+msgstr "¿Con qué jugadores iniciar?"
 
 msgid "favorite-choose"
 msgstr "Elegir de la lista de jugadores"
 
 msgid "favorite-generic"
-msgstr "Jugador 1, Jugador 2…"
+msgstr "Jugador 1, Jugador 2..."
 
 msgid "favorite-last"
-msgstr "Los últimos jugadores elegidos"
+msgstr "Últimos jugadores seleccionados"
 
 msgid "favorite-player"
 msgstr "Jugador"
@@ -663,40 +3858,40 @@ msgid "favorite-saved"
 msgstr "Favorito {number} guardado"
 
 msgid "favorite-not-saved"
-msgstr "No se pudo guardar el favorito"
+msgstr "El favorito no pudo guardarse"
 
 msgid "favorite-too-many"
-msgstr "Los jugadores de más se quitarán. ¿Continuar?"
+msgstr "Se eliminarán los jugadores sobrantes. ¿Continuar?"
 
 msgid "favorite-too-few"
-msgstr "Faltarán jugadores. ¿Continuar?"
+msgstr "Faltan jugadores. ¿Continuar?"
 
 msgid "favorite-define-options"
-msgstr "¿definir sus opciones?"
+msgstr "¿definir opciones?"
 
 msgid "favorite-edit-options"
-msgstr "Cambiar las opciones"
+msgstr "Editar opciones"
 
 msgid "favorite-remove"
-msgstr "Quitar de los favoritos"
+msgstr "Eliminar de favoritos"
 
 msgid "favorite-place-button"
-msgstr "¿Ponerlo también en un botón del menú principal?"
+msgstr "¿Añadir botón de acceso directo al menú principal?"
 
 msgid "favorite-ask"
-msgstr "Elegirlos al empezar"
+msgstr "Seleccionar al iniciar"
 
 msgid "favorite-numbered"
-msgstr "¿Guardarlo también como favorito numerado?"
+msgstr "¿Guardar como favorito numerado?"
 
 msgid "favorite-numbered-sub"
-msgstr "Favorito 1 a 9: solo estará en el menú principal si el archivo de menús le da un botón (favorite:fav1…)"
+msgstr "Favorito 1 a 9: aparece en el menú principal solo si se configura en el archivo de menú (favorite:fav1…)"
 
 msgid "favorite-options-mark"
-msgstr "Opc."
+msgstr "Opt."
 
 msgid "favorite-options-legend"
-msgstr "Opc.: opciones definidas, sin pantalla de opciones"
+msgstr "Opt. : opciones predefinidas sin pantalla de opciones"
 
 msgid "vk-shift"
 msgstr "Mayús"
@@ -705,103 +3900,103 @@ msgid "vk-space"
 msgstr "Espacio"
 
 msgid "nextplayer_music"
-msgstr "Música al empezar cada turno"
+msgstr "Música en cada inicio de turno"
 
 msgid "idle_light"
-msgstr "Luz fuera de las partidas (sin animaciones)"
+msgstr "Iluminación en espera (sin animaciones)"
 
 msgid "idle_strip_color"
-msgstr "Tira fuera de las partidas"
+msgstr "Tira LED en espera"
 
 msgid "idle_target_color"
-msgstr "Diana fuera de las partidas"
+msgstr "Diana en espera"
 
 msgid "idle-off"
-msgstr "Apagada"
+msgstr "Apagado"
 
 msgid "idle-origin"
 msgstr "Colores originales"
 
 msgid "idle-off-target"
-msgstr "Apagada"
+msgstr "Apagado"
 
 msgid "raspy2dmd"
 msgstr "Pantalla DMD (Raspy2DMD)"
 
 msgid "raspy2dmd-scan"
-msgstr "Escanee para abrir todos sus ajustes en su teléfono"
+msgstr "Escanear para abrir ajustes en el teléfono"
 
 msgid "raspy2dmd-test-message"
-msgstr "Mostrar un mensaje de prueba"
+msgstr "Mostrar mensaje de prueba"
 
 msgid "raspy2dmd-hello"
 msgstr "¡Hola desde RaspyDarts!"
 
 msgid "raspy2dmd-test-pattern"
-msgstr "Patrón de prueba del Pico"
+msgstr "Patrón de prueba de Pico"
 
 msgid "raspy2dmd-clock"
-msgstr "Mostrar el reloj"
+msgstr "Mostrar reloj"
 
 msgid "raspy2dmd-demo"
-msgstr "Iniciar la demo"
+msgstr "Ejecutar demostración"
 
 msgid "raspy2dmd-sent"
 msgstr "Enviado a la pantalla"
 
 msgid "raspy2dmd-install-question"
-msgstr "La pantalla DMD Raspy2DMD no está instalada. ¿Instalarla ahora? (Internet, 15 a 45 minutos, el juego sigue disponible)"
+msgstr "Pantalla Raspy2DMD no instalada. ¿Instalar ahora? (Requiere Internet, 15-45 mins, el juego sigue jugable)"
 
 msgid "raspy2dmd-no-internet"
-msgstr "Sin acceso a Internet: la instalación no es posible"
+msgstr "Sin conexión a Internet: la instalación falló"
 
 msgid "raspy2dmd-install-started"
-msgstr "Instalación iniciada: sígala en este menú"
+msgstr "Instalación iniciada: siga el progreso en el menú"
 
 msgid "raspy2dmd-install-failed"
-msgstr "No se pudo iniciar la instalación"
+msgstr "La instalación no pudo iniciarse"
 
 msgid "raspy2dmd-installing"
-msgstr "Instalando la pantalla (15 a 45 minutos)"
+msgstr "Instalando software de pantalla (15-45 mins)"
 
 msgid "raspy2dmd-not-running"
-msgstr "La pantalla no está iniciada"
+msgstr "Pantalla no ejecutándose"
 
 msgid "raspy2dmd-start"
-msgstr "Iniciar la pantalla"
+msgstr "Iniciar pantalla"
 
 msgid "raspy2dmd-starting"
-msgstr "Iniciando la pantalla…"
+msgstr "Iniciando pantalla..."
 
 msgid "raspy2dmd-started"
 msgstr "Pantalla iniciada"
 
 msgid "raspy2dmd-start-failed"
-msgstr "La pantalla no se ha iniciado (registros en /Medias/Logs)"
+msgstr "La pantalla no pudo iniciarse (ver registros en /Medias/Logs)"
 
 msgid "favorite-options-title"
-msgstr "Opciones del favorito"
+msgstr "Opciones de favorito"
 
 msgid "favorite-add-game"
 msgstr "Añadir a favoritos"
 
 msgid "favorite-add-options"
-msgstr "Nuevo favorito con sus opciones"
+msgstr "Nuevo favorito con opciones"
 
 msgid "favorite-add-plain"
 msgstr "Nuevo favorito sin opciones"
 
 msgid "favorite-numbered-remove"
-msgstr "Quitar este favorito"
+msgstr "Eliminar este favorito"
 
 msgid "favorite-removed"
-msgstr "Favorito {number} quitado"
+msgstr "Favorito {number} eliminado"
 
 msgid "favorite-replace"
-msgstr "Reemplazar el favorito"
+msgstr "Reemplazar favorito"
 
 msgid "favorite-no-options"
-msgstr "Sin opciones: se eligen en cada inicio"
+msgstr "Sin opciones: se seleccionan en cada inicio"
 
 msgid "favorite-with-options"
 msgstr "con opciones"
@@ -810,79 +4005,79 @@ msgid "favorite-without-options"
 msgstr "sin opciones"
 
 msgid "favorite-to-button"
-msgstr "Ponerlo en un botón del menú principal"
+msgstr "Añadir al botón del menú principal"
 
 msgid "favorite-exists"
-msgstr "Este favorito ya existe"
+msgstr "El favorito ya existe"
 
 msgid "favorite-pick-sub"
 msgstr "Jugadores favoritos y banco de nombres"
 
 msgid "favorite-count"
-msgstr "Número de jugadores del favorito"
+msgstr "Número de jugadores para favorito"
 
 msgid "favorite-edit-players"
-msgstr "Modificar los jugadores"
+msgstr "Editar jugadores"
 
 msgid "player-exists"
-msgstr "Este nombre ya está en la lista"
+msgstr "El nombre ya está en la lista"
 
 msgid "edit-screens"
-msgstr "Modificar las pantallas"
+msgstr "Editar pantallas"
 
 msgid "editor-title"
-msgstr "Modificar la pantalla"
+msgstr "Editar pantalla"
 
 msgid "editor-screen-main"
 msgstr "Pantalla principal"
 
 msgid "editor-screen-miscellaneous"
-msgstr "Parámetros"
+msgstr "Ajustes"
 
 msgid "editor-screen-settings"
 msgstr "Configuración"
 
 msgid "editor-help-select"
-msgstr "Flechas: elegir · Validar: acciones del botón · Ratón: clic, arrastrar el botón o sus tiradores · Volver o Menú: añadir, guardar, salir"
+msgstr "Flechas: navegar · Confirmar: acción del botón · Ratón: hacer clic/arrastrar botón o tiradores · Atrás/Menú: añadir, guardar, salir"
 
 msgid "editor-help-move"
-msgstr "Flechas: mover (paso {step}) · + / -: paso · Validar o Volver: terminar"
+msgstr "Flechas: mover (paso {step}) · + / - : tamaño de paso · Confirmar/Atrás: terminar"
 
 msgid "editor-help-resize"
-msgstr "Flechas: mover el tirador (paso {step}) · Validar: tirador siguiente · + / -: paso · Volver: terminar"
+msgstr "Flechas: redimensionar tirador (paso {step}) · Confirmar: siguiente tirador · + / - : tamaño de paso · Atrás: terminar"
 
 msgid "editor-move"
 msgstr "Mover"
 
 msgid "editor-resize"
-msgstr "Cambiar el tamaño"
+msgstr "Redimensionar"
 
 msgid "editor-delete"
-msgstr "Borrar"
+msgstr "Eliminar"
 
 msgid "editor-delete-confirm"
-msgstr "¿Borrar este botón?"
+msgstr "¿Eliminar este botón?"
 
 msgid "editor-add-title"
-msgstr "Añadir un elemento"
+msgstr "Añadir elemento"
 
 msgid "editor-version"
 msgstr "Número de versión"
 
 msgid "editor-add-game"
-msgstr "Un juego…"
+msgstr "Un juego..."
 
 msgid "editor-category"
 msgstr "Categoría"
 
 msgid "editor-discard"
-msgstr "¿Abandonar los cambios?"
+msgstr "¿Descartar cambios?"
 
 msgid "editor-saved"
 msgstr "Pantalla guardada"
 
 msgid "editor-not-saved"
-msgstr "No se pudo guardar la pantalla"
+msgstr "La pantalla no pudo guardarse"
 
 msgid "editor-save-quit"
 msgstr "Guardar y salir"
@@ -903,28 +4098,28 @@ msgid "editor-shortcut-none"
 msgstr "ninguno"
 
 msgid "editor-shortcut-change"
-msgstr "Cambiar el atajo"
+msgstr "Cambiar atajo"
 
 msgid "editor-shortcut-remove"
-msgstr "Quitar el atajo"
+msgstr "Eliminar atajo"
 
 msgid "editor-shortcut-press"
-msgstr "Pulse la tecla del atajo: F1 a F12, una letra (salvo c) o una cifra (Esc: cancelar)"
+msgstr "Pulse la tecla de atajo: F1 a F12, letra (excepto c) o dígito (Esc: cancelar)"
 
 msgid "editor-shortcut-taken"
-msgstr "{key} ya es el atajo de «{button}»: ¿quitárselo?"
+msgstr "{key} ya está asignado a « {button} »: ¿reasignar?"
 
 msgid "editor-key-escape"
 msgstr "Esc"
 
 msgid "editor-key-enter"
-msgstr "Intro"
+msgstr "Enter"
 
 msgid "editor-key-space"
 msgstr "Espacio"
 
 msgid "editor-arrange"
-msgstr "Disponer automáticamente"
+msgstr "Organizar automáticamente"
 
 msgid "editor-arrange-columns"
 msgstr "Columnas"
@@ -942,64 +4137,61 @@ msgid "editor-arrange-all"
 msgstr "todos"
 
 msgid "editor-arrange-inside"
-msgstr "los de la zona"
+msgstr "dentro del área"
 
 msgid "editor-arrange-apply"
-msgstr "Disponer en la zona"
+msgstr "Organizar en el área"
 
 msgid "editor-arrange-zone"
-msgstr "Cambiar la zona"
+msgstr "Redefinir área"
 
 msgid "editor-arrange-too-few"
-msgstr "{buttons} botones para {cells} casillas: añada columnas o filas"
+msgstr "{buttons} botones para {cells} celdas: añada columnas o filas"
 
 msgid "editor-arrange-too-small"
-msgstr "Zona demasiado pequeña para tantas casillas"
+msgstr "Área demasiado pequeña para esta disposición de cuadrícula"
 
 msgid "editor-arrange-none"
-msgstr "Ningún botón en la zona"
+msgstr "No hay botones en el área"
 
 msgid "editor-snap"
-msgstr "Imantado"
+msgstr "Ajustar a la cuadrícula"
 
 msgid "editor-help-zone"
-msgstr "Zona de los botones · Flechas: mover el tirador (paso {step}) · Validar: tirador siguiente · + / -: paso · Ratón: arrastrar la zona o sus tiradores · Volver o Menú: disponer"
+msgstr "Área de botones · Flechas: mover tirador (paso {step}) · Confirmar: siguiente tirador · + / - : tamaño de paso · Ratón: arrastrar área o tiradores · Atrás/Menú: organizar"
 
 msgid "editor-background"
-msgstr "Fondo de pantalla"
+msgstr "Fondo"
 
 msgid "editor-background-theme"
-msgstr "El del tema"
+msgstr "Fondo del tema"
 
 msgid "editor-help-background"
-msgstr "Flechas o tocar a la izquierda / derecha: fondo anterior / siguiente · Validar o Menú: conservar · Volver: cancelar"
+msgstr "Flechas/Táctil izquierda-derecha: ant/sig fondo · Confirmar/Menú: mantener · Atrás: cancelar"
 
 msgid "quit-game-question"
-msgstr "¿Realmente quiere salir de la partida?"
+msgstr "¿Seguro que desea salir de la partida?"
 
 msgid "quit-game-keys"
-msgstr "Escape: salir · Validar o esperar: volver a la partida"
-
-msgid "PIN_MISSDART"
-msgstr "Piezo"
+msgstr "Esc: salir · Confirmar/Esperar: reanudar partida"
 
 msgid "editor-import"
-msgstr "Importar un fondo"
+msgstr "Importar imagen de fondo"
 
 msgid "editor-import-usb"
-msgstr "Llave USB"
+msgstr "Unidad USB"
 
 msgid "editor-import-home"
 msgstr "Carpeta personal"
 
 msgid "editor-import-root"
-msgstr "Toda la tarjeta"
+msgstr "Directorio raíz"
 
 msgid "editor-import-up"
 msgstr "Carpeta superior"
 
 msgid "editor-import-failed"
-msgstr "Imagen no importada"
+msgstr "La importación de imagen falló"
 
 msgid "category-classic"
 msgstr "Clásicos"
@@ -1025,45 +4217,44 @@ msgstr "esquinas redondeadas"
 msgid "editor-shape-pill"
 msgstr "redondo (botón cuadrado: círculo)"
 
-
 msgid "usb-pads"
-msgstr "Configuración de botones y ruedas USB"
+msgstr "Configuración de botones y mandos USB"
 
 msgid "usb-pads-sub"
-msgstr "La tecla o la rueda accionada se ilumina aquí"
+msgstr "Los botones pulsados o mandos girados se iluminan aquí"
 
 msgid "usb-pads-none"
-msgstr "Ningún dispositivo USB de botones conectado"
+msgstr "Ninguna botonera USB conectada"
 
 msgid "usb-pads-pad"
-msgstr "Dispositivo"
+msgstr "Caja de control"
 
 msgid "usb-pads-keys"
-msgstr "Teclas"
+msgstr "Botones"
 
 msgid "usb-pads-knobs"
-msgstr "Ruedas"
+msgstr "Mandos giratorios"
 
 msgid "usb-pads-program"
-msgstr "Programar el dispositivo"
+msgstr "Programar caja de control"
 
 msgid "usb-pads-programmed"
-msgstr "Dispositivo programado: pruebe cada tecla"
+msgstr "Caja de control programada: prueba los botones de entrada"
 
 msgid "usb-pads-program-error"
-msgstr "Programación imposible: desconecte y vuelva a conectar el dispositivo"
+msgstr "Programación fallida: desenchufe y vuelva a enchufar la caja de control"
 
 msgid "usb-pads-program-denied"
-msgstr "Programación rechazada por el sistema: actualice RaspyDarts y reinicie"
+msgstr "Programación denegada por el sistema: actualice RaspyDarts y reinicie"
 
 msgid "usb-pads-not-programmed"
-msgstr "Este dispositivo no está programado: elija «Programar el dispositivo»"
+msgstr "Caja de control sin programar: seleccione «Programar caja de control»"
 
 msgid "usb-pads-to-program"
-msgstr "Número cambiado: programe el dispositivo"
+msgstr "Conteo cambiado: programe la caja de control"
 
 msgid "usb-pads-saved"
-msgstr "Ajustes de botones y ruedas guardados"
+msgstr "Ajustes de botones y mandos guardados"
 
 msgid "usb-pads-menus"
 msgstr "Menús"
@@ -1072,22 +4263,22 @@ msgid "usb-pads-game"
 msgstr "Partida"
 
 msgid "usb-pads-key"
-msgstr "Tecla"
+msgstr "Botón"
 
 msgid "usb-pads-knob-left"
-msgstr "Rueda izquierda"
+msgstr "Mando izquierdo"
 
 msgid "usb-pads-knob-press"
-msgstr "Rueda pulsada"
+msgstr "Pulsación de mando"
 
 msgid "usb-pads-knob-right"
-msgstr "Rueda derecha"
+msgstr "Mando derecho"
 
 msgid "usb-pads-none-action"
-msgstr "Nada"
+msgstr "Ninguna"
 
 msgid "usb-pads-validate"
-msgstr "Validar"
+msgstr "Confirmar"
 
 msgid "usb-pads-back"
 msgstr "Atrás"
@@ -1117,7 +4308,7 @@ msgid "usb-pads-miss"
 msgstr "Dardo fallado"
 
 msgid "usb-pads-stop"
-msgstr "Detener la partida"
+msgstr "Detener partida"
 
 msgid "usb-pads-volume-up"
 msgstr "Volumen +"
@@ -1126,70 +4317,70 @@ msgid "usb-pads-volume-down"
 msgstr "Volumen -"
 
 msgid "usb-pads-volume-mute"
-msgstr "Silenciar"
+msgstr "Silenciar sonido"
 
 msgid "usb-pads-system-volume-up"
-msgstr "Volumen general +"
+msgstr "Volumen del sistema +"
 
 msgid "usb-pads-system-volume-down"
-msgstr "Volumen general -"
+msgstr "Volumen del sistema -"
 
 msgid "usb-pads-knob-long"
-msgstr "Rueda pulsación larga"
+msgstr "Pulsación larga de mando"
 
 msgid "raspy2dmd-check-update"
-msgstr "Buscar actualizaciones"
+msgstr "Comprobar actualizaciones"
 
 msgid "raspy2dmd-checking"
-msgstr "Buscando una actualización de Raspy2DMD…"
+msgstr "Buscando actualización de Raspy2DMD..."
 
 msgid "raspy2dmd-check-failed"
-msgstr "Comprobación imposible: GitHub no responde (¿Internet?)"
+msgstr "Comprobación fallida: GitHub inalcanzable (compruebe conexión a Internet)"
 
 msgid "raspy2dmd-up-to-date"
 msgstr "Raspy2DMD {version} está actualizado"
 
 msgid "raspy2dmd-update-disabled"
-msgstr "Actualizaciones desactivadas en Raspy2DMD: actívelas en su página web"
+msgstr "Actualizaciones desactivadas en Raspy2DMD: actívelas mediante la interfaz web"
 
 msgid "raspy2dmd-update-question"
 msgstr "¿Instalar Raspy2DMD {version}?"
 
 msgid "raspy2dmd-update-explain"
-msgstr "Versión instalada: {version}. El DMD muestra el progreso y luego Raspy2DMD se reinicia (la máquina sigue encendida)"
+msgstr "Versión instalada: {version}. El DMD muestra el progreso, luego Raspy2DMD se reinicia"
 
 msgid "raspy2dmd-updating"
-msgstr "Instalando Raspy2DMD {version}: progreso en el DMD"
+msgstr "Instalando Raspy2DMD {version}: compruebe el progreso en el DMD"
 
 msgid "raspy2dmd-updated"
 msgstr "Raspy2DMD {version} instalado"
 
 msgid "raspy2dmd-update-failed"
-msgstr "Actualización no terminada: vea la página web de Raspy2DMD"
+msgstr "Actualización incompleta: compruebe la interfaz web de Raspy2DMD"
 
 msgid "raspy2dmd-install-elapsed"
 msgstr "Tiempo transcurrido: {time}"
 
 msgid "raspy2dmd-install-continues"
-msgstr "La instalación continúa: sígala en Ajustes > Pantalla DMD"
+msgstr "Instalación en curso: siga el progreso en Ajustes > Pantalla DMD"
 
 msgid "raspy2dmd-install-done"
-msgstr "Raspy2DMD está instalado"
+msgstr "Raspy2DMD instalado"
 
 msgid "raspy2dmd-install-error"
-msgstr "Instalación fallida: vea logs/raspy2dmd_install.log"
+msgstr "Instalación fallida: inspeccione logs/raspy2dmd_install.log"
 
 msgid "sound_output"
-msgstr "Salida de sonido"
+msgstr "Salida de audio"
 
 msgid "sound-output-auto"
-msgstr "Automática (tarjeta USB si está conectada)"
+msgstr "Automática (tarjeta de sonido USB si está conectada)"
 
 msgid "sound-output-hdmi"
 msgstr "HDMI (pantalla)"
 
 msgid "sound-output-jack"
-msgstr "Toma jack de la Raspberry"
+msgstr "Jack de 3.5mm de Raspberry"
 
 msgid "sound-output-usb"
 msgstr "Tarjeta de sonido USB"
@@ -1198,52 +4389,52 @@ msgid "coins"
 msgstr "Monedero"
 
 msgid "coins-sub"
-msgstr "Una moneda insertada aparece aquí (prueba)"
+msgstr "La moneda insertada se muestra aquí (modo de prueba)"
 
 msgid "coins-last"
-msgstr "Última moneda hace {seconds} s"
+msgstr "Última moneda insertada hace {seconds} s"
 
 msgid "coins-mode"
 msgstr "Modo"
 
 msgid "coins-mode-off"
-msgstr "Desactivado (gratis)"
+msgstr "Desactivado (Juego libre)"
 
 msgid "coins-mode-games"
 msgstr "Créditos por partida"
 
 msgid "coins-mode-time"
-msgstr "Tiempo de partida"
+msgstr "Tiempo de juego"
 
 msgid "coins-input"
-msgstr "Entrada del monedero"
+msgstr "Entrada del aceptador de monedas"
 
 msgid "coins-credits-per-coin"
 msgstr "Créditos por moneda"
 
 msgid "coins-players-per-credit"
-msgstr "Jugadores por partida"
+msgstr "Jugadores por crédito de juego"
 
 msgid "coins-players-any"
-msgstr "Libre"
+msgstr "Cualquiera"
 
 msgid "coins-minutes-per-coin"
 msgstr "Minutos por moneda"
 
 msgid "coins-price-local"
-msgstr "Precio partida local"
+msgstr "Precio de partida individual"
 
 msgid "coins-price-network"
-msgstr "Precio partida en red"
+msgstr "Precio de partida en red"
 
 msgid "coins-price-games"
 msgstr "Precio por juego"
 
 msgid "coins-price-games-sub"
-msgstr "Un precio propio reemplaza el de su tipo"
+msgstr "El precio de juego personalizado anula el precio de tipo predeterminado"
 
 msgid "coins-price-type"
-msgstr "Precio del tipo"
+msgstr "Precio de tipo"
 
 msgid "coins-free"
 msgstr "Gratis"
@@ -1255,7 +4446,7 @@ msgid "coins-count"
 msgstr "Monedas recibidas"
 
 msgid "coins-count-reset"
-msgstr "¿Poner a cero el contador de monedas?"
+msgstr "¿Restablecer contador de monedas?"
 
 msgid "coins-password"
 msgstr "Contraseña del monedero"
@@ -1264,19 +4455,19 @@ msgid "coins-password-new"
 msgstr "Nueva contraseña del monedero"
 
 msgid "coins-password-again"
-msgstr "Confirme la contraseña"
+msgstr "Confirmar contraseña"
 
 msgid "coins-password-different"
-msgstr "Las dos contraseñas son diferentes"
+msgstr "Las contraseñas no coinciden"
 
 msgid "coins-password-wrong"
 msgstr "Contraseña incorrecta"
 
 msgid "coins-password-change"
-msgstr "Cambiar la contraseña"
+msgstr "Cambiar contraseña"
 
 msgid "coins-password-changed"
-msgstr "Contraseña cambiada: guarde"
+msgstr "Contraseña cambiada: guarde la configuración"
 
 msgid "coins-saved"
 msgstr "Ajustes del monedero guardados"
@@ -1288,10 +4479,10 @@ msgid "coins-time"
 msgstr "Tiempo: {time}"
 
 msgid "coins-need-credits"
-msgstr "Esta partida cuesta {credits} crédito(s)"
+msgstr "Este juego requiere {credits} crédito(s)"
 
 msgid "coins-need-time"
-msgstr "No queda tiempo de juego"
+msgstr "Sin tiempo de juego"
 
 msgid "coins-insert-coin"
 msgstr "Inserte una moneda"
@@ -1300,19 +4491,19 @@ msgid "coins-time-up"
 msgstr "Tiempo agotado"
 
 msgid "coins-time-up-sub"
-msgstr "Inserte una moneda para seguir, Atrás para parar la partida"
+msgstr "Inserte moneda para continuar, Atrás para salir del juego"
 
 msgid "coins-badge-position"
-msgstr "Posición de la banda"
+msgstr "Posición de insignia"
 
 msgid "coins-badge-size"
-msgstr "Tamaño de la banda"
+msgstr "Tamaño de insignia"
 
 msgid "coins-badge-top-right"
 msgstr "Arriba a la derecha"
 
 msgid "coins-badge-top-center"
-msgstr "Arriba en el centro"
+msgstr "Arriba al centro"
 
 msgid "coins-badge-top-left"
 msgstr "Arriba a la izquierda"
@@ -1333,70 +4524,70 @@ msgid "coins-badge-large"
 msgstr "Grande"
 
 msgid "coins-input-none"
-msgstr "Ninguna (a elegir)"
+msgstr "Ninguna (seleccionar entrada)"
 
 msgid "coins-no-mcp"
-msgstr "Ninguna tarjeta MCP detectada: el monedero se conecta a una entrada MCP"
+msgstr "No se detectó placa MCP: el aceptador de monedas se conecta a la entrada MCP"
 
 msgid "online-title"
-msgstr "Partida en línea"
+msgstr "Partida en red"
 
 msgid "online-server"
 msgstr "Servidor: {server}"
 
 msgid "online-connecting"
-msgstr "Conectando…"
+msgstr "Conectando..."
 
 msgid "online-connected"
 msgstr "Conectado"
 
 msgid "online-connected-no-live"
-msgstr "Conectado (partidas en curso no disponibles)"
+msgstr "Conectado (partidas en directo no disponibles)"
 
 msgid "online-offline"
-msgstr "Sin conexión"
+msgstr "Desconectado"
 
 msgid "online-offline-retry"
-msgstr "Sin conexión, reintentando…"
+msgstr "Desconectado, reintentando..."
 
 msgid "online-account-required"
-msgstr "Cuenta obligatoria: inicie sesión"
+msgstr "Cuenta requerida: por favor inicie sesión"
 
 msgid "online-chat-unavailable"
 msgstr "Chat no disponible"
 
 msgid "online-chat-unavailable-check"
-msgstr "Chat no disponible: compruebe Internet y python3-websocket"
+msgstr "Chat no disponible: compruebe conexión a Internet y python3-websocket"
 
 msgid "online-no-room"
-msgstr "Ninguna partida disponible"
+msgstr "No hay partidas disponibles"
 
 msgid "online-room-join"
-msgstr "En espera, unirse"
+msgstr "Esperando, unirse"
 
 msgid "online-room-full"
-msgstr "Completa"
+msgstr "Lleno"
 
 msgid "online-room-playing"
 msgstr "En curso"
 
 msgid "online-legend"
-msgstr "Verde: en espera, para unirse. Rojo: en curso o completa"
+msgstr "Verde: esperando para unirse. Rojo: en curso o lleno"
 
 msgid "online-ready"
 msgstr "Listo para jugar"
 
 msgid "online-change-server"
-msgstr "Cambiar de servidor"
+msgstr "Cambiar servidor"
 
 msgid "online-change-account"
-msgstr "Cambiar de cuenta"
+msgstr "Cambiar cuenta"
 
 msgid "online-account"
-msgstr "Cuenta de partidas en línea"
+msgstr "Cuenta de partida en red"
 
 msgid "online-account-scan"
-msgstr "¿Aún sin cuenta? Escanee este código QR con su teléfono para crear una"
+msgstr "¿Aún sin cuenta? Escanee el código QR en su móvil para crear una"
 
 msgid "online-login"
 msgstr "Iniciar sesión"
@@ -1408,31 +4599,31 @@ msgid "online-one-server"
 msgstr "Un solo servidor: añada más en Varios > Favoritos > Servidores"
 
 msgid "online-server-choice"
-msgstr "Servidor de las partidas en línea"
+msgstr "Servidor de juego en red"
 
 msgid "online-chat"
 msgstr "Jugadores y chat"
 
 msgid "online-create"
-msgstr "Crear una partida"
+msgstr "Crear partida"
 
 msgid "online-chat-title"
 msgstr "Jugadores y chat"
 
 msgid "online-chat-needs-ready"
-msgstr "Active «Listo para jugar en línea» ({key}) para usar el chat"
+msgstr "Habilite «Listo para jugar online» ({key}) para usar el chat"
 
 msgid "online-chat-hint"
-msgstr "Elija un jugador y luego Escribir o Invitar"
+msgstr "Seleccione jugador, luego Escribir o Invitar"
 
 msgid "online-chat-keys"
-msgstr "Arriba / abajo: jugador. Izquierda / derecha: acción. Validar: elegir. Volver: salir"
+msgstr "Arriba / Abajo: jugador. Izquierda / Derecha: acción. Confirmar: seleccionar. Atrás: salir"
 
 msgid "online-players-connected"
 msgstr "Jugadores conectados"
 
 msgid "online-no-other-player"
-msgstr "Ningún otro jugador"
+msgstr "No hay otros jugadores en línea"
 
 msgid "online-me"
 msgstr "Yo"
@@ -1465,7 +4656,7 @@ msgid "online-invitation-sent"
 msgstr "Invitación enviada, esperando respuesta"
 
 msgid "online-invitation-text"
-msgstr "Hola, ¿quieres jugar conmigo?"
+msgstr "¡Hola, quieres jugar una partida?"
 
 msgid "online-invitation-accepted"
 msgstr "{name}: invitación aceptada"
@@ -1474,67 +4665,67 @@ msgid "online-invitation-refused"
 msgstr "{name}: invitación rechazada"
 
 msgid "online-invitation-received"
-msgstr "{name} le propone una partida: {accept} aceptar, {refuse} rechazar"
+msgstr "{name} te invitó a una partida: {accept} aceptar, {refuse} rechazar"
 
 msgid "online-you-accepted"
-msgstr "Invitación aceptada: vuelva atrás y cree o únase a la partida"
+msgstr "Invitación aceptada: vuelva atrás y únase o cree la partida"
 
 msgid "online-you-refused"
 msgstr "Invitación rechazada"
 
 msgid "online-player-joined"
-msgstr "{name} se une a la sala"
+msgstr "{name} se unió a la sala"
 
 msgid "online-send-error"
 msgstr "Error de envío"
 
 msgid "online-sending"
-msgstr "Enviando…"
+msgstr "Enviando..."
 
 msgid "online-chat-disconnected"
-msgstr "Chat desconectado: no se envió nada"
+msgstr "Chat desconectado: el mensaje no pudo enviarse"
 
 msgid "online-no-player-selected"
-msgstr "Ningún jugador elegido"
+msgstr "Ningún jugador seleccionado"
 
 msgid "online-no-invitation"
-msgstr "Ninguna invitación pendiente"
+msgstr "No hay invitaciones pendientes"
 
 msgid "online-session-expired"
-msgstr "Sesión caducada: vuelva a iniciar sesión"
+msgstr "Sesión caducada: inicie sesión de nuevo"
 
 msgid "online-player-gone"
-msgstr "Jugador desconectado: ningún mensaje enviado"
+msgstr "Jugador desconectado: mensaje no enviado"
 
 msgid "online-reply-1"
 msgstr "¡Hola!"
 
 msgid "online-reply-2"
-msgstr "¿Quieres jugar conmigo?"
+msgstr "¿Quieres jugar?"
 
 msgid "online-reply-3"
 msgstr "Sí, estoy listo."
 
 msgid "online-reply-4"
-msgstr "Espera 2 minutos."
+msgstr "Dame 2 minutos."
 
 msgid "online-reply-5"
-msgstr "Ahora no, gracias."
+msgstr "Ahora mismo no, gracias."
 
 msgid "online-reply-6"
 msgstr "¡Gracias, hasta pronto!"
 
 msgid "online-username"
-msgstr "Nombre de la cuenta"
+msgstr "Nombre de usuario de la cuenta"
 
 msgid "online-username-rules"
-msgstr "Nombre: letras, cifras, _ o - (3 a 18)"
+msgstr "Usuario: letras, números, _ o - (3 a 18 carac.)"
 
 msgid "online-password"
 msgstr "Contraseña (10 caracteres mínimo)"
 
 msgid "online-remember"
-msgstr "¿Mantener la sesión en esta máquina (30 días)?"
+msgstr "¿Mantener sesión iniciada en este terminal (30 días)?"
 
 msgid "online-logged-in"
 msgstr "Conectado: {name}"
@@ -1543,58 +4734,129 @@ msgid "online-players-panel"
 msgstr "Jugadores en línea"
 
 msgid "online-identify"
-msgstr "Identificarse"
+msgstr "Iniciar sesión"
 
 msgid "online-account-create"
-msgstr "¿Sin cuenta? Escanee para crear una"
+msgstr "¿Sin cuenta? Escanea para crear una"
 
 msgid "online-open-lobby"
-msgstr "Validar: partida en línea"
+msgstr "Confirmar: Partida en red"
 
 msgid "online-unread-open"
-msgstr "Validar: leer en partida en línea"
+msgstr "Confirmar: leer en Partida en red"
 
 msgid "online-checking-account"
-msgstr "Comprobando la cuenta…"
+msgstr "Verificando cuenta..."
 
 msgid "online-escape-back"
-msgstr "Volver: cancelar"
+msgstr "Atrás: cancelar"
 
 msgid "online-check-cancelled"
-msgstr "Comprobación cancelada"
+msgstr "Verificación cancelada"
 
 msgid "online-error-credentials"
-msgstr "Nombre o contraseña incorrectos"
+msgstr "Usuario o contraseña incorrectos"
 
 msgid "online-error-attempts"
-msgstr "Demasiados intentos: espere un minuto"
+msgstr "Demasiados intentos fallidos: espere un minuto"
 
 msgid "online-error-rules"
-msgstr "Nombre: 3 a 18 caracteres. Contraseña: 10 mínimo"
+msgstr "Usuario: 3-18 carac. Contraseña: 10 carac. mín"
 
 msgid "online-error-unavailable"
-msgstr "Inicio de sesión no disponible: inténtelo de nuevo"
+msgstr "Conexión de cuenta no disponible: intente de nuevo"
 
 msgid "online-error-unreachable"
-msgstr "Servidor inaccesible: compruebe la conexión a Internet"
+msgstr "Servidor inalcanzable: compruebe la conexión a Internet"
 
 msgid "online-account-retry"
-msgstr "Inicio de sesión obligatorio: inténtelo de nuevo"
+msgstr "Inicio de sesión de cuenta requerido: intente de nuevo"
 
 msgid "online-chat-impossible"
-msgstr "No se puede entrar en la sala: inténtelo de nuevo"
+msgstr "Conexión a la sala fallida: intente de nuevo"
 
 msgid "online-network-player"
 msgstr "Jugador en línea:"
 
 msgid "online-new-messages"
-msgstr "Mensajes nuevos ({count})"
+msgstr "Nuevos mensajes ({count})"
 
 msgid "online-players-online"
 msgstr "Jugadores en línea ({count})"
 
 msgid "online-you"
-msgstr "(usted)"
+msgstr "(tú)"
 
 msgid "online-no-player"
-msgstr "Ningún jugador"
+msgstr "No hay jugadores"
+
+######## ENTREES GARDEES DE LA VERSION PRECEDENTE ########
+
+msgid "serial-issue-1"
+msgstr "Problema al cargar la conexion de la diana"
+
+msgid "serial-issue-2"
+msgstr "Este juego necesita una diana compatible"
+
+msgid "serial-issue-3"
+msgstr "Por favor, consulte la wiki en la web oficial del proyecto"
+
+msgid "serial-issue-4"
+msgstr "¡Nos vemos!"
+
+msgid "select-port"
+msgstr "Se detectaron varios puertos serie"
+
+msgid "select-port-subtxt"
+msgstr "Seleccione el puerto deseado con las teclas Fx"
+
+msgid "Killer-max_round"
+msgstr "Numero de rondas"
+
+msgid "Practice-max_round"
+msgstr "Numero de rondas"
+
+msgid "Practice-master"
+msgstr "Opcion Master"
+
+msgid "Sample_game-max_round"
+msgstr "Numero de rondas"
+
+msgid "321_Zlip-master"
+msgstr "Opcion Master"
+
+msgid "321_Zlip-max_round"
+msgstr "Numero de rondas"
+
+msgid "Ho_One-max_round"
+msgstr "Numero de rondas"
+
+msgid "Cricket-max_round"
+msgstr "Numero de rondas"
+
+msgid "Kinito-max_round"
+msgstr "Numero de rondas"
+
+msgid "Kinito-master"
+msgstr "Opcion Master"
+
+msgid "Shanghai-max_round"
+msgstr "Numero de rondas"
+
+msgid "Football-max_round"
+msgstr "Numero de rondas"
+
+msgid "Football-master"
+msgstr "Numero de rondas"
+
+msgid "By_Fives-startingat"
+msgstr "Play to?"
+
+msgid "Scram_Cricket-Teaming"
+msgstr "Team Mode (4 players only)"
+
+msgid "Scram_Cricket-optioncutthroat"
+msgstr "Cutthroat Mode"
+
+msgid "nl_NL"
+msgstr "Neerlandés"

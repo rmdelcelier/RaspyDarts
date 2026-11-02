@@ -1,0 +1,4911 @@
+msgid ""
+msgstr ""
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Project-Id-Version: RaspyDarts\n"
+"POT-Creation-Date:\n"
+"PO-Revision-Date:\n"
+"Language-Team:\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: nl_NL\n"
+"X-Generator: Poedit 1.8.11\n"
+
+######## GENERALITES ########
+
+msgid "yes"
+msgstr "Ja"
+
+msgid "no"
+msgstr "Nee"
+
+msgid "True"
+msgstr "Ja"
+
+msgid "False"
+msgstr "Nee"
+
+msgid "trophees"
+msgstr "Trofeeën en voortgang"
+
+msgid "player-name"
+msgstr "Naam speler"
+
+msgid "players-names"
+msgstr "Namen spelers"
+
+msgid "players"
+msgstr "Spelers"
+
+msgid "round"
+msgstr "Ronde"
+
+msgid "rounds"
+msgstr "Rondes"
+
+msgid "over"
+msgstr "van"
+
+msgid "exit"
+msgstr "Afsluiten"
+
+msgid "add"
+msgstr "Toevoegen"
+
+msgid "back"
+msgstr "Terug"
+
+msgid "reset"
+msgstr "Resetten"
+
+msgid "reseting"
+msgstr "Bezig met resetten..."
+
+msgid "Updating_librairies"
+msgstr "Bibliotheken bijwerken, even geduld..."
+
+msgid "Install_additional_librairies"
+msgstr "Nieuwe bibliotheken installeren, even geduld..."
+
+msgid "continue"
+msgstr "Doorgaan"
+
+msgid "save"
+msgstr "Opslaan"
+
+msgid "clean"
+msgstr "Schoonmaken"
+
+msgid "shake"
+msgstr "Schudden"
+
+msgid "refresh"
+msgstr "Vernieuwen"
+
+msgid "remaining-darts"
+msgstr "Pijlen"
+
+msgid "back-to-menu"
+msgstr "Menu"
+
+msgid "game-no-desc"
+msgstr "Geen beschrijving"
+
+msgid "back-to-desktop"
+msgstr "Terug naar bureaublad"
+
+msgid "start-again"
+msgstr "Opnieuw starten"
+
+msgid "left"
+msgstr "Resterend"
+
+msgid "press-on"
+msgstr "Druk op {}"
+
+msgid "Ok"
+msgstr "Ok"
+
+msgid "Next"
+msgstr "Volgende"
+
+msgid "Previous"
+msgstr "Vorige"
+
+msgid "Refresh"
+msgstr "Vernieuwen"
+
+msgid "Welcome"
+msgstr "Welkom"
+
+msgid "network-error"
+msgstr "Netwerkfout"
+
+msgid "sets"
+msgstr "Sets"
+
+msgid "set"
+msgstr "Set"
+
+msgid "none"
+msgstr "Geen"
+
+msgid "darts"
+msgstr "Pijlen"
+
+msgid "winner"
+msgstr "Winnaar"
+
+msgid "nowinner"
+msgstr "Gelijkspel"
+
+msgid "duration"
+msgstr "Duur"
+
+msgid "Player"
+msgstr "Speler"
+
+msgid "favorites-games"
+msgstr "Favoriete spellen"
+
+msgid "Game type"
+msgstr "Speltype"
+
+msgid "Game name"
+msgstr "Spelnaam"
+
+msgid "simple"
+msgstr "Enkel"
+
+msgid "double"
+msgstr "Dubbel"
+
+msgid "triple"
+msgstr "Tripel"
+
+msgid "tire"
+msgstr "Band"
+
+msgid "test"
+msgstr "Testen"
+
+msgid "reverse"
+msgstr "Omkeren"
+
+msgid "extended"
+msgstr "Uitbreidingskaart"
+
+msgid "up"
+msgstr "Omhoog"
+
+msgid "down"
+msgstr "Omlaag"
+
+msgid "right"
+msgstr "Rechts"
+
+msgid "plus"
+msgstr "Plus"
+
+msgid "minus"
+msgstr "Min"
+
+msgid "validate"
+msgstr "Bevestigen"
+
+msgid "try"
+msgstr "Test"
+
+msgid "cancel"
+msgstr "Annuleren"
+
+msgid "and"
+msgstr "en"
+
+msgid "Loading"
+msgstr "Laden ..."
+
+######## VIDEOS #######
+
+msgid "videos"
+msgstr "Video's"
+
+msgid "videos-none"
+msgstr "Geen"
+
+msgid "videos-special"
+msgstr "Speciale worpen"
+
+msgid "videos-all"
+msgstr "Alle"
+
+######## LANGUES #######
+
+msgid "fr_FR"
+msgstr "Frans"
+
+msgid "es_ES"
+msgstr "Spaans"
+
+msgid "en_GB"
+msgstr "Engels"
+
+msgid "de_DE"
+msgstr "Duits"
+
+msgid "it_IT"
+msgstr "Italiaans"
+
+######## PARAMETRAGE ########
+
+msgid "extension1"
+msgstr "Uitbreiding 1"
+
+msgid "extension2"
+msgstr "Uitbreiding 2"
+
+msgid "general"
+msgstr "Algemeen"
+
+msgid "game"
+msgstr "Spel"
+
+msgid "locale"
+msgstr "Taal"
+
+msgid "scoreonlogo"
+msgstr "Score op logo"
+
+msgid "onscreenbuttons"
+msgstr "Virtuele knoppen tijdens het spel"
+
+msgid "blinktime"
+msgstr "Weergaveduur van berichten"
+
+msgid "releasedartstime"
+msgstr "Tijd om pijlen te verwijderen"
+
+msgid "pnj_time"
+msgstr "Speeltijd van NPC/Computer"
+
+msgid "resx"
+msgstr "Horizontale resolutie"
+
+msgid "resy"
+msgstr "Verticale resolutie"
+
+msgid "fullscreen"
+msgstr "Volledig scherm"
+
+msgid "colorset"
+msgstr "Thema"
+
+msgid "debuglevel"
+msgstr "Logniveau"
+
+msgid "font"
+msgstr "Lettertype"
+
+msgid "startpercent"
+msgstr "Handicap"
+
+msgid "exhibition_mode"
+msgstr "Demomodus (menu's geblokkeerd tegen verkeerde handelingen)"
+
+msgid "mode"
+msgstr "Modus"
+
+msgid "competition_mode"
+msgstr "Competitiemodus (geen animaties, alleen spel)"
+
+msgid "leisure"
+msgstr "Recreatie"
+
+msgid "competition"
+msgstr "Competitie"
+
+msgid "sound_multiplier"
+msgstr "Geluidsvolumefactor (0-1)"
+
+msgid "preferedcategory"
+msgstr "Voorkeur spelcategorie"
+
+msgid "illumination_mode"
+msgstr "Led-strip enkele kleur"
+
+msgid "illumination_color"
+msgstr "Kleur van de led-strip"
+
+msgid "fast_games_mode"
+msgstr "Hoofdmenu niet tonen (direct spelerskeuze)"
+
+msgid "only_favorites_games_mode"
+msgstr "Alleen favoriete spellen tonen"
+
+msgid "check_for_updates"
+msgstr "Bij het opstarten controleren op updates"
+
+msgid "no-update-available"
+msgstr "Geen updates beschikbaar"
+
+msgid "btn_update"
+msgstr "Controleren op updates"
+
+######## EVENEMENTS ########
+
+msgid "event-simple"
+msgstr "Enkel"
+
+msgid "event-double"
+msgstr "Dubbel"
+
+msgid "event-triple"
+msgstr "Tripel"
+
+msgid "event-launch"
+msgstr "Spel starten"
+
+msgid "event-wait"
+msgstr "Wachten"
+
+msgid "event-menu"
+msgstr "Menu openen"
+
+msgid "event-newgame"
+msgstr "Nieuw spel"
+
+msgid "event-nextplayer"
+msgstr "Volgende speler"
+
+msgid "event-target"
+msgstr "Te raken segment"
+
+msgid "event-touch"
+msgstr "Geraakt segment"
+
+msgid "event-SB"
+msgstr "Enkele bull"
+
+msgid "event-DB"
+msgstr "Dubbele bull"
+
+msgid "event-180"
+msgstr "180"
+
+msgid "event-pressure"
+msgstr "Druk!"
+
+msgid "event-release"
+msgstr "Verwijder de pijlen"
+
+msgid "event-miss"
+msgstr "Bord gemist"
+
+msgid "event-setwinner"
+msgstr "Set gewonnen"
+
+msgid "event-winner"
+msgstr "Winnaar"
+
+msgid "event-gameover"
+msgstr "Spel afgelopen (geen winnaar)"
+
+msgid "event-buttonpressed"
+msgstr "Knop ingedrukt"
+
+msgid "event-interrupt"
+msgstr "Spel onderbroken"
+
+msgid "event-quit"
+msgstr "Spel verlassen"
+
+msgid "no-favs-games"
+msgstr "Selecteer a.u.b. favoriete spellen!"
+
+######## DMD ########
+
+msgid "dmd-player-choice"
+msgstr "Spelerskeuze"
+
+msgid "dmd-player-bank"
+msgstr "Spelersbank"
+
+msgid "dmd-player-favorites"
+msgstr "Favoriete spelers"
+
+msgid "dmd-server-favorites"
+msgstr "Favoriete servers"
+
+msgid "dmd-game-choice"
+msgstr "Spelkeuze"
+
+msgid "dmd-game-classic"
+msgstr "Klassieke spellen"
+
+msgid "dmd-game-fun"
+msgstr "Fun spellen"
+
+msgid "dmd-game-sport"
+msgstr "Sportspellen"
+
+msgid "dmd-game-favorites"
+msgstr "Favoriete spellen"
+
+msgid "dmd-backup-menu"
+msgstr "Back-ups"
+
+msgid "dmd-bestwin"
+msgstr "Moge de beste winnen!"
+
+######## MENUS ########
+
+msgid "technical-informations"
+msgstr "Technische informatie"
+
+msgid "game-cat"
+msgstr "Spelcategorie"
+
+msgid "game-list"
+msgstr "Spelkeuze"
+
+msgid "game-options"
+msgstr "Spelopties"
+
+msgid "players-bank"
+msgstr "Namenbank"
+
+msgid "master-client-title"
+msgstr "Kies een spel om mee te doen"
+
+msgid "game-type-menu"
+msgstr "Raspydarts"
+
+msgid "main-menu"
+msgstr "Hoofdmenu"
+
+msgid "game-type-local"
+msgstr "Lokaal spel"
+
+msgid "game-type-master"
+msgstr "Deelnemen aan netwerkspel"
+
+msgid "game-type-manual"
+msgstr "Netwerkspel aanmaken"
+
+msgid "net-options"
+msgstr "Specificeer raspydarts serveropties"
+
+msgid "net-options-netgamename"
+msgstr "Spelnaam"
+
+msgid "net-options-servername"
+msgstr "Naam of IP-adres van server"
+
+msgid "net-options-serveralias"
+msgstr "Serveralias (alleen bij aanmaken)"
+
+msgid "net-options-serverport"
+msgstr "Serverpoort"
+
+######## REINITIALISATION ########
+
+msgid "reinit-question"
+msgstr "Weet u zeker dat u uw spel wilt resetten?"
+
+######## MISE A JOUR ########
+
+msgid "config-restart"
+msgstr "Spel wordt herstart om configuratie toe te passen"
+
+msgid "update-check"
+msgstr "Controleren op updates"
+
+msgid "update-download"
+msgstr "Downloaden..."
+
+msgid "update-failed"
+msgstr "Downloaden mislukt, probeer het opnieuw"
+
+msgid "update-available"
+msgstr "Er is een update beschikbaar. Wilt u deze installeren?"
+
+msgid "updating"
+msgstr "Installatie bezig..."
+
+######## CONFIGURATION ########
+
+msgid "menu-NBR_STRIPLED"
+msgstr "Aantal leds op uw strip"
+
+msgid "menu-PIN_STRIPLED"
+msgstr "Pin van de led-strip (aanbevolen: 12)"
+
+msgid "menu-TYP_STRIPLED"
+msgstr "Type led-strip"
+
+msgid "menu-PIN_TARGETLED"
+msgstr "Pin van de bord-leds (aanbevolen: 21)"
+
+msgid "menu-BRI_STRIPLED"
+msgstr "Helderheid van de led-strip (1 tot 100)"
+
+msgid "menu-BRI_TARGETLED"
+msgstr "Helderheid van de bord-leds (1 tot 100)"
+
+msgid "menu-TYP_TARGETLED"
+msgstr "Type leds in het bord"
+
+msgid "menu-config-already"
+msgstr "Deze pin is al in gebruik"
+
+msgid "menu-leds-conflict"
+msgstr "De pins voor bord en strips MOETEN verschillend zijn"
+
+msgid "TYP_TARGETLED"
+msgstr "het type leds in het bord"
+
+msgid "TYP_STRIPLED"
+msgstr "het type leds in de strip(s)"
+
+msgid "NBR_STRIPLED"
+msgstr "het aantal leds op uw strip"
+
+msgid "PIN_STRIPLED"
+msgstr "de pin van de led-strip"
+
+msgid "PIN_TARGETLED"
+msgstr "de pin van de bord-leds"
+
+msgid "BRI_STRIPLED"
+msgstr "de helderheid van de led-strip (1 tot 100)"
+
+msgid "BRI_TARGETLED"
+msgstr "de helderheid van de bord-leds (1 tot 100)"
+
+msgid "conf-esc1"
+msgstr "configuratie annuleren"
+
+msgid "conf-esc2"
+msgstr "teruggaan"
+
+msgid "conf-pin1"
+msgstr "Geef {} op. Esc om {}, Enter om over te slaan of te bevestigen."
+
+msgid "conf-pin2"
+msgstr "Geef {} op. Esc om {}, Enter om te bevestigen."
+
+msgid "conf-leds"
+msgstr "Led-configuratie"
+
+msgid "conf-fillin"
+msgstr "Vul in"
+
+msgid "PIN_UP"
+msgstr "Omhoog"
+
+msgid "PIN_DOWN"
+msgstr "Omlaag"
+
+msgid "PIN_LEFT"
+msgstr "Links"
+
+msgid "PIN_RIGHT"
+msgstr "Rechts"
+
+msgid "PIN_MINUS"
+msgstr "Speler -"
+
+msgid "PIN_PLUS"
+msgstr "Speler +"
+
+msgid "PIN_VALIDATE"
+msgstr "Bevestigen"
+
+msgid "PIN_CANCEL"
+msgstr "Annuleren"
+
+msgid "PIN_NEXTPLAYER"
+msgstr "Volgende speler"
+
+msgid "PIN_BACK"
+msgstr "Terug"
+
+msgid "PIN_GAMEBUTTON"
+msgstr "Spel"
+
+msgid "PIN_VOLUME_UP"
+msgstr "Volume +"
+
+msgid "PIN_VOLUME_DOWN"
+msgstr "Volume -"
+
+msgid "PIN_VOLUME_MUTE"
+msgstr "Demping"
+
+msgid "PIN_CPTPLAYER"
+msgstr "Computer"
+
+msgid "PIN_MISSDART"
+msgstr "Piezo"
+
+msgid "LIGHT_NEXTPLAYER"
+msgstr "Led knop volgende speler"
+
+msgid "LIGHT_VALIDATE"
+msgstr "Led knop bevestigen"
+
+msgid "LIGHT_BACK"
+msgstr "Led knop terug"
+
+msgid "LIGHT_NAVIGATE"
+msgstr "Led navigatieknoppen"
+
+msgid "LIGHT_PLAYERS"
+msgstr "Leds spelerknop +/-"
+
+msgid "LIGHT_LASER"
+msgstr "Laser"
+
+msgid "LIGHT_LIGHT"
+msgstr "Verlichting"
+
+msgid "LIGHT_FLASH"
+msgstr "Flits"
+
+msgid "LIGHT_CELEBRATION"
+msgstr "Viering 1"
+
+msgid "LIGHT_CELEBRATION2"
+msgstr "Viering 2"
+
+msgid "paramled_text1"
+msgstr "Instellen van leds voor de"
+
+msgid "paramled_text2"
+msgstr "Enkele vakken moeten van het midden naar buiten worden ingevoerd"
+
+msgid "paramled_text3"
+msgstr "Dubbele buitenrand moet met de klok mee worden ingevoerd."
+
+msgid "paramled_text4"
+msgstr "Spatie om de zone te wissen."
+
+msgid "nogpio"
+msgstr "Geen MCP aangesloten!"
+
+msgid "notoyset"
+msgstr "Geen toy ingesteld"
+
+msgid "config-interface"
+msgstr "Keuze van interfacekaart"
+
+msgid "config-pin"
+msgstr "Ingangsconfiguratie"
+
+msgid "config-pin-sub"
+msgstr "Kies de knop die aangesloten is op de pin"
+
+msgid "config-toy"
+msgstr "Uitgangsconfiguratie"
+
+msgid "config-toy-sub"
+msgstr "Kies de toy die aangesloten is op de pin"
+
+msgid "card-other"
+msgstr "Anders of niet-standaard bedrading"
+
+msgid "config-leds_choice"
+msgstr "Keuze van leds"
+
+msgid "config-leds_question"
+msgstr "Gebruikt u raspyleds?"
+
+msgid "config-buttons_choice"
+msgstr "Knoppenconfiguratie"
+
+msgid "config-buttons_question"
+msgstr "Wilt u de knoppen configureren? U moet de in/uitgangsmapping kennen"
+
+msgid "config-cancel"
+msgstr "configuratie annuleren"
+
+msgid "config-back"
+msgstr "teruggaan"
+
+msgid "config-pin_out"
+msgstr "Configuratie uitgangspins bord"
+
+msgid "config-already"
+msgstr "Deze pin is al ingevoerd"
+
+msgid "config-noMCP"
+msgstr "Geen uitbreidingskaart gevonden"
+
+msgid "config-toysfound"
+msgstr "Toys gevonden op de volgende uitgangen: "
+
+msgid "noCconfig-toysfound"
+msgstr "Geen Toys gevonden"
+
+msgid "buttons"
+msgstr "Knoppen"
+
+msgid "toys"
+msgstr "Toys"
+
+msgid "conf-cam"
+msgstr "Cameraconfiguratie"
+
+msgid "test-cam"
+msgstr "Cameratest"
+
+msgid "camera_id"
+msgstr "Camera niet gedetecteerd? (klik hier)"
+
+msgid "picture_path"
+msgstr "Opslagpad voor foto's"
+
+msgid "video_path"
+msgstr "Opslagpad voor video's"
+
+msgid "take_a_shot"
+msgstr "Foto maken"
+
+msgid "take_a_video"
+msgstr "Video maken"
+
+msgid "picture_res_width*picture_res_height"
+msgstr "Fotoresolutie"
+
+msgid "video_res_width*video_res_height"
+msgstr "Videoresolutie"
+
+msgid "flip_horizontal"
+msgstr "Beeld horizontaal spiegelen"
+
+msgid "flip_vertical"
+msgstr "Beeld verticaal spiegelen"
+
+msgid "nb_picture"
+msgstr "Aantal foto's bij gebeurtenis"
+
+msgid "video_duration"
+msgstr "Videoduur bij gebeurtenis (s)"
+
+msgid "fps"
+msgstr "Opnamesnelheid (fps)"
+
+msgid "directory_order"
+msgstr "Mapstructuur voor foto's en video's"
+
+msgid "choice_of_memories"
+msgstr "Herinneringskeuze"
+
+msgid "events"
+msgstr "Acties die herinnering uitlopen (scheidingsteken ,)"
+
+msgid "upload_cloud"
+msgstr "Naar de cloud verzenden"
+
+msgid "path_google_drive"
+msgstr "Google Drive-map (indien leeg, upload naar hoofdmap)"
+
+msgid "dir-dont-exist-create"
+msgstr "Pad bestaat niet, wilt u het aanmaken?"
+
+msgid "abstracted"
+msgstr "Vergeet niet de configuratie op te slaan!"
+
+msgid "fullscreen_pop"
+msgstr "Herinneringen in het midden van het scherm tonen"
+
+msgid "duree_ms"
+msgstr "Weergaveduur van foto's"
+
+msgid "gallery"
+msgstr "Galerij"
+
+msgid "gallery_password"
+msgstr "Wachtwoord galerij (leeg: geen)"
+
+msgid "gallery-scan"
+msgstr "Scan om foto's en video me van spellen te bekijken, te downloaden, af te drukken of te verwijderen"
+
+msgid "gallery-no-password"
+msgstr "Geen wachtwoord: iedereen op het netwerk kan herinneringen verwijderen"
+
+msgid "gallery-password"
+msgstr "Wachtwoord"
+
+msgid "gallery-password-set"
+msgstr "Wachtwoord opgeslagen"
+
+msgid "gallery-password-removed"
+msgstr "Wachtwoord verwijderd"
+
+msgid "gallery-title"
+msgstr "RaspyDarts Galerij"
+
+msgid "gallery-all"
+msgstr "Alle spellen"
+
+msgid "gallery-none"
+msgstr "Momenteel geen herinneringen."
+
+msgid "gallery-empty"
+msgstr "Geen herinneringen."
+
+msgid "gallery-gone"
+msgstr "Deze herinnering bestaat niet meer."
+
+msgid "gallery-notfound"
+msgstr "Niet gevonden"
+
+msgid "gallery-error"
+msgstr "Fout"
+
+msgid "gallery-warning"
+msgstr "Geen wachtwoord: iedereen op dit netwerk kan herinneringen verwijderen (instelling op het scherm « Galerij »)."
+
+msgid "gallery-counts"
+msgstr "{photos} foto('s), {videos} video('s)"
+
+msgid "gallery-download"
+msgstr "Downloaden"
+
+msgid "gallery-print"
+msgstr "Afdrukken"
+
+msgid "gallery-delete"
+msgstr "Verwijderen"
+
+msgid "gallery-delete-one"
+msgstr "Deze herinnering verwijderen?"
+
+msgid "gallery-download-all"
+msgstr "Alles downloaden, één voor één"
+
+msgid "gallery-zip"
+msgstr "Alles downloaden (ZIP)"
+
+msgid "gallery-delete-game"
+msgstr "Spel verwijderen"
+
+msgid "gallery-delete-all"
+msgstr "Alle herinneringen van dit spel verwijderen?"
+
+msgid "gallery-password-label"
+msgstr "Galerijwachtwoord:"
+
+msgid "gallery-enter"
+msgstr "Binnengaan"
+
+msgid "gallery-wrong"
+msgstr "Onjuist wachtwoord."
+
+msgid "gallery-delete-selection"
+msgstr "Selectie verwijderen"
+
+msgid "gallery-delete-selected"
+msgstr "Alle geselecteerde spellen verwijderen?"
+
+msgid "gallery-delete-password"
+msgstr "Galerijwachtwoord:"
+
+msgid "gallery-back"
+msgstr "Terug"
+
+######## MESSAGES ########
+
+msgid "Loading logos..."
+msgstr "Logo's laden..."
+
+msgid "Ready to kick ass ?"
+msgstr "Klaar om te knallen?"
+
+msgid "Game interrupted"
+msgstr "Spel onderbroken"
+
+msgid "end-of-game"
+msgstr "Spel afgelopen"
+
+msgid "end-of-set"
+msgstr "Set afgelopen"
+
+msgid "master-client-empty"
+msgstr "Geen actief spel op deze server"
+
+msgid "master-client-no-connection"
+msgstr "Kan geen verbinding maken met de server"
+
+msgid "game-client-connecting"
+msgstr "Verbinden met de spelserver... Patientez svp"
+
+msgid "game-client-no-connection"
+msgstr "Kan geen verbinding maken met de spelserver"
+
+msgid "master-client-connecting"
+msgstr "Verbinding maken met server. Even geduld..."
+
+msgid "master-client-refresh"
+msgstr "Druk op Spatie om te vernieuwen"
+
+msgid "master-player-has-left"
+msgstr "De hoofdspeler heeft het spel verlassen. Spel geannuleerd. Druk op Enter"
+
+msgid "getting-info-from-server"
+msgstr "Informatie wordt gedownload..."
+
+msgid "get-ready"
+msgstr "Klaar?"
+
+msgid "game-options-binary"
+msgstr "Gebruik de Fx-toetsen om opties te wijzigen."
+
+msgid "players-names-subtitle"
+msgstr "Druk op + om toe te voegen, - om te verwijderen, / voor computerspeler, * voor spelerkleur, <Tab> om te schudden"
+
+msgid "press-player"
+msgstr "Druk op de knop Player"
+
+msgid "press-player-remote"
+msgstr "Wachten op speler op afstand"
+
+msgid "release-darts"
+msgstr "Verwijder de pijlen"
+
+msgid "release-darts-and-press-player"
+msgstr "Verwijder de pijlen en druk op de knop \"Player\""
+
+msgid "version-mismatch"
+msgstr "Let op! Uw Raspydarts-versie komt niet overeen met die van de server."
+
+msgid "bad-numberofplayers"
+msgstr "Ongeldig aantal spelers voor dit spel en deze opties"
+
+msgid "players-ready-masterplayer"
+msgstr "Wachten op spelers. Ga door zodra uw tegenstanders klaar zijn."
+
+msgid "players-ready-slaveplayer"
+msgstr "Spelers klaar... Wachten op de Spelleider"
+
+msgid "net-client-refresh-players"
+msgstr "Spelerslijst vernieuwen..."
+
+msgid "net-client-randomizing"
+msgstr "Schudden op de server, even geduld!"
+
+msgid "last-round-reached"
+msgstr "Laatste ronde bereikt..."
+
+msgid "need-restart"
+msgstr "Wilt u herstarten?"
+
+msgid "press-enter"
+msgstr "Druk op Enter, op de Bevestigingsknop of tik op het scherm om te bevestigen"
+
+msgid "are-you-sure"
+msgstr "Weet u het zeker?"
+
+msgid "options-saved"
+msgstr "Uw opties zijn opgeslagen."
+
+msgid "options-old"
+msgstr "!!! Oude optie gevonden !!! Sla uw opties opnieuw op."
+
+######## STATISTIQUES ########
+
+msgid "game-stats"
+msgstr "Spelstatistieken"
+
+msgid "stats-multiplier"
+msgstr "Vermenigvuldiger"
+
+msgid "stats-touch"
+msgstr "Aantal treffers"
+
+msgid "stats-percent"
+msgstr "Percentage"
+
+msgid "hi-score"
+msgstr "Hoogste score"
+
+msgid "this-game-stats"
+msgstr "Records van dit spel"
+
+msgid "local-db-stats"
+msgstr "Algemene recordtabel"
+
+msgid "ranking"
+msgstr "Rang"
+
+msgid "Points Per Dart"
+msgstr "Punten Per Pijl"
+
+msgid "Points Per Round"
+msgstr "Punten Per Ronde"
+
+msgid "Score"
+msgstr "Score"
+
+msgid "Hits per round"
+msgstr "Treffers per ronde"
+
+######## BACKUP / RESTORE ########
+
+msgid "backup"
+msgstr "Opslaan"
+
+msgid "backups"
+msgstr "Back-upbeheer"
+
+msgid "backup-clean"
+msgstr "Alleen de laatste 3 back-ups worden bewaard"
+
+msgid "backup-choice"
+msgstr "U heeft gekozen voor het herstellen van "
+
+msgid "backup-done"
+msgstr "Back-up voltooid"
+
+msgid "backing-up"
+msgstr "Back-up maken..."
+
+msgid "restoring"
+msgstr "Herstellen..."
+
+msgid "restore-done"
+msgstr "Herstel voltooid"
+
+msgid "cleaning"
+msgstr "Opschonen..."
+
+msgid "clean-done"
+msgstr "Opschonen voltooid"
+
+######## CONFIGURATION ########
+
+msgid "server-unreachable"
+msgstr "Server onbereikbaar"
+
+msgid "server-menu"
+msgstr "Serverkeuze"
+
+msgid "check-server"
+msgstr "Servers controleren..."
+
+msgid "enter-valid-url"
+msgstr "Voer de URL van de server in als <server>:<poort>"
+
+msgid "board-calibration"
+msgstr "Kalibratie van het bord!"
+
+msgid "press-on-parts"
+msgstr "Druk één voor één op elk segment van het bord. Esc om terug te gaan."
+
+msgid "setwinneris"
+msgstr "Set gewonnen door "
+
+msgid "Autorefresh in %sec seconds"
+msgstr "Automatisch vernieuwen in %(sec)s seconden"
+
+msgid "serverlist-header-STATUS"
+msgstr "Status"
+
+msgid "serverlist-header-GAMENAME"
+msgstr "Spelnaam"
+
+msgid "serverlist-header-PLAYERS"
+msgstr "Spelers"
+
+msgid "serverlist-header-SERVERIP"
+msgstr "Server"
+
+msgid "serverlist-header-SERVERPORT"
+msgstr "Poort"
+
+msgid "serverlist-header-GAMECREATOR"
+msgstr "Maker"
+
+msgid "serverlist-header-GAMETYPE"
+msgstr "Matchtype"
+
+msgid "favorites-players"
+msgstr "Favoriete spelers"
+
+msgid "favorites-servers"
+msgstr "Favoriete servers"
+
+######## JEUX ########
+
+msgid "AllGame-colorised"
+msgstr "Gekleurd bord"
+
+msgid "AllGame-master"
+msgstr "Master"
+
+msgid "AllGame-max_round"
+msgstr "Aantal rondes"
+
+######## BALL TRAP ########
+
+msgid "Description-Balltrap"
+msgstr "Dit is een spel waarbij precisie en snelheid hand in hand gaan.\n"
+"\n"
+"Raaak in 1 of 2 pijlen het verlichte segment om\n"
+"1 of 2 bonusworpen op de Bull te verdienen.\n"
+"\n"
+"De winnaar is de speler met de meeste punten aan het einde van het spel.\n"
+"\n"
+"-----\n"
+"Als u het verlichte segment raakt met uw 1e pijl, krijgt u 2 punten.\n"
+"Als u het verlichte segment raakt met uw 2e pijl, krijgt u 1 punt.\n"
+"* Als u het verlichte segment niet raakt met uw eerste 2 pijlen, \n"
+"  verliest u uw 3e pijl.\n"
+"\n"
+"Als u het verlichte segment raakt met uw 1e pijl, richt 2x op de bull.\n"
+"Als u het verlichte segment raakt met uw 2e pijl, richt 1x op de bull.\n"
+"\n"
+"- een SB geeft een extra bonus van 2 punten.\n"
+"- een DB geeft een extra bonus van 3 punten.\n"
+"\n"
+"In de rondes 3-6-9-12 worden 2 schijven tegelijkertijd gelanceerd.\n"
+"\n"
+"De schijven kunnen overlappen; als u ze tegelijkertijd raakt met\n"
+"- uw 1e pijl krijgt u 2*2 punten én een X2-bonus.\n"
+"- uw 2e pijl krijgt u 2*1 punt én een X2-bonus.\n"
+"anders krijgt u 2 punten per schijf als u ze bij de 1e poging raakt.\n"
+"\n"
+"Opties:\n"
+"- Tijd: De bewegingssnelheid van de schijf.\n"
+" "
+
+msgid "Balltrap-Repetition"
+msgstr "Aantal herhalingen"
+
+msgid "Balltrap-Time"
+msgstr "Schijfsnelheid"
+
+######## BASEBALL ########
+
+msgid "Description-Baseball"
+msgstr "Het doel is om in elke inning zoveel mogelijk punten te scoren.\n"
+"Maar voordat u punten kunt scoren, moet u 3 honken veroveren\n"
+"of een Home Run slaan.\n"
+"\n"
+"De winnaar is de speler met de meeste punten aan het einde van het spel.\n"
+"\n"
+"-----\n"
+"Voordat u punten scoort, moet u de eerste 3 honken veroveren\n"
+"door uw getal te raken (Enkel = 1 honk, Dubbel = 2 honken, Tripel = 3 honken).\n"
+"\n"
+"U behoudt de bereikte honken het hele spel door, maar uw tegenstanders\n"
+"kunnen er een of meer afnemen door uw getal te raken.\n"
+"\n"
+"U scoort punten wanneer u 3 honken bezet heeft en u uw getal raakt.\n"
+"\n"
+"Als u de SB raakt, krijgt u een Home Run (+1 punt) en een\n"
+"Super Home Run (2 punten) door de DB te raken, naast uw behaalde honken.\n"
+"\n"
+"Opties:\n"
+"- 7e inning: Deelt uw score door 2 als u uw segment mist.\n"
+"- Geen gelijkspel: Bij gelijkspel speelt u een extra inning.\n"
+" "
+
+msgid "Baseball-max_players"
+msgstr "Max 4"
+
+msgid "Baseball-7eme_manche"
+msgstr "7e inning"
+
+msgid "Baseball-noequal"
+msgstr "Geen gelijkspel"
+
+msgid "Baseball-egalite"
+msgstr "GELIJKSPEL - EXTRA INNING"
+
+msgid "Baseball-septieme"
+msgstr "Raak uw getal, anders wordt uw score halveerd (/ 2)"
+
+msgid "Baseball-team"
+msgstr "Teamspel"
+
+######## BATARD ########
+
+msgid "Batard-name"
+msgstr "Bastaard"
+
+msgid "Description-Batard"
+msgstr "De eerste pijl van de beurt opent de score; elk volgend\n"
+"punt moet gelijk zijn aan of hoger zijn dan de vorige pijl.\n"
+"\n"
+"Als de score lager is dan de vorige pijl, wordt deze afgetrokken.\n"
+"\n"
+"De hoogste score wint.\n"
+"-----\n"
+"Het spel bestaat uit 10 beurten van 3 pijlen.\n"
+"\n"
+"De eerste pijl van de beurt opent de score; elk volgend punt\n"
+"moet gelijk zijn aan of hoger dan de vorige pijl.\n"
+"\n"
+"Als de score lager is dan de vorige pijl, wordt deze afgetrokken.\n"
+"\n"
+"Bij elke ronde wordt de score opnieuw ingesteld bij de eerste pijl.\n"
+"\n"
+"Een gemiste pijl of randworp kost u een straf van -10 punten.\n"
+"\n"
+"De hoogste score wint.\n"
+"\n"
+"Opties:\n"
+"- 1e pijl: De 1e pijl is de minimale vereiste score.\n"
+"- Enkele bull: SB is 50 waard.\n"
+"- Straf: Waarde van de straf\n"
+" "
+
+msgid "Batard-simple50"
+msgstr "Enkele Bull"
+
+msgid "Batard-penality"
+msgstr "Straf"
+
+msgid "Batard-first_dart"
+msgstr "1e pijl"
+
+######## BERMUDE TRIANGLE ########
+
+msgid "Bermuda_Triangle-name"
+msgstr "Bermudadriehoek"
+
+msgid "Description-Bermuda_Triangle"
+msgstr "Raak niet verdwaald in de Bermudadriehoek.\n"
+"\n"
+"Voltooi verschillende opdrachten gedurende het spel.\n"
+"-----\n"
+"Richt in elke ronde op het aangegeven getal of segment om\n"
+"zoveel mogelijk punten te behalen.\n"
+"\n"
+"Als u het gevraagde getal of segment niet raakt, wordt uw score\n"
+"door 2 gedeeld.\n"
+"\n"
+"Raak een willekeurige dubbel of tripel wanneer dat gevraagd wordt.\n"
+"\n"
+"De beste score wint het spel.\n"
+"\n"
+"Optie:\n"
+"- Dubbele bull: Schakelt de 13e ronde (DB) in/uit.\n"
+" "
+
+msgid "Bermuda_Triangle-Double_bull"
+msgstr "Schakelt het dubbele centrum in/uit"
+
+######## BIG 6 ########
+
+msgid "Big6-name"
+msgstr "Big 6"
+
+msgid "Description-Big6"
+msgstr "Elke speler richt om de beurt op het segment dat door de vorige speler is ingesteld.\n"
+"\n"
+"U begint met 3 levens, het eerste doelwit is het segment S6.\n"
+"\n"
+"Als u het doelwit mist met uw 3 pijlen, verliest u een leven.\n"
+"\n"
+"Om te winnen, moet u de laatste speler met levens zijn of de\n"
+"hoogste score hebben aan het einde van 10 rondes.\n"
+"-----\n"
+"Het spel bestaat uit 10 beurten van 3 pijlen.\n"
+"\n"
+"U moet het doelsegment raken met een van uw 3 pijlen.\n"
+"\n"
+"- Als u het doelsegment raakt\n"
+"  gaat het segment uit; u moet nu een willekeurig segment raken\n"
+"  om punten te scoren en tegelijkertijd het segment te selecteren\n"
+"  dat de volgende speler moet raken. Hoe moeilijker het segment,\n"
+"  hoe groter de kans dat uw tegenstander een leven verliest.\n"
+"\n"
+"- Als u het doelsegment mist, scoort u geen punten.\n"
+"\n"
+"- Als u het segment niet raakt met uw 3 pijlen, verliest u een leven\n"
+"  en keert het segment terug naar het startsegment (S6).\n"
+"\n"
+"\n"
+"Opties:\n"
+"- Aantal rondes: Maximaal aantal rondes.\n"
+"- Enkele Bull: SB is 50 punten waard.\n"
+"- Volledig segment: het geraakte segment telt volledig (Enkel-Dubbel-Tripel).\n"
+" "
+
+msgid "Big6-lives"
+msgstr "Aantal levens"
+
+msgid "Big6-simple50"
+msgstr "Enkele Bull"
+
+msgid "Big6-segment"
+msgstr "Volledig segment"
+
+######## BINGO ######
+
+msgid "Description-Bingo"
+msgstr "Het doel van Bingo is om 5 volledige fiches van uw kleur\n"
+"horizontaal, verticaal of diagonaal op een rij te krijgen.\n"
+"\n"
+"U moet het getal 2x raken (2 enkel, 1 dubbel of 1 tripel)\n"
+"om een volledig fiche te krijgen.\n"
+"\n"
+"De winnaar is de speler met de meeste punten aan het einde van het spel.\n"
+"\n"
+"Opties:\n"
+"- Aantal punten: Aantal punten om te winnen\n"
+"- Witte fiches: Geef het aantal (0 tot 5) straffiches aan.\n"
+"- Blokkeren: Blokkeer uw fiches als u 3x een volledig fiche van uw kleur raakt.\n"
+"-----\n"
+"Bonusvakken: worden vertegenwoordigd door fiches van uw kleur\n"
+"met een ster; deze zijn gemeenschappelijk voor alle spelers.\n"
+"\n"
+"Strafvakken: worden vertegenwoordigd door witte fiches met een X;\n"
+"hiermee kan geen rij worden gemaakt.\n"
+"\n"
+"- Als u een Single Bull raakt: het raster wordt geschud\n"
+"\n"
+"- Als u een Double Bull raakt: het raster wordt geschud en u krijgt\n"
+"  ook een half fiche van uw kleur in het raster.\n"
+" "
+
+msgid "Bingo-max_players"
+msgstr "Max 4"
+
+msgid "Bingo-win_points"
+msgstr "Aantal punten om te winnen"
+
+msgid "Bingo-master"
+msgstr "Wit fiche"
+
+msgid "Bingo-block"
+msgstr "Blokkeren"
+
+######## BOB'S 27 ######
+
+msgid "Bob27-name"
+msgstr "Bob '27"
+
+msgid "Description-Bob27"
+msgstr "Spel uitgevonden door Bob Anderson, voormalig profspeler.\n"
+"\n"
+"Elke speler begint met een score van 27 en het doel van het spel is\n"
+"het bord rond te gaan door uitsluitend dubbels te raken.\n"
+"\n"
+"U begint met drie pijlen op dubbel 1, daarna dubbel 2, dubbel 3,\n"
+"enzovoort tot aan de bull.\n"
+"\n"
+"De winnaar is de speler met de meeste punten aan het einde van het spel.\n"
+"-----\n"
+"Als u de gevraagde dubbel raakt, telt u de punten daarvan op bij uw score.\n"
+"\n"
+"Als u daarentegen alle 3 uw pijlen mist, verliest u het aantal punten\n"
+"van de gemiste dubbel (bijv. 2 punten bij dubbel 1, score wordt 25).\n"
+"\n"
+"U kunt tot 3x de waarde van de dubbel winnen, maar u kunt er slechts\n"
+"één keer de waarde van verliezen.\n"
+"\n"
+"Als de score van een speler op nul of minder komt, is hij uitgeschakeld.\n"
+"\n"
+"De maximale score is 1437, als het u lukt elke dubbel drie keer te raken.\n"
+"\n"
+"Opties:\n"
+"- Getallen: de getallen worden in numerieke volgorde gespeeld.\n"
+"- Bulls: Eindig met de bull.\n"
+" "
+
+msgid "Bob27-Bull"
+msgstr "Eindigen met de Bull"
+
+msgid "Bob27-Numbers"
+msgstr "Numerieke volgorde"
+
+msgid "bob27-nextnumber"
+msgstr "Het volgende getal is"
+
+msgid "bob27-touchit"
+msgstr "Raak het met 3 pijlen"
+
+msgid "bob27-yourscore"
+msgstr "Jouw score"
+
+######## BOWLING ######
+
+msgid "Description-Bowling"
+msgstr "Net als bij echt bowlen wordt het spel in 10 frames gespeeld.\n"
+"\n"
+"In elke frame heeft u 3 pijlen. De eerste bepaalt welke baan\n"
+"u gebruikt (voor deze frame), de andere 2 pijlen dienen om punten te scoren.\n"
+"\n"
+"Opties:\n"
+"- Aantal frames: Aantal frames.\n"
+"- Master: Om een Spare te maken, moet u een enkel en een dubbel raken\n"
+"-----\n"
+"Kies een baan met uw eerste pijl.\n"
+"- Als u een al gekozen baan raakt, verliest u uw beurt.\n"
+"\n"
+"Raak uw baan met uw 2e en 3e pijl om punten te scoren.\n"
+"- Een enkel is 5 punten waard. (4 punten in Master)\n"
+"- Een dubbel is 9 punten waard. (7 punten in Master)\n"
+"- Een tripel is 10 punten waard.\n"
+"\n"
+"U maakt een STRIKE wanneer\n"
+"- u de tripel van uw baan raakt met uw 2e pijl.\n"
+"U maakt een SPARE wanneer\n"
+"- het totaal van uw 2e en 3e pijl 10 of meer is.\n"
+"\n"
+"Bij een STRIKE:\n"
+"- verdubbelt u de punten van uw 2e en 3e pijl in de volgende frame.\n"
+"Bij een SPARE:\n"
+"- verdubbelt u de punten van uw 2e pijl in de volgende frame.\n"
+"\n"
+"De speler met de meeste punten in de laatste frame wint het spel.\n"
+" "
+
+msgid "Bowling-choix"
+msgstr "Kies een baan"
+
+msgid "Bowling-miss"
+msgstr "Baan gemist"
+
+msgid "Bowling-rate"
+msgstr "Geen kegel geraakt"
+
+msgid "Bowling-double-strike"
+msgstr "'Double' bonus behaald"
+
+msgid "Bowling-triple-strike"
+msgstr "'Turkey' bonus behaald"
+
+
+######## BULLS ######
+
+msgid "Description-Bulls"
+msgstr "Raak de bull\n"
+"\n"
+"De perfecte training om op de bull te oefenen.\n"
+"\n"
+"Het doel van het spel is om 100 punten te scoren om te winnen, maar uitsluitend\n"
+"met de bulls, want alle andere segmenten zijn negatief.\n"
+"-----\n"
+"\n"
+"Als u de SB raakt, scoort u 25 punten.\n"
+"Als u de DB raakt, scoort u 50 punten.\n"
+"\n"
+"Als u een ander getal raakt, verliest u de punten van dat getal.\n"
+"\n"
+"\n"
+"OPTIES\n"
+"- Aantal rondes: Maximaal aantal rondes.\n"
+"- Score: Bepaalt het aantal punten om te winnen.\n"
+"- Negatief /2: Halveert de negatieve punten.\n"
+" "
+
+msgid "Bulls-max_round"
+msgstr "Aantal rondes"
+
+msgid "Bulls-winscore"
+msgstr "Winnende score"
+
+msgid "Bulls-negatif_div2"
+msgstr "Negatief /2"
+
+
+######## BY FIVE ######
+
+msgid "By_Fives-name"
+msgstr "By 5"
+
+msgid "Description-By_Fives"
+msgstr "Haal de rekenmachines maar tevoorschijn!\n"
+"\n"
+"Zorg ervoor dat uw beurtscore deelbaar is door 5.\n"
+"-----\n"
+"Zorg ervoor dat uw beurtscore deelbaar is door 5.\n"
+"\n"
+"- Als uw score deelbaar is door 5, krijgt u 1 punt\n"
+"- Anders krijgt u geen punten.\n"
+"\n"
+"De hoogste score wint het spel.\n"
+"\n"
+"Opties:\n"
+"- Score: Bepaalt het aantal punten om te winnen.\n"
+"- 51 by 5's: Verzamel 51 punten om te winnen. Uw score stijgt wanneer\n"
+"  de score van uw beurt een meervoud van 5 is. Deze stijgt dan met\n"
+"  (Uw beurtscore) / 5. Voorbeeld: S20 + S20 + S20 geeft 12 punten\n"
+" "
+
+msgid "By_Fives-winscore"
+msgstr "Winnende score"
+
+msgid "By_Fives-score51"
+msgstr "51 by 5's"
+
+######## CASTLE ######
+
+msgid "Description-Castle"
+msgstr "Bouw uw kasteel sneller dan uw tegenstanders.\n"
+"\n"
+"U heeft de mogelijkheid om de voortgang van een vijandelijk kasteel\n"
+"te vertragen door op het bijbehorende getal te gooien.\n"
+"-----\n"
+"De eerste die 15 bereikt, wint!\n"
+"\n"
+"Een enkel telt voor 1.\n"
+"Een dubbel telt voor 2.\n"
+"Een tripel telt voor 3.\n"
+"SB telt voor +1 voor het eigen kasteel en -1 voor tegenstanders.\n"
+"DB telt voor +2 voor het eigen kasteel en -2 voor tegenstanders.\n"
+"\n"
+"Opties:\n"
+"- Aantal rondes: Maximaal aantal rondes.\n"
+"- Aantal verdiepingen: 15.\n"
+"- Willekeurige modus: De getallen veranderen elke ronde.\n"
+" "
+
+msgid "Castle-max_players"
+msgstr "Max 4"
+
+msgid "Castle-number_of_lives"
+msgstr "Aantal verdiepingen"
+
+msgid "Castle-mode_random"
+msgstr "Willekeurige modus"
+
+######## CHALLENGE ######
+
+msgid "Description-Challenge"
+msgstr "8 minigames (standaard) worden willekeurig gekozen uit de 27 beschikbare spellen.\n"
+"\n"
+"U krijgt 2 punten als u de uitdaging voltooit met de beste score.\n"
+"\n"
+"U krijgt 1 punt als u de uitdaging voltooit met de op één na beste score.\n"
+"\n"
+"U krijgt 0 punten als u de uitdaging mist of als uw score lager is dan de\n"
+"op één na beste score.\n"
+"-----\n"
+"Overzicht van beschikbare spellen:\n"
+"\n"
+"- 777: Behaal de exacte score van 777.\n"
+"- Dier: Vind het verborgen dier achter 3 getallen.\n"
+"- Blauw / Wit: Raak alleen Blauwe of Witte segmenten.\n"
+"- Bom: Vermijd de 10 verborgen bommen tussen de 20 segmenten.\n"
+"- Dubbel / Tripel / Bull: Raak een willekeurige dubbel, tripel of Bull.\n"
+"- Tussen 2: Uw score moet tussen een minimum en maximum liggen.\n"
+"- Fortuna: Vermenigvuldig uw punten en behaal de beste score in 3 pijlen.\n"
+"- Hoger / Lager: Uw score moet hoger of lager zijn dan de ingestelde score.\n"
+"- Meervoud: Raak een meervoud van 3, 4, 5 of 6.\n"
+"- Even / Oneven: Raak alleen Evens of Oneven segmenten.\n"
+"- Score: Behaal de beste score in 1 of 3 pijlen.\n"
+"- Enkel: Raak de gevraagde enkel in 1 of 3 pijlen.\n"
+"- Reeks / Buur: Raak een reeks van 3 getallen of 3 aangrenzende getallen.\n"
+"- Hoger / Lager dan vorige: Uw pijlen moeten hoger of lager zijn dan de vorige.\n"
+" "
+
+msgid "Challenge-max_round"
+msgstr "Aantal uitdagingen"
+
+msgid "Challenge-only3"
+msgstr "Alleen uitdagingen met 3 pijlen"
+
+######## CHAOS ######
+
+msgid "Description-Chaos"
+msgstr " "
+"Het doel van het spel is om aan het einde de hoogste score te behalen.\n"
+"\n"
+"Aan het begin van elke ronde heeft elke pijl zijn eigen wiskundig symbool,\n"
+"hetzij POSITIEF, NEGATIEF, VERMENIGVULDIGER (*2,*3,*4) of DELER (/2,/3,/4)\n"
+"die uw eindscore beïnvloeden.\n"
+"\n"
+"Bij een MISSDART verliest u, ongeacht het wiskundige symbool, 20 punten.\n"
+"\n"
+"De winnaar is de speler met de meeste punten aan het einde van het spel.\n"
+"\n"
+"-----\n"
+"Het doel van het spel is om aan het einde de hoogste score te behalen.\n"
+"\n"
+"Aan het begin van elke ronde heeft elke pijl zijn eigen wiskundig symbool,\n"
+"hetzij POSITIEF, NEGATIEF, VERMENIGVULDIGER (*2,*3,*4) of DELER (/2,/3,/4)\n"
+"die uw eindscore beïnvloeden.\n"
+"\n"
+"Bij een MISSDART verliest u, ongeacht het wiskundige symbool, 20 punten.\n"
+"\n"
+"De winnaar is de speler met de meeste punten aan het einde van het spel.\n"
+"\n"
+"Opties:\n"
+"- Aantal rondes: Maximaal aantal rondes.\n"
+"- Enkele Bull: SB is 50 punten waard.\n"
+"- Verschillend wiskundig symbool: elk symbool is anders\n"
+" "
+
+msgid "Chaos-max_round"
+msgstr "Aantal rondes"
+
+
+msgid "Chaos-oper1"
+msgstr "Verschillend wiskundig symbool"
+
+msgid "Chaos-simple50"
+msgstr "SB is 50 punten waard"
+
+######## COLOR ######
+
+msgid "Description-Color"
+msgstr "Raak de groene segmenten om punten te scoren.\n"
+"\n"
+"Als u een rood segment raakt, scoort u geen punten of,\n"
+"afhankelijk van uw opties, verliest u punten en/of geeft u punten aan\n"
+"uw tegenstanders.\n"
+"\n"
+"Bij een MISSDART verliest u 20 punten.\n"
+"\n"
+"De winnaar is de speler die de 'winscore' overschrijdt of de meeste punten\n"
+"heeft aan het einde van het spel.\n"
+"-----\n"
+"Score zoveel mogelijk punten door de groene segmenten te raken.\n"
+"\n"
+"Als u een rood segment raakt, scoort u geen punten, maar verliest u punten\n"
+"of geeft u punten aan uw tegenstanders afhankelijk van de actieve opties.\n"
+"\n"
+"Bij een MISSDART verliest u 20 points.\n"
+"\n"
+"De opties kunnen worden gecombineerd.\n"
+"\n"
+"Opties:\n"
+"- Aantal rondes: Maximaal aantal rondes.\n"
+"- Enkele Bull: SB is 50 punten waard.\n"
+"- Score: Bepaal de winnende score\n"
+"- Punten: Alle getallen zijn 10 punten waard\n"
+"- Punten tegenstanders: Als u rood raakt, geeft u punten aan uw tegenstanders.\n"
+"- Straf: Als u rood raakt, verliest u de punten van het segment.\n"
+" "
+
+msgid "Color-simple50"
+msgstr "Enkele Bull"
+
+msgid "Color-winscore"
+msgstr "Winnende score"
+
+msgid "Color-points"
+msgstr "Alle getallen zijn 10 punten waard"
+
+msgid "Color-points_advs"
+msgstr "Punten naar tegenstanders"
+
+msgid "Color-penalite"
+msgstr "Straf"
+
+msgid "Color-miss"
+msgstr "MISSDARTS straf"
+
+######## CONQUER ######
+
+msgid "Description-Conquer"
+msgstr "Het doel van het spel is om het grootste gebied te veroveren.\n"
+"\n"
+"De winnaar is de speler die voldoende aaneengesloten gebieden heeft\n"
+"veroverd of de meeste gebieden (in totaal) bezit aan het einde van de\n"
+"laatste ronde.\n"
+"\n"
+"-----\n"
+"Het doel van het spel is om het grootste gebied te veroveren.\n"
+"\n"
+"De winnaar is de speler die voldoende aaneengesloten gebieden heeft\n"
+"veroverd of de meeste gebieden (in totaal) bezit aan het einde van de\n"
+"laatste ronde.\n"
+"\n"
+"Verover een neutraal gebied met één treffer.\n"
+"\n"
+"Richt op uw eigen gebied om het te versterken (maximaal 3 versterkingen).\n"
+"\n"
+"Richt op een vijandelijk gebied om het te verzwakken, of te veroveren als het\n"
+"geen versterkingen meer heeft.\n"
+"\n"
+"Opties:\n"
+"- Aantal gebieden: Aantal te verbinden gebieden.\n"
+"- Aantal rondes: Maximaal aantal rondes\n"
+" "
+
+msgid "Conquer-max_players"
+msgstr "Max 4"
+
+msgid "Conquer-max_territory"
+msgstr "Aantal gebieden"
+
+######## CRICKET ######
+
+msgid "Description-Cricket"
+msgstr "Klassiek Cricket.\n"
+"\n"
+"Sluit de vereiste getallen voor uw tegenstander en behaal de\n"
+"hoogste score.\n"
+"-----\n"
+"Richt minstens 3 keer op elk getal en de bull om ze te openen en te sluiten.\n"
+"Scoor daarna punten zolang niet alle spelers ze ook gesloten hebben.\n"
+"\n"
+"Opties:\n"
+"- Crazy: De getallen veranderen zodra ze geopend zijn.\n"
+"- Cut Throat (Punten naar tegenstanders): Verhoogt de punten van tegenstanders.\n"
+"- Drink score (\"Trakteer\"): Als de score >= 200 is in Cut Throat, trakteert de speler.\n"
+"- Volgorde (Enculette): Verplichte volgorde: De doelen (20, 19, 18, 17, 16, 15 en Bull)\n"
+"  moeten strikt in deze volgorde worden gesloten, anders worden strafpunten afgetrokken.\n"
+"- Teamspel: 2 teams van 2.\n"
+"- Delen: Spelers van hetzelfde team delen dezelfde scoreraster.\n"
+"- Handicap: Voegt een handicap toe aan het sterkste team.\n"
+"- MPR: Toont de MPR naast de naam van de speler.\n"
+" "
+
+msgid "Cricket-max_players"
+msgstr "Max 8"
+
+msgid "Cricket-optioncutthroat"
+msgstr "Punten naar tegenstanders"
+
+msgid "Cricket-drinkscore"
+msgstr "Score \"Trakteer op een drankje\""
+
+msgid "Cricket-optioncrazy"
+msgstr "Crazy!"
+
+msgid "Cricket-Teaming"
+msgstr "Teamspel"
+
+msgid "Cricket-optionteamscore"
+msgstr "Scores delen"
+
+msgid "Cricket-optionhandicap"
+msgstr "Handicap"
+
+msgid "Cricket-mpr"
+msgstr "MPR"
+
+msgid "Cricket-enculette"
+msgstr "Vaste volgorde"
+
+
+######## DRAGON ########
+
+msgid "Description-Dragon"
+msgstr "Raak de draak om punten te scoren.\n"
+"\n"
+"De draak wordt vertegenwoordigd door 5 opeenvolgende leds die rond het bord draaien;\n"
+"de knipperende led is de kop van de draak.\n"
+"\n"
+"Raak deze om maximale punten te scoren.\n"
+"\n"
+"De winnaar is de speler met de meeste punten aan het einde van het spel.\n"
+"-----\n"
+"De draak wordt vertegenwoordigd door 5 opeenvolgende leds die rond het bord draaien;\n"
+"de knipperende led is de kop van de draak.\n"
+"\n"
+"Als u de kop van de draak raakt, krijgt u 10 punten.\n"
+"Als u het 2e segment raakt, krijgt u 5 punten.\n"
+"Als u het 3e segment raakt, krijgt u 3 punten.\n"
+"Als u het 4e segment raakt, krijgt u 2 punten.\n"
+"Als u het 5e segment raakt, krijgt u 1 punt.\n"
+"\n"
+"Als u de dubbel of tripel van een verlicht segment raakt, vermenigvuldigt u\n"
+"uw treffer daarmee.\n"
+"\n"
+"OPTIES:\n"
+"Aantal rondes: Bepaalt het aantal rondes\n"
+"Tijd: Bepaalt de snelheid van de draak\n"
+" "
+
+msgid "Dragon-max_round"
+msgstr "Aantal rondes"
+
+msgid "Dragon-Time"
+msgstr "Snelheid draak (in ms)"
+
+
+
+######## DUEL ######
+
+msgid "Description-Duel"
+msgstr "Het spel Duel is een directe uitschakeling tussen twee spelers.\n"
+"\n"
+"Elke speler begint met 100 levenspunten. Het doel is de score van de\n"
+"tegenstander tot nul te herleiden via precieze worpen, beurtbonussen,\n"
+"verdediging en tegenaanvallen.\n"
+"\n"
+"De totale score van de beurt (de aanval) en de bonussen vormen een straf.\n"
+"Deze straf is bedoeld voor de tegenstander.\n"
+"\n"
+"De verdediger probeert een tegenaanval uit te voeren voordat hij de straf incasseert,\n"
+"door op zijn beurt 3 pijlen te gooien voor een parering of tegenaanval.\n"
+"\n"
+"-----\n"
+"De Parering\n"
+"De verdediger behaalt evenveel punten als zijn tegenstander. Hij loopt geen\n"
+"schade op.\n"
+"\n"
+"De Tegenaanval\n"
+"De verdediger behaalt meer punten dan zijn tegenstander en creëert op zijn beurt\n"
+"een straf voor zijn tegenstander.\n"
+"\n"
+"De Sanctie\n"
+"Bij mislukking wordt de aanvalsscore min de verdedigingsscore van de speler\n"
+"afgetrokken van zijn levenspunten.\n"
+"\n"
+"Het spel stopt zodra een speler nul bereikt.\n"
+"\n"
+"Bonusrooster:\n"
+"- Individuele bonussen: Dubbel +5, Tripel +5, Enkele Bull +2, Dubbele Bull +5.\n"
+"- Beurtbonus: E-D-T +20, Reeks +20.\n"
+"- Buurbonus: Aangrenzende vakken +15.\n"
+"- Zelfde getal: 3x hetzelfde vak +30.\n"
+"- Hattrick: 3x Dubbel +50, 3x Tripel +50, 3x Bull +50, 3x Dubbele Bull +75.\n"
+" "
+
+msgid "Duel-start_hp"
+msgstr "Aantal levens"
+
+msgid "Duel-penality"
+msgstr "Straf bij MISS"
+
+msgid "Duel-speed"
+msgstr "Spraaksnelheid"
+
+
+
+
+
+
+######## Dungeon ########
+
+msgid "Description-Dungeon"
+msgstr "Dungeon is een coöperatief spel geïnspireerd door rollenspellen.\n"
+"Spelers werken samen om een reeks bazen te verslaan over 1 tot 7 verdiepingen\n"
+"om het avontuur te voltooien.\n"
+"\n"
+"Er zijn 4 personages beschikbaar die willekeurig aan elke speler worden toegewezen:\n"
+"\n"
+"- Krijger: Aanvallen op enkele en tripel segmenten van de baas krijgen +1 schade.\n"
+"\n"
+"- Magiër: Bij het raken van een Dubbel of Tripel activeert hij een groepsgenezing;\n"
+"  elke speler krijgt 1 of 2 levenspunten terug.\n"
+"\n"
+"- Dief: Heeft 40% ontwijkingskans bij het missen van een doelwit om schade te voorkomen.\n"
+"\n"
+"- Alchemist: Aanvallen op tripels krijgen +1 schade en 2 extra scorepunten.\n"
+"\n"
+"-----\n"
+"Elk monster heeft 3 tot 5 Hit-getallen.\n"
+"Deze getallen worden willekeurig gekozen aan het begin van elke ronde.\n"
+"\n"
+"1 enkel: monster verliest 1 leven.\n"
+"1 dubbel: monster verliest 2 levens.\n"
+"1 tripel: monster verliest 3 levens.\n"
+"\n"
+"Spelers beschikken over een genezingsvak (bull).\n"
+"\n"
+"1 SB: speler krijgt 1 leven punt.\n"
+"1 DB: speler krijgt 2 levenspunten.\n"
+"\n"
+"Het verslaan van een monster levert 50 punten op, verdeeld naar gelang de slagen van elke speler.\n"
+"\n"
+"Opties:\n"
+"- Aantal bazen: Aantal te bestrijden monsters.\n"
+"- Aantal levens: Aantal levens van spelers.\n"
+"- Aantal doelen: Aantal doelsegmenten op de baas.\n"
+"- HP baas: Aantal levens van de eerste baas.\n" 
+"- Baasbonus: Extra levenspunten toegevoegd voor elke nieuwe baas.\n"
+"- Krachten tonen: Toont krachtsegmenten in het geel."
+" "
+
+msgid "Dungeon-number_of_targets"
+msgstr "Aantal doelen (3 - 5)"
+
+msgid "Dungeon-number_of_lives"
+msgstr "Aantal levens"
+
+msgid "Dungeon-nb_boss"
+msgstr "Aantal bazen (1-7)"
+
+msgid "Dungeon-vie_premier_boss"
+msgstr "HP baas"
+
+msgid "Dungeon-palier_pv_boss"
+msgstr "Baasbonus (0-99)"
+
+msgid "Dungeon-target_jaune"
+msgstr "Toon Krachten (led)"
+
+######## FIGHTERS ########
+
+msgid "Description-Fighters"
+msgstr "Sla uw tegenstanders K.O.\n"
+"\n"
+"U begint met een vastgesteld aantal levens en 0 punten.\n"
+"\n"
+"De winnaar is de speler die overblijft of degene met de meeste punten\n"
+"aan het einde van de laatste ronde.\n"
+"-----\n"
+"Elk monster heeft 3 Hit-getallen (standaard) en de actieve speler heeft\n"
+"een genezingsvak.\n"
+"Deze getallen worden willekeurig gekozen aan het begin van de beurt.\n"
+"De getallen kunnen gemeenschappelijk zijn voor meerdere spelers.\n"
+"\n"
+"1 enkel: tegenstander verliest 1 leven, speler krijgt 1 punt.\n"
+"1 dubbel: tegenstander verliest 2 levens, speler krijgt 2 punten.\n"
+"1 tripel: tegenstander verliest 3 levens, speler krijgt 3 punten.\n"
+"\n"
+"Hetzelfde geldt voor de GENEZING die u levenspunten teruggeeft.\n"
+"\n"
+"1 SB: 1 schade aan alle tegenstanders, speler krijgt x punten (x = aantal spelers).\n"
+"1 DB: 2 schade aan alle tegenstanders, speler krijgt x punten (x = aantal spelers).\n"
+"\n"
+"Het K.O. slaan van een speler levert 5 punten op (of +30 levenspunten als optie PUNTEN actief is).\n"
+"\n"
+"Opties:\n"
+"- Punten: Begin met 300 levenspunten; de punten van geraakte segmenten\n"
+"  worden afgetrokken van uw levens.\n"
+" "
+
+msgid "Fighters-max_players"
+msgstr "Max 5"
+
+msgid "Fighters-number_of_lives"
+msgstr "Aantal levens"
+
+msgid "Fighters-points"
+msgstr "Trek segmentpunten af van levens"
+
+
+
+######## FOOTBALL ######
+
+msgid "Description-Football"
+msgstr "Onderschep de bal en storm af op het doel van de tegenstander.\n"
+"\n"
+"De eerste speler die 3 doelpunten scoort, wint de wedstrijd.\n"
+"-----\n"
+"U moet de bal bezitten om te scoren.\n"
+"\n"
+"- Als u de bal niet heeft, raak dan\n"
+"  een bull om balbezit te krijgen.\n"
+"\n"
+"- Als u de bal bezit, raak dan een\n"
+"  dubbel of tripel om te scoren.\n"
+"\n"
+"Opties:\n"
+"- Aantal rondes: Maximaal aantal rondes.\n"
+"- Master: Maak een DB om balbezit te krijgen.\n"
+"- Aantal doelpunten: Score om te winnen.\n"
+"- Verdediging: Block het schot van de tegenstander.\n"
+" "
+
+msgid "Football-goals"
+msgstr "Aantal doelpunten"
+
+msgid "Football-defense"
+msgstr "Verdediging"
+
+msgid "Football-defend"
+msgstr "Verdedig jezelf!"
+
+msgid "Football-def2"
+msgstr "Richt op"
+
+msgid "Football-def3"
+msgstr "om de aanval te stoppen"
+
+msgid "Football-stopped"
+msgstr "Aanval afgeweerd. Goed gedaan!"
+
+######## GAME OF GOOSE ######
+
+msgid "GameOfGoose-name"
+msgstr "Ganzenbord"
+
+msgid "Description-GameOfGoose"
+msgstr "Gooi de dobbelstenen!\n"
+"\n"
+"Bereik het einde van het bord voor uw tegenstanders.\n"
+"-----\n"
+"Bereik het einde van het bord voor uw tegenstanders.\n"
+"\n"
+"- 2 pijlen per beurt. Alleen segmenten 1 t/m 6 tellen.\n"
+"- Als u mist of iets anders raakt, is de beurt verloren.\n"
+"- Probeer 5 en 4 of 6 en 3 te gooien in beurt 1 voor een boost (niet in Master).\n"
+"- Het bord is gelijk aan het klassieke ganzenbord.\n"
+"- Bij 1 speler zijn de effecten van herberg, put en gevangenis uitgeschakeld.\n"
+"\n"
+"De winnaar is degene die als eerste precies op vak 63 komt.\n"
+"Moeilijkheidsgraad:\n"
+"- 1 = Volledige segmenten.\n"
+"- 2 = Alleen enkele tellen.\n"
+"- 3 = Alleen dubbels tellen.\n"
+"- 4 = Alleen tripels tellen.\n"
+"\n"
+"Master-optie: Schakelt de boost van de 1e beurt uit en vervangt deze door +1.\n"
+"Gevangenis & Put-optie: Vervangt blokkering door beurten overstaan.\n"
+"Kids-optie: Kindermodus, gebruikt willekeurige segmenten.\n"
+" "
+
+msgid "GameOfGoose-max_players"
+msgstr "Max 4"
+
+msgid "GameOfGoose-level"
+msgstr "Moeilijkheidsgraad"
+
+msgid "GameOfGoose-tour"
+msgstr "Gevangenis & Put = 2 beurten overstaan"
+
+msgid "GameOfGoose-alea"
+msgstr "Kids"
+
+######## GOLF ######
+
+msgid "Description-Golf"
+msgstr "Elke speler heeft drie pijlen per beurt.\n"
+"\n"
+"De speler kan besluiten te stoppen wanneer hij wil als hij tevreden is\n"
+"over zijn slag, maar alleen de laatst gegooide pijl telt voor de score.\n"
+"\n"
+"De speler met de minste slagen wint het spel.\n"
+"\n"
+"Opties:\n"
+"- BULL: activeert de BULL\n"
+"- MASTER: alleen de Dubbele Bull telt (optie BULLS moet actief zijn)\n"
+"- 9 holes: 9 holes in plaats van 18\n"
+"-----\n"
+"In de 1e ronde richt u op 1, in de 2e ronde op 2, enzovoort.\n"
+"\n"
+"Alleen de laatste pijl telt voor de score. Druk op Volgende Speler om te bevestigen.\n"
+"\n"
+"- Een enkel is 4 slagen waard (BOGEY).\n"
+"- Een tripel is 2 slagen waard (BIRDIE).\n"
+"- Een dubbel is 1 slag waard (EAGLE).\n"
+"- Een misworp/buitenrand is 5 slagen waard (DOUBLE BOGEY).\n"
+"\n"
+"Als de BULL-optie geactiveerd is:\n"
+"- een SB is 0 slagen waard (ALBATROS).\n"
+"- een DB is -1 slag waard (CONDOR).\n"
+"Anders is een SB of DB 5 slagen waard (DOUBLE BOGEY).\n"
+"\n"
+"Als BULL en MASTER geactiveerd zijn:\n"
+"- Een SB is 5 slagen waard (DOUBLE BOGEY).\n"
+"- Een DB is -1 slag waard (CONDOR).\n"
+" "
+
+msgid "Golf-nine_holes"
+msgstr "9 holes"
+
+msgid "Golf-bulls"
+msgstr "Activeer Bull"
+
+msgid "Golf-master"
+msgstr "Master-Activeer alleen DB"
+
+msgid "Golf-save"
+msgstr "Staat genoteerd ;)"
+
+
+######  HIGH SCORE  ######
+msgid "Description-High_Score"
+msgstr "Het meest eenvoudige dartspel.\n"
+"\n"
+"Slechts één regel: behaal zoveel mogelijk punten.\n"
+"\n"
+"De speler met de hoogste score wint de wedstrijd.\n"
+"-----\n"
+"Het meest eenvoudige dartspel.\n"
+"\n"
+"De speler met de hoogste score wint de wedstrijd.\n"
+"\n"
+"Opties:\n"
+"- Enkele Bull: Het buitenste centrum (Single Bull) is 50 punten waard.\n"
+"- Sudden Death: Aan het einde van elke ronde valt de speler met de laagste score af.\n"
+"- Vermenigvuldiger (x1-x2-x3): De scores van elke worp worden vermenigvuldigd met 1, 2 of 3.\n"
+" "
+
+msgid "High_Score-lives"
+msgstr "Aantal levens"
+
+msgid "High_Score-simple50"
+msgstr "Enkele Bull"
+
+msgid "High_Score-suddendeath"
+msgstr "Sudden death"
+
+msgid "High_Score-multix123"
+msgstr "Multi x1-x2-x3"
+
+msgid "High_Score-shoot_out"
+msgstr "Shoot out"
+
+msgid "High_Score-super_shoot_out"
+msgstr "Super shoot out"
+
+msgid "High_Score-segment"
+msgstr "Segment"
+
+######## HO ONE ######
+
+msgid "Ho_One-name"
+msgstr "'01"
+
+msgid "Description-Ho_One"
+msgstr "Het bekende 301, 501, 701, 1001, ...\n"
+"\n"
+"Het meest klassieke dartspel.\n"
+"\n"
+"Wees de eerste speler die precies op 0 uitkomt om te winnen.\n"
+"-----\n"
+"U begint op 301 (501, 701,...), de eerste die precies op 0 komt wint.\n"
+"\n"
+"Als u onder nul gaat (bust), keert de score terug naar de beginscore van die beurt.\n"
+"\n"
+"Opties:\n"
+"- Double in: Start met een dubbel.\n"
+"- Double out: Eindig met een dubbel.\n"
+"- Master in: Start met een dubbel, tripel of Bull.\n"
+"- Master out: Eindig met een dubbel, tripel ou Bull.\n"
+"- League-modus: Activeert freeze-modus en handicap.\n"
+"- Enkele bull 25: SB is 25 punten waard (anders 50).\n"
+"- Zap-modus: Kom op de gelijke score van een tegenstander om hem te laten herstarten.\n"
+"- Equal: Voorkomt het \"Ja, maar jij mocht eerst!\" voordeel.\n"
+" "
+
+msgid "Ho_One-max_players"
+msgstr "Max 8"
+
+msgid "Ho_One-startingat"
+msgstr "Beginscore"
+
+msgid "Ho_One-double_in"
+msgstr "Double In"
+
+msgid "Ho_One-double_out"
+msgstr "Double Out"
+
+msgid "Ho_One-master_in"
+msgstr "Master In"
+
+msgid "Ho_One-master_out"
+msgstr "Master Out"
+
+msgid "Ho_One-split_bull"
+msgstr "Enkele bull 25"
+
+msgid "Ho_One-zap"
+msgstr "Zap-modus"
+
+msgid "Ho_One-equal"
+msgstr "Laat elke speler zijn beurt afmaken"
+
+msgid "Ho_One-league"
+msgstr "League-modus (max 4 spelers)"
+
+######## HORSE ######
+
+msgid "Description-Horse"
+msgstr "Klaar voor een bloedstollende paardenrace!\n"
+"\n"
+"Wees de eerste die de finish bereikt.\n"
+"-----\n"
+"\n"
+"Raak het gevraagde getal om vooruit te komen richting de finish.\n"
+" \n"
+"Er zijn 3 parcoursen beschikbaar:\n"
+"- Het standaardparcours bevat 2 hindernissen.\n"
+"- Het tussenparcours bevat 4 hindernissen.\n"
+"- Het expertparcours bevat een grote hoeveelheid hindernissen.\n"
+"\n"
+"Om de finishlijn te passeren, moet u de bull raken.\n"
+"\n"
+"Opties:\n"
+"- Medium: Parcours met 4 hindernissen.\n"
+"- Master: Parcours met heel veel hindernissen.\n"
+" "
+
+msgid "Horse-max_players"
+msgstr "Max 4"
+
+msgid "Horse-max_round"
+msgstr "Aantal rondes"
+
+msgid "Horse-inter"
+msgstr "Medium"
+
+msgid "Horse-master"
+msgstr "Master"
+
+
+######## Incendie ########
+
+msgid "Description-Incendie"
+msgstr "Brandbestrijding is een coöperatief spel. Spelers werken samen om\n"
+"een reeks branden op verschillende verdiepingen te blussen.\n"
+"\n"
+"Er zijn 4 personages die willekeurig aan elke speler worden toegewezen:\n"  
+"\n"
+"- Brandweerman: Garandeert minimaal 2 punten schade per schot.\n"  
+"\n"
+"- Verkenner: Schade afhankelijk van geraakt segment (E-D-T) + Splash-effect\n"
+"  selecteert willekeurig een nabijgelegen actieve brand en vermindert\n"
+"  de intensiteit met 1 punt.\n"  
+"\n"
+"- Specialist: Brengt zware schade toe, twee niveaus hoger dan een normaal schot.\n"  
+"\n"
+"- Logistieker: Blust gele of oranje branden in 1 schot, en bij een Tripel\n"
+"  een Splash-effect vergelijkbaar met de verkenner.\n"
+"\n"
+"De eindrangschikking verdeelt de spelers volgens hun individuele score.\n"
+"-----\n"
+"Er zijn 3 soorten branden:\n" 
+"- Kleine brand (geel): intensiteit 1.\n"
+"- Middelgrote brand (oranje): intensiteit 2.\n"
+"- Grote brand (rood): intensiteit 3.\n"
+"\n"
+"Elke brand heeft 1 Hit-getal.\n"
+"Deze getallen worden willekeurig gekozen aan het begin van elke ronde.\n"
+"\n"
+"1 enkel: intensiteit van de brand neemt af met 1.\n"
+"1 dubbel: intensiteit van de brand neemt af met 2.\n"
+"1 tripel: intensiteit van de brand neemt af met 3.\n"
+"\n"
+"Spelers beschikken over een watervoorraad (bull).\n"
+"\n"
+"1 SB: 1 rode brand of een willekeurige brand wordt volledig gelest.\n"
+"1 DB: 2 rode branden (of willekeurige branden als er minder dan 2 rode zijn) worden gelest.\n"
+"\n"
+"Opties:\n"
+"- Aantal branden: Aantal branden bij de start.\n"
+"- Gebouw HP: Aantal gezondheidspunten van het gebouw.\n"
+"- Aantal doelen: Aantal doelen op het bord.\n"
+" "
+
+msgid "Incendie-nb_feux_depart"
+msgstr "Aantal branden bij start"
+
+msgid "Incendie-number_of_lives"
+msgstr "Levenspunten van het gebouw"
+
+msgid "Incendie-target_jaune"
+msgstr "Toon Krachten (led)."
+
+
+######## KAPITAL ######
+
+msgid "Description-Kapital"
+msgstr "De hoogste Kapital wint.\n"
+"\n"
+"U moet verschillende opdrachten voltooien, elke ronde een andere.\n"
+"-----\n"
+"Opdrachten:\n"
+" \n"
+"K: Behaal een maximale score in 3 pijlen.\n"
+"TRIP: Raak minimaal 1 tripel.\n"
+"DOUB: Raak minimaal 1 dubbel.\n"
+"KOLR: Raak 3 verschillende segmentkleuren met uw 3 pijlen.\n"
+"57: Behaal 57 punten in 1, 2 of 3 pijlen.\n"
+"KKOT: Raak 3 opeenvolgende buren op het bord (de Bull is een joker).\n"
+"SUIT: Raak 3 opeenvolgende getallen (de Bull is een joker).\n"
+"20, 19, 18, 17, 16, 15, 14: Raak minimaal 1x dit getal.\n"
+" "
+
+######## KILLER ######
+
+msgid "Description-Killer"
+msgstr "Elimineer uw tegenstanders voordat zij u elimineren!\n"
+"Behaal de Killer-status door minimaal 5 punten te scoren op uw toegewezen getal.\n"
+"\n"
+"U verliest de Killer-status als uw score weer onder 5 punten komt.\n"
+"-----\n"
+"Zodra een speler 5 punten bereikt, wordt hij Killer.\n"
+"Als hij onder 5 punten zakt, verliest hij zijn Killer-status.\n"
+"\n"
+"Wanneer een speler op -1 punt (of lager) komt, is hij uitgeschakeld.\n"
+"\n"
+"Als u GEEN Killer bent:\n"
+"- Het raken van uw getal verhoogt uw punten.\n"
+"- Het raken van het getal van een tegenstander verlaagt uw punten.\n"
+"\n"
+"Als u WEL Killer bent:\n"
+"- Het raken van het getal van een tegenstander verlaagt diens punten.\n"
+"- Het raken van uw eigen getal verlaagt uw eigen punten.\n"
+" "
+
+msgid "Killer-random"
+msgstr "De segmenten veranderen elke ronde"
+
+msgid "Killer-vie"
+msgstr "Aantal levens bij start"
+
+msgid "Killer-killer"
+msgstr "Aantal punten om killer te worden"
+
+msgid "Killer-bulls"
+msgstr "De bull is ingeschakeld"
+
+msgid "Killer-max"
+msgstr "Maximale killer-limiet niet overschrijden"
+
+msgid "Killer-suicide"
+msgstr "Verkeerde doelwitten kosten punten"
+
+######## KINITO ######
+
+msgid "Description-Kinito"
+msgstr "Bereik 221 punten om te winnen door met elke\n"
+"pijl een score te behalen die gelijk is aan of hoger\n"
+"is dan de vorige pijl.\n"
+"-----\n"
+"In de 1e ronde moet speler 1 een getal behalen dat gelijk is aan of hoger\n"
+"dan door de computer aangegeven. Daarna moet de volgende speler een getal\n"
+"behalen dat gelijk is aan of hoger dan de helft van de score van de 3e pijl\n"
+"van de vorige speler (bijv. 20 / 2 = 10).\n"
+"\n"
+"Als al u 3 de pijlen lukken, scoort u de gegooide punten.\n"
+"Als u een pijl mist, scoort u niets.\n"
+"\n"
+"Als u een Kinito gooit (Kinito-score in één pijl), kunt u\n"
+"de score van uw tegenstander halveuren door zijn specifieke getal te raken.\n"
+"\n"
+"Opties:\n"
+"- Kinito: Bepaal de waarde van Kinito (1 tot 60)\n"
+"- WinScore: Bepaal de winnende score\n"
+" "
+
+msgid "Kinito-kinito"
+msgstr "Kinito-score"
+
+msgid "Kinito-winscore"
+msgstr "Winnende score"
+
+######## LOW SCORE ######
+
+msgid "Description-Low_Score"
+msgstr "Slechts één regel:\n"
+"haal de laagst mogelijke score om te winnen.\n"
+"\n"
+"Pas op voor strafpunten!!!\n"
+"-----\n"
+"U moet zo min mogelijk punten behalen om te winnen.\n"
+"\n"
+"Richt hiervoor op de bull of de kleinste getallen.\n"
+"\n"
+"SB verlaagt uw score met 25 punten.\n"
+"DB verlaagt uw score met 50 punten.\n"
+"Een misworp kost u een straf van +50 punten.\n"
+"\n"
+"Opties:\n"
+"- Straf: Bepaalt de hoogte van de straf.\n"
+" "
+
+msgid "Low_Score-penality"
+msgstr "Hoogte van de straf"
+
+######## MICKEY ######
+
+msgid "Description-Mickey"
+msgstr "Koreaanse Cricket.\n"
+"\n"
+"Een spel identiek aan Cricket, maar met 5 extra zones, waaronder\n"
+"de vakken Tripel 'T' en Dubbel 'D'.\n"
+"\n"
+"Sluit de vereiste getallen voor uw tegenstanders en behaal de beste score.\n"
+"-----\n"
+"Het 3x raken van een getal of Bull opent en sluit het vak.\n"
+"Scoor punten op uw geopende getallen zolang uw tegenstanders deze\n"
+"op hun beurt nog niet gesloten hebben.\n"
+"\n"
+"Opties:\n"
+"- Crazy: De getallen veranderen willekeurig zodra ze geopend zijn.\n"
+"- Cut-Throat (Punten naar tegenstanders): De laagste score wint.\n"
+"- Volgorde (Enculette): Verplichte volgorde: De doelen (20, 19, 18, 17, 16, 15 en Bull)\n"
+"  moeten strikt in deze volgorde worden gesloten, anders worden strafpunten afgetrokken.\n"
+"- Teamspel: Maakt 2 tegen 2 spelen mogelijk (tot 4 teams).\n"
+"- Delen: Spelers van hetzelfde team delen het scoreraster.\n"
+"- Handicap: Kent een handicap toe aan het sterkste team om de kansen te gelijken.\n"
+"- MPR: Toont het gemiddelde van Marks Per Round (MPR) naast de naam van elke speler.\n"
+" "
+
+msgid "Mickey-max_players"
+msgstr "Max 8"
+
+msgid "Mickey-optioncutthroat"
+msgstr "Punten naar tegenstanders"
+
+msgid "Mickey-optioncrazy"
+msgstr "Crazy!"
+
+msgid "Mickey-Teaming"
+msgstr "Teamspel"
+
+msgid "Mickey-optionteamscore"
+msgstr "Scores delen"
+
+msgid "Mickey-optionhandicap"
+msgstr "Handicap"
+
+msgid "Mickey-mpr"
+msgstr "MPR"
+
+msgid "Mickey-max_round"
+msgstr "Aantal rondes"
+
+msgid "Mickey-colorised"
+msgstr "Gekleurd bord"
+
+msgid "Mickey-enculette"
+msgstr "Vaste volgorde"
+
+
+
+######## MORPION ######
+
+msgid "Description-Morpion"
+msgstr "Het doel van het spel is om 3 getallen van uw kleur op een rij te krijgen\n"
+"(horizontaal, verticaal of diagonaal) om een punt te scoren.\n"
+"\n"
+"De winnaar is de speler die 3 punten behaalt.\n"
+"-----\n"
+"Enkel op een leeg vak: u krijgt dit vak.\n"
+"Dubbel op een leeg vak: u krijgt dit vak met een zilveren schild.\n"
+"Tripel op een leeg vak: u krijgt dit vak met een gouden schild.\n"
+"\n"
+"SB geeft een willekeurig leeg vak met een zilveren schild.\n"
+"DB laat elke tegenstander een vak verliezen.\n"
+
+"Bijzonderheden:\n"
+"Een dubbel of tripel telt slechts voor 1 op een al bezet vak.\n"
+"Een zilveren schild vereist dat het vak 2x geraakt wordt om vrij te komen.\n"
+"Een gouden schild maakt het vak onoverwinbaar.\n"
+"\n"
+"Opties:\n"
+"- Punten voor overwinning: Aantal roosters te valideren voor winst.\n"
+"- Master: Een dubbel geeft een GOUDEN schild - een tripel geeft ZILVER.\n"
+"- Variant: Raak het getal 4x om het te veroveren. Naast traditionele\n"
+"  lijnen (H-V-D) levert elke 3 aaneengesloten vakken 1 punt op.\n"
+" "
+
+msgid "Morpion-max_players"
+msgstr "2 of 4 (Teams)"
+
+msgid "Morpion-variante"
+msgstr "Variant"
+
+msgid "Morpion-win_points"
+msgstr "Punten voor overwinning"
+
+######## OTHELLO ######
+
+msgid "Description-Othello"
+msgstr "Het principe is om stenen aan weerszijden van die van de\n"
+"tegenstander te plaatsen om alle tussenliggende stenen om te draaien.\n"
+"\n"
+"De speler met de meeste stenen van zijn kleur wint het spel.\n"
+"Kantelingen komen vaak voor, tot aan de allerlaatste steen…\n"
+"-----\n"
+"\n"
+"Het principe is om stenen aan weerszijden van die van de\n"
+"tegenstander te plaatsen om alle tussenliggende stenen om te draaien.\n"
+"\n"
+"De speler met de meeste stenen van zijn kleur wint het spel.\n"
+"Kantelingen komen vaak voor, tot aan de allerlaatste steen…\n"
+"\n"
+"Raak een van de gevraagde segmenten om uw steen te plaatsen.\n"
+"\n"
+"Het spel eindigt als een speler geen zet meer kan doen\n"
+"of als het bord vol is.\n"
+"\n"
+"Opties:\n"
+"- Bord: Kies de grootte van het spelbord (4 - 6 - 8).\n"
+" "
+
+msgid "Othello-max_players"
+msgstr "2 of 4 (Teams)"
+
+msgid "Othello-xgrille"
+msgstr "Bordgrootte"
+
+######## PINGPONG ######
+
+msgid "Pingpong-name"
+msgstr "Pingpong"
+
+msgid "Description-Pingpong"
+msgstr "De hoogste score per beurt wint het punt.\n"
+"\n"
+"De winnaar is de eerste speler die de score van 6 punten bereikt.\n"
+"\n"
+"De winnaar moet een voorsprong van minstens twee punten hebben.\n"
+"-----\n"
+"De beste beurtscore wint het punt.\n"
+"\n"
+"Het spel is gewonnen wanneer een score van 6 punten (standaard) is bereikt\n"
+"door een van de spelers.\n"
+"\n"
+"De winnaar moet minstens twee punten voorsprong hebben op de tegenstander.\n"
+"\n"
+"Bij een stand van 6 tegen 6 gaat het spel door totdat een van de spelers\n"
+"twee punten meer behaalt, oftewel vroegst op 8 tegen 6 (of 6 tegen 8).\n"
+"\n"
+"Opties:\n"
+"- Score: Bepaalt het aantal punten om te winnen.\n"
+"- Enkele bull: SB is 50 waard.\n"
+" "
+
+msgid "Pingpong-win"
+msgstr "Score"
+
+msgid "Pingpong-simple50"
+msgstr "Enkele bull"
+
+######## PRACTICE ######
+
+msgid "Description-Practice"
+msgstr "Aan de slag met trainen!!\n"
+"\n"
+"Oefen door te richten op de getallen die door de computer worden opgegeven.\n"
+"-----\n"
+"Oefen door te richten op de getallen die door de computer worden opgegeven.\n"
+"\n"
+"Niets is beter om uw dartzorgen te verbeteren.\n"
+"\n"
+"Opties:\n"
+"- Aantal rondes: Aantal rondes tot het einde van het spel.\n"
+"- Master: Dubbels en tripels doen ook mee (alleen zonder opties).\n"
+"- Dubbel: Raak een willekeurige dubbel.\n"
+"- Tripel: Raak een willekeurige tripel.\n"
+"- Bull: Raak een willekeurige bull.\n"
+"- Three on the bed: Raak 3 keer het gevraagde getal (E-D-T).\n"
+"- Reeks: Raak een reeks van 3 opeenvolgende getallen.\n"
+"- Buur: Raak 3 naburige getallen op het bord.\n"
+" "
+
+msgid "Practice-split_bull"
+msgstr "Enkele bull 25"
+
+msgid "Practice-finish"
+msgstr "Finish"
+
+msgid "Practice-double"
+msgstr "Dubbel"
+
+msgid "Practice-triple"
+msgstr "Tripel"
+
+msgid "Practice-bulls"
+msgstr "Bulls"
+
+msgid "Practice-threeonthebed"
+msgstr "Three on the bed"
+
+msgid "Practice-suite"
+msgstr "Reeks"
+
+msgid "Practice-voisin"
+msgstr "Buur"
+
+msgid "Practice-pourcent"
+msgstr "U heeft de uitdaging voltooid met "
+
+######## PUNCH OUT######
+
+msgid "Punch-Out"
+msgstr "Punch out!"
+
+msgid "Description-Punch-Out"
+msgstr "Sla uw tegenstanders K.O.\n"
+"\n"
+"U begint met een vastgesteld aantal levens en 0 punten.\n"
+"\n"
+"De winnaar is de speler die overblijft of degene met de meeste\n"
+"punten aan het einde van de laatste ronde.\n"
+"-----\n"
+"Elke tegenstander heeft 3 Hit-getallen en de actieve speler heeft een genezingsvak.\n"
+"Deze getallen worden willekeurig gekozen aan het begin van de beurt.\n"
+"De getallen kunnen gemeenschappelijk zijn voor meerdere spelers.\n"
+"\n"
+"1 enkel: tegenstander verliest 1 leven, speler krijgt 1 punt.\n"
+"1 dubbel: tegenstander verliest 2 levens, speler krijgt 2 punten.\n"
+"1 tripel: tegenstander verliest 3 levens, speler krijgt 3 punten.\n"
+"\n"
+"Hetzelfde geldt voor de GENEZING die u levenspunten teruggeeft.\n"
+"\n"
+"1 SB: 1 schade aan alle tegenstanders, speler krijgt x punten (x = aantal spelers).\n"
+"1 DB: 2 schade aan alle tegenstanders, speler krijgt x punten (x = aantal spelers).\n"
+"\n"
+"Het K.O. slaan van een speler levert 5 punten op (of +30 levenspunten als optie PUNTEN actief is).\n"
+"\n"
+"Opties:\n"
+"- Punten: Begin met 300 levenspunten; de punten van geraakte segmenten\n"
+"  worden afgetrokken van uw levens.\n"
+" "
+
+msgid "Punch-Out-max_players"
+msgstr "Max 7"
+
+msgid "Punch-Out-number_of_lives"
+msgstr "Aantal levens"
+
+msgid "Punch-Out-points"
+msgstr "Trek segmentpunten af van levens"
+
+######## PUISSANCE 4 ######
+
+msgid "Puissance4-name"
+msgstr "Vier op een rij"
+
+msgid "Description-Puissance4"
+msgstr "Raak een van de segmenten om een schijf in het raster te laten vallen.\n"
+"\n"
+"Speel vervolgens om de beurt totdat een speler erin slaagt 4 van zijn\n"
+"schijven horizontaal, verticaal of diagonaal op een rij te krijgen.\n"
+"\n"
+"De eerste speler met 4 op een rij wint! \n"
+"-----\n"
+"\n"
+"Raak een van de segmenten om een schijf in het raster te plaatsen.\n"
+"Speel vervolgens om de beurt totdat een speler erin slaagt 4 schijven\n"
+"op een rij te krijgen (horizontaal, verticaal of diagonaal).\n"
+" \n"
+"U kunt tot 3 schijven per beurt gooien (standaard 2).\n"
+"\n"
+"Bij elke nieuwe beurt veranderen de getallen, behalve de bull.\n"
+"\n"
+"Opties:\n"
+"- Aantal punten: Aantal punten om te winnen.\n"
+"- Schijven: Aantal schijven (pijlen) per beurt.\n"
+"- Vernieuwen: Verandert de getallen bij elke nieuwe beurt.\n"
+" "
+
+msgid "Puissance4-max_players"
+msgstr "2 of 4 (Teams)"
+
+msgid "Puissance4-win_points"
+msgstr "Aantal punten om te winnen"
+
+msgid "Puissance4-fleche"
+msgstr "Aantal schijven"
+
+msgid "Puissance4-regenere"
+msgstr "Vernieuwen"
+
+######## PURSUIT ######
+
+msgid "Description-Pursuit"
+msgstr "3, 2, 1, maak u klaar voor een zinderende achtervolging.\n"
+"\n"
+"Het doel van het spel is om tegenstanders in te halen of voorbij te streven.\n"
+"\n"
+"De winnaar is de laatste die op de baan overblijft."
+"-----\n"
+"Om vooruit te komen, raakt u in elke ronde het gevraagde getal.\n"
+"\n"
+"Een enkel laat u 1 vak vooruitgaan.\n"
+"Een dubbel laat u 2 vakken vooruitgaan.\n"
+"Een tripel laat u 3 vakken vooruitgaan.\n"
+"\n"
+"De laatste op de baan wint het spel.\n"
+"\n"
+"Opties:\n"
+"- Master: Tegenstander niet inhalen.\n"
+"- Reverse: Omkering van richting.\n"
+" "
+
+msgid "Pursuit-max_players"
+msgstr "Max 4"
+
+msgid "Pursuit-reverse"
+msgstr "Richting omkeren"
+
+######## RISK ######
+
+msgid "Description-Risk"
+msgstr "U begint het spel met 5 gebieden en 3 versterkingstroepen.\n"
+"\n"
+"Het doel van het spel is om alle vijandelijke gebieden te vernietigen, maar pas op\n"
+"voor eigen vuur.\n"
+"-----\n"
+"Als u een vijandelijk gebied raakt of een eigen gebied met versterkingen:\n"
+"- Met ENKEL: verwijder 1 versterking.\n"
+"- Met DUBBEL: verwijder 2 versterkingen.\n"
+"- Met TRIPEL: verwijder 3 versterkingen.\n"
+"\n"
+"Als u een vijandelijk gebied of een eigen gebied zonder versterkingen raakt,\n"
+"wordt het vernietigd en wordt het neutraal.\n"
+"\n"
+"Als u de bull raakt, krijgt u met:\n"
+"- SB: 1 versterking op al uw gebieden, plus een nieuw gebied\n"
+"  ZONDER versterking (alleen als er een neutraal gebied beschikbaar is).\n"
+"- DB: 1 versterking op al uw gebieden, plus een nieuw gebied\n"
+"  MET 1 versterking (alleen als er een neutraal gebied beschikbaar is).\n"
+"\n"
+"De winnaar is de speler die alle vijandelijke gebieden heeft vernietigd.\n"
+"\n"
+"Opties:\n"
+"- Aantal versterkingen: Aantal versterkingen (0 tot 3).\n"
+"- Bonus van x punt(en) bij vernietiging van vijandelijk gebied.\n"
+"- Straf van x punt(en) bij vernietiging van eigen gebied.\n"
+" "
+
+msgid "Risk-max_players"
+msgstr "Max 5"
+
+msgid "Risk-bouclier"
+msgstr "Aantal versterkingen"
+
+msgid "Risk-miss"
+msgstr "Straf vernietigen eigen gebied"
+
+msgid "Risk-bonus"
+msgstr "Bonus vernietigen vijandelijk gebied"
+
+######## ROBIN DRINK ######
+
+msgid "Robin_Drink-name"
+msgstr "Robin Drinks"
+
+msgid "Description-Robin_Drink"
+msgstr "Laat uw tegenstanders drinken, maar pas op voor wraak!\n"
+"\n"
+"De winnaar is de speler die de minste glazen heeft gedronken.\n"
+"-----\n"
+"Slechts 1 pijl per speler.\n"
+"\n"
+"De winnaar is de speler die de minste glazen heeft gedronken.\n"
+"\n"
+"Een enkel = 1 glas, een dubbel = 2 glazen, een tripel = 3 glazen.\n"
+"Een tegenstander kan willekeurig gekozen worden door het spel\n"
+"of aangewezen worden door de speler.\n"
+"\n"
+"Schot op groen segment: laat een tegenstander drinken (aangeduid via 2e worp).\n"
+"Schot op blauw segment: laat een willekeurige tegenstander drinken.\n"
+"Schot op rood segment of misworp: laat de actieve speler drinken.\n"
+"Schot op enkele bull: laat ALLE tegenstanders drinken.\n"
+"\n"
+"Opties:\n"
+"- Willekeurig: segmenten om speler aan te wijzen zijn willekeurig.\n"
+"- Chaos: segmenten veranderen elke 3 seconden willekeurig.\n"
+" "
+
+msgid "Robin_Drink-max_players"
+msgstr "Max 10"
+
+msgid "Robin_Drink-mode_random"
+msgstr "Willekeurige modus"
+
+msgid "Robin_Drink-chaos"
+msgstr "Chaosmodus"
+
+msgid "robin-opponent"
+msgstr "BAM! #PlayerName# moet drinken\n#drink#"
+
+msgid "robin-targetOpponent"
+msgstr "Zo? Wie moet er drinken?\nAls u mist, jammer dan!"
+
+msgid "robin-player"
+msgstr "Helaas... Jij moet drinken\n#drink#"
+
+msgid "robin-all"
+msgstr "Kom op! Al je tegenstanders drinken\n#drink#"
+
+msgid "robin-pass"
+msgstr "Je had geluk deze keer...\n volgende!"
+
+msgid "robin-glass"
+msgstr "glas"
+
+msgid "robin-glasses"
+msgstr "glazen"
+
+######## ROBIN STRIP ######
+
+msgid "Robin_Strip-name"
+msgstr "Robin's Striptease"
+
+msgid "Description-Robin_Strip"
+msgstr "Kleed uw tegenstanders uit, maar pas op voor wraak!\n"
+"\n"
+"De winnaar is de speler die de minste kledingstukken heeft uitgetrokken.\n"
+"-----\n"
+"1 tot 2 pijlen per speler.\n"
+"\n"
+"De winnaar is de speler die de meeste kledingstukken heeft laten uittrekken bij tegenstanders.\n"
+"\n"
+"Een enkel, dubbel of tripel laat de tegenstander 1 kledingstuk uittrekken.\n"
+"Een tegenstander kan willekeurig gekozen worden door het spel\n"
+"of aangewezen worden door de speler.\n"
+"\n"
+"Schot op:\n"
+"- groen segment: laat 1 tegenstander kleding uittrekken (aangewezen via 2e worp).\n"
+"- blauw segment: laat een willekeurige tegenstander 1 kledingstuk uittrekken.\n"
+"- rood segment of misworp: laat de actieve speler 1 kledingstuk uittrekken.\n"
+"- wit segment: laat tegenstanders weer 1 kledingstuk aantrekken.\n"
+"- SB: laat ALLE tegenstanders 1 kledingstuk uittrekken.\n"
+"\n"
+"Opties:\n"
+"- Willekeurig: segmenten om speler aan te wijzen zijn willekeurig.\n"
+"- Chaos: segmenten veranderen elke 3 seconden willekeurig.\n"
+" "
+
+msgid "Robin_Strip-max_players"
+msgstr "Max 10"
+
+msgid "Robin_Strip-mode_random"
+msgstr "Willekeurige modus"
+
+msgid "Robin_Strip-chaos"
+msgstr "Chaosmodus"
+
+msgid "robin_strip-opponent"
+msgstr "BAM! #PlayerName# moet uitdoen:\n#drink#"
+
+msgid "robin_strip-targetOpponent"
+msgstr "En? Wie gaat er wat uittrekken?\nAls u mist, niemand!"
+
+msgid "robin_strip-player"
+msgstr "Helaas... Jij moet wat uittrekken:\n#drink#"
+
+msgid "robin_strip-all"
+msgstr "Kom op! Al je tegenstanders moeten uittrekken:\n#drink#"
+
+msgid "robin_strip-pass"
+msgstr "Je tegenstanders mogen weer aandoen:\n#drink#, volgende!"
+
+msgid "robin_strip-glass"
+msgstr "kledingstuk"
+
+msgid "robin_strip-glasses"
+msgstr "kledingstukken"
+
+######## ROUND THE CLOCK ######
+
+msgid "Description-Round_the_clock"
+msgstr "Ga de klok rond door de getallen te volgen of door\n"
+"de segmenten te volgen.\n"
+"-----\n"
+"Het doel is om als eerste het bord rond te gaan.\n"
+"Elke treffer verplaatst de klok.\n"
+"\n"
+"Opties:\n"
+"- Dubbel: Alleen dubbels tellen.\n"
+"- Tripel: Alleen tripels tellen.\n"
+"- Nummer: Volgorde is numeriek.\n"
+"- Sprong: Een dubbel verplaatst met 2, een tripel met 3.\n"
+"- Bull: Eindig met de bull.\n"
+"- Tijd: Het segment verandert regelmatig (500 tot 10000 ms).\n"
+" "
+
+msgid "Round_the_clock-Double"
+msgstr "Alleen dubbels tellen"
+
+msgid "Round_the_clock-Triple"
+msgstr "Alleen tripels tellen"
+
+msgid "Round_the_clock-Bull"
+msgstr "Eindigen met de Bull"
+
+msgid "Round_the_clock-Numbers"
+msgstr "Doelen zijn gesorteerd op nummer"
+
+msgid "Round_the_clock-Jump"
+msgstr "De klok gaat sneller met dubbels en tripels"
+
+msgid "Round_the_clock-Time"
+msgstr "Doel verandert regelmatig (in ms)"
+
+
+######## ROUTINE ######
+
+msgid "Description-Routine"
+msgstr "Verbeter uw dartspel door dagelijks te oefenen met\n"
+"de 35 voorgestelde uitdagingen.\n"
+"\n"
+"1: Check-out 32 in 1 pijl - Raak D16.\n"
+"2: Check-out 40 in 3 pijlen - Eindig met een Dubbel.\n"
+"3: Check-out 50 in 3 pijlen - Bull verboden.\n"
+"4: Check-out 60 in 2 pijlen - Eindig met een Dubbel.\n"
+"5: Check-out 80 in 2 pijlen - Eindig met een Dubbel.\n"
+"6: Check-out 120 in 3 pijlen - Eindig met een Dubbel.\n"
+"7: Check-out 110 in 6 pijlen - Eindig met een Dubbel.\n"
+"8: Check-out 121 in 6 pijlen - Eindig met een Dubbel.\n"
+"9: Check-out 180 in 9 pijlen - Eindig met een Dubbel.\n"
+"10: Check-out 201 in 12 pijlen - Eindig met een Dubbel.\n"
+"11: Check-out 301 in 12 pijlen - Eindig met een Dubbel.\n"
+"12: Check-out 401 in 10 pijlen - Eindig met een Dubbel.\n"
+"13: Check-out 501 in 15 pijlen - Eindig met een Dubbel.\n"
+"14: Raak 1 Enkel, 1 Dubbel, 1 Bull in 3 pijlen.\n"
+"15: Raak 2 Dubbele Bulls (DB) in 6 pijlen.\n"
+"16: Raak 3 Bulls in 9 pijlen.\n"
+"-----\n"
+"17: Behaal 10 ptn via bull (SB=1, DB=2) in 10 pijlen.\n"
+"18: Behaal 15 ptn via bull (SB=1, DB=2) in 15 pijlen.\n"
+"19: Raak 3 identieke getallen in 3 pijlen.\n"
+"20: Raak 2 verschillende Dubbels in 3 pijlen.\n"
+"21: Raak D20 en D1 in 6 pijlen.\n"
+"22: Raak achtereenvolgens D20, D19 en D18 in 9 pijlen.\n"
+"23: Raak 3 verschillende Dubbels in 9 pijlen.\n"
+"24: Raak achtereenvolgens D16, D8, D4 en D2 in 12 pijlen.\n"
+"25: Raak D3, D5, D7, D9 en D11 in 15 pijlen.\n"
+"26: Raak 2 verschillende Tripels in 3 pijlen.\n"
+"27: Raak S10, D10 en T10 in 3 pijlen.\n"
+"28: Raak S20, T20 en D20 in 3 pijlen.\n"
+"29: Raak 3 Enkels, 2 Dubbels en 1 Tripel op hetzelfde getal in 6 pijlen.\n"
+"30: Raak 3x 1 getal en 1 bull in 4 pijlen.\n"
+"31: Raak 3x 2 getallen en 1 bull in 7 pijlen.\n"
+"32: Raak 3 verschillende Tripels in 9 pijlen.\n"
+"33: Raak 3x Tripel 20 in 9 pijlen.\n"
+"34: Raak 3x T20, 3x T19 en 3x T18 in 9 pijlen.\n"
+"35: Progressieve finisher (+5 bij succes)\n"
+" "
+
+msgid "Routine-max_retries"
+msgstr "Max pogingen per uitdaging"
+
+msgid "Routine-start_drill"
+msgstr "Keuze van uitdaging"
+
+msgid "Routine-teste"
+msgstr "Slechts 1 uitdaging testen"
+
+msgid "Routine-nb_repetition"
+msgstr "Max aantal herhalingen"
+
+
+
+
+######## SABOTAGE #########
+
+msgid "Description-Sabotage"
+msgstr "Het doel van het spel is om zoveel mogelijk punten te behalen en tegelijkertijd\n"
+"de punten van uw tegenstanders te saboteren.\n"
+"\n"
+"Behaal hiervoor maximale punten met uw 3e pijl (standaard);\n"
+"deze verhoogt uw punten, maar verlaagt ook de punten van uw tegenstanders.\n"
+"\n"
+"De beste score aan het einde van 10 rondes wint het spel.\n"
+"\n"
+"Opties:\n"
+"– Pijlen: de beurtscore wordt door 3 gedeeld en afgetrokken van uw tegenstanders.\n"
+"– Willekeurig: Trekt punten af van een willekeurige speler.\n"
+"-----\n"
+"\n"
+"Het doel van het spel is om zoveel mogelijk punten te behalen en tegelijkertijd\n"
+"de punten van uw tegenstanders te saboteren.\n"
+"\n"
+"Behaal hiervoor maximale punten met uw 3e pijl (standaard);\n"
+"deze verhoogt uw punten, maar verlaagt ook de punten van uw tegenstanders.\n"
+"\n"
+"Druk bij een « missdart » op de knop « nextplayer » om een pijl over te slaan.\n"
+"\n"
+"De beste score aan het einde van 10 rondes wint het spel.\n"
+"\n"
+"Opties:\n"
+"– Pijlen: de beurtscore wordt door 3 gedeeld en afgetrokken van uw tegenstanders.\n"
+"– Willekeurig: Trekt punten af van een willekeurige speler.\n"
+" "
+
+msgid "Sabotage-flch3"
+msgstr "Totaal van beurt /3"
+
+msgid "Sabotage-alea"
+msgstr "Willekeurig"
+
+msgid "Sabotage-simple50"
+msgstr "SB is 50 punten waard"
+
+######## SAMPLE GAME ######
+
+msgid "Description-Sample_game"
+msgstr "Dit voorbeeld is een basis om\n"
+"te leren hoe u uw eigen spellen maakt.\n"
+"Vereist Python-vaardigheden.\n"
+"Bekijk de broncode!"
+
+######## SCRAM CRICKET ######
+
+msgid "Description-Scram_Cricket"
+msgstr "Variatie op klassiek Cricket die in 2 fasen wordt gespeeld.\n"
+"\n"
+"Fase 1: behaal zoveel mogelijk punten terwijl\n"
+"uw tegenstanders alle segmenten sluiten.\n"
+"Fase 2: de rollen worden omgedraaid.\n"
+"\n"
+"Het winnende team is het team met de meeste punten.\n"
+"\n"
+"Wordt uitsluitend met 2 teams gespeeld.\n"
+"\n"
+"-----\n"
+"In de eerste rondes probeert team 1 zoveel mogelijk punten te scoren\n"
+"terwijl team 2 alle segmenten moet sluiten. Wanneer team 2 alle segmenten\n"
+"heeft gesloten, worden de rollen omgedraaid.\n"
+"\n"
+"Opties:\n"
+"- Crazy: De getallen veranderen zodra ze geopend zijn.\n"
+"- Cut Throat: Verhoogt de punten van tegenstanders.\n"
+"- Drink score: Als de score van het team 200 bereikt, moet het\n"
+"  traktéren (alleen in \"Cut Throat\" modus).\n"
+" "
+
+msgid "Scram_Cricket-optioncrazy"
+msgstr "Crazy-modus"
+
+msgid "Scram_Cricket-drinkscore"
+msgstr "Trakteer bij deze score (cut-throat)!"
+
+msgid "Scram_Cricket-teaming"
+msgstr "Teammodus (max 4 spelers)"
+
+msgid "Scram_Cricket-optionteamscore"
+msgstr "Gedeelde teamscores"
+
+msgid "Scram_Cricket-cutthroat"
+msgstr "Cut-throat modus"
+
+msgid "Scram_Cricket-optionscram"
+msgstr "Racemodus"
+
+######## SHANGHAI ######
+
+msgid "Description-Shanghai"
+msgstr "Soort \"Round the Clock\" met de bijzonderheid dat het spel op elk moment\n"
+"gewonnen kan worden door een \"enkel\", \"dubbel\" en \"tripel\" van hetzelfde\n"
+"segment te gooien (volgorde maakt niet uit).\n"
+"-----\n"
+"Het doel is om als eerste speler een enkel, een dubbel en een tripel\n"
+"van hetzelfde segment te raken met 3 pijlen.\n"
+"\n"
+"Het segment verandert elke ronde.\n"
+"\n"
+"Opties:\n"
+"- Master: Gooi, in exacte volgorde, een enkel, dubbel en tripel\n"
+"om te winnen\n"
+"- Punten: Als in de laatste ronde niemand de opdracht heeft voltooid,\n"
+"is de winnaar de speler met de meeste punten.\n"
+" "
+
+msgid "Shanghai-Points"
+msgstr "Punten"
+
+msgid "Shanghai-maitre"
+msgstr "Master"
+
+
+######## SHOOT OUT ######
+
+msgid "Description-Shoot-out"
+msgstr "Een High Score met punt vermenigvuldiger.\n"
+"\n"
+"Slechts één regel: behaal een maximale score.\n"
+"\n"
+"De vermenigvuldiger stijgt elke keer dat u een verlicht segment raakt.\n"
+"Als u een niet-verlicht segment raakt, scoort u geen punten en stijgt de vermenigvuldiger niet.\n"
+"\n"
+"De speler met de hoogste score wint de wedstrijd.\n"
+"-----\n"
+"Een High Score met punt vermenigvuldiger.\n"
+"\n"
+"Slechts één regel: behaal een maximale score.\n"
+"\n"
+"De hoogste score wint het spel.\n"
+"\n"
+"Opties:\n"
+"- Super Shoot-out: Dezelfde regels als klassiek Shoot-out, maar met een\n"
+"secundaire vermenigvuldiger die stijgt bij elk verlicht geraakt segment.\n"
+" Bij een worp op een niet-verlicht segment wordt deze secundaire vermenigvuldiger\n"
+"gereset naar 1 (de hoofdvermenigvuldiger verandert niet).\n"
+"- Segment: Schakelt alleen het exacte geraakte segment uit (Enkel, Dubbel of Tripel)\n"
+" in plaats van de hele sector van het getal.\n"
+" "
+
+msgid "Shoot-out-lives"
+msgstr "Aantal levens"
+
+msgid "Shoot-out-simple50"
+msgstr "Enkele Bull"
+
+msgid "Shoot-out-suddendeath"
+msgstr "Sudden death"
+
+msgid "Shoot-out-multix123"
+msgstr "Multi x1-x2-x3"
+
+msgid "Shoot-out-shoot_out"
+msgstr "Shoot out"
+
+msgid "Shoot-out-super_shoot_out"
+msgstr "Super shoot out"
+
+msgid "Shoot-out-segment"
+msgstr "Segment"
+
+
+######## SIMON ######
+
+msgid "Description-Simon"
+msgstr "Speel de volgorde in de juiste volgorde na.\n"
+"\n"
+"Het spel toont u een reeks kleuren die u moet onthouden\n"
+"en nadoen.\n"
+"\n"
+"Elke ronde wordt er een kleur aan de reeks toegevoegd.\n"
+"\n"
+"De winnaar is degene die de langste reeks nabootst.\n"
+"\n"
+"Het aantal pijlen hangt af van de na te botsen reeks.\n"
+"\n"
+"-----\n"
+"De winnaar is de speler die de langste reeks na-aapt.\n"
+"\n"
+"Opties:\n"
+"- Aantal rondes: maximaal aantal rondes.\n"
+"- Aantal bonuspijlen: aantal toegestane fouten\n"
+"per ronde.\n"
+" "
+
+msgid "Simon-nb_bonus_darts"
+msgstr "Aantal bonuspijlen"
+
+msgid "Simon-nb_segment"
+msgstr "Aantal segmenten (1-5)"
+
+######## SLIDER ######
+
+msgid "Description-Slider"
+msgstr "Het doel van het spel is om als eerste de 20 (of bull) te bereiken.\n"
+"\n"
+"U begint standaard op getal 10 en gaat naar het hogere getal\n"
+"wanneer u dit raakt, enzovoort.\n"
+"\n"
+"Als u het getal mist met uw 3 pijlen, zakt u in uw volgende beurt\n"
+"naar het lagere getal.\n"
+"\n"
+"De winnaar is de speler met de meeste punten aan het einde van het spel.\n"
+"-----\n"
+"In uw beurt moet u het gevraagde getal raken.\n"
+"- Als u raakt, gaat u naar het hogere getal.\n"
+"- Als u mist met al uw 3 pijlen, zakt u in uw volgende beurt naar\n"
+"  het lagere getal.\n"
+"\n"
+"Om te winnen moet u getal 20 (of bull afhankelijk van optie) raken.\n"
+"\n"
+"Opties:\n"
+"- Max aantal rondes: Bepaalt het aantal rondes.\n"
+"- Start: Bepaalt het startgetal.\n"
+"- Bull: Eindigen met de bull.\n"
+"- Master: Missen laat u direct zakken naar het lagere getal.\n"
+" "
+
+msgid "Slider-start"
+msgstr "Startgetal"
+
+msgid "Slider-master"
+msgstr "Zakt een getal bij misworp"
+
+msgid "Slider-bull"
+msgstr "Eindigen met de Bull"
+
+msgid "Slider-double"
+msgstr "Speel dubbels"
+
+msgid "Slider-triple"
+msgstr "Speel tripels"
+
+msgid "Slider-jump"
+msgstr "Slaat getallen over"
+
+######## SNOOKER ######
+
+msgid "Description-Snooker"
+msgstr "Dit is een conversie van het snookerspel naar darts.\n"
+"\n"
+"Raak een rode bal en vervolgens een gekleurde bal.\n"
+"\n"
+"Als u niet de juiste bal raakt, begaat u een fout;\n"
+"uw tegenstanders krijgen 4 bonuspunten.\n"
+"\n"
+"De winnaar is de speler met de meeste punten aan het einde van het spel.\n"
+"-----\n"
+"Raak een rode bal en vervolgens een gekleurde bal.\n"
+"\n"
+"Als u een bal mist (rood of kleur), begaat u een fout\n"
+"en verliest u de beurt. Elke tegenstander krijgt 4 bonuspunten.\n"
+"\n"
+"Zodra alle rode ballen gepot zijn, moet u de laagste\n"
+"gekleurde bal raken om deze uit het spel te spelen, enzovoort.\n"
+"\n"
+"- Geel = 2 ptn, Groen = 3 ptn, Bruin = 4 ptn, Blauw = 5 ptn,\n"
+"- Roze = 6 ptn, Zwart = 7 ptn.\n"
+"\n"
+"Opties:\n"
+"- Aantal rondes: maximaal aantal rondes.\n"
+"- Rode ballen: Aantal rode ballen (max 15).\n"
+"- Willekeurig rood: De rode ballen worden willekeurig geplaatst.\n"
+"- Gedeelde tafel: speelt met één enkele tafel.\n"
+" "
+
+msgid "Snooker-max_players"
+msgstr "Max 4"
+
+msgid "Snooker-rouge"
+msgstr "Aantal rode ballen"
+
+msgid "Snooker-penalite"
+msgstr "Fout - 4 bonuspunten voor de tegenstander(s)"
+
+msgid "Snooker-table1"
+msgstr "Gedeelde tafel"
+
+msgid "Snooker-break"
+msgstr "U heeft uw tegenstander 'GESNOOKERD'"
+
+msgid "Snooker-alea"
+msgstr "Rode bal willekeurig geplaatst"
+
+msgid "Snooker-billerouge"
+msgstr "Raak een rode bal"
+
+msgid "Snooker-couleur"
+msgstr "Raak een gekleurde bal"
+
+msgid "Snooker-jaune"
+msgstr "Raak de gele bal"
+
+msgid "Snooker-verte"
+msgstr "Raak de groene bal"
+
+msgid "Snooker-brun"
+msgstr "Raak de bruine bal"
+
+msgid "Snooker-bleu"
+msgstr "Raak de blauwe bal"
+
+msgid "Snooker-rose"
+msgstr "Raak de roze bal"
+
+msgid "Snooker-noir"
+msgstr "Raak de zwarte bal"
+
+
+######## SWITCH_OFF #########
+msgid "Description-Switch"
+msgstr "Het doel van het spel is om alle leds uit te schakelen door het geassocieerde getal te raken,\n"
+"maar pas op dat u ze niet opnieuw inschakelt door ze nogmaals te raken.\n"
+"\n"
+"Schakel alle leds uit om te winnen, anders wint de hoogste score na 12 rondes.\n"
+"\n"
+"Opties:\n"
+"– Aantal rondes: Bepaalt het aantal rondes.\n"
+"– Numeriek: Toont in numerieke volgorde.\n"
+"-----\n"
+"- Als u de ENKEL van een getal raakt,\n"
+"  schakelt u dat getal om.\n"
+"- Als u de DUBBEL van een getal raakt,\n"
+"  schakelt u dat getal en het volgende om.\n"
+"- Als u de TRIPEL van een getal raakt,\n"
+"  schakelt u dat getal, het volgende én het vorige om.\n"
+"\n"
+"- Als u de SB raakt en deze uit is,\n"
+"  schakelt u SB in.\n"
+"- Als u de SB raakt en deze aan is,\n"
+"  schakelt u DB in.\n"
+"- Als u de SB raakt en zowel SB als DB aan zijn,\n"
+"  schakelt u SB uit.\n"
+"- Als u de DB raakt en zowel DB als SB uit zijn,\n"
+"  schakelt u DB en SB in.\n"
+"- Als u de DB raakt en deze aan is terwijl SB uit is,\n"
+"  schakelt u SB in.\n"
+"- Als u de DB raakt en zowel DB als SB aan zijn,\n"
+"  schakelt u DB uit.\n"
+" "
+
+msgid "Switch-numerique"
+msgstr "Numerieke volgorde"
+
+
+
+
+
+
+
+
+######## TARGET #########
+
+msgid "Description-Target"
+msgstr "Het doel van het spel is om de gevraagde score te behalen in zo min mogelijk pijlen.\n"
+"\n"
+"Alle scores (van 30 tot 60) kunnen in 1 pijl worden behaald.\n"
+"\n"
+"- Als u de gevraagde score behaalt in 1 pijl, krijgt u 3 punten.\n"
+"- Als u de gevraagde score behaalt in 2 pijlen, krijgt u 2 punten.\n"
+"- Als u de gevraagde score behaalt in 3 pijlen, krijgt u 1 punt.\n"
+"\n"
+"De eerste die 10 punten (standaard) of meer behaalt, wint het spel.\n"
+"\n"
+"Opties:\n"
+"– Score: Bepaalt het aantal punten om te winnen.\n"
+"\n"
+"-----\n"
+"\n"
+"Het doel van het spel is om de gevraagde score te behalen in zo min mogelijk pijlen.\n"
+"\n"
+"Alle scores (van 30 tot 60) kunnen in 1 pijl worden behaald.\n"
+"\n"
+"- Als u de gevraagde score behaalt in 1 pijl, krijgt u 3 punten.\n"
+"- Als u de gevraagde score behaalt in 2 pijlen, krijgt u 2 punten.\n"
+"- Als u de gevraagde score behaalt in 3 pijlen, krijgt u 1 punt.\n"
+"\n"
+"De eerste die 10 punten (standaard) of meer behaalt, wint het spel.\n"
+"\n"
+"Opties:\n"
+"– Score: Bepaalt het aantal punten om te winnen.\n"
+" "
+
+msgid "Target-score"
+msgstr "Aantal punten om te winnen"
+
+msgid "Target-simple50"
+msgstr "SB is 50 punten waard"
+
+msgid "Target-winscore"
+msgstr "Punten om te winnen"
+
+######## TENNIS ######
+
+msgid "Description-Tennis"
+msgstr "Elke speler serveert in zijn eigen beurt.\n"
+"\n"
+"Win de game door uw eigen segment te raken,\n"
+"anders scoort uw tegenstander de punten.\n"
+"\n"
+"Opties:\n"
+"- Aantal sets: 1 tot 3 gewonnen sets.\n"
+"- Zijde: Net in verticale positie.\n"
+"-----\n"
+"\n"
+"Kies bij uw eerste worp uw favoriete segment.\n"
+"- Als u de DUBBEL raakt, wint u de game direct.\n"
+"- Als u de TRIPEL raakt, scoort u 3 punten.\n"
+"- Als u de ENKEL raakt, scoort u 1 punt.\n"
+"\n"
+"Na uw eerste worp raakt u uw segment om punten te scoren.\n"
+"- Een ENKEL is 1 punt waard.\n"
+"- Een DUBBEL is 2 punten waard.\n"
+"- Een TRIPEL is 3 punten waard.\n"
+"\n"
+"Tijdens een TIEBREAK krijgt u slechts 1 punt per winnend schot,\n"
+"zelfs bij een Dubbel of Tripel.\n"
+"\n"
+"U heeft een onbeperkt aantal pijlen om de game te beëindigen.\n"
+"\n"
+"De winnende speler is degene die de meeste sets heeft gewonnen.\n"
+" "
+
+msgid "Tennis-max_players"
+msgstr "2 of 4 (Teams)"
+
+msgid "Tennis-service"
+msgstr "Aan de service"
+
+msgid "Tennis-set"
+msgstr "Aantal gewonnen sets"
+
+msgid "Tennis-cote"
+msgstr "Net verticaal"
+
+msgid "Tennis-set1"
+msgstr "1 gewonnen set"
+
+msgid "Tennis-set3"
+msgstr "2 gewonnen sets"
+
+msgid "Tennis-set5"
+msgstr "3 gewonnen sets"
+
+msgid "Tennis-retour"
+msgstr "Retour"
+
+######## TOWER ######
+
+
+msgid "Description-Tower"
+msgstr "Red uw prinses!\n"
+"\n"
+"Het doel van het spel is om een prinses te bevrijden die opgesloten zit in een toren\n"
+"die bewaakt wordt door een draak.\n"
+"U moet uw moed bewijzen door deze 3 opdrachten te voltooien tijdens uw\n"
+"reis:\n"
+"- Een draak verslaan.\n"
+"- Het boeket bloemen meebrengen.\n"
+"- Haar verloren diadeem terugvinden op een bepaalde verdieping.\n"
+"\n"
+"Deze 3 opdrachten kunnen in elke volgorde en op elk moment worden uitgevoerd.\n"
+"\n"
+"De overwinning gaat naar de ridder die zijn 3 opdrachten heeft volbracht en zich bovenaan de toren bevindt.\n"
+"-----\n"
+"De overwinning gaat naar de ridder die zijn 3 opdrachten heeft volbracht en zich bovenaan de toren bevindt.\n"
+"\n"
+"Om de toren te beklimmen, raakt u het aangegeven segment onderaan uw toren:\n"
+"enkel=1, dubbel=2, tripel=3.\n"
+"\n"
+"Om de draak te bestrijden, raakt u de 2 aangegeven segmenten in dezelfde beurt.\n"
+"Om het boeket bloemen te verzamelen, raakt u het aangegeven segment 2 keer in dezelfde beurt.\n"
+"Om de diadeem te vinden, raakt u een willekeurige dubbel of tripel op de aangegeven verdieping.\n"
+"Als u een SB gooit, zakken alle tegenstanders één verdieping.\n"
+"Als u een DB gooit, annuleert u een opdracht (bloemen, daarna draak) bij uw tegenstanders.\n"
+"\n"
+"Als u een randworp/misworp maakt: de speler zakt één verdieping.\n"
+"\n"
+"Optie:\n"
+"- Dragon hard: Er zijn 3 treffers nodig in plaats van 2 om de draak te verslaan.\n"
+" "
+
+msgid "Tower-max_players"
+msgstr "Max 6"
+
+msgid "Tower-dragon_hard"
+msgstr "Draak moeilijk"
+
+#########TREASURE HUNT #########
+
+msgid "Description-Treasure"
+msgstr "Haal uw detectors tevoorschijn en ga op zoek naar fantastische schatten,\n"
+"maar pas op voor vervloekingen.\n"
+"\n"
+"De hoogste score wint het spel.\n"
+"-----\n"
+"15 schatten liggen aan het begin van elke beurt willekeurig op het bord verborgen.\n"
+"\n"
+"Raak een getal om een van deze schatten te vinden.\n"
+"\n"
+"Kisten X2, X3, X4, X5, X10: Vermenigvuldigt de waarde van het geraakte segment met X.\n"
+"De Diamant: De waarde van het segment is gelijk aan 1000 punten.\n"
+"De Goudstaaf: Verdubbelt uw score.\n"
+"Gele Schedel: De waarde van het segment is gelijk aan -100 punten.\n"
+"Paarse Schedel: De waarde van het segment is gelijk aan -300 punten.\n"
+"Rode Schedel: De waarde van het segment is gelijk aan -500 punten.\n"
+"Blauwe Schedel: U verliest uw huidige beurt.\n"
+"De Granaat: De waarde van het segment is gelijk aan -1000 punten.\n"
+"Het Mes: U steelt 300 punten van een van uw tegenstanders.\n"
+"Het Zwaard: U steelt 600 punten van een van uw tegenstanders.\n"
+"Het Schild: U ondervindt gedurende 1 beurt geen negatieve effecten.\n"
+"\n"
+"Opties:\n"
+"- Aantal rondes: Maximaal aantal rondes.\n"
+"- Enkele Bull: SB is 50 punten waard.\n"
+" "
+
+msgid "Treasure-simple50"
+msgstr "Enkele Bull"
+
+msgid "Treasure-protect"
+msgstr "Je bent beschermd dankzij je schild"
+
+msgid "Treasure-protect2"
+msgstr "Je tegenstander is beschermd dankzij zijn schild"
+
+######## UP DOWN COUNT UP ######
+
+msgid "Description-Up_Down_Count_Up"
+msgstr "In dit spel zijn de rondes afwisselend positief en negatief.\n"
+"\n"
+"De hoogste score wint de wedstrijd.\n"
+"-----\n"
+"In een positieve ronde worden behaalde punten opgeteld.\n"
+"In een negatieve ronde worden behaalde punten afgetrokken,\n"
+" en een misworp levert u een straf op van 50 punten.\n"
+"\n"
+"Opties:\n"
+"- Straf: Bepaalt de waarde van de misworpstraf.\n"
+"- Negatieve start: Begint het spel met een negatieve ronde.\n"
+" "
+
+msgid "Up_Down_Count_Up-penalty"
+msgstr "Straf"
+
+msgid "Up_Down_Count_Up-start_negative"
+msgstr "Negatieve start"
+
+msgid "UDCP-tourpos"
+msgstr "Positieve ronde"
+
+msgid "UDCP-tourneg"
+msgstr "Negatieve ronde"
+
+######## VOLEUR ######
+
+msgid "Voleur-name"
+msgstr "De Dief"
+
+msgid "Description-Voleur"
+msgstr "Steel in dit spel segmenten van uw tegenstander\n"
+"zodat hij deze niet meer kan spelen.\n"
+"\n"
+"De hoogste score wint het spel.\n"
+"-----\n"
+"Alleen in de eerste beurt van de speler:\n"
+"- Deze verliest automatisch en willekeurig 1 tot 3 segmenten.\n"
+"\n"
+"Vervolgens:\n"
+"- De actieve speler steelt de segmenten van de volgende speler.\n"
+"- De laatste speler steelt de segmenten van de eerste speler.\n"
+"\n"
+"- Als u een verlicht segment raakt, krijgt u de punten daarvan en\n"
+"  wist u het voor de volgende speler (behalve de Bull).\n"
+"- Als u een gedoofd segment raakt, scoort u geen punten maar\n"
+"  wist u het wel voor de volgende speler.\n"
+"\n"
+"Opties:\n"
+"- Aantal rondes: Maximaal aantal rondes.\n"
+"- Enkele bull: SB is 50 waard.\n"
+" "
+
+msgid "Voleur-simple50"
+msgstr "Enkele bull is 50 ptn waard"
+
+
+######## 321 ZLIP ######
+
+msgid "Description-321_Zlip"
+msgstr "Een soort omgekeerd \"Ho One\" met de bijzonderheid dat u\n"
+"de score van uw tegenstander op 0 kunt zetten door exact dezelfde\n"
+"score te behalen als hij (u maakt dan een «Zlip»).\n"
+"\n"
+"Behaal exact 321 punten om te winnen.\n"
+"-----\n"
+"Wanneer u exact de score van een tegenstander bereikt, keert diens\n"
+"score terug naar 0. U maakt een «Zlip».\n"
+"\n"
+"Als u boven de 321 uitkomt, wordt het overschot van 321 afgetrokken. U kunt\n"
+"op deze manier ook een «Zlip» maken, wat erg vermakelijk is.\n"
+"\n"
+"Wanneer u 321 bereikt in modus:\n"
+"\"Klassiek\": U wint.\n"
+"\"Master\" zonder een tegenstander te Zlippen: uw score keert terug naar 0.\n"
+"\"Master\" met ten minste één Zlip: u wint.\n"
+"\"Advanced\" zonder een tegenstander te Zlippen: uw score keert terug naar 0 + 1 Zlip.\n"
+"\"Advanced\" nadat u een tegenstander heeft Gezlipt: u wint.\n"
+" "
+
+msgid "321_Zlip-advanced"
+msgstr "Advanced"
+
+###############################################
+##################           ##################
+#################  A CLASSER  #################
+##################           ##################
+###############################################
+
+msgid "GiveOut"
+msgstr "Uitgedeeld"
+
+msgid "Reached Score"
+msgstr "Bereikte score"
+
+msgid "Hits"
+msgstr "Treffers"
+
+msgid "Missed !"
+msgstr "Gemist!"
+
+msgid "Missed"
+msgstr "Gemist"
+
+msgid "Exit"
+msgstr "Afsluiten"
+
+msgid "Backup"
+msgstr "Vorige beurt"
+
+msgid "Next Player"
+msgstr "Volgende Speler"
+
+msgid "Backup Turn !"
+msgstr "Terug naar de vorige beurt!"
+
+msgid "Not available !"
+msgstr "Functie niet beschikbaar!"
+
+msgid "Bounce out !"
+msgstr "Pijl geannuleerd!"
+
+msgid "Please wait"
+msgstr "Even geduld a.u.b."
+
+msgid "Username"
+msgstr "Gebruikersnaam"
+
+msgid "Password"
+msgstr "Wachtwoord"
+
+msgid "animations-menu"
+msgstr "Aanpassen van led-animaties"
+
+msgid "animations"
+msgstr "Led-animaties"
+
+msgid "menu-event"
+msgstr "Instellen van gebeurtenis"
+
+msgid "setup"
+msgstr "Instellingen"
+
+msgid "parameters"
+msgstr "Parameters"
+
+msgid "sets-count"
+msgstr "Aantal gewonnen sets om te winnen"
+
+msgid "setup-pinsleds"
+msgstr "Led-instellingen"
+
+msgid "setup-leds"
+msgstr "Led-toewijzing"
+
+msgid "setup-buttons"
+msgstr "Knoppen- en toys-instellingen"
+
+msgid "setup-couleurs-segments"
+msgstr "Instellingen originele segmentkleur"
+
+msgid "setup-cam"
+msgstr "Camerainstellingen"
+
+msgid "test-target"
+msgstr "Bordtest"
+
+msgid "test-toys"
+msgstr "Toystest"
+
+msgid "test-target-msg"
+msgstr "Druk op Esc of wacht 10 seconden om af te sluiten."
+
+msgid "test-buttons"
+msgstr "Knoppentest"
+
+msgid "test-button-msg"
+msgstr "Druk op Esc, 3 knoppen tegelijk of wacht 10 seconden om af te sluiten"
+
+msgid "Support menu"
+msgstr "Supportmenu"
+
+msgid "soundvolume"
+msgstr "Volume"
+
+msgid "light_target"
+msgstr "Alle segmenten verlichten met originele kleuren"
+
+msgid "light_strip"
+msgstr "Leds verlichten in kleur van de speler"
+
+msgid "nextplayer_sound_duration"
+msgstr "Duur van geluiden en muziek"
+
+msgid "waitevent_time"
+msgstr "Wachttijd voor het activeren van 'Wachten' gebeurtenis"
+
+msgid "customization"
+msgstr "Spelaanpassing"
+
+msgid "bypass-stats"
+msgstr "Geen statistieken tonen aan einde van het spel"
+
+msgid "endgamestats"
+msgstr "Scores aan einde van het spel"
+
+msgid "keeporder"
+msgstr "Spelersvolgorde behouden bij herstarten"
+
+msgid "statistics"
+msgstr "Statistieken"
+
+msgid "netgamecreator"
+msgstr "Spelmaker voor online spellen"
+
+msgid "creator"
+msgstr "Maker"
+
+msgid "game-type"
+msgstr "Spel"
+
+msgid "game-name"
+msgstr "Match"
+
+msgid "pnjtime"
+msgstr "Speeltijd van NPC/Computer (in ms - max 10000)"
+
+msgid "solo"
+msgstr "Tijd tussen pijlen. 0 om druk op VOLGENDE SPELER te verplichten aan einde van beurt"
+
+msgid "play_firstname"
+msgstr "Kondigt speler aan wanneer hij aan de beurt is"
+
+msgid "print_dartstroke"
+msgstr "Geraakt segment op het scherm tonen"
+
+msgid "nextplayer"
+msgstr "Volgende speler"
+
+msgid "newplayer"
+msgstr "Nieuwe speler"
+
+msgid "gamebutton"
+msgstr "Spel"
+
+msgid "volume_up"
+msgstr "Volume +"
+
+msgid "volume_down"
+msgstr "Volume -"
+
+msgid "volume_mute"
+msgstr "Demping"
+
+msgid "cptplayer"
+msgstr "?? cptplayer ??"
+
+msgid "notattributed"
+msgstr "Niet toegewezen"
+
+msgid "menu-restart"
+msgstr "Spel herstarten"
+
+msgid "restart"
+msgstr "Opnieuw spelen"
+
+msgid "timeout"
+msgstr "Time-out overschreden"
+
+msgid "miscellaneous"
+msgstr "Diversen (Favorieten, instellingen,...)"
+
+msgid "realy-stop"
+msgstr "Weet u zeker dat u wilt afsluiten?"
+
+msgid "restarting"
+msgstr "Spel wordt herstart"
+
+msgid "news"
+msgstr "Nieuws"
+
+msgid "target-simple1"
+msgstr "Enkel 1,4,6,..."
+
+msgid "target-simple2"
+msgstr "Enkel 20,18,13,..."
+
+msgid "target-double1"
+msgstr "Dubbel 1,4,6,..."
+
+msgid "target-double2"
+msgstr "Dubbel 20,18,13,..."
+
+msgid "target-triple1"
+msgstr "Tripel 1,4,6,..."
+
+msgid "target-triple2"
+msgstr "Tripel 20,18,13,..."
+
+msgid "target-sb"
+msgstr "Enkele bull"
+
+msgid "target-db"
+msgstr "Dubbele bull"
+
+
+######## Hangman ######
+
+msgid "Description-Hangman"
+msgstr ""
+"GALGJE\n"
+"\n"
+"\n"
+"Vind het woord!\n"
+"\n"
+"Lukt het u om de juiste letters te raken?\n"
+"\n"
+"\n"
+"Uitsluitend 1 speler.\n"
+"\n"
+"-----\n"
+"Vind het woord!\n"
+"\n"
+"Vind het voorgestelde woord door de juiste segmenten te raken.\n"
+"Trainingsspel, behaal de beste score!\n"
+"\n"
+"Woordlengte:\n"
+"- 6 = Alleen 6 letters.\n"
+"- 7 = Alleen 7 letters.\n"
+"- 8 = Alleen 8 letters.\n"
+"- 9 = 6, 7 of 8 letters.\n"
+"\n"
+"Master-optie: de galg wordt niet gereset na elk woord.\n"
+"\n"
+" "
+msgid "Hangman-master"
+msgstr "Master"
+
+msgid "Hangman-word_length"
+msgstr "Woordlengte"
+
+######## YAHTZYDARTS ######
+
+msgid "Yahtzydarts-name"
+msgstr "Yahtzydarts"
+
+msgid "Yahtzydarts-video"
+msgstr "Video"
+
+msgid "Yahtzydarts-wrong"
+msgstr "Selecteer een knipperend segment"
+
+msgid "Description-Yahtzydarts"
+msgstr "Omzetting van het spel Yahtzee naar Yahtzydarts.\n"
+"Het spel is opgedeeld in twee delen zoals bij klassiek Yahtzee:\n"
+"\n"
+"Bovenste deel: u moet de aangewezen getallen raken om\n"
+"punten te scoren. U krijgt een extra bonus als uw punten\n"
+"gelijk zijn aan of hoger zijn dan het vereiste totaal in het Bonusvak.\n" 
+"\n"
+"Onderste deel: u moet verschillende combinaties maken zoals\n"
+"Three of a Kind, Carré of anders om punten te scoren.\n"
+"-----\n"
+"U heeft 2 tot 5 pijlen om uw combinatie te maken, afhankelijk van het\n"
+"segment dat u raakt:\n"
+"\n"
+"- Als u een enkel raakt, krijgt u 1 dobbelsteen van het geraakte getal.\n"
+"- Als u een dubbel raakt, krijgt u 2 dobbelstenen van het geraakte getal.\n"
+"- Als u een tripel raakt, krijgt u 3 dobbelstenen van het geraakte getal.\n"
+"\n"
+"OPMERKING: als u al 3 dobbelstenen heeft en u raakt een tripel, krijgt u\n"
+"slechts 2 dobbelstenen daarvan, aangezien er maximaal 5 dobbelstenen zijn.\n"
+"\n"
+"Als u de gevraagde getallen mist, krijgt u een dobbelsteen met waarde 0\n"
+"(zelfs als u een dubbel of tripel raakt). Hoewel dit een misworp is,\n"
+"kunt u deze toch gebruiken om een combinatie te maken.\n"
+"\n"
+"Om uw combinatie te valideren, drukt u handmatig op een van de knipperende\n"
+"segmenten (of voor de waaghalzen: richt erop!)\n"
+"\n" 
+"Opties:\n"
+"- Video's: Toont wel of geen video's."
+
+msgid "exhibition"
+msgstr "Tentoonstellingsmodus"
+
+msgid "exhibition-sub"
+msgstr "Hoofdmenuknoppen zichtbaar in tentoonstellingsmodus"
+
+msgid "config-skip"
+msgstr "Overslaan"
+
+msgid "deposit-title"
+msgstr "Nieuwe configuratie geplaatst"
+
+msgid "deposit-sub"
+msgstr "Verschillende waarden ten opzichte van huidige configuratie, per categorie"
+
+msgid "deposit-apply"
+msgstr "Deze waarden bijwerken"
+
+msgid "deposit-drop"
+msgstr "Geplaatst bestand verwijderen"
+
+msgid "deposit-SectionGlobals"
+msgstr "Algemene instellingen"
+
+msgid "deposit-SectionAdvanced"
+msgstr "Geavanceerde instellingen"
+
+msgid "deposit-SectionKeys"
+msgstr "Bordsegmenten"
+
+msgid "deposit-Raspberry"
+msgstr "Knoppen van uitbreidingskaart"
+
+msgid "deposit-Raspberry_Leds"
+msgstr "LED"
+
+msgid "deposit-Raspberry_BoardPinsIns"
+msgstr "Ingangspinnen van het bord"
+
+msgid "deposit-Raspberry_BoardPinsOuts"
+msgstr "Uitgangspinnen van het bord"
+
+msgid "deposit-LEDTarget"
+msgstr "Bord-LED's"
+
+msgid "deposit-Camera"
+msgstr "Webcam"
+
+msgid "deposit-Gallery"
+msgstr "Galerij"
+
+msgid "deposit-Events"
+msgstr "Lichtgebeurtenissen"
+
+msgid "deposit-Favorites"
+msgstr "Favorieten"
+
+msgid "deposit-Server"
+msgstr "Netwerkspelserver"
+
+msgid "vk-delete"
+msgstr "Wissen"
+
+msgid "vk-ok"
+msgstr "Bevestigen"
+
+msgid "vk-cancel"
+msgstr "Annuleren"
+
+msgid "favorite"
+msgstr "Favoriet"
+
+msgid "favorite-empty"
+msgstr "leeg"
+
+msgid "favorite-save"
+msgstr "Opslaan als favoriet"
+
+msgid "favorite-save-sub"
+msgstr "Kies het nummer (een al opgeslagen favoriet wordt pas na bevestiging vervangen)"
+
+msgid "favorite-players"
+msgstr "Spelers van de favoriet"
+
+msgid "favorite-players-sub"
+msgstr "Met welke spelers starten?"
+
+msgid "favorite-choose"
+msgstr "Kiezen uit de spelerslijst"
+
+msgid "favorite-generic"
+msgstr "Speler 1, Speler 2…"
+
+msgid "favorite-last"
+msgstr "Laatst gekozen spelers"
+
+msgid "favorite-player"
+msgstr "Speler"
+
+msgid "favorite-saved"
+msgstr "Favoriet {number} opgeslagen"
+
+msgid "favorite-not-saved"
+msgstr "Favoriet kon niet worden opgeslagen"
+
+msgid "favorite-too-many"
+msgstr "Overtollige spelers worden verwijderd. Doorgaan?"
+
+msgid "favorite-too-few"
+msgstr "Er ontbreken spelers. Doorgaan?"
+
+msgid "favorite-define-options"
+msgstr "opties instellen?"
+
+msgid "favorite-edit-options"
+msgstr "Opties bewerken"
+
+msgid "favorite-remove"
+msgstr "Verwijderen uit favorieten"
+
+msgid "favorite-place-button"
+msgstr "Ook op een knop in het hoofdmenu plaatsen?"
+
+msgid "favorite-ask"
+msgstr "Kiezen bij opstarten"
+
+msgid "favorite-numbered"
+msgstr "Ook opslaan als genummerde favoriet?"
+
+msgid "favorite-numbered-sub"
+msgstr "Favoriet 1 t/m 9: verschijnt alleen in het hoofdmenu als het menubestand er een knop voor heeft (favorite:fav1…)"
+
+msgid "favorite-options-mark"
+msgstr "Opt."
+
+msgid "favorite-options-legend"
+msgstr "Opt.: ingestelde opties, zonder optiesscherm"
+
+msgid "vk-shift"
+msgstr "Shift"
+
+msgid "vk-space"
+msgstr "Spatie"
+
+msgid "nextplayer_music"
+msgstr "Muziek bij begin van elke beurt"
+
+msgid "idle_light"
+msgstr "Verlichting buiten spel (zonder animaties)"
+
+msgid "idle_strip_color"
+msgstr "Strip buiten spel"
+
+msgid "idle_target_color"
+msgstr "Bord buiten spel"
+
+msgid "idle-off"
+msgstr "Uit"
+
+msgid "idle-origin"
+msgstr "Originele kleuren"
+
+msgid "idle-off-target"
+msgstr "Uitgeschakeld"
+
+msgid "raspy2dmd"
+msgstr "DMD-display (Raspy2DMD)"
+
+msgid "raspy2dmd-scan"
+msgstr "Scan om alle instellingen te openen op uw telefoon"
+
+msgid "raspy2dmd-test-message"
+msgstr "Testbericht tonen"
+
+msgid "raspy2dmd-hello"
+msgstr "Hallo van RaspyDarts!"
+
+msgid "raspy2dmd-test-pattern"
+msgstr "Testpatroon Pico"
+
+msgid "raspy2dmd-clock"
+msgstr "Kloksymbool tonen"
+
+msgid "raspy2dmd-demo"
+msgstr "Demo starten"
+
+msgid "raspy2dmd-sent"
+msgstr "Verzonden naar display"
+
+msgid "raspy2dmd-install-question"
+msgstr "Het DMD-display Raspy2DMD is niet geïnstalleerd. Nu installeren? (Internet, 15 tot 45 minuten, het spel blijft bruikbaar)"
+
+msgid "raspy2dmd-no-internet"
+msgstr "Geen internettoegang: installatie is onmogelijk"
+
+msgid "raspy2dmd-install-started"
+msgstr "Installatie gestart: volg deze in dit menu"
+
+msgid "raspy2dmd-install-failed"
+msgstr "Installatie kon niet worden gestart"
+
+msgid "raspy2dmd-installing"
+msgstr "Installatie van het display bezig (15 tot 45 minuten)"
+
+msgid "raspy2dmd-not-running"
+msgstr "Het display is niet gestart"
+
+msgid "raspy2dmd-start"
+msgstr "Display starten"
+
+msgid "raspy2dmd-starting"
+msgstr "Display starten…"
+
+msgid "raspy2dmd-started"
+msgstr "Display gestart"
+
+msgid "raspy2dmd-start-failed"
+msgstr "Display is niet gestart (logs in /Medias/Logs)"
+
+msgid "favorite-options-title"
+msgstr "Opties van favoriet"
+
+msgid "favorite-add-game"
+msgstr "Toevoegen aan favorieten"
+
+msgid "favorite-add-options"
+msgstr "Nieuwe favoriet met opties"
+
+msgid "favorite-add-plain"
+msgstr "Nieuwe favoriet zonder opties"
+
+msgid "favorite-numbered-remove"
+msgstr "Deze favoriet verwijderen"
+
+msgid "favorite-removed"
+msgstr "Favoriet {number} verwijderd"
+
+msgid "favorite-replace"
+msgstr "Favoriet vervangen"
+
+msgid "favorite-no-options"
+msgstr "Zonder opties: deze worden bij elke start gekozen"
+
+msgid "favorite-with-options"
+msgstr "met opties"
+
+msgid "favorite-without-options"
+msgstr "zonder opties"
+
+msgid "favorite-to-button"
+msgstr "Plaatsen op een knop in het hoofdmenu"
+
+msgid "favorite-exists"
+msgstr "Deze favoriet bestaat al"
+
+msgid "favorite-pick-sub"
+msgstr "Favoriete spelers en namenbank"
+
+msgid "favorite-count"
+msgstr "Aantal spelers van de favoriet"
+
+msgid "favorite-edit-players"
+msgstr "Spelers bewerken"
+
+msgid "player-exists"
+msgstr "Deze naam staat al in de lijst"
+
+msgid "edit-screens"
+msgstr "Schermen bewerken"
+
+msgid "editor-title"
+msgstr "Scherm bewerken"
+
+msgid "editor-screen-main"
+msgstr "Hoofdscherm"
+
+msgid "editor-screen-miscellaneous"
+msgstr "Parameters"
+
+msgid "editor-screen-settings"
+msgstr "Instellingen"
+
+msgid "editor-help-select"
+msgstr "Pijlen: kiezen · Bevestigen: knopacties · Muis: klikken, knop of handgrepen slepen · Terug of Menu: toevoegen, opslaan, afsluiten"
+
+msgid "editor-help-move"
+msgstr "Pijlen: verplaatsen (stap {step}) · + / - : stap · Bevestigen of Terug: voltooien"
+
+msgid "editor-help-resize"
+msgstr "Pijlen: handgreep verplaatsen (stap {step}) · Bevestigen: volgende handgreep · + / - : stap · Terug: voltooien"
+
+msgid "editor-move"
+msgstr "Verplaatsen"
+
+msgid "editor-resize"
+msgstr "Formaat wijzigen"
+
+msgid "editor-delete"
+msgstr "Verwijderen"
+
+msgid "editor-delete-confirm"
+msgstr "Deze knop verwijderen?"
+
+msgid "editor-add-title"
+msgstr "Element toevoegen"
+
+msgid "editor-version"
+msgstr "Versienummer"
+
+msgid "editor-add-game"
+msgstr "Een spel…"
+
+msgid "editor-category"
+msgstr "Categorie"
+
+msgid "editor-discard"
+msgstr "Wijzigingen negeren?"
+
+msgid "editor-saved"
+msgstr "Scherm opgeslagen"
+
+msgid "editor-not-saved"
+msgstr "Scherm kon niet worden opgeslagen"
+
+msgid "editor-save-quit"
+msgstr "Opslaan en afsluiten"
+
+msgid "editor-quit"
+msgstr "Afsluiten zonder opslaan"
+
+msgid "editor-continue"
+msgstr "Doorgaan"
+
+msgid "editor-menu-button"
+msgstr "Menu"
+
+msgid "editor-shortcut"
+msgstr "Snelkoppeling"
+
+msgid "editor-shortcut-none"
+msgstr "geen"
+
+msgid "editor-shortcut-change"
+msgstr "Snelkoppeling wijzigen"
+
+msgid "editor-shortcut-remove"
+msgstr "Snelkoppeling verwijderen"
+
+msgid "editor-shortcut-press"
+msgstr "Druk op de sneltoets: F1 t/m F12, een letter (behalve c) of een getal (Esc: annuleren)"
+
+msgid "editor-shortcut-taken"
+msgstr "{key} is al de snelkoppeling voor « {button} »: bij die knop verwijderen?"
+
+msgid "editor-key-escape"
+msgstr "Esc"
+
+msgid "editor-key-enter"
+msgstr "Enter"
+
+msgid "editor-key-space"
+msgstr "Spatie"
+
+msgid "editor-arrange"
+msgstr "Automatisch rangschikken"
+
+msgid "editor-arrange-columns"
+msgstr "Kolommen"
+
+msgid "editor-arrange-rows"
+msgstr "Rijen"
+
+msgid "editor-arrange-gap"
+msgstr "Tussenruimte"
+
+msgid "editor-arrange-buttons"
+msgstr "Knoppen"
+
+msgid "editor-arrange-all"
+msgstr "alle"
+
+msgid "editor-arrange-inside"
+msgstr "die in de zone"
+
+msgid "editor-arrange-apply"
+msgstr "Rangschikken in de zone"
+
+msgid "editor-arrange-zone"
+msgstr "Zone opnieuw instellen"
+
+msgid "editor-arrange-too-few"
+msgstr "{buttons} knoppen voor {cells} vakken: voeg kolommen of rijen toe"
+
+msgid "editor-arrange-too-small"
+msgstr "Zone te klein voor zoveel vakken"
+
+msgid "editor-arrange-none"
+msgstr "Geen knoppen in de zone"
+
+msgid "editor-snap"
+msgstr "Uitlijnen op raster"
+
+msgid "editor-help-zone"
+msgstr "Knopzone · Pijlen: handgreep verplaatsen (stap {step}) · Bevestigen: volgende handgreep · + / - : stap · Muis: zone of handgrepen slepen · Terug of Menu: rangschikken"
+
+msgid "editor-background"
+msgstr "Achtergrond"
+
+msgid "editor-background-theme"
+msgstr "Van het thema"
+
+msgid "editor-help-background"
+msgstr "Pijlen of tikken op links / rechts: vorige / volgende achtergrond · Bevestigen of Menu: behouden · Terug: annuleren"
+
+msgid "quit-game-question"
+msgstr "Weet u zeker dat u het spel wilt verlassen?"
+
+msgid "quit-game-keys"
+msgstr "Esc: verlassen · Bevestigen of wachten: spel hervatten"
+
+msgid "editor-import"
+msgstr "Achtergrond importeren"
+
+msgid "editor-import-usb"
+msgstr "USB-stick"
+
+msgid "editor-import-home"
+msgstr "Persoonlijke map"
+
+msgid "editor-import-root"
+msgstr "Gehele SD-kaart"
+
+msgid "editor-import-up"
+msgstr "Bovenliggende map"
+
+msgid "editor-import-failed"
+msgstr "Afbeelding niet geïmporteerd"
+
+msgid "category-classic"
+msgstr "Klassiekers"
+
+msgid "category-fun"
+msgstr "Fun"
+
+msgid "category-sport"
+msgstr "Sport"
+
+msgid "editor-shape"
+msgstr "Vorm"
+
+msgid "editor-shape-style"
+msgstr "zoals de andere knoppen"
+
+msgid "editor-shape-rectangle"
+msgstr "rechthoek"
+
+msgid "editor-shape-rounded"
+msgstr "afgeronde hoeken"
+
+msgid "editor-shape-pill"
+msgstr "rond (vierkante knop: cirkel)"
+
+
+msgid "usb-pads"
+msgstr "Instellingen USB-knoppen en draaiknoppen"
+
+msgid "usb-pads-sub"
+msgstr "Een ingedrukte toets of gedraaide knop licht hier op"
+
+msgid "usb-pads-none"
+msgstr "Geen USB-knoppenbehuizing aangesloten"
+
+msgid "usb-pads-pad"
+msgstr "Behuizing"
+
+msgid "usb-pads-keys"
+msgstr "Toetsen"
+
+msgid "usb-pads-knobs"
+msgstr "Draaiknoppen"
+
+msgid "usb-pads-program"
+msgstr "Behuizing programmeren"
+
+msgid "usb-pads-programmed"
+msgstr "Behuizing geprogrammeerd: elke toets kan worden getest"
+
+msgid "usb-pads-program-error"
+msgstr "Programmeren onmogelijk: koppel de behuizing los en sluit deze opnieuw aan"
+
+msgid "usb-pads-program-denied"
+msgstr "Programmeren geweigerd door het systeem: werk RaspyDarts bij en herstart"
+
+msgid "usb-pads-not-programmed"
+msgstr "Deze behuizing is niet geprogrammeerd: kies « Behuizing programmeren »"
+
+msgid "usb-pads-to-program"
+msgstr "Aantal gewijzigd: programmeer de behuizing"
+
+msgid "usb-pads-saved"
+msgstr "Instellingen van knoppen en draaiknoppen opgeslagen"
+
+msgid "usb-pads-menus"
+msgstr "Menu's"
+
+msgid "usb-pads-game"
+msgstr "Spel"
+
+msgid "usb-pads-key"
+msgstr "Toets"
+
+msgid "usb-pads-knob-left"
+msgstr "Draaiknop links"
+
+msgid "usb-pads-knob-press"
+msgstr "Draaiknop indrukken"
+
+msgid "usb-pads-knob-right"
+msgstr "Draaiknop rechts"
+
+msgid "usb-pads-none-action"
+msgstr "Niets"
+
+msgid "usb-pads-validate"
+msgstr "Bevestigen"
+
+msgid "usb-pads-back"
+msgstr "Terug"
+
+msgid "usb-pads-up"
+msgstr "Omhoog"
+
+msgid "usb-pads-down"
+msgstr "Omlaag"
+
+msgid "usb-pads-left"
+msgstr "Links"
+
+msgid "usb-pads-right"
+msgstr "Rechts"
+
+msgid "usb-pads-plus"
+msgstr "Plus"
+
+msgid "usb-pads-minus"
+msgstr "Min"
+
+msgid "usb-pads-nextplayer"
+msgstr "Volgende speler"
+
+msgid "usb-pads-miss"
+msgstr "Gemiste pijl"
+
+msgid "usb-pads-stop"
+msgstr "Spel stoppen"
+
+msgid "usb-pads-volume-up"
+msgstr "Volume +"
+
+msgid "usb-pads-volume-down"
+msgstr "Volume -"
+
+msgid "usb-pads-volume-mute"
+msgstr "Geluid dempen"
+
+msgid "usb-pads-system-volume-up"
+msgstr "Hoofdvolume +"
+
+msgid "usb-pads-system-volume-down"
+msgstr "Hoofdvolume -"
+
+msgid "usb-pads-knob-long"
+msgstr "Draaiknop lang indrukken"
+
+msgid "raspy2dmd-check-update"
+msgstr "Controleren op updates"
+
+msgid "raspy2dmd-checking"
+msgstr "Zoeken naar een update voor Raspy2DMD…"
+
+msgid "raspy2dmd-check-failed"
+msgstr "Controle onmogelijk: GitHub reageert niet (Internet?)"
+
+msgid "raspy2dmd-up-to-date"
+msgstr "Raspy2DMD {version} is up-to-date"
+
+msgid "raspy2dmd-update-disabled"
+msgstr "Update uitgeschakeld in Raspy2DMD: schakel deze in op de webpagina"
+
+msgid "raspy2dmd-update-question"
+msgstr "Raspy2DMD {version} installeren?"
+
+msgid "raspy2dmd-update-explain"
+msgstr "Geïnstalleerde versie: {version}. Het DMD toont de voortgang, daarna herstart Raspy2DMD (de kast blijft aan)"
+
+msgid "raspy2dmd-updating"
+msgstr "Installatie van Raspy2DMD {version}: voortgang op het DMD"
+
+msgid "raspy2dmd-updated"
+msgstr "Raspy2DMD {version} geïnstalleerd"
+
+msgid "raspy2dmd-update-failed"
+msgstr "Update niet voltooid: zie de webpagina van Raspy2DMD"
+
+msgid "raspy2dmd-install-elapsed"
+msgstr "Verstreken tijd: {time}"
+
+msgid "raspy2dmd-install-continues"
+msgstr "De installatie gaat door: volg deze in Instellingen > DMD-display"
+
+msgid "raspy2dmd-install-done"
+msgstr "Raspy2DMD is geïnstalleerd"
+
+msgid "raspy2dmd-install-error"
+msgstr "Installatie mislukt: zie logs/raspy2dmd_install.log"
+
+msgid "sound_output"
+msgstr "Geluidsuitvoer"
+
+msgid "sound-output-auto"
+msgstr "Automatisch (USB-kaart indien aangesloten)"
+
+msgid "sound-output-hdmi"
+msgstr "HDMI (scherm)"
+
+msgid "sound-output-jack"
+msgstr "3.5mm jack van Raspberry"
+
+msgid "sound-output-usb"
+msgstr "USB-geluidskaart"
+
+msgid "coins"
+msgstr "Muntinworp"
+
+msgid "coins-sub"
+msgstr "Een ingeworpen munt verschijnt hier (test)"
+
+msgid "coins-last"
+msgstr "Laatste munt {seconds} s geleden"
+
+msgid "coins-mode"
+msgstr "Modus"
+
+msgid "coins-mode-off"
+msgstr "Uitgeschakeld (gratis)"
+
+msgid "coins-mode-games"
+msgstr "Credits per spel"
+
+msgid "coins-mode-time"
+msgstr "Speeltijd"
+
+msgid "coins-input"
+msgstr "Ingang muntinworp"
+
+msgid "coins-credits-per-coin"
+msgstr "Credits per munt"
+
+msgid "coins-players-per-credit"
+msgstr "Spelers per spel"
+
+msgid "coins-players-any"
+msgstr "Vrij"
+
+msgid "coins-minutes-per-coin"
+msgstr "Minuten per munt"
+
+msgid "coins-price-local"
+msgstr "Prijs lokaal spel"
+
+msgid "coins-price-network"
+msgstr "Prijs netwerkspel"
+
+msgid "coins-price-games"
+msgstr "Prijs per spel"
+
+msgid "coins-price-games-sub"
+msgstr "Een specifieke spelprijs vervangt die van het speltype"
+
+msgid "coins-price-type"
+msgstr "Prijs van het type"
+
+msgid "coins-free"
+msgstr "Gratis"
+
+msgid "coins-add"
+msgstr "Credits toevoegen"
+
+msgid "coins-count"
+msgstr "Ontvangen munten"
+
+msgid "coins-count-reset"
+msgstr "Muntenteller op nul zetten?"
+
+msgid "coins-password"
+msgstr "Wachtwoord muntinworp"
+
+msgid "coins-password-new"
+msgstr "Nieuw wachtwoord muntinworp"
+
+msgid "coins-password-again"
+msgstr "Bevestig het wachtwoord"
+
+msgid "coins-password-different"
+msgstr "De twee wachtwoorden zijn verschillend"
+
+msgid "coins-password-wrong"
+msgstr "Onjuist wachtwoord"
+
+msgid "coins-password-change"
+msgstr "Wachtwoord wijzigen"
+
+msgid "coins-password-changed"
+msgstr "Wachtwoord gewijzigd: sla op"
+
+msgid "coins-saved"
+msgstr "Instellingen muntinworp opgeslagen"
+
+msgid "coins-credits"
+msgstr "Credits: {credits}"
+
+msgid "coins-time"
+msgstr "Tijd: {time}"
+
+msgid "coins-need-credits"
+msgstr "Dit spel kost {credits} credit(s)"
+
+msgid "coins-need-time"
+msgstr "Geen speeltijd meer"
+
+msgid "coins-insert-coin"
+msgstr "Werp een munt in"
+
+msgid "coins-time-up"
+msgstr "Tijd om"
+
+msgid "coins-time-up-sub"
+msgstr "Werp een munt in om door te gaan, Terug om het spel te stoppen"
+
+msgid "coins-badge-position"
+msgstr "Positie van de banner"
+
+msgid "coins-badge-size"
+msgstr "Grootte van de banner"
+
+msgid "coins-badge-top-right"
+msgstr "Rechtsboven"
+
+msgid "coins-badge-top-center"
+msgstr "Middenboven"
+
+msgid "coins-badge-top-left"
+msgstr "Linksboven"
+
+msgid "coins-badge-bottom-right"
+msgstr "Rechtsonder"
+
+msgid "coins-badge-bottom-left"
+msgstr "Linksonder"
+
+msgid "coins-badge-small"
+msgstr "Klein"
+
+msgid "coins-badge-medium"
+msgstr "Middel"
+
+msgid "coins-badge-large"
+msgstr "Groot"
+
+msgid "coins-input-none"
+msgstr "Geen (te kiezen)"
+
+msgid "coins-no-mcp"
+msgstr "Geen MCP-kaart gedetecteerd: de muntinworp wordt aangesloten op een MCP-ingang"
+
+msgid "online-title"
+msgstr "Netwerkspel"
+
+msgid "online-server"
+msgstr "Server: {server}"
+
+msgid "online-connecting"
+msgstr "Verbinden…"
+
+msgid "online-connected"
+msgstr "Verbonden"
+
+msgid "online-connected-no-live"
+msgstr "Verbonden (actieve spellen niet beschikbaar)"
+
+msgid "online-offline"
+msgstr "Off-line"
+
+msgid "online-offline-retry"
+msgstr "Off-line, opnieuw proberen…"
+
+msgid "online-account-required"
+msgstr "Account verplicht: meld u aan"
+
+msgid "online-chat-unavailable"
+msgstr "Chat niet beschikbaar"
+
+msgid "online-chat-unavailable-check"
+msgstr "Chat niet beschikbaar: controleer Internet en python3-websocket"
+
+msgid "online-no-room"
+msgstr "Geen spellen beschikbaar"
+
+msgid "online-room-join"
+msgstr "In afwachting, deelnemen"
+
+msgid "online-room-full"
+msgstr "Vol"
+
+msgid "online-room-playing"
+msgstr "Bezig"
+
+msgid "online-legend"
+msgstr "Groen: in afwachting, deel te nemen. Rood: bezig of vol"
+
+msgid "online-ready"
+msgstr "Klaar om te spelen"
+
+msgid "online-change-server"
+msgstr "Van server veranderen"
+
+msgid "online-change-account"
+msgstr "Van account veranderen"
+
+msgid "online-account"
+msgstr "Netwerkspelaccount"
+
+msgid "online-account-scan"
+msgstr "Nog geen account? Scan deze QR-code met uw telefoon om er een aan te maken"
+
+msgid "online-login"
+msgstr "Aanmelden"
+
+msgid "online-account-name"
+msgstr "Account: {name}"
+
+msgid "online-one-server"
+msgstr "Slechts één server: voeg er meer toe in Diversen > Favorieten > Servers"
+
+msgid "online-server-choice"
+msgstr "Netwerkspelserver"
+
+msgid "online-chat"
+msgstr "Spelers en chat"
+
+msgid "online-create"
+msgstr "Spel aanmaken"
+
+msgid "online-chat-title"
+msgstr "Spelers en chat"
+
+msgid "online-chat-needs-ready"
+msgstr "Schakel « Klaar om online te spelen » ({key}) in om de chat te gebruiken"
+
+msgid "online-chat-hint"
+msgstr "Kies een speler, daarna Schrijven of Uitnodigen"
+
+msgid "online-chat-keys"
+msgstr "Omhoog / omlaag: speler. Links / rechts: actie. Bevestigen: kiezen. Terug: afsluiten"
+
+msgid "online-players-connected"
+msgstr "Verbonden spelers"
+
+msgid "online-no-other-player"
+msgstr "Geen andere speler"
+
+msgid "online-me"
+msgstr "Ik"
+
+msgid "online-write"
+msgstr "Schrijven"
+
+msgid "online-invite"
+msgstr "Uitnodigen"
+
+msgid "online-accept"
+msgstr "Accepteren"
+
+msgid "online-refuse"
+msgstr "Weigeren"
+
+msgid "online-quick"
+msgstr "Snelle antwoorden"
+
+msgid "online-logout"
+msgstr "Afmelden"
+
+msgid "online-message-for"
+msgstr "Bericht voor {name}"
+
+msgid "online-message-sent"
+msgstr "Bericht verzonden"
+
+msgid "online-invitation-sent"
+msgstr "Uitnodiging verzonden, wachten op antwoord"
+
+msgid "online-invitation-text"
+msgstr "Hoi, wil je een spelletje spelen?"
+
+msgid "online-invitation-accepted"
+msgstr "{name}: uitnodiging geaccepteerd"
+
+msgid "online-invitation-refused"
+msgstr "{name}: uitnodiging GEWEIGERD"
+
+msgid "online-invitation-received"
+msgstr "{name} nodigt u uit voor een spel: {accept} accepteren, {refuse} weigeren"
+
+msgid "online-you-accepted"
+msgstr "Uitnodiging geaccepteerd: ga terug en maak het spel aan of neem deel"
+
+msgid "online-you-refused"
+msgstr "Uitnodiging geweigerd"
+
+msgid "online-player-joined"
+msgstr "{name} komt de lobby binnen"
+
+msgid "online-send-error"
+msgstr "Fout bij verzenden"
+
+msgid "online-sending"
+msgstr "Verzenden bezig…"
+
+msgid "online-chat-disconnected"
+msgstr "Chat verbroken: er is niets verzonden"
+
+msgid "online-no-player-selected"
+msgstr "Geen speler gekozen"
+
+msgid "online-no-invitation"
+msgstr "Geen uitnodiging in behandeling"
+
+msgid "online-session-expired"
+msgstr "Sessie verlopen: meld u opnieuw aan op uw account"
+
+msgid "online-player-gone"
+msgstr "Speler afgemeld: geen bericht verzonden"
+
+msgid "online-reply-1"
+msgstr "Hoi!"
+
+msgid "online-reply-2"
+msgstr "Wil je een spelletje spelen?"
+
+msgid "online-reply-3"
+msgstr "Ja, ik ben er klaar voor."
+
+msgid "online-reply-4"
+msgstr "Wacht 2 minuten."
+
+msgid "online-reply-5"
+msgstr "Nu even niet, bedankt."
+
+msgid "online-reply-6"
+msgstr "Bedankt, tot snel!"
+
+msgid "online-username"
+msgstr "Gebruikersnaam account"
+
+msgid "online-username-rules"
+msgstr "Gebruikersnaam: letters, cijfers, _ of - (3 tot 18 tekens)"
+
+msgid "online-password"
+msgstr "Wachtwoord (minimaal 10 tekens)"
+
+msgid "online-remember"
+msgstr "Aangemeld blijven op deze kast (30 dagen)?"
+
+msgid "online-logged-in"
+msgstr "Aangemeld: {name}"
+
+msgid "online-players-panel"
+msgstr "Online spelers"
+
+msgid "online-identify"
+msgstr "Identificeren"
+
+msgid "online-account-create"
+msgstr "Geen account? Scan om er een aan te maken"
+
+msgid "online-open-lobby"
+msgstr "Bevestigen: Netwerkspel"
+
+msgid "online-unread-open"
+msgstr "Bevestigen: lezen in Netwerkspel"
+
+msgid "online-checking-account"
+msgstr "Account controleren…"
+
+msgid "online-escape-back"
+msgstr "Terug: annuleren"
+
+msgid "online-check-cancelled"
+msgstr "Controle geannuleerd"
+
+msgid "online-error-credentials"
+msgstr "Gebruikersnaam of wachtwoord onjuist"
+
+msgid "online-error-attempts"
+msgstr "Te veel pogingen: wacht een minuut"
+
+msgid "online-error-rules"
+msgstr "Gebruikersnaam: 3 tot 18 tekens. Wachtwoord: minimaal 10 tekens"
+
+msgid "online-error-unavailable"
+msgstr "Accountverbinding niet beschikbaar: probeer het opnieuw"
+
+msgid "online-error-unreachable"
+msgstr "Server onbereikbaar: controleer de internetverbinding"
+
+msgid "online-account-retry"
+msgstr "Accountaanmelding vereist: probeer het opnieuw"
+
+msgid "online-chat-impossible"
+msgstr "Verbinding met lobby onmogelijk: probeer het opnieuw"
+
+msgid "online-network-player"
+msgstr "Online speler:"
+
+msgid "online-new-messages"
+msgstr "Nieuwe berichten ({count})"
+
+msgid "online-players-online"
+msgstr "Online spelers ({count})"
+
+msgid "online-you"
+msgstr "(jij)"
+
+msgid "online-no-player"
+msgstr "Geen speler"
+
+msgid "nl_NL"
+msgstr "Nederlands"

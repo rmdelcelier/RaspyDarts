@@ -22,6 +22,7 @@ class Locale:
                 'es_SV', 'es_US', 'es_UY', 'es_VE']
         localias['de_DE'] = ['de_DE', 'de_CH']
         localias['it_IT'] = ['it_IT', 'it_CH']
+        localias['nl_NL'] = ['nl_NL', 'nl_BE']
 
         if config.get_value('SectionGlobals', 'locale'):
             paramloc = config.get_value('SectionGlobals', 'locale')

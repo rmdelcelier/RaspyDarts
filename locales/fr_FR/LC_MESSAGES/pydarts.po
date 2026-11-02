@@ -1736,6 +1736,9 @@ msgstr "Le Cricket classique.\n"
 "- Crazy : Les chiffres changent quand ils sont ouverts.\n"
 "- Points aux adversaires : Augmente les points des adversaires.\n"
 "- Score \"Paye ton coup\" : Si le score du joueur >= 200 en Cut Throat, il paye sa tournée.\n"
+"- L'Enculette : Ordre imposé : Les cibles (20, 19, 18, 17, 16, 15 et le Bull) \n"
+"  doivent obligatoirement être fermées dans cet ordre, sinon les points du\n"
+"  mauvais segment seront décompté. \n"
 "- Jeu en équipe : 2 équipes de 2.\n"
 "- Mutualisation : Les joueurs d'une même équipe partagent la même grille de scores.\n"
 "- Handicap : Ajoute un handicap à l'équipe la plus forte.\n"
@@ -1765,6 +1768,10 @@ msgstr "Handicap"
 
 msgid "Cricket-mpr"
 msgstr "MPR"
+
+msgid "Cricket-enculette"
+msgstr "L'enculette"
+
 
 ######## DRAGON ########
 
@@ -2405,6 +2412,9 @@ msgstr "Le Cricket coréen.\n"
 "Options :\n"
 "- Crazy : Les chiffres changent aléatoirement une fois qu'ils sont ouverts.\n"
 "- Cut-Throat (Points aux adversaires) : le plus petit score gagne.\n"
+"- L'Enculette : Ordre imposé : Les cibles (20, 19, 18, 17, 16, 15 et le Bull) \n"
+"  doivent obligatoirement être fermées dans cet ordre, sinon les points du\n"
+"  mauvais segment seront décompté. \n"
 "- Jeu en équipe : Permet de jouer à 2 contre 2 (jusqu'à 4 équipes).\n"
 "- Mutualisation : Les joueurs d'une même équipe partagent la même grille de scores.\n"
 "- Handicap : Attribue un handicap à l'équipe la plus forte pour équilibrer la partie.\n"
@@ -2437,6 +2447,11 @@ msgstr "Nombre de tours"
 
 msgid "Mickey-colorised"
 msgstr "Cible colorisée"
+
+msgid "Mickey-enculette"
+msgstr "L'enculette"
+
+
 
 ######## MORPION ######
 
@@ -4913,3 +4928,6 @@ msgstr "(vous)"
 
 msgid "online-no-player"
 msgstr "Aucun joueur"
+
+msgid "nl_NL"
+msgstr "Néerlandais"

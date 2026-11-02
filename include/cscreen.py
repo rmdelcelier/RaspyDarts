@@ -7383,7 +7383,7 @@ class Screen(pygame.Surface):
 
     # Keys of a button which change its look (section 7.2 : style properties on the button)
     STYLE_KEYS = ('shape', 'radius', 'background', 'border', 'shadow', 'selected', 'disabled', 'pressed')
-    LANGUAGES = {'fr', 'en', 'de', 'es', 'it'}
+    LANGUAGES = {'fr', 'en', 'de', 'es', 'it', 'nl'}
 
     def button_style(self, menu, button):
         '''

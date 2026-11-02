@@ -16,8 +16,12 @@ from include import ctrophies
 
 LOGO = 'Cricket'
 HEADERS = ['20', '19', '18', '17', '16', '15', 'B']
-OPTIONS = {'theme': 'default', 'max_round': 20, 'optioncrazy': False, 'optioncutthroat': False, 'drinkscore': 200,
+#OPTIONS = {'theme': 'default', 'max_round': 20, 'optioncrazy': False, 'optioncutthroat': False, 'drinkscore': 200,
+#        'Teaming': False, 'optionteamscore': False, 'optionhandicap': False, 'mpr': False, 'colorised': False}
+        
+OPTIONS = {'theme': 'default', 'max_round': 20, 'optioncrazy': False, 'optioncutthroat': False, 'enculette': False, 'drinkscore': 200,
         'Teaming': False, 'optionteamscore': False, 'optionhandicap': False, 'mpr': False, 'colorised': False}
+      
 NB_DARTS = 3
 GAME_RECORDS = {'MPR': 'DESC', 'Hits per round': 'DESC', 'GiveOut': 'ASC'}
 
@@ -79,6 +83,9 @@ class Game(cgame.Game):
             self.teamscore = False
         else:
             self.display.teaming = True
+            
+        
+        self.enculette = options['enculette']  # Option L'Enculette
 
         self.winner = None
         self.infos = ''
@@ -92,6 +99,19 @@ class Game(cgame.Game):
         self.margin = self.display.margin
         self.margin_2 = 2 * self.display.margin
         self.margin_4 = 4 * self.display.margin
+
+
+
+
+    def get_enculette_current_target_index(self, player):
+        """
+        Retourne l'index de la première colonne non fermée ( < 3 ) dans l'ordre strict de la enculette.
+        """
+        for idx, header in enumerate(self.headers):
+            if player.get_col_value(idx) < 3:
+                return idx
+        return len(self.headers) - 1
+
 
     def post_dart_check(self, hit, players, actual_round, actual_player, player_launch):
         """
@@ -110,10 +130,7 @@ class Game(cgame.Game):
         ### TROPHEE
         ctrophies.process_single_dart(players[actual_player], hit)
         
-        # On vérifie les trophées de volée uniquement à la 3ème fléchette
-        if player_launch == 3:
-            round_darts = players[actual_player].darts[-3:]
-            ctrophies.check_and_unlock_trophies(players[actual_player], round_darts)
+        
 
         touchcount4total = False
         self.infos = f"Player {players[actual_player].ident} -\
@@ -122,21 +139,41 @@ class Game(cgame.Game):
         to_add, value = self.split_key(hit, multiplier=True)
         hit_value = 0
         
-        ####TROPHEE pas utiliser handler car envoie diffrent
-        if player_launch == self.nb_darts:
-            ctrophies.check_cricket_mickey_mark(players[actual_player], players[actual_player].darts, self)
-        
+        # Controle de la regle enculette / L'Enculette
 
+        valid_hit = True
+        if self.enculette and value in self.headers:
+            target_idx = self.get_enculette_current_target_index(players[actual_player])
+            current_target_header = self.headers[target_idx]
+            
+            hit_column_idx = self.headers.index(value)
+            is_already_closed_by_player = players[actual_player].get_col_value(hit_column_idx) >= 3
+            
+            if value != current_target_header and not is_already_closed_by_player:
+                valid_hit = False
+                handler['sound'] = 'plouf'
+                
+                # --- DÉDUCTION DES POINTS DU MAUVAIS SEGMENT ---
+                bad_hit_points = self.score_map.get(hit, 0)
+                
+                if bad_hit_points > 0:
+                    # Utilisation de add_score avec une valeur négative pour soustraire les points
+                    players[actual_player].add_score(-bad_hit_points)
+                    self.infos += f"[enculette] Faute ! Cible attendue : {current_target_header}, touché par erreur : {hit}. Pénalité de -{bad_hit_points} points.\n"
+                else:
+                    self.infos += f"[enculette] Faute ! Le joueur devait viser {current_target_header} et a touché {value}.\n"
+                # ----------------------------------------------
 
-        ### TROPHEE pas utiliser handler car envoie diffrent
-        if player_launch == self.nb_darts:
-            ctrophies.check_cricket_mickey_mark(players[actual_player], players[actual_player].darts, self)
-        
-        
+                # On enregistre la fléchette comme ratée/faute pour ce tour
+                players[actual_player].add_dart(actual_round, player_launch, hit, hit_value=0)
+                players[actual_player].darts_thrown += 1
+                self.refresh_stats(players, actual_round)
+                
+                return handler
 
 
         #If this column is currently displayed - Valid key
-        if value in self.headers and self.get_column_state(actual_player, players, self.headers.index(value)) < 4:
+        if valid_hit and value in self.headers and self.get_column_state(actual_player, players, self.headers.index(value)) < 4:
             # Launch animation
             self.ok = True
             # column touched
@@ -290,6 +327,16 @@ class Game(cgame.Game):
 
         # Time for shot or video ?
         handler['take_shot'] = self.time_to_take_shot_or_video(hit)
+
+# On vérifie les trophées de volée uniquement à la 3ème fléchette
+        if player_launch == 3:
+            round_darts = players[actual_player].darts[-3:]
+            ctrophies.check_and_unlock_trophies(players[actual_player], round_darts)
+        ####TROPHEE pas utiliser handler car envoie diffrent
+        if player_launch == self.nb_darts:
+            ctrophies.check_cricket_mickey_mark(players[actual_player], players[actual_player].darts, self)
+        
+
 
         # And return code
         return handler
@@ -506,6 +553,11 @@ class Game(cgame.Game):
 
         leds = []
         ind = 0
+        
+        
+        enculette_target_idx = self.get_enculette_current_target_index(players[actual_player]) if self.enculette else None
+        
+        
         for header in self.headers:
             already_closed = 0
             test_player = 0
@@ -516,6 +568,14 @@ class Game(cgame.Game):
                             player.get_col_value(ind) >= 3:
                         already_closed += 1
                 test_player += 1
+
+            # Si mode enculette, n'allumer en actif que la cible courante
+            if self.enculette and ind != enculette_target_idx:
+                ind += 1
+                continue
+
+
+
 
             if column_state == 4:
                 # Closed by everyone
@@ -595,6 +655,24 @@ class Game(cgame.Game):
 
         if tyre_rate > 0 and tyre_range < tyre_rate:
             return 'MISS'
+
+
+        # Adaptation du PNJ pour viser la cible en cours si mode enculette
+        if self.enculette:
+            target_idx = self.get_enculette_current_target_index(players[actual_player])
+            enculette_target = self.headers[target_idx]
+            mult_rate = random.randrange(100)
+            if enculette_target != 'B':
+                if mult_rate < triple_rate:
+                    return f'T{enculette_target}'
+                elif mult_rate < double_rate:
+                    return f'D{enculette_target}'
+                else:
+                    return f'S{enculette_target}'
+            else:
+                return 'DB' if mult_rate < triple_rate else 'SB'
+
+
 
         scores = {}
         my_score = players[actual_player].get_score()

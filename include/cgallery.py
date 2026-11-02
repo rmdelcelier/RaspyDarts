@@ -49,7 +49,7 @@ COOKIE = 'raspydarts_gallery'
 HASH = 'pbkdf2_sha256'
 # About 0.3 s on a Pi 3 : only when the password is set or typed
 ITERATIONS = 60000
-LANGUAGES = {'fr': 'fr_FR', 'en': 'en_GB', 'de': 'de_DE', 'es': 'es_ES', 'it': 'it_IT'}
+LANGUAGES = {'fr': 'fr_FR', 'en': 'en_GB', 'de': 'de_DE', 'es': 'es_ES', 'it': 'it_IT', 'nl': 'nl_NL'}
 
 
 # ------------------------------------------------------------------ shared with the game
