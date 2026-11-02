@@ -1,7 +1,7 @@
 """
-Beta : the installation told by a QR code (screen of the technical informations, F9). Scanned,
-it opens the page of the beta testers with what the borne is and what is plugged on it, after
-a « # » : nothing reaches a server before the tester sends a report from the page.
+Beta : the installation told by a QR code (screen of the technical informations, F9) : what
+the borne is and what is plugged on it, as text only (one « key=value » a line, no address of
+a site), read by whoever scans it.
 
 Never a password, a token, a name nor an address : the identifier of the Raspberry is its
 serial hashed (cupdate.machine_id, the one of the statistics and of Raspy2DMD).
@@ -13,14 +13,10 @@ in / out pins of the target matrix, seg segments calibrated (on 82), tled LEDs o
 webcam (1/0), coin coin acceptor (off, games, time ; +in : its input chosen), snd output of
 the sound, dmd version of Raspy2DMD (0 : none), expo exhibition mode (1/0)
 """
-import os
 import re
-from urllib.parse import urlencode
 
 from . import cupdate
 
-# Page of the beta testers (SectionGlobals > beta_page changes it)
-PAGE = 'https://raspystats.raspyhub.fr/beta'
 FORMAT = 1
 # Segments of a target : singles (inner and outer), doubles, triples, bull and double bull
 SEGMENTS = [f'{mult}{num}' for mult in ('s', 'S', 'D', 'T') for num in range(1, 21)] + ['SB', 'DB']
@@ -113,10 +109,8 @@ def infos(config, rpi, version, model, resolution):
     }
 
 
-def url(config, fields):
+def text(fields):
     '''
-    Address of the page of the beta testers, the fields after its « # »
+    Text of the QR code : one « key=value » a line, in the order of the fields
     '''
-    page = config.get_value('SectionGlobals', 'beta_page', False) or PAGE
-    return f"{page}#{urlencode(fields)}"
-
+    return '\n'.join(f'{key}={value}' for key, value in fields.items())

@@ -6937,16 +6937,25 @@ class Screen(pygame.Surface):
         import psutil
 
         ratio = 1 / 3
-        # Beta : the installation in a QR code, on the right of the tables (include/cbeta.py)
+        # Beta : the installation in a QR code (include/cbeta.py), on the right of the tables :
+        # the tables and the code centred together, the code in the middle of their height
         from include import cbeta
         fields = cbeta.infos(Conf, self.rpi, Conf.pyDartsFullVersion, Conf.rpi_version, (self.res_x, self.res_y))
+        beta_text = cbeta.text(fields)
+        self.logs.debug(f"Beta : {fields}")
         side = min(int(self.res['x'] * .26), int(self.res['y'] * .5))
-        beta_url = cbeta.url(Conf, fields)
-        self.logs.debug(f"Beta : {beta_url}")
-        beta_code = self.online_qrcode(beta_url, side)
-        beta_x = int(self.res['x'] * .69)
-        beta_y = 4 * self.res_y_16
+        beta_code = self.online_qrcode(beta_text, side)
         line = int(self.res['y'] / 28)
+        table_width = int(self.res['x'] * 14 / 16 * ratio)
+        gap = int(self.res['x'] * .03)
+        left = int((self.res['x'] - table_width - gap - side) / 2)
+        shift = left - int((self.res['x'] - table_width) / 2)
+        beta_x = left + table_width + gap
+        # Rows : from 2 above the first (offset -2) to the last one of the last table
+        row_height = int((self.res['y'] * 10 / 16) / 15)
+        top = 4 * self.res_y_16 - 2 * row_height
+        bottom = 4 * self.res_y_16 + row_height * (14 + len(self.ips))
+        beta_y = int((top + bottom - side - self.margin - line) / 2)
 
         while True:
             total, used, free = shutil.disk_usage("/")
@@ -6960,37 +6969,35 @@ class Screen(pygame.Surface):
             # Titles
             self.menu_header(self.lang.translate('technical-informations'))
 
-            self.display_row(1, 2, 1, [("Hardware", 1 / 2), ('Version', 1 / 2)], ratio, offset=-2)
-            self.display_row(2, 2, 0, [("Raspberry", 1 / 2), (Conf.rpi_version, 1 / 2)], ratio, offset=-2)
+            self.display_row(1, 2, 1, [("Hardware", 1 / 2), ('Version', 1 / 2)], ratio, offset=-2, shift=shift)
+            self.display_row(2, 2, 0, [("Raspberry", 1 / 2), (Conf.rpi_version, 1 / 2)], ratio, offset=-2, shift=shift)
 
-            self.display_row(1, 4, 1, [("Software", 1 / 2), ('Version', 1 / 2)], ratio, 1)
-            self.display_row(2, 4, 0, [("Raspydarts", 1 / 2), (Conf.pyDartsFullVersion, 1 / 2)], ratio, 1)
+            self.display_row(1, 4, 1, [("Software", 1 / 2), ('Version', 1 / 2)], ratio, 1, shift=shift)
+            self.display_row(2, 4, 0, [("Raspydarts", 1 / 2), (Conf.pyDartsFullVersion, 1 / 2)], ratio, 1, shift=shift)
 
-            self.display_row(3, 4, 0, [("Python", 1 / 2), (sys.version.split(' ')[0], 1 / 2)], ratio, 1)
-            self.display_row(4, 4, 0, [("Pygame", 1 / 2), (str(pygame.version.ver), 1 / 2)], ratio, 1)
+            self.display_row(3, 4, 0, [("Python", 1 / 2), (sys.version.split(' ')[0], 1 / 2)], ratio, 1, shift=shift)
+            self.display_row(4, 4, 0, [("Pygame", 1 / 2), (str(pygame.version.ver), 1 / 2)], ratio, 1, shift=shift)
 
             if len(self.ips) > 0:
-                self.display_row(1, 1 + len(self.ips), 1, [("Interface", 1 / 2), ("Adresse IP", 1 / 2)], ratio, 6)
+                self.display_row(1, 1 + len(self.ips), 1, [("Interface", 1 / 2), ("Adresse IP", 1 / 2)], ratio, 6, shift=shift)
 
             index = 1
             for ip in self.ips:
                 index += 1
-                self.display_row(index, 1 + len(self.ips), 0, [(ip[0], 1 / 2), (ip[1], 1 / 2)], ratio, 6)
+                self.display_row(index, 1 + len(self.ips), 0, [(ip[0], 1 / 2), (ip[1], 1 / 2)], ratio, 6, shift=shift)
 
             cpu_freq = f"{psutil.cpu_freq().current:.0f} ({psutil.cpu_freq().min:.0f} - {psutil.cpu_freq().max:.0f})"
 
-            self.display_row(1, 6, 1, [("Information", 1 / 2), ("Value", 1 / 2)], ratio, 8 + len(self.ips))
-            self.display_row(2, 6, 0, [("Résolution", 1 / 2), (f"{self.res_x} x {self.res_y}", 1 / 2)], ratio, 8 + len(self.ips))
-            self.display_row(3, 6, 0, [("Disk occupation", 1 / 2), ("{} %".format(round(100 * used / total, 1)), 1 / 2)], ratio, 8 + len(self.ips))
-            self.display_row(4, 6, 0, [("RAM occupation", 1 / 2), ("{} %".format(psutil.virtual_memory()[2]), 1 / 2)], ratio, 8 + len(self.ips))
-            self.display_row(5, 6, 0, [("CPU usage", 1 / 2), ("{} %".format(psutil.cpu_percent()), 1 / 2)], ratio, 8 + len(self.ips))
-            self.display_row(6, 6, 0, [("CPU frequency", 1 / 2), (cpu_freq, 1 / 2)], ratio, 8 + len(self.ips))
+            self.display_row(1, 6, 1, [("Information", 1 / 2), ("Value", 1 / 2)], ratio, 8 + len(self.ips), shift=shift)
+            self.display_row(2, 6, 0, [("Résolution", 1 / 2), (f"{self.res_x} x {self.res_y}", 1 / 2)], ratio, 8 + len(self.ips), shift=shift)
+            self.display_row(3, 6, 0, [("Disk occupation", 1 / 2), ("{} %".format(round(100 * used / total, 1)), 1 / 2)], ratio, 8 + len(self.ips), shift=shift)
+            self.display_row(4, 6, 0, [("RAM occupation", 1 / 2), ("{} %".format(psutil.virtual_memory()[2]), 1 / 2)], ratio, 8 + len(self.ips), shift=shift)
+            self.display_row(5, 6, 0, [("CPU usage", 1 / 2), ("{} %".format(psutil.cpu_percent()), 1 / 2)], ratio, 8 + len(self.ips), shift=shift)
+            self.display_row(6, 6, 0, [("CPU frequency", 1 / 2), (cpu_freq, 1 / 2)], ratio, 8 + len(self.ips), shift=shift)
 
             self.blit(beta_code, (beta_x, beta_y))
-            self.blit_text(self.lang.translate('beta-scan'), beta_x, beta_y + side + self.margin, side, line,
-                           self.colorset['menu-text-white'])
             self.blit_text(self.lang.translate('beta-identifier').format(id=fields['id']), beta_x,
-                           beta_y + side + self.margin + line, side, line, self.colorset['menu-text-white'])
+                           beta_y + side + self.margin, side, line, self.colorset['menu-text-white'])
 
             self.update_screen()
 
@@ -9824,9 +9831,10 @@ class Screen(pygame.Surface):
 
             old_selection = selection
 
-    def display_row(self, item_id, total, selected, columns, ratio=1, offset=0, center=True, align=None):
+    def display_row(self, item_id, total, selected, columns, ratio=1, offset=0, center=True, align=None, shift=0):
         '''
         Menu to display a row (to display an array)
+        shift : pixels to the right (negative : to the left) of where it is placed
         '''
 
         # Columns = [("Title1", pct1), ("Title2", pct2), ... ]
@@ -9855,6 +9863,7 @@ class Screen(pygame.Surface):
             if center:
                 min_x = int((self.res['x'] - row_width) / 2)
 
+        min_x += shift
         cell_x = min_x
         cell_y = min_y + row_height * (item_id - 1 + offset)
 

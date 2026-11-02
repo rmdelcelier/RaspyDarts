@@ -4916,8 +4916,5 @@ msgstr "Clásica"
 msgid "editor-image-none"
 msgstr "Ninguna"
 
-msgid "beta-scan"
-msgstr "Beta: escanee para identificar esta máquina"
-
 msgid "beta-identifier"
 msgstr "Identificador: {id}"

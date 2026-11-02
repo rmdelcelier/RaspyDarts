@@ -4965,8 +4965,5 @@ msgstr "Klassiek"
 msgid "editor-image-none"
 msgstr "Geen"
 
-msgid "beta-scan"
-msgstr "Bèta: scan om deze automaat te identificeren"
-
 msgid "beta-identifier"
 msgstr "Kenmerk: {id}"

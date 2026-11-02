@@ -4987,8 +4987,5 @@ msgstr "Classique"
 msgid "editor-image-none"
 msgstr "Aucune"
 
-msgid "beta-scan"
-msgstr "Bêta : scannez pour identifier cette borne"
-
 msgid "beta-identifier"
 msgstr "Identifiant : {id}"
