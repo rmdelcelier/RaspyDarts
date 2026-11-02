@@ -5182,3 +5182,9 @@ msgstr "Classic"
 
 msgid "editor-image-none"
 msgstr "None"
+
+msgid "beta-scan"
+msgstr "Beta: scan to identify this machine"
+
+msgid "beta-identifier"
+msgstr "Identifier: {id}"

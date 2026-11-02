@@ -6937,6 +6937,16 @@ class Screen(pygame.Surface):
         import psutil
 
         ratio = 1 / 3
+        # Beta : the installation in a QR code, on the right of the tables (include/cbeta.py)
+        from include import cbeta
+        fields = cbeta.infos(Conf, self.rpi, Conf.pyDartsFullVersion, Conf.rpi_version, (self.res_x, self.res_y))
+        side = min(int(self.res['x'] * .26), int(self.res['y'] * .5))
+        beta_url = cbeta.url(Conf, fields)
+        self.logs.debug(f"Beta : {beta_url}")
+        beta_code = self.online_qrcode(beta_url, side)
+        beta_x = int(self.res['x'] * .69)
+        beta_y = 4 * self.res_y_16
+        line = int(self.res['y'] / 28)
 
         while True:
             total, used, free = shutil.disk_usage("/")
@@ -6975,6 +6985,12 @@ class Screen(pygame.Surface):
             self.display_row(4, 6, 0, [("RAM occupation", 1 / 2), ("{} %".format(psutil.virtual_memory()[2]), 1 / 2)], ratio, 8 + len(self.ips))
             self.display_row(5, 6, 0, [("CPU usage", 1 / 2), ("{} %".format(psutil.cpu_percent()), 1 / 2)], ratio, 8 + len(self.ips))
             self.display_row(6, 6, 0, [("CPU frequency", 1 / 2), (cpu_freq, 1 / 2)], ratio, 8 + len(self.ips))
+
+            self.blit(beta_code, (beta_x, beta_y))
+            self.blit_text(self.lang.translate('beta-scan'), beta_x, beta_y + side + self.margin, side, line,
+                           self.colorset['menu-text-white'])
+            self.blit_text(self.lang.translate('beta-identifier').format(id=fields['id']), beta_x,
+                           beta_y + side + self.margin + line, side, line, self.colorset['menu-text-white'])
 
             self.update_screen()
 

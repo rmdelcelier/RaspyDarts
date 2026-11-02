@@ -4977,3 +4977,9 @@ msgstr "Classica"
 
 msgid "editor-image-none"
 msgstr "Nessuna"
+
+msgid "beta-scan"
+msgstr "Beta: scansiona per identificare questa macchina"
+
+msgid "beta-identifier"
+msgstr "Identificativo: {id}"

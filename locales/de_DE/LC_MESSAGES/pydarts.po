@@ -4910,3 +4910,9 @@ msgstr "Klassisch"
 
 msgid "editor-image-none"
 msgstr "Keine"
+
+msgid "beta-scan"
+msgstr "Beta: scannen, um diesen Automaten zu identifizieren"
+
+msgid "beta-identifier"
+msgstr "Kennung: {id}"
