@@ -557,7 +557,7 @@ class Editor:
         nothing chosen
         '''
         chosen = cexplorer.explore(self.screen, title, self.image_file(current), extra)
-        if chosen is None or chosen in dict(extra):
+        if chosen is None or chosen in [choice[0] for choice in extra]:
             return chosen
         return cexplorer.portable(self.screen, chosen, kind)
 
@@ -568,7 +568,7 @@ class Editor:
         '''
         current = self.backdrop.get('image') if isinstance(self.backdrop, dict) else None
         chosen = self.choose_image(self.translate('editor-background'), current,
-                                   [('theme', self.translate('editor-background-theme'))], 'menus')
+                                   [('theme', self.translate('editor-background-theme'), self.screen.background)], 'menus')
         if chosen is None:
             return
         block = None if chosen == 'theme' else {'image': chosen, 'fit': 'cover'}

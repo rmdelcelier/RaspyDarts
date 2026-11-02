@@ -4894,3 +4894,15 @@ msgstr "Kein Bild in diesem Ordner"
 
 msgid "explorer-unreadable"
 msgstr "Bild nicht lesbar"
+
+msgid "explorer-holds"
+msgstr "{folders} Ordner · {images} Bilder"
+
+msgid "Cricket-display"
+msgstr "Anzeige"
+
+msgid "cricket-display-horizontal"
+msgstr "Horizontal"
+
+msgid "cricket-display-classic"
+msgstr "Klassisch"

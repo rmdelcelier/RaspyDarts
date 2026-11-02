@@ -19,9 +19,11 @@ HEADERS = ['20', '19', '18', '17', '16', '15', 'B']
 #OPTIONS = {'theme': 'default', 'max_round': 20, 'optioncrazy': False, 'optioncutthroat': False, 'drinkscore': 200,
 #        'Teaming': False, 'optionteamscore': False, 'optionhandicap': False, 'mpr': False, 'colorised': False}
         
-OPTIONS = {'theme': 'default', 'max_round': 20, 'optioncrazy': False, 'optioncutthroat': False, 'enculette': False, 'drinkscore': 200,
+OPTIONS = {'theme': 'default', 'display': 'horizontal', 'max_round': 20, 'optioncrazy': False, 'optioncutthroat': False, 'enculette': False, 'drinkscore': 200,
         'Teaming': False, 'optionteamscore': False, 'optionhandicap': False, 'mpr': False, 'colorised': False}
       
+# Options with a list of values (the screen of the options : a dropdown) : value, its text
+OPTION_CHOICES = {'display': [('horizontal', 'cricket-display-horizontal'), ('classic', 'cricket-display-classic')]}
 NB_DARTS = 3
 GAME_RECORDS = {'MPR': 'DESC', 'Hits per round': 'DESC', 'GiveOut': 'ASC'}
 
@@ -86,6 +88,12 @@ class Game(cgame.Game):
             
         
         self.enculette = options['enculette']  # Option L'Enculette
+        # Display : horizontal (the players in lines), or classic (the one of always : the
+        # players in columns, the hits drawn on the dart)
+        self.display_mode = options.get('display', 'horizontal')
+        if self.display_mode == 'classic':
+            # Only in classic : the game loop draws the hit itself when it is missing
+            self.display_hit = self.display_hit_classic
 
         self.winner = None
         self.infos = ''
@@ -1082,6 +1090,11 @@ class Game(cgame.Game):
         return click_zones
 
     def refresh_game_screen(self, players, actual_round, max_round, rem_darts, nb_darts, logo, headers, actual_player, TxtOnLogo=False, OnScreenButtons=None, showScores=True, end_of_game=False, endOfSet=None, Set=None, MaxSet=None):
+        if self.display_mode == 'classic':
+            return self.refresh_game_screen_classic(players, actual_round, max_round, rem_darts, nb_darts, logo, headers,
+                                                    actual_player, TxtOnLogo=TxtOnLogo, OnScreenButtons=OnScreenButtons,
+                                                    showScores=showScores, end_of_game=end_of_game, endOfSet=endOfSet,
+                                                    Set=Set, MaxSet=MaxSet)
             self.display.reset_background()
 
             mpr = players[actual_player].show_mpr()
@@ -1252,3 +1265,468 @@ class Game(cgame.Game):
                 return [click, [screenshot1, rect1], [screenshot2, mpr_rectangle], [screenshot3, rect_dart]]
             else:
                 return [[], [screenshot1, rect1], [screenshot2, mpr_rectangle], [screenshot3, rect_dart]]
+
+    # ------------------------------------------------------------ display « Classique »
+    def refresh_game_screen_classic(self, players, actual_round, max_round, rem_darts, nb_darts, logo, headers, actual_player, TxtOnLogo=False, OnScreenButtons=None, showScores=True, end_of_game=False, endOfSet=None, Set=None, MaxSet=None):
+
+        self.display.reset_background()
+
+        game = 'Cricket'
+        hit = ''
+
+        scores = players[actual_player].rounds
+        mpr = players[actual_player].show_mpr()
+        self.mpr = mpr
+
+        game_background = f"background_{logo}"
+        game_background = self.display.file_class.get_full_filename(game_background, 'images')
+        if game_background is not None:
+            self.display.display_background(image=game_background)
+            self.display.save_background()
+        else:
+            self.display.display_background()
+
+        if len(players) > 6:
+            left_x = self.margin
+            left_y = int(self.display.res_y * 2 / 3) + self.margin
+            left_w = int(self.display.res_x / 6) - left_x
+            left_h = self.display.res_y - left_y
+        else:
+            left_x = self.margin
+            left_y = self.margin
+            left_w = int(self.display.res_x / 6) - left_x
+            left_h = int(((self.display.res_y / 3) - left_y) * 1.2)
+
+        mid_y = self.margin
+        mid_h = int(self.display.res_y * 2 / 3) - mid_y
+
+        if len(players) < 5:
+            mid_x = int(self.display.res_x / 4)
+            mid_w = int(self.display.res_x / 2)
+        elif len(players) < 7:
+            mid_x = int(self.display.res_x / 4)
+            mid_w = int(self.display.res_x * 34 / 48)
+        else:
+            mid_x = int(self.display.res_x / 24)
+            mid_w = int(self.display.res_x * 44 / 48)
+            symbol_w = int(left_w / 6)
+            symbol_h = int(left_h / 6)
+
+        target_x = int(mid_x + (mid_w / 2)) - int(self.display.res_x / 32)
+        target_y = mid_y + self.margin_2
+        target_w = int(self.display.res_x / 16)
+        target_h = int((mid_h - self.margin_4)/ 7)
+
+        symbol_w = int(left_w / 4)
+        symbol_h = int(left_h / 5)
+        self.symbol_thickness = self.margin_2
+        self.symbol_size = int(target_h * 3 / 4 - self.margin)
+        self.symbol_thickness2 = self.symbol_thickness
+        self.symbol_size2 = self.symbol_size
+        if len(players) > 6:
+            self.symbol_thickness2 = int(self.symbol_thickness / 2)
+            self.symbol_size2 = int(self.symbol_size / 2)
+
+        darts_x = int(self.display.res_x / 4)
+
+        scores_m = int(self.display.res_x / 96)
+        scores_x = mid_x + scores_m
+        scores_y = mid_y + self.margin
+        scores_w = int(self.display.res_x * 3 / 32)
+        scores_h = mid_h - self.margin_2
+
+        dart_x = int(darts_x + self.margin / 2)
+        dart_x_increment = int(self.display.res_x / 6)
+        dart_y = scores_y + scores_h + int(self.display.res_y / 32)
+        dart_h = target_h
+        dart_w = int(self.display.res_x / 6 - 2 * self.margin)
+
+        # Game type
+        game_width = int(self.display.res['x'] / 16)
+        game_x = int((self.display.res['x'] - game_width) / 2)
+        game_y = dart_y + dart_h + 2 * self.margin
+        game_height = int(self.display.res['y'] / 24)
+
+        # Background
+        self.display.blit_rect(0, 0, self.display.res_x, self.display.res_y, self.display.colorset['game-bg'])
+
+        # Round informations
+        self.display.blit_rect(left_x, left_y, left_w, left_h, self.display.colorset['game-bg'])
+        self.display.blit_text(f"Round", left_x, left_y, int(left_w / 3), left_h, color=self.display.colorset['game-round'], align='Left', valign='top', margin=False)
+        self.display.blit_text(f"{actual_round} / {max_round}", left_x + int(left_w / 2), left_y, left_w - int(left_w / 2), int(left_h / 4), color=self.display.colorset['game-round'], align='Right', valign='top', margin=False)
+
+        left_y += int(left_h / 5)
+
+        mpr_rectangle = (left_x, left_y, left_w, symbol_h)
+        self.display.blit_text(f'MPR', left_x, left_y, left_w, symbol_h, color=self.display.colorset['game-score'], align='Left')
+        sub = self.display.screen.subsurface(mpr_rectangle)
+        screenshot2 = pygame.Surface((mpr_rectangle[2], mpr_rectangle[3]))
+        self.display.blit_screen(screenshot2, sub, (0, 0))
+        self.display.blit_text(f'{mpr}', left_x , left_y, left_w, symbol_h, color=players[actual_player].color, align='Right')
+
+        left_y += int(left_h / 5)
+        rect_dart = None
+        for index in range(3):
+            if end_of_game:
+                continue
+            if actual_round - index > 0:
+                text1 = f'R{actual_round - index}'
+                score = 0
+                self.display.blit_text(text1, left_x, left_y, symbol_w, symbol_h, color=self.display.colorset['game-score'], align='Left')
+                index_s = 1
+                for dartx in scores[actual_round - 1 - index]:
+                    if dartx is not None and dartx[1::] in self.headers:
+                        multiplier = self.get_hit_unit(dartx)
+                        if multiplier > 0:
+                            self.draw_symbol_classic(players[actual_player].color, \
+                                left_x + int(symbol_w / 2) + symbol_w * index_s, left_y + int(symbol_h / 2), \
+                                int(self.symbol_size / 2), int(self.symbol_thickness / 2), multiplier)
+                    elif dartx is not None:
+                        self.draw_symbol_classic(self.display.colorset['game-darts'], left_x + int(symbol_w / 2) + symbol_w * index_s, \
+                                left_y + int(symbol_h / 2), int(self.symbol_size2 / 2), int(self.symbol_thickness2 / 2), -1)
+                    elif rect_dart is None:
+                        rect_dart = (left_x + symbol_w * index_s, left_y, symbol_w, symbol_h)
+
+                    index_s += 1
+
+            left_y += int(left_h / 5)
+
+        # Scores part
+        self.display.blit_rect(mid_x, mid_y, mid_w, mid_h, self.display.colorset['game-bg'])
+
+        index = 0
+        for target in self.headers:
+            if index % 2 == 0:
+                self.display.blit_rect(mid_x + self.margin, target_y + target_h * index, mid_w - self.margin_2, target_h, self.display.colorset['game-bg'])
+            self.display.blit_text(f'{target}', target_x, target_y + target_h * index, target_w, target_h, color=self.display.colorset['game-score'], align='Center')
+            index += 1
+
+        index = 0
+        for player in players:
+            if index == int((len(players) + 1) / 2) or (len(players) == 2 and index == 1):
+                scores_x += target_w + scores_m
+            elif(len(players) == 2 and index == 0):
+                scores_x += scores_w + scores_m
+
+            players[index].scores_x = int(scores_x + scores_w / 2)
+
+            if index == actual_player:
+                rectangle_color = players[actual_player].color
+            else:
+                rectangle_color = self.display.colorset['game-player']
+            self.draw_rect((scores_x, scores_y, scores_w, scores_h), 5, rectangle_color)
+
+            index_c = 0
+            for column in players[index].columns:
+                if self.get_column_state(player.ident, players, index_c) == 4:
+                    self.draw_symbol_classic(self.display.colorset['game-player'], players[index].scores_x, target_y + target_h * index_c + int(target_h / 2), self.symbol_size, self.symbol_thickness, column[0])
+                else:
+                    self.draw_symbol_classic(players[index].color, players[index].scores_x, target_y + target_h * index_c + int(target_h / 2), self.symbol_size, self.symbol_thickness, column[0])
+                index_c += 1
+
+            scores_x += scores_w + scores_m
+            index += 1
+
+        # For scrolling dart
+        pos_y = dart_y + dart_h + self.margin
+        height = int(self.display.res_y / 24)
+
+        index_d = 0
+        if not end_of_game:
+            for dart in players[actual_player].darts:
+                if dart is None:
+                    if index_d == 0:
+                        dart_color = self.display.colorset['game-gold']
+                    elif index_d == 1:
+                        dart_color = self.display.colorset['game-silver']
+                    else:
+                        dart_color = self.display.colorset['game-bronze']
+                    self.display.blit_rect(dart_x + index_d * dart_x_increment, dart_y, dart_w, dart_h, self.display.colorset['game-bg'])
+                    self.display.display_image(self.dart, dart_x + index_d * dart_x_increment, dart_y, dart_w, dart_h, center_x=True, change_colors=[[(0, 0, 0), dart_color]])
+                    #pass
+                else:
+                    self.draw_dart_score(index_d, dart)
+                index_d += 1
+
+        right_x = int(self.display.res['x'] * 13 / 16)
+        right_y = self.margin
+        right_width = int(self.display.res['x'] * 3 / 16)
+        right_height = int(self.display.res['y'] / 16)
+
+        if not end_of_game:
+            if self.display.game_type == 'online':
+                self.display.display_image(self.online_icon, game_x - 40, game_y + self.margin, width=32, height=32, UseCache=True)
+            self.display.blit_text(f"{self.display.game_type} game", game_x, game_y, game_width, game_height, color=(255, 0, 0), align='Center', valign='top', margin=False)
+
+        self.display_players_classic(players, actual_player, end_of_game)
+
+        # On screen buttons
+        if OnScreenButtons is True or self.display.is_true(self.config.get_value('SectionGlobals', 'onscreenbuttons')):
+            click = self.onscreen_buttons()
+
+        # Game's options
+        option_height = right_height / 2
+        option_y = self.display.res['y'] - option_height
+
+        if self.display.colorset['game-option'] is not None:
+            for option, value in self.options.items():
+                if option == 'theme' or value is False:
+                    continue
+                # As the other displays : the text of the option and of its value
+                text = self.display.translate_option(game, option)
+                if not isinstance(value, bool):
+                    value = self.display.option_value_text(game, option, value)
+
+                if value is True:
+                    self.display.blit_text(f'{text}', right_x, option_y, right_width, option_height, color=self.display.colorset['game-green'], align='Right')
+                else:
+                    self.display.blit_text(f'{text} : {value}', right_x, option_y, right_width, option_height, color=self.display.colorset['game-option'], align='Right')
+                option_y -= option_height
+        self.display.blit_text(f"{game.replace('_', ' ')}  ", right_x, option_y - option_height, right_width, option_height * 2, color=(255, 0, 0), align='Right')
+
+        self.display.save_background()
+        self.display.update_screen()
+
+        # scrolling dart
+        rect1 = pygame.Rect(0, dart_y, self.display.res['x'], dart_h)
+        sub = self.display.screen.subsurface(rect1)
+        screenshot1 = pygame.Surface((self.display.res['x'], dart_h))
+        self.display.blit_screen(screenshot1, sub, (0, 0))
+
+        if rect_dart is not None:
+            sub = self.display.screen.subsurface(rect_dart)
+            screenshot3 = pygame.Surface((rect_dart[2], rect_dart[3]))
+            self.display.blit_screen(screenshot3, sub, (0, 0))
+        else:
+            screenshot3 = None
+
+        if end_of_game:
+            click = self.display.end_of_game_menu()
+            return click
+
+        if OnScreenButtons is True or self.display.is_true(self.config.get_value('SectionGlobals', 'onscreenbuttons')):
+            return [click, [screenshot1, rect1], [screenshot2, mpr_rectangle], [screenshot3, rect_dart]]
+        else:
+            return [[], [screenshot1, rect1], [screenshot2, mpr_rectangle], [screenshot3, rect_dart]]
+
+    def display_players_classic(self, players, actual_player, end_of_game):
+
+        heading_color = self.display.colorset['game-bg']
+        player_color = self.display.colorset['game-alt-headers']
+        # Display players and scores
+        player_width = int(self.display.res['x'] / max(2 * len(players), 6))
+        player_height = int(self.display.res['y'] / 8)
+        heading_height = int(self.display.res['y'] / 24)
+        players_x = int(self.display.res['x'] / 4 + (self.display.res['x'] / 2 - player_width * len(players)) / 2)
+        player_y = self.display.res_y - player_height - self.margin
+
+        if end_of_game:
+            player_y = self.display.res_y - 2 * player_height - self.margin
+        else:
+            player_y = self.display.res_y - player_height - self.margin
+
+        index = 0
+        for player in players:
+            color = player.color
+            if self.show_mpr :
+                if self.mpr:
+                    mpr = player.show_mpr()
+                    name = f'{player.name} - {mpr}'
+                else:
+                    name = f'{player.name} - 0.0'
+            else:
+                name = f'{player.name}'
+
+            score = player.score
+            player_x = players_x + index * player_width
+            if index != actual_player:
+                if index < actual_player:
+                    player_x -= int(player_width / 2)
+                else:
+                    player_x += int(player_width / 2)
+
+                self.display.blit_rect(player_x, player_y, player_width, heading_height, heading_color)
+                self.display.blit_rect(player_x, player_y + heading_height, player_width, player_height - heading_height, player_color)
+
+                if self.display.colorset['game-bg'] is not None:
+                    pygame.draw.line(self.display.screen, self.display.colorset['game-bg'], (player_x, player_y + heading_height), (player_x + player_width, player_y + heading_height), 2)
+                    pygame.draw.line(self.display.screen, self.display.colorset['game-bg'], (player_x, player_y), (player_x, player_y + player_height), 2)
+                    pygame.draw.line(self.display.screen, self.display.colorset['game-bg'], (player_x + player_width, player_y), (player_x + player_width, player_y + player_height), 2)
+
+                if index < actual_player:
+                    self.display.blit_text(name, player_x, player_y - self.margin, player_width, heading_height + self.margin_2, color=player_color, align='Left')
+                    self.display.blit_text(score, player_x, player_y + heading_height, player_width, player_height - heading_height, color=self.display.colorset['game-score'], align='Left')
+                else:
+                    self.display.blit_text(name, player_x, player_y - self.margin, player_width, heading_height + self.margin_2, color=player_color, align='Right')
+                    self.display.blit_text(score, player_x, player_y + heading_height, player_width, player_height - heading_height, color=self.display.colorset['game-score'], align='Right')
+                pygame.draw.line(self.display.screen, color, (player_x, player_y), (player_x + player_width, player_y), 8)
+            else:
+                # For actual player's infos
+                actual_color = color
+                actual_x = player_x - int(player_width / 2)
+                actual_name = name
+                actual_score = score
+            index += 1
+
+        # Actual player and his score
+        player_x = int(self.display.res['x'] / 4 + (self.display.res['x'] / 2 - player_width * len(players)) / 2) + actual_player * player_width - (player_width / 2)
+        player_x = actual_x
+        player_y -= self.margin
+        player_height += self.margin_2
+        player_width *= 2
+        dart_icon_size = player_height - heading_height - self.margin_2
+        self.display.blit_rect(player_x, player_y, player_width, heading_height, actual_color)
+        self.display.blit_rect(player_x, player_y + heading_height, player_width, player_height - heading_height, actual_color)
+        if self.display.colorset['game-bg'] is not None:
+            pygame.draw.line(self.display.screen, self.display.colorset['game-bg'], (player_x, player_y + heading_height), (player_x + player_width, player_y + heading_height), 2)
+            pygame.draw.line(self.display.screen, self.display.colorset['game-bg'], (player_x, player_y), (player_x, player_y + player_height), 2)
+            pygame.draw.line(self.display.screen, self.display.colorset['game-bg'], (player_x + player_width, player_y), (player_x + player_width, player_y + player_height), 2)
+        self.display.display_image(self.dart_icon, player_x + self.margin, player_y + heading_height + self.margin, width=dart_icon_size, height=dart_icon_size, UseCache=True)
+        self.display.blit_text(actual_name, player_x, player_y - self.margin, player_width, heading_height + self.margin_2, color=self.display.colorset['game-player-name'], align='Center')
+        self.display.blit_text(actual_score, player_x, player_y + heading_height, player_width, player_height - heading_height, color=self.display.colorset['game-score'], align='Right')
+
+        return (player_x, player_y, player_width, player_height)
+
+    def display_hit_classic(self, rectangles, players, actual_player, player_launch, hit):
+        """
+        Nice hit animation
+        """
+
+        if hit == 'MISSDART':
+            return
+        screenshot1 = rectangles[1][0]
+        rect1 = rectangles[1][1]
+
+        screenshot_mpr = rectangles[2][0]
+        rectangle_mpr = rectangles[2][1]
+
+        screenshot_dart = rectangles[3][0]
+        rectangle_dart = rectangles[3][1]
+
+        mpr = players[actual_player].show_mpr()
+
+        width, height = self.display.display_image(self.trail, 0, rect1[1], rect1[2], rect1[3], UseCache=True)
+        # Image movement step
+        nb_steps = 15
+        step = int((self.display.res['x'] + width) / nb_steps)
+
+        sens = -1
+        min_x = int(self.display.res['x'])
+        max_x = -width
+
+        hit_x = int(self.display.res['x'] / 4) - self.margin_2
+        hit_y = int(self.display.res['y'] / 4) - self.margin_2
+        hit_w = self.display.mid_x + 4 * self.margin
+        hit_h = self.display.mid_y + 4 * self.margin
+
+        mid_x = int(self.display.res_x / 4)
+        mid_y = self.margin
+        mid_w = self.display.mid_x
+        mid_h = int(self.display.res_y * 2 / 3) - mid_y
+
+        target_x = self.display.mid_x - int(self.display.res_x / 32)
+        target_y = mid_y + self.margin_2
+        target_w = int(self.display.res_x / 16)
+        target_h = int((mid_h - self.margin_4)/ 7)
+
+        scores_m = int(self.display.res_x / 96)
+        scores_x = mid_x + scores_m
+        scores_y = mid_y + self.margin
+        scores_w = int(self.display.res_x * 3 / 32)
+        scores_h = mid_h - self.margin_2
+
+        mid_x = int(self.display.res['x'] / 4) + self.margin
+        mid_y = int(self.display.res['y'] * 3 / 4) + self.margin
+
+        mid_width = self.display.mid_x - self.margin_2
+        mid_height = int(self.display.res['y'] / 4) - self.margin_2
+
+        symbol_size = int(target_h * 3 / 4 - self.margin)
+        self.symbol_thickness = self.margin_2
+
+        rect_players = self.display_players_classic(players, actual_player, False)
+        self.display.update_screen(rect=rect_players)
+
+
+        if hit[1::] in self.headers:
+            # column touched
+            column_hit = self.headers.index(hit[1::])
+        else:
+            column_hit = None
+
+        index = 0
+        for index in range(0, nb_steps + 2):
+            ratio = min(1, index / nb_steps)
+            dart_x = min_x + step * sens * index
+
+            # Scrolling dart
+            rect = (dart_x, rect1[1] , rect1[2] + 4 * step, rect1[3])
+            self.display.blit(screenshot1, (rect1[0], rect1[1]))
+            self.draw_dart_score(player_launch - 1, hit)
+
+            self.display.display_image(self.trail, dart_x, rect1[1], rect1[2], rect1[3], UseCache=True)
+            if index == nb_steps + 1:
+                act_mpr = mpr
+            else:
+                act_mpr = round(self.mpr + (mpr - self.mpr) / (nb_steps + 1 - index), 2)
+            self.display.blit(screenshot_mpr, (rectangle_mpr[0] , rectangle_mpr[1]))
+            self.display.blit_text(f'{act_mpr}', rectangle_mpr[0] , rectangle_mpr[1], rectangle_mpr[2], rectangle_mpr[3], color=players[actual_player].color, align='Right')
+
+            multiplier = self.get_hit_unit(hit)
+            pos_x = int(rectangle_dart[0] + rectangle_dart[2] / 2)
+            pos_y = int(rectangle_dart[1] + rectangle_dart[3] / 2)
+            if column_hit is None:
+                self.draw_symbol_classic(self.display.colorset['game-darts'], pos_x, pos_y, int(self.symbol_size / 2), int(self.symbol_thickness / 2), -1, ratio=ratio)
+            else:
+                self.draw_symbol_classic(players[actual_player].color, pos_x, pos_y, int(self.symbol_size2 / 2), int(self.symbol_thickness2 / 2), multiplier, ratio=ratio)
+
+            # Dart's symbol
+            if column_hit is not None and self.ok:
+                hit_x = players[actual_player].scores_x
+                hit_y = target_y + target_h * column_hit + int(target_h / 2)
+                self.draw_symbol_classic(players[actual_player].color, hit_x, hit_y, self.symbol_size, self.symbol_thickness, players[actual_player].columns[column_hit][0], ratio=ratio)
+                rect2 = (hit_x - symbol_size, hit_y - symbol_size, 2 * symbol_size, 2 * symbol_size)
+                rect_array = [rect, rect2, rectangle_mpr, rectangle_dart]
+            else:
+                rect_array = [rect, rectangle_mpr, rectangle_dart]
+
+            self.display.update_screen(rect_array=rect_array)
+            index += 1
+
+        self.display.save_background()
+
+    def draw_symbol_classic(self, color, center_x, center_y, size, thickness, score, ratio=None):
+        pos_x = int(center_x - size / 2)
+        pos_y = int(center_y - size / 2)
+        if ratio is None:
+            for index in range(0, size + 1):
+                if score > 0:
+                    pygame.draw.circle(self.display.screen, color, (pos_x + index, pos_y + index), thickness, 0)
+                if score > 1:
+                    pygame.draw.circle(self.display.screen, color, (pos_x + index, pos_y + size - index), thickness, 0)
+                if score < 0:
+                    pygame.draw.circle(self.display.screen, color, (pos_x + index, center_y), thickness, 0)
+            if score > 2:
+                 pygame.draw.circle(self.display.screen, color, (center_x, center_y), int(size / sqrt(2)), int(thickness * sqrt(2)))
+        else:
+            index = int(size * ratio)
+            width = int(ratio * thickness * sqrt(2))
+            if score > 0:
+                pygame.draw.circle(self.display.screen, color, (pos_x + index, pos_y + index), thickness, 0)
+            if score > 1:
+                pygame.draw.circle(self.display.screen, color, (pos_x + index, pos_y + size - index), thickness, 0)
+            if score > 2 and width > 0:
+                pygame.draw.circle(self.display.screen, color, (center_x, center_y), int(size / sqrt(2)), width)
+            if score < 0:
+                pygame.draw.circle(self.display.screen, color, (pos_x + index, center_y), thickness, 0)
+
+    def draw_rect(self, rect, thickness, color):
+        pos_x = rect[0]
+        pos_y = rect[1]
+        width = rect[2]
+        height = rect[3]
+
+        pygame.draw.line(self.display.screen, color, (pos_x, pos_y), (pos_x, pos_y + height), thickness)
+        pygame.draw.line(self.display.screen, color, (pos_x + width, pos_y), (pos_x + width, pos_y + height), thickness)
+        pygame.draw.line(self.display.screen, color, (pos_x, pos_y), (pos_x + width, pos_y), thickness)
+        pygame.draw.line(self.display.screen, color, (pos_x, pos_y + height), (pos_x + width, pos_y + height), thickness)

@@ -10,6 +10,7 @@ import shutil
 
 import pygame
 
+from include import cemoji
 from include import cpaths
 
 IMAGES = ('.png', '.jpg', '.jpeg')
@@ -19,6 +20,10 @@ MOUNTS = ('/media', '/mnt')
 ROWS = 10
 # Previews kept (an image read and scaled : up to 1 s on a Pi 3)
 PREVIEWS = 24
+# Icons of the lines (colour emojis) ; up : a folder with an arrow, drawn
+ICONS = {'dir': '\U0001F4C1', 'open': '\U0001F4C2', 'file': '\U0001F5BC', 'extra': '\U0001F3A8',
+         'theme': '\U0001F3A8', 'mine': '\U0001F5BC', 'game': '\U0001F3AF', 'usb': '\U0001F4BE',
+         'home': '\U0001F3E0', 'card': '\U0001F4BD', 'arrow': '\u2B06'}
 
 
 def places(screen, translate):
@@ -28,20 +33,20 @@ def places(screen, translate):
     '''
     found = []
     theme_dir = getattr(screen.file_class, 'theme_dir', None)
-    for path, label in ((os.path.join(theme_dir, 'images') if theme_dir else None, 'explorer-theme-images'),
-                        (os.path.join(cpaths.user_dir(), 'images'), 'explorer-my-images'),
-                        (os.path.join(cpaths.ROOT_DIR, 'images'), 'explorer-game-images')):
+    for path, label, icon in ((os.path.join(theme_dir, 'images') if theme_dir else None, 'explorer-theme-images', 'theme'),
+                              (os.path.join(cpaths.user_dir(), 'images'), 'explorer-my-images', 'mine'),
+                              (os.path.join(cpaths.ROOT_DIR, 'images'), 'explorer-game-images', 'game')):
         if path and os.path.isdir(path):
-            found.append({'kind': 'dir', 'path': path, 'label': translate(label)})
+            found.append({'kind': 'dir', 'path': path, 'label': translate(label), 'icon': icon})
     for base in MOUNTS:
         for root, folders, _files in os.walk(base):
             if root.count(os.sep) - base.count(os.sep) >= 2:
                 folders.clear()
             if os.path.ismount(root) and root != base:
-                found.append({'kind': 'dir', 'path': root,
+                found.append({'kind': 'dir', 'path': root, 'icon': 'usb',
                               'label': f"{translate('editor-import-usb')} : {os.path.basename(root)}"})
-    found.append({'kind': 'dir', 'path': os.path.expanduser('~'), 'label': translate('editor-import-home')})
-    found.append({'kind': 'dir', 'path': os.sep, 'label': translate('editor-import-root')})
+    found.append({'kind': 'dir', 'path': os.path.expanduser('~'), 'label': translate('editor-import-home'), 'icon': 'home'})
+    found.append({'kind': 'dir', 'path': os.sep, 'label': translate('editor-import-root'), 'icon': 'card'})
     return found
 
 
@@ -55,7 +60,7 @@ def listing(folder, translate):
     except OSError:
         entries = []
     found = [{'kind': 'up', 'path': None, 'label': translate('editor-import-up')}]
-    found += [{'kind': 'dir', 'path': entry.path, 'label': f'{entry.name}/'}
+    found += [{'kind': 'dir', 'path': entry.path, 'label': entry.name}
               for entry in entries if entry.is_dir()]
     found += [{'kind': 'file', 'path': entry.path, 'label': entry.name}
               for entry in entries if entry.is_file() and entry.name.lower().endswith(IMAGES)]
@@ -65,20 +70,26 @@ def listing(folder, translate):
 def explore(screen, title, current=None, extra=()):
     '''
     An image chosen : its full path ; or the id of one of the extra choices given first
-    ((id, text) : the one of the theme, none...) ; None : given up. current : the image of
-    the moment, the explorer opens in its folder
+    ((id, text[, image shown]) : the one of the theme, none...) ; None : given up. current : the
+    image of the moment, the explorer opens in its folder. Back goes up to the place where the
+    browsing started (the image of the moment : the place holding it), then to the places
     '''
     # pylint: disable=import-outside-toplevel
     from include.cscreen import DOWN_KEYS, ENTER_KEYS, ESCAPE_KEYS, LEFT_KEYS, RIGHT_KEYS, UP_KEYS
     translate = screen.lang.translate
     previews = {}
-    folder = None
+    folder = root = None
     selected = 0
     if current and os.path.isfile(current):
         folder = os.path.dirname(current)
+        # Its place : the deepest one holding it
+        holding = [place['path'] for place in places(screen, translate)
+                   if folder == place['path'] or folder.startswith(place['path'].rstrip(os.sep) + os.sep)]
+        root = max(holding, key=len) if holding else os.sep
     while True:
         if folder is None:
-            entries = [{'kind': 'extra', 'path': ident, 'label': text} for ident, text in extra]
+            entries = [{'kind': 'extra', 'path': choice[0], 'label': choice[1],
+                        'image': choice[2] if len(choice) > 2 else None} for choice in extra]
             entries += places(screen, translate)
         else:
             entries = listing(folder, translate)
@@ -112,16 +123,22 @@ def explore(screen, title, current=None, extra=()):
                 if key in ESCAPE_KEYS:
                     return None
                 continue
-            # The folder above, the one left selected ; above the card : the first list
-            parent = os.path.dirname(folder.rstrip(os.sep)) or os.sep
+            # The folder above, the one left selected ; above the place where the browsing
+            # started : the places, this one selected
             current_folder = folder
-            folder = None if folder == os.sep else parent
-            selected = 0
-            if folder is not None:
+            if folder == root or folder == os.sep:
+                folder = root = None
+                selected = next((index for index, item in enumerate(places(screen, translate))
+                                 if item['path'] == current_folder), 0) + len(extra)
+            else:
+                folder = os.path.dirname(folder.rstrip(os.sep)) or os.sep
                 selected = next((index for index, item in enumerate(listing(folder, translate))
                                  if item['path'] == current_folder), 0)
         elif entry and (key in ENTER_KEYS + ['space'] or (key in RIGHT_KEYS and entry['kind'] == 'dir')):
             if entry['kind'] == 'dir':
+                if folder is None:
+                    # A place : Back comes back to the places from it
+                    root = entry['path']
                 folder, selected = entry['path'], 0
             elif entry['kind'] == 'file':
                 return entry['path']
@@ -129,14 +146,56 @@ def explore(screen, title, current=None, extra=()):
                 return entry['path']
 
 
+def icon(kind, size, icons):
+    '''
+    The icon of a line at this height (an emoji ; up : a folder and an arrow), None without
+    the emoji font
+    '''
+    key = (kind, size)
+    if key not in icons:
+        font = cemoji.emoji_font()
+        surface = None
+        if font is not None:
+            def emoji(char, height):
+                picture = font.render(char, True, (255, 255, 255))
+                return pygame.transform.smoothscale(picture, (max(1, round(picture.get_width() * height / picture.get_height())),
+                                                              height))
+            surface = emoji(ICONS['dir' if kind == 'up' else kind], size)
+            if kind == 'up':
+                # The folder above : an arrow over the folder
+                arrow = emoji(ICONS['arrow'], int(size * 0.62))
+                surface = surface.copy()
+                surface.blit(arrow, ((surface.get_width() - arrow.get_width()) // 2, int(size * 0.3)))
+        icons[key] = surface
+    return icons[key]
+
+
+def folder_text(path, translate, counts):
+    '''
+    What a folder holds : its folders and its images
+    '''
+    if path not in counts:
+        try:
+            entries = [entry for entry in os.scandir(path) if not entry.name.startswith('.')]
+            folders = sum(1 for entry in entries if entry.is_dir())
+            images = sum(1 for entry in entries if entry.is_file() and entry.name.lower().endswith(IMAGES))
+            counts[path] = translate('explorer-holds').replace('{folders}', str(folders)).replace('{images}', str(images))
+        except OSError:
+            counts[path] = ''
+    return counts[path]
+
+
 def draw(screen, title, folder, entries, selected, previews, translate):
     '''
-    The explorer : the list on the left (around the line selected), the preview on the right.
-    Returns the places to click : the lines (their index) and Back
+    The explorer : the list on the left (around the line selected, each line with its icon),
+    the preview on the right (an image, or what a folder holds). Returns the places to click :
+    the lines (their index) and Back
     '''
     colorset = screen.colorset
     res_x, res_y = screen.res['x'], screen.res['y']
     unit_x, unit_y = res_x / 16, res_y / 16
+    icons = previews.setdefault('icons', {})
+    counts = previews.setdefault('counts', {})
     screen.display_background()
     screen.menu_header(title, folder if folder is not None else translate('explorer-places'))
     zones = {}
@@ -149,27 +208,45 @@ def draw(screen, title, folder, entries, selected, previews, translate):
         chosen = index == selected
         screen.new_blit_rect2(rect, colorset['menu-selected'] if chosen else colorset['menu-buttons'],
                               corners='All', border_radius=int(line_h / 4))
-        screen.blit_text(entry['label'], rect.x + int(unit_x / 4), rect.y, rect.w - int(unit_x / 2), rect.h,
-                         colorset['menu-text-white'] if chosen else colorset['menu-text-black'], align='Left')
+        kind = entry.get('icon') or ('open' if chosen and entry['kind'] == 'dir' else entry['kind'])
+        picture = icon(kind, int(line_h * 0.72), icons)
+        text_x = rect.x + int(unit_x / 4)
+        if picture is not None:
+            screen.screen.blit(picture, (text_x, rect.centery - picture.get_height() // 2))
+            text_x += picture.get_width() + int(unit_x / 4)
+        if entry['kind'] != 'up' or picture is None:
+            # The folder above : its icon only
+            screen.blit_text(entry['label'], text_x, rect.y, rect.right - text_x - int(unit_x / 4), rect.h,
+                             colorset['menu-text-white'] if chosen else colorset['menu-text-black'], align='Left')
         zones[index] = tuple(rect)
     if not entries or all(entry['kind'] == 'up' for entry in entries):
-        screen.blit_text(translate('explorer-empty'), int(unit_x), int(4 * unit_y), int(7 * unit_x), int(unit_y),
+        screen.blit_text(translate('explorer-empty'), int(unit_x), int(4.5 * unit_y), int(7 * unit_x), int(unit_y),
                          colorset['menu-text-white'])
     # The preview
     box = pygame.Rect(int(8.5 * unit_x), int(3.2 * unit_y), int(6.5 * unit_x), int(8.8 * unit_y))
     screen.new_blit_rect2(box, colorset['menu-buttons'], corners='All', border_radius=int(unit_y / 4))
     entry = entries[selected] if entries else None
     caption = ''
-    if entry and entry['kind'] == 'file':
-        picture = preview(entry['path'], box.inflate(-int(unit_x / 2), -int(unit_y / 2)).size, previews)
+    image = entry['path'] if entry and entry['kind'] == 'file' else (entry or {}).get('image')
+    if image:
+        picture = preview(image, box.inflate(-int(unit_x / 2), -int(unit_y / 2)).size, previews)
         if picture is None:
             caption = translate('explorer-unreadable')
         else:
             surface, size = picture
             screen.screen.blit(surface, surface.get_rect(center=box.center))
-            caption = f"{os.path.basename(entry['path'])} · {size[0]} × {size[1]}"
+            caption = f"{os.path.basename(image)} · {size[0]} × {size[1]}" if entry['kind'] == 'file' else entry['label']
     elif entry:
+        # A folder, a place, the folder above : a big icon, what it holds
+        kind = entry.get('icon') or ('open' if entry['kind'] == 'dir' else entry['kind'])
+        picture = icon(kind, int(box.h / 3), icons)
+        if picture is not None:
+            screen.screen.blit(picture, picture.get_rect(center=box.center))
         caption = entry['label']
+        target = entry['path'] if entry['kind'] == 'dir' else (os.path.dirname(folder.rstrip(os.sep)) or os.sep
+                                                               if entry['kind'] == 'up' and folder else None)
+        if target:
+            caption = f"{caption} · {folder_text(target, translate, counts)}"
     screen.blit_text(caption, box.x, box.bottom + int(unit_y / 4), box.w, int(0.7 * unit_y), colorset['menu-text-white'])
     zones['escape'] = screen.display_button(False, 'back', special='escape')
     screen.update_screen()
@@ -182,6 +259,8 @@ def preview(path, size, previews):
     '''
     key = (path, tuple(size))
     if key not in previews:
+        while len(previews) > PREVIEWS:
+            previews.pop(next(key for key in previews if key not in ('icons', 'counts')))
         try:
             picture = pygame.image.load(path)
             width, height = picture.get_size()
@@ -191,8 +270,6 @@ def preview(path, size, previews):
             previews[key] = (scaled, (width, height))
         except Exception:    # pylint: disable=broad-except
             previews[key] = None
-        while len(previews) > PREVIEWS:
-            previews.pop(next(iter(previews)))
     return previews[key]
 
 

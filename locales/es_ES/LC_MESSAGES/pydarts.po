@@ -4899,3 +4899,15 @@ msgstr "Ninguna imagen en esta carpeta"
 
 msgid "explorer-unreadable"
 msgstr "Imagen ilegible"
+
+msgid "explorer-holds"
+msgstr "{folders} carpetas · {images} imágenes"
+
+msgid "Cricket-display"
+msgstr "Visualización"
+
+msgid "cricket-display-horizontal"
+msgstr "Horizontal"
+
+msgid "cricket-display-classic"
+msgstr "Clásica"

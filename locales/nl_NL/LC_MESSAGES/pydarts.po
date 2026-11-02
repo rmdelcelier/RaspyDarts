@@ -4948,3 +4948,15 @@ msgstr "Geen afbeelding in deze map"
 
 msgid "explorer-unreadable"
 msgstr "Onleesbare afbeelding"
+
+msgid "explorer-holds"
+msgstr "{folders} mappen · {images} afbeeldingen"
+
+msgid "Cricket-display"
+msgstr "Weergave"
+
+msgid "cricket-display-horizontal"
+msgstr "Horizontaal"
+
+msgid "cricket-display-classic"
+msgstr "Klassiek"

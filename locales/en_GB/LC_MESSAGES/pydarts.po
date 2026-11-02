@@ -5166,3 +5166,15 @@ msgstr "No image in this folder"
 
 msgid "explorer-unreadable"
 msgstr "Unreadable image"
+
+msgid "explorer-holds"
+msgstr "{folders} folders · {images} images"
+
+msgid "Cricket-display"
+msgstr "Display"
+
+msgid "cricket-display-horizontal"
+msgstr "Horizontal"
+
+msgid "cricket-display-classic"
+msgstr "Classic"

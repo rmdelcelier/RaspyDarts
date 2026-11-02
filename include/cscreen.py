@@ -10040,6 +10040,25 @@ class Screen(pygame.Surface):
         lines = [f"{self.lang.translate('favorite-options-title')} :", '']
         return '\n'.join(lines + self.favorite_options_lines(game, options))
 
+    def option_choices(self, game, name):
+        '''
+        The values an option of a game can take, if it gives them (OPTION_CHOICES of the game :
+        [(value, its text)]) ; None : a free value
+        '''
+        game = str(game).replace(' ', '_')
+        try:
+            module = importlib.import_module(f'games.{cmenus.game_category(game)}.{game}')
+        except Exception:    # pylint: disable=broad-except
+            return None
+        return (getattr(module, 'OPTION_CHOICES', None) or {}).get(name)
+
+    def option_value_text(self, game, name, value):
+        '''
+        The value of an option as it is shown (the text of its choice, if it has a list)
+        '''
+        choices = self.option_choices(game, name)
+        return self.lang.translate(dict(choices).get(value, value)) if choices else value
+
     def favorite_options_lines(self, game, options):
         '''
         The options of a favorite : 'label : value' (as the screen of the options names them)
@@ -10050,6 +10069,8 @@ class Screen(pygame.Surface):
         for name, value in options.items():
             if isinstance(value, bool):
                 value = self.lang.translate('yes' if value else 'no')
+            else:
+                value = self.option_value_text(game, name, value)
             label = self.lang.translate('colorset') if name == 'theme' else self.translate_option(game.replace(' ', '_'), name)
             lines.append(f"{label} : {value}")
         return lines
@@ -10292,12 +10313,18 @@ class Screen(pygame.Surface):
                     option_type = BTN_DROPDOWN
                     values = [(theme, theme) for theme in themes]
                     value = option_value
+                elif self.option_choices(game, option_name):
+                    # A list of values given by the game : the text of the one chosen
+                    option_type = BTN_DROPDOWN
+                    values = self.option_choices(game, option_name)
+                    value = self.option_value_text(game, option_name, option_value)
                 else:
                     option_type = BTN_VALUE    # free entry (Alphanum)
                     value = option_value
 
                 shortcut = f'F{index}'
-                options[index] = [value, option_type, option_name]
+                # (the values of a list : those of this option)
+                options[index] = [value, option_type, option_name, values if option_type == BTN_DROPDOWN else None]
 
                 click_zones[shortcut] = self.menu_item((index, nb_elements, selected)
                         , (shortcut, f'{text}', option_type, value), align='Left')
@@ -10371,7 +10398,8 @@ class Screen(pygame.Surface):
                     else:
                         game_options[options[selected][2]] = True
                 elif options[selected][1] == BTN_DROPDOWN:
-                    tmp = self.dropdown(self.res['x'] * 6 / 16, 3 * self.res_y_16, values)
+                    tmp = self.dropdown(self.res['x'] * 6 / 16, 3 * self.res_y_16, options[selected][3],
+                                        navigate=game_options[options[selected][2]])
                     if tmp != 'escape':
                         game_options[options[selected][2]] = tmp
                     refresh = True
@@ -11698,6 +11726,7 @@ class Screen(pygame.Surface):
                 if value is True:
                     self.blit_text(f'{txt_option}', pos_x, pos_y, width, height, color=self.colorset['game-option'], align='Right', margin=False)
                 else:
+                    value = self.option_value_text(game, option, value)
                     self.blit_text(f'{txt_option} : {value}', pos_x, pos_y, width, height, color=self.colorset['game-option'], align='Right', margin=False)
                 # One option under the other (they were all written at the same place)
                 pos_y += height + self.margin
