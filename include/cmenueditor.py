@@ -126,7 +126,8 @@ class Editor:
     def button_name(self, button):
         if button.get('version'):
             return self.translate('editor-version')
-        return self.screen.lang.translate(self.screen.button_text(button))
+        # A favorite : the name of its game, as on the screen
+        return self.screen.lang.translate(self.screen.button_text(self.screen.favorite_button(button)))
 
     # ------------------------------------------------------------------ drawing
     def background(self):
@@ -684,9 +685,11 @@ class Editor:
 
     def default_icon(self, button):
         '''
-        The icon a button has without one of its own (the logo of its game...), None : none
+        The icon a button has without one of its own (the logo of its game, of the game of its
+        favorite...), None : none
         '''
-        return self.screen.button_icon({key: value for key, value in button.items() if key not in ('icon', 'logo_image')})
+        bare = {key: value for key, value in button.items() if key not in ('icon',) + RUNTIME_KEYS}
+        return self.screen.button_icon(self.screen.favorite_button(bare))
 
     def icon_text(self, button):
         icon = button.get('icon')

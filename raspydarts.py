@@ -806,6 +806,8 @@ try:
                                 versionGame = ''
                             local_players = favorite_players[:]
                             players_count = len(local_players)
+                            # Their colours : the screen of the players, which reads them, is skipped
+                            players_favorite_color = Config.get_players_color()
                             nb_sets = int(Config.get_value('SectionAdvanced', 'nb_sets', False, None))
                             selected_game = Game
                             display.selectedgame = Game

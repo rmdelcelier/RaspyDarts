@@ -8753,17 +8753,17 @@ class Screen(pygame.Surface):
         '''
         translate = self.lang.translate
         if not coins.settings.get('password'):
-            first = self.input_value_item('string', '', 4, 32, text='coins-password-new')
+            first = self.input_value_item('string', '', 4, 32, text='coins-password-new', hidden=True)
             if first in ('', 'escape'):
                 return False
-            if self.input_value_item('string', '', 4, 32, text='coins-password-again') != first:
+            if self.input_value_item('string', '', 4, 32, text='coins-password-again', hidden=True) != first:
                 self.message([translate('coins-password-different')], 2500, self.colorset['menu-ko'], 'middle', 'big')
                 return False
             settings = dict(coins.settings)
             settings['password'] = coins.hash_password(first)
             coins.save_settings(settings)
             return True
-        typed = self.input_value_item('string', '', 1, 32, text='coins-password')
+        typed = self.input_value_item('string', '', 1, 32, text='coins-password', hidden=True)
         if typed in ('', 'escape'):
             return False
         if not coins.check_password(typed):
@@ -8908,9 +8908,9 @@ class Screen(pygame.Surface):
                 settings[key] = chosen
                 coins.settings[key] = chosen
         elif name == 'password':
-            new = self.input_value_item('string', '', 4, 32, text='coins-password-new')
+            new = self.input_value_item('string', '', 4, 32, text='coins-password-new', hidden=True)
             if new not in ('', 'escape'):
-                if self.input_value_item('string', '', 4, 32, text='coins-password-again') == new:
+                if self.input_value_item('string', '', 4, 32, text='coins-password-again', hidden=True) == new:
                     settings['password'] = coins.hash_password(new)
                     self.message([translate('coins-password-changed')], 1500, self.colorset['menu-ok'], 'middle', 'big')
                 else:
