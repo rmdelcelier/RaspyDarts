@@ -12711,6 +12711,370 @@ class Screen(pygame.Surface):
             
         self.blit(img, (pos_x, pos_y))
         self.update_screen()
-        
-      
-        
+
+    def chti_music_init(self):
+        if hasattr(self, '_mp3_lock'):
+            return
+        self._mp3_lock = threading.RLock()
+        self._mp3_tracks = []
+        self._mp3_index = -1
+        self._mp3_paused = False
+        self._mp3_playing = False
+        self._mp3_volume = 0.35
+        self._mp3_error = ''
+        self._mp3_artist = ''
+        self._mp3_title = 'Choisir un morceau'
+        self._music_dmd_last = 0.0
+        self._spectrum_generation = 0
+        self._spectrum_process = None
+        self._spectrum_frames = {}
+        self._spectrum_peaks = [0.0] * 18
+        self._spectrum_draw_time = time.monotonic()
+        self.chti_music_scan()
+        threading.Thread(target=self.chti_music_worker, daemon=True).start()
+
+
+    def chti_music_scan(self):
+        # Un dossier dédié, aucun son du jeu dans la playlist.
+        root = '/media'
+        previous = (self._mp3_tracks[self._mp3_index]
+                    if 0 <= self._mp3_index < len(self._mp3_tracks) else None)
+        self._mp3_tracks = sorted(
+            [os.path.join(base, name) for base, dirs, names in os.walk(root)
+             for name in names if name.lower().endswith('.mp3')],
+            key=lambda path: path.casefold())
+        self._mp3_index = (self._mp3_tracks.index(previous)
+                           if previous in self._mp3_tracks else -1)
+
+
+    def chti_music_play(self, index):
+        with self._mp3_lock:
+            if not self._mp3_tracks:
+                return
+            self._mp3_playing = False
+            self.chti_spectrum_stop()
+            try:
+                if not pygame.mixer.get_init():
+                    pygame.mixer.init(22050, -16, 2)
+                self._mp3_index = index % len(self._mp3_tracks)
+                filename = self._mp3_tracks[self._mp3_index]
+                self._mp3_artist, self._mp3_title = self.chti_music_names(filename)
+                pygame.mixer.music.load(self._mp3_tracks[self._mp3_index])
+                pygame.mixer.music.set_volume(self._mp3_volume)
+                pygame.mixer.music.play()
+                self._mp3_paused = False
+                self._mp3_playing = True
+                self._mp3_error = ''
+                generation = self._spectrum_generation
+                threading.Thread(target=self.chti_music_tags,
+                    args=(filename, generation), daemon=True).start()
+                threading.Thread(target=self.chti_spectrum_decode,
+                    args=(self._mp3_tracks[self._mp3_index], generation), daemon=True).start()
+            except Exception as error:
+                self._mp3_error = 'Lecture impossible : choisir un autre morceau'
+                self.logs.log('WARNING', 'MP3 : {}'.format(error))
+
+
+    def chti_music_action(self, action):
+        with self._mp3_lock:
+            if action == 'pause':
+                if not self._mp3_playing:
+                    self.chti_music_play(max(0, self._mp3_index))
+                elif self._mp3_paused:
+                    pygame.mixer.music.unpause()
+                    self._mp3_paused = False
+                else:
+                    pygame.mixer.music.pause()
+                    self._mp3_paused = True
+            elif action in ('next', 'previous'):
+                self.chti_music_play(self._mp3_index + (1 if action == 'next' else -1))
+            elif action == 'stop':
+                self.chti_spectrum_stop()
+                self._mp3_playing = False
+                self._mp3_paused = False
+                if pygame.mixer.get_init():
+                    pygame.mixer.music.stop()
+            elif action in ('volup', 'voldown'):
+                self._mp3_volume = max(0.0, min(1.0, round(
+                    self._mp3_volume + (0.05 if action == 'volup' else -0.05), 2)))
+                if pygame.mixer.get_init():
+                    pygame.mixer.music.set_volume(self._mp3_volume)
+
+
+    def chti_music_worker(self):
+        # Continue la playlist pendant les menus ET les parties.
+        while True:
+            time.sleep(0.3)
+            with self._mp3_lock:
+                if (self._mp3_playing and not self._mp3_paused
+                        and pygame.mixer.get_init()
+                        and not pygame.mixer.music.get_busy()):
+                    self.chti_music_play(self._mp3_index + 1)
+
+
+    def chti_music_text(self, text, rect, size, color=(255, 255, 255)):
+        font = pygame.font.Font(None, max(16, int(size)))
+        text = ''.join(c for c in str(text) if 32 <= ord(c) <= 65535 and not 55296 <= ord(c) <= 57343)
+        while text and font.size(text)[0] > rect.width - 12:
+            text = text[:-1]
+        surface = font.render(text, True, color)
+        self.screen.blit(surface, (rect.x + 6, rect.centery - surface.get_height() // 2))
+
+
+    def chti_spectrum_stop(self):
+        self._spectrum_generation += 1
+        process = self._spectrum_process
+        self._spectrum_process = None
+        self._spectrum_frames = {}
+        self._spectrum_peaks = [0.0] * 18
+        if process is not None and process.poll() is None:
+            try:
+                process.terminate()
+            except OSError:
+                pass
+
+
+    def chti_spectrum_decode(self, filename, generation):
+        # Analyse du fichier MP3, sans capturer ni modifier la sortie audio.
+        # FFT de 1024 échantillons à 16 kHz : une trame toutes les 64 ms.
+        process = None
+        try:
+            import numpy as np
+            rate, size = 16000, 1024
+            window = np.hanning(size)
+            frequencies = np.fft.rfftfreq(size, 1.0 / rate)
+            edges = np.geomspace(45.0, 7500.0, 19)
+            bands = [(frequencies >= edges[i]) & (frequencies < edges[i + 1])
+                     for i in range(18)]
+            process = subprocess.Popen(
+                ['ffmpeg', '-nostdin', '-v', 'error', '-threads', '1', '-i', filename,
+                 '-vn', '-ac', '1', '-ar', str(rate), '-f', 's16le', 'pipe:1'],
+                stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+            with self._mp3_lock:
+                if generation != self._spectrum_generation:
+                    return
+                self._spectrum_process = process
+            frame_number = 0
+            while generation == self._spectrum_generation:
+                # Deux secondes d'avance maximum : mémoire et CPU limités,
+                # y compris lors d'une longue pause ou pendant une partie.
+                with self._mp3_lock:
+                    position = max(0, pygame.mixer.music.get_pos()) if pygame.mixer.get_init() else 0
+                    ahead = frame_number * 64 > position + 2000
+                if ahead:
+                    time.sleep(0.08)
+                    continue
+                data = process.stdout.read(size * 2)
+                if not data:
+                    break
+                if len(data) < size * 2:
+                    data += b'\x00' * (size * 2 - len(data))
+                samples = np.frombuffer(data, dtype='<i2').astype(np.float32) / 32768.0
+                amplitude = np.abs(np.fft.rfft(samples * window)) * (2.0 / window.sum())
+                values = tuple(float(amplitude[band].max()) if band.any() else 0.0
+                               for band in bands)
+                with self._mp3_lock:
+                    if generation != self._spectrum_generation:
+                        break
+                    self._spectrum_frames[frame_number] = values
+                    while len(self._spectrum_frames) > 256:
+                        del self._spectrum_frames[min(self._spectrum_frames)]
+                frame_number += 1
+        except Exception as error:
+            self.logs.log('WARNING', 'Spectre MP3 indisponible : {}'.format(error))
+        finally:
+            if process is not None:
+                if process.poll() is None:
+                    process.terminate()
+                try:
+                    process.wait(timeout=1)
+                except subprocess.TimeoutExpired:
+                    process.kill()
+                    process.wait()
+                if process.stdout is not None:
+                    process.stdout.close()
+            with self._mp3_lock:
+                if self._spectrum_process is process:
+                    self._spectrum_process = None
+
+
+    def chti_spectrum_draw(self, rect):
+        now = time.monotonic()
+        elapsed = min(0.5, now - self._spectrum_draw_time)
+        self._spectrum_draw_time = now
+        with self._mp3_lock:
+            frame = None
+            if (self._mp3_playing and not self._mp3_paused
+                    and pygame.mixer.get_init()):
+                position = pygame.mixer.music.get_pos()
+                index = int(max(0, position) / 64)
+                if position >= 0:
+                    frame = self._spectrum_frames.get(index)
+                    if frame is None and self._spectrum_frames:
+                        nearest = min(self._spectrum_frames,
+                                      key=lambda n: abs(n - index))
+                        if abs(nearest - index) <= 8:
+                            frame = self._spectrum_frames[nearest]
+            values = [max(0.0, min(1.0, (20.0 * math.log10(
+                max(1e-8, value)) + 70.0) / 60.0))
+                for value in frame] if frame is not None else [0.0] * 18
+        # Segments LED et petit témoin de crête avec chute progressive.
+        columns, segments = 18, 12
+        step_x = rect.width / columns
+        step_y = rect.height / segments
+        for column, level in enumerate(values):
+            peak = max(level, self._spectrum_peaks[column] - elapsed * 1.8)
+            self._spectrum_peaks[column] = peak
+            for segment in range(segments):
+                color = ((55, 220, 90) if segment < 7 else
+                         (250, 200, 45) if segment < 10 else (245, 65, 45))
+                if segment >= int(round(level * segments)):
+                    color = tuple(int(component * .13) for component in color)
+                cell = pygame.Rect(rect.x + int(column * step_x),
+                    rect.bottom - int((segment + 1) * step_y),
+                    max(1, int(step_x) - 3), max(1, int(step_y) - 2))
+                pygame.draw.rect(self.screen, color, cell)
+            if peak > .025:
+                pygame.draw.rect(self.screen, (245, 240, 185),
+                    (rect.x + int(column * step_x),
+                     rect.bottom - max(2, int(peak * rect.height)),
+                     max(1, int(step_x) - 3), 2))
+
+
+    def chti_music_bar(self, focused=False):
+        w, h = self.screen.get_size()
+        box = pygame.Rect(int(w * .55), int(h * .825), int(w * .435), int(h * .12))
+        panel = pygame.Surface(box.size, pygame.SRCALPHA)
+        panel.fill((110, 75, 10, 245) if focused else (15, 15, 15, 220))
+        self.screen.blit(panel, box)
+        pygame.draw.rect(self.screen, (255, 215, 70) if focused else (180, 140, 40), box, 5 if focused else 2)
+        title = (os.path.splitext(os.path.basename(self._mp3_tracks[self._mp3_index]))[0]
+                 if 0 <= self._mp3_index < len(self._mp3_tracks) else 'Lecteur MP3 - choisir un morceau')
+        state = 'Pause' if self._mp3_paused else ('Lecture' if self._mp3_playing else 'Arret')
+        self.chti_music_text(title, pygame.Rect(box.x + 5, box.y, int(box.w * .66) - 10, box.h // 2), h * .034)
+        self.chti_music_text('{} | Volume {}% | Valider : morceaux'.format(
+            state, int(round(self._mp3_volume * 100))),
+            pygame.Rect(box.x + 5, box.y + box.h // 2, int(box.w * .66) - 10, box.h // 2), h * .028)
+        spectrum = pygame.Rect(box.x + int(box.w * .69), box.y + 10,
+                               int(box.w * .29), box.h - 20)
+        self.chti_spectrum_draw(spectrum)
+        return tuple(box)
+
+
+    def chti_music_names(self, filename):
+        name = os.path.splitext(os.path.basename(filename))[0]
+        name = re.sub(r'^\s*\d+[ ._-]+', '', name).replace('_', ' ').strip()
+        parts = re.split(r'\s*[-–—]\s*', name, maxsplit=1)
+        return (parts[0].strip(), parts[1].strip()) if len(parts) == 2 else ('', name)
+
+
+    def chti_music_tags(self, filename, generation):
+        # ffprobe lit les métadonnées sans ralentir les boutons ni la musique.
+        try:
+            result = subprocess.run(['ffprobe', '-v', 'error', '-show_entries',
+                'format_tags=artist,title', '-of', 'json', filename],
+                stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, timeout=3)
+            if result.returncode != 0:
+                return
+            tags = json.loads(result.stdout.decode('utf-8')).get('format', {}).get('tags', {})
+            tags = {key.lower(): value for key, value in tags.items()}
+            with self._mp3_lock:
+                if generation == self._spectrum_generation:
+                    self._mp3_artist = str(tags.get('artist') or self._mp3_artist)
+                    self._mp3_title = str(tags.get('title') or self._mp3_title)
+        except Exception:
+            pass  # Le nom du fichier reste disponible.
+
+
+    def chti_music_dmd(self, active=True):
+        now = time.monotonic()
+        if active and now - self._music_dmd_last < 0.020:
+            return
+        self._music_dmd_last = now
+        try:
+            if not active:
+                self.dmd.send('music|{"active":false}')
+                return
+            with self._mp3_lock:
+                frame = None
+                if (self._mp3_playing and not self._mp3_paused
+                        and pygame.mixer.get_init()):
+                    position = pygame.mixer.music.get_pos()
+                    if position >= 0:
+                        frame = self._spectrum_frames.get(int(position / 64))
+                bands = [int(round(100 * max(0.0, min(1.0,
+                    (20.0 * math.log10(max(1e-8, value)) + 70.0) / 60.0))))
+                    for value in frame] if frame is not None else [0] * 18
+                data = {'active': True, 'artist': self._mp3_artist[:120],
+                        'title': self._mp3_title[:160], 'bands': bands,
+                        'state': 'Pause' if self._mp3_paused else
+                                 ('Lecture' if self._mp3_playing else 'Arret')}
+            self.dmd.send('music|' + json.dumps(data, ensure_ascii=True, separators=(',', ':')))
+        except Exception as error:
+            # Le lecteur local reste utilisable si le DMD est déconnecté.
+            if now - getattr(self, '_music_dmd_error_time', 0.0) > 10:
+                self._music_dmd_error_time = now
+                self.logs.log('WARNING', 'Musique DMD : {}'.format(error))
+
+
+    def chti_music_menu(self):
+        self.chti_music_init()
+        with self._mp3_lock:
+            self.chti_music_scan()
+        selected = max(0, self._mp3_index)
+        actions = [('pause', 'Lecture / Pause'), ('previous', 'Precedent'),
+                   ('next', 'Suivant'), ('voldown', 'Volume -'),
+                   ('volup', 'Volume +'), ('stop', 'Arreter'), ('back', 'Retour')]
+        self._music_dmd_last = 0.0
+        try:
+            while True:
+                w, h = self.screen.get_size()
+                self.screen.fill((22, 20, 17))
+                self.chti_music_text('MUSIQUE MP3', pygame.Rect(w * .08, h * .03, w * .84, h * .07), h * .05, (255, 210, 60))
+                count = len(self._mp3_tracks)
+                entries = [(i, os.path.splitext(os.path.basename(path))[0])
+                           for i, path in enumerate(self._mp3_tracks)] + actions
+                selected = min(selected, len(entries) - 1)
+                first = max(0, min(selected - 4, len(entries) - 8))
+                zones = {}
+                for row, index in enumerate(range(first, min(first + 8, len(entries)))):
+                    rect = pygame.Rect(int(w * .08), int(h * (.14 + row * .07)), int(w * .84), int(h * .06))
+                    pygame.draw.rect(self.screen, (110, 80, 15) if index == selected else (43, 40, 35), rect)
+                    label = entries[index][1]
+                    if index < count and index == self._mp3_index:
+                        label = '> ' + label
+                    self.chti_music_text(label, rect, h * .031)
+                    zones['mp3row{}'.format(index)] = tuple(rect)
+                notice = self._mp3_error or ('Aucun MP3 : verifier la cle USB' if not count else 'Haut/Bas : choisir | Valider : lancer | Retour : menu')
+                self.chti_music_text(notice, pygame.Rect(w * .08, h * .72, w * .84, h * .06), h * .026)
+                self.chti_music_bar()
+                self.chti_music_dmd(True)
+                self.update_screen()
+                key = self.rpi.listen_inputs(['arrows'],
+                    ['escape', 'enter', 'PLAYERBUTTON', 'BACKUPBUTTON', 'GAMEBUTTON',
+                     'single-click', 'VOLUME-UP', 'VOLUME-DOWN'], timeout=20)
+                clicked = self.is_clicked(zones, key)
+                if clicked:
+                    selected = int(clicked.replace('mp3row', ''))
+                    key = 'enter'
+                if key in ESCAPE_KEYS or key in ('BACKUPBUTTON', 'BTN_BACKUPBUTTON'):
+                    return
+                if key in UP_KEYS:
+                    selected = (selected - 1) % len(entries)
+                elif key in DOWN_KEYS:
+                    selected = (selected + 1) % len(entries)
+                elif key == 'VOLUME-UP':
+                    self.chti_music_action('volup')
+                elif key == 'VOLUME-DOWN':
+                    self.chti_music_action('voldown')
+                elif key in ENTER_KEYS or key in ('GAMEBUTTON', 'PLAYERBUTTON'):
+                    action = entries[selected][0]
+                    if isinstance(action, int):
+                        self.chti_music_play(action)
+                    elif action == 'back':
+                        return
+                    else:
+                        self.chti_music_action(action)
+        finally:
+            self.chti_music_dmd(False)
+

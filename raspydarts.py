@@ -14,7 +14,7 @@ import sys
 # libraries only for features the game does not use. Each library expects them to be
 # missing and does without : pygame finds its data files without pkg_resources and has no
 # surfarray without numpy, paho-mqtt has no connect_srv() without dns
-for _unused in ('pkg_resources', 'numpy', 'dns', 'dns.resolver'):
+for _unused in ('pkg_resources', 'dns', 'dns.resolver'):
     sys.modules.setdefault(_unused, None)
 
 import datetime
@@ -769,6 +769,10 @@ try:
                     display.infos_menu(Config)
                 elif game_type == 'gallery':
                     display.gallery_menu()
+                elif game_type == 'mp3':
+                    display.chti_music_menu()
+                    menu = 'gametype'
+                    continue
                 elif game_type != 'miscellaneous':
                     menu = 'players'
             elif menu == 'gametype' and skip_main :

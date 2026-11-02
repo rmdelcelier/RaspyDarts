@@ -38,6 +38,7 @@ ACTIONS = {
     'network_create': 'netcreate',
     'trophies': 'trophees',
     'gallery': 'gallery',
+    'mp3': 'mp3',
     'infos': 'infos',
     'restart': 'restart',
     'desktop': 'quit',

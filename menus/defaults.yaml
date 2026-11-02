@@ -67,6 +67,10 @@ menus:
         text: gallery
         shortcut: F6
         exhibition: true
+      - id: mp3
+        action: mp3
+        text: "Composant : Lecteur MP3"
+        exhibition: true
       - id: infos
         action: infos
         shortcut: F9
