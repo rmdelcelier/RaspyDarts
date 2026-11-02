@@ -4965,5 +4965,5 @@ msgstr "Klassiek"
 msgid "editor-image-none"
 msgstr "Geen"
 
-msgid "beta-identifier"
+msgid "infos-identifier"
 msgstr "Kenmerk: {id}"

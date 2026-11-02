@@ -4911,5 +4911,5 @@ msgstr "Klassisch"
 msgid "editor-image-none"
 msgstr "Keine"
 
-msgid "beta-identifier"
+msgid "infos-identifier"
 msgstr "Kennung: {id}"

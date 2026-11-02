@@ -6937,25 +6937,25 @@ class Screen(pygame.Surface):
         import psutil
 
         ratio = 1 / 3
-        # Beta : the installation in a QR code (include/cbeta.py), on the right of the tables :
+        # The installation in a QR code (include/cinfos.py), on the right of the tables :
         # the tables and the code centred together, the code in the middle of their height
-        from include import cbeta
-        fields = cbeta.infos(Conf, self.rpi, Conf.pyDartsFullVersion, Conf.rpi_version, (self.res_x, self.res_y))
-        beta_text = cbeta.text(fields)
-        self.logs.debug(f"Beta : {fields}")
+        from include import cinfos
+        fields = cinfos.infos(Conf, self.rpi, Conf.pyDartsFullVersion, Conf.rpi_version, (self.res_x, self.res_y))
+        infos_text = cinfos.text(fields)
+        self.logs.debug(f"Infos : {fields}")
         side = min(int(self.res['x'] * .26), int(self.res['y'] * .5))
-        beta_code = self.online_qrcode(beta_text, side)
+        infos_code = self.online_qrcode(infos_text, side)
         line = int(self.res['y'] / 28)
         table_width = int(self.res['x'] * 14 / 16 * ratio)
         gap = int(self.res['x'] * .03)
         left = int((self.res['x'] - table_width - gap - side) / 2)
         shift = left - int((self.res['x'] - table_width) / 2)
-        beta_x = left + table_width + gap
+        infos_x = left + table_width + gap
         # Rows : from 2 above the first (offset -2) to the last one of the last table
         row_height = int((self.res['y'] * 10 / 16) / 15)
         top = 4 * self.res_y_16 - 2 * row_height
         bottom = 4 * self.res_y_16 + row_height * (14 + len(self.ips))
-        beta_y = int((top + bottom - side - self.margin - line) / 2)
+        infos_y = int((top + bottom - side - self.margin - line) / 2)
 
         while True:
             total, used, free = shutil.disk_usage("/")
@@ -6995,9 +6995,9 @@ class Screen(pygame.Surface):
             self.display_row(5, 6, 0, [("CPU usage", 1 / 2), ("{} %".format(psutil.cpu_percent()), 1 / 2)], ratio, 8 + len(self.ips), shift=shift)
             self.display_row(6, 6, 0, [("CPU frequency", 1 / 2), (cpu_freq, 1 / 2)], ratio, 8 + len(self.ips), shift=shift)
 
-            self.blit(beta_code, (beta_x, beta_y))
-            self.blit_text(self.lang.translate('beta-identifier').format(id=fields['id']), beta_x,
-                           beta_y + side + self.margin, side, line, self.colorset['menu-text-white'])
+            self.blit(infos_code, (infos_x, infos_y))
+            self.blit_text(self.lang.translate('infos-identifier').format(id=fields['id']), infos_x,
+                           infos_y + side + self.margin, side, line, self.colorset['menu-text-white'])
 
             self.update_screen()
 

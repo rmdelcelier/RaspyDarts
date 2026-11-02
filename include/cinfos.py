@@ -1,7 +1,7 @@
 """
-Beta : the installation told by a QR code (screen of the technical informations, F9) : what
-the borne is and what is plugged on it, as text only (one « key=value » a line, no address of
-a site), read by whoever scans it.
+Informations of the installation, told by a QR code (screen of the technical informations,
+F9) : what the borne is and what is plugged on it, as text only (one « key=value » a line, no
+address of a site), read by whoever scans it.
 
 Never a password, a token, a name nor an address : the identifier of the Raspberry is its
 serial hashed (cupdate.machine_id, the one of the statistics and of Raspy2DMD).

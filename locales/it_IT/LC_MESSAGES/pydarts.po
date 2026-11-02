@@ -4978,5 +4978,5 @@ msgstr "Classica"
 msgid "editor-image-none"
 msgstr "Nessuna"
 
-msgid "beta-identifier"
+msgid "infos-identifier"
 msgstr "Identificativo: {id}"

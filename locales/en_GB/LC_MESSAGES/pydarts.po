@@ -5183,5 +5183,5 @@ msgstr "Classic"
 msgid "editor-image-none"
 msgstr "None"
 
-msgid "beta-identifier"
+msgid "infos-identifier"
 msgstr "Identifier: {id}"

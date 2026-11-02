@@ -4916,5 +4916,5 @@ msgstr "Clásica"
 msgid "editor-image-none"
 msgstr "Ninguna"
 
-msgid "beta-identifier"
+msgid "infos-identifier"
 msgstr "Identificador: {id}"
