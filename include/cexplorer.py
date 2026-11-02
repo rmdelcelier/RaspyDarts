@@ -23,7 +23,7 @@ PREVIEWS = 24
 # Icons of the lines (colour emojis) ; up : a folder with an arrow, drawn
 ICONS = {'dir': '\U0001F4C1', 'open': '\U0001F4C2', 'file': '\U0001F5BC', 'extra': '\U0001F3A8',
          'theme': '\U0001F3A8', 'mine': '\U0001F5BC', 'game': '\U0001F3AF', 'usb': '\U0001F4BE',
-         'home': '\U0001F3E0', 'card': '\U0001F4BD', 'arrow': '\u2B06'}
+         'home': '\U0001F3E0', 'card': '\U0001F4BD', 'arrow': '\u2B06', 'none': '\U0001F6AB'}
 
 
 def places(screen, translate):
@@ -100,8 +100,10 @@ def explore(screen, title, current=None, extra=()):
         root = max(holding, key=len) if holding else os.sep
     while True:
         if folder is None:
+            # (no image : its own icon)
             entries = [{'kind': 'extra', 'path': choice[0], 'label': choice[1],
-                        'image': choice[2] if len(choice) > 2 else None} for choice in extra]
+                        'image': choice[2] if len(choice) > 2 else None,
+                        'icon': 'none' if choice[0] == 'none' else None} for choice in extra]
             entries += places(screen, translate)
         else:
             entries = listing(folder, translate)
