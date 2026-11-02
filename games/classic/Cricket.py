@@ -1095,6 +1095,7 @@ class Game(cgame.Game):
                                                     actual_player, TxtOnLogo=TxtOnLogo, OnScreenButtons=OnScreenButtons,
                                                     showScores=showScores, end_of_game=end_of_game, endOfSet=endOfSet,
                                                     Set=Set, MaxSet=MaxSet)
+        else:
             self.display.reset_background()
 
             mpr = players[actual_player].show_mpr()
