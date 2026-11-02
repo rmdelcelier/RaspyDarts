@@ -19,7 +19,7 @@ HEADERS = ['20', '19', '18', '17', '16', '15', 'B']
 #OPTIONS = {'theme': 'default', 'max_round': 20, 'optioncrazy': False, 'optioncutthroat': False, 'drinkscore': 200,
 #        'Teaming': False, 'optionteamscore': False, 'optionhandicap': False, 'mpr': False, 'colorised': False}
         
-OPTIONS = {'theme': 'default', 'display': 'horizontal', 'max_round': 20, 'optioncrazy': False, 'optioncutthroat': False, 'enculette': False, 'drinkscore': 200,
+OPTIONS = {'theme': 'default', 'display': 'classic', 'max_round': 20, 'optioncrazy': False, 'optioncutthroat': False, 'enculette': False, 'drinkscore': 200,
         'Teaming': False, 'optionteamscore': False, 'optionhandicap': False, 'mpr': False, 'colorised': False}
       
 # Options with a list of values (the screen of the options : a dropdown) : value, its text
@@ -88,9 +88,9 @@ class Game(cgame.Game):
             
         
         self.enculette = options['enculette']  # Option L'Enculette
-        # Display : horizontal (the players in lines), or classic (the one of always : the
-        # players in columns, the hits drawn on the dart)
-        self.display_mode = options.get('display', 'horizontal')
+        # Display : classic (the one of always, by default : the players in columns, the hits
+        # drawn on the dart), or horizontal (the players in lines)
+        self.display_mode = options.get('display', 'classic')
         if self.display_mode == 'classic':
             # Only in classic : the game loop draws the hit itself when it is missing
             self.display_hit = self.display_hit_classic

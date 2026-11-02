@@ -1720,6 +1720,7 @@ msgstr "Klassisches Cricket.\n"
 "- Geteilte Scores: Teammitglieder teilen sich die Punktetabelle.\n"
 "- Handicap: Fügt dem stärksten Team ein Handicap hinzu.\n"
 "- MPR: Zeigt MPR neben Spielernamen an.\n"
+"- Anzeige: Klassisch (eine Spalte pro Spieler) oder Horizontal (eine Zeile pro Spieler).\n"
 " "
 
 msgid "Cricket-max_players"
@@ -4906,3 +4907,6 @@ msgstr "Horizontal"
 
 msgid "cricket-display-classic"
 msgstr "Klassisch"
+
+msgid "editor-image-none"
+msgstr "Keine"

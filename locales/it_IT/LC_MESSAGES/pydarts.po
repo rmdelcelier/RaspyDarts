@@ -1721,6 +1721,7 @@ msgstr "Cricket classico.\n"
 "- Punteggi condivisi: I membri della squadra condividono la tabella punti.\n"
 "- Handicap: Aggiunge un handicap alla squadra più forte.\n"
 "- MPR: Mostra il valore MPR accanto al nome del giocatore.\n"
+"- Visualizzazione: Classica (una colonna per giocatore) o Orizzontale (una riga per giocatore).\n"
 " "
 
 msgid "Cricket-max_players"
@@ -4973,3 +4974,6 @@ msgstr "Orizzontale"
 
 msgid "cricket-display-classic"
 msgstr "Classica"
+
+msgid "editor-image-none"
+msgstr "Nessuna"

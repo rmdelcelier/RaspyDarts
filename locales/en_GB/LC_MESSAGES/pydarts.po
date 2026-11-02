@@ -1721,6 +1721,7 @@ msgstr "Classic Cricket.\n"
 "- Shared scores: Teammates share score grid.\n"
 "- Handicap: Adds handicap to stronger team.\n"
 "- MPR: Displays MPR next to player names.\n"
+"- Display: Classic (one column per player) or Horizontal (one line per player).\n"
 " "
 
 msgid "Cricket-max_players"
@@ -5178,3 +5179,6 @@ msgstr "Horizontal"
 
 msgid "cricket-display-classic"
 msgstr "Classic"
+
+msgid "editor-image-none"
+msgstr "None"

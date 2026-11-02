@@ -682,10 +682,19 @@ class Editor:
             button['text'] = names
         self.changed = True
 
+    def default_icon(self, button):
+        '''
+        The icon a button has without one of its own (the logo of its game...), None : none
+        '''
+        return self.screen.button_icon({key: value for key, value in button.items() if key not in ('icon', 'logo_image')})
+
     def icon_text(self, button):
         icon = button.get('icon')
         path = icon.get('image') if isinstance(icon, dict) else icon
-        return os.path.basename(str(path)) if path else self.translate('editor-image-default')
+        if isinstance(path, str):
+            # Its own ('' : none at all)
+            return os.path.basename(path) if path else self.translate('editor-image-none')
+        return self.translate('editor-image-default' if self.default_icon(button) else 'editor-image-none')
 
     @staticmethod
     def state_block(button, state):
@@ -698,19 +707,40 @@ class Editor:
             block = {'image': block} if '/' in block or block.lower().endswith(cexplorer.IMAGES) else {'color': block}
         return block if isinstance(block, dict) else {}
 
+    def style_image(self, button, state):
+        '''
+        The image the style of the button gives to this state (the states take the one of the
+        normal state when they have none), None : none
+        '''
+        own = ('background', 'selected', 'disabled', 'pressed', 'color')
+        style = self.screen.button_style(self.menu, {key: value for key, value in button.items() if key not in own})
+        blocks = [style.get('background')] + ([(style.get(state) or {}).get('background')] if state != 'normal' else [])
+        image = None
+        for block in blocks:
+            if isinstance(block, str) and ('/' in block or block.lower().endswith(cexplorer.IMAGES)):
+                image = block
+            elif isinstance(block, dict) and 'image' in block:
+                image = block.get('image')
+        return image or None
+
     def state_image_text(self, button, state):
-        image = self.state_block(button, state).get('image')
-        return os.path.basename(str(image)) if image else self.translate('editor-image-style')
+        block = self.state_block(button, state)
+        if 'image' in block:
+            # Its own ('' or none : none at all)
+            return os.path.basename(str(block['image'])) if block['image'] else self.translate('editor-image-none')
+        return self.translate('editor-image-style' if self.style_image(button, state) else 'editor-image-none')
 
     def choose_icon(self, button):
         '''
-        The image of the shortcut of a button (its icon) : chosen in the explorer, or the one of
-        always
+        The image of the shortcut of a button (its icon) : chosen in the explorer, none, or the
+        one it has by default (if it has one)
         '''
         icon = button.get('icon')
         current = icon.get('image') if isinstance(icon, dict) else icon
-        chosen = self.choose_image(self.translate('editor-icon'), current,
-                                   [('default', self.translate('editor-image-default'))], 'buttons')
+        extra = [('none', self.translate('editor-image-none'))]
+        if self.default_icon(button):
+            extra.insert(0, ('default', self.translate('editor-image-default'), self.image_file(self.default_icon(button))))
+        chosen = self.choose_image(self.translate('editor-icon'), current or None, extra, 'buttons')
         if chosen is None:
             return
         if chosen == 'default':
@@ -718,24 +748,35 @@ class Editor:
                 icon.pop('image', None)
             else:
                 button.pop('icon', None)
-        elif isinstance(icon, dict):
-            icon['image'] = chosen
         else:
-            button['icon'] = chosen
+            path = '' if chosen == 'none' else chosen
+            if isinstance(icon, dict):
+                icon['image'] = path
+            elif path or self.default_icon(button):
+                button['icon'] = path
+            else:
+                button.pop('icon', None)
         self.changed = True
 
     def choose_state_image(self, button, state):
         '''
         The image of a state of a button (normal, selected, disabled) : chosen in the explorer
-        (it fills the button), or the one of its style
+        (it fills the button), none, or the one of its style (if it gives one)
         '''
         block = dict(self.state_block(button, state))
-        chosen = self.choose_image(self.translate(f'editor-image-{state}'), block.get('image'),
-                                   [('style', self.translate('editor-image-style'))], 'buttons')
+        style = self.style_image(button, state)
+        extra = [('none', self.translate('editor-image-none'))]
+        if style:
+            extra.insert(0, ('style', self.translate('editor-image-style'), self.image_file(style)))
+        chosen = self.choose_image(self.translate(f'editor-image-{state}'), block.get('image') or None, extra, 'buttons')
         if chosen is None:
             return
-        if chosen == 'style':
+        if chosen == 'style' or (chosen == 'none' and not style):
             block.pop('image', None)
+            block.pop('fit', None)
+        elif chosen == 'none':
+            # The image of the style hidden
+            block['image'] = ''
             block.pop('fit', None)
         else:
             block['image'] = chosen

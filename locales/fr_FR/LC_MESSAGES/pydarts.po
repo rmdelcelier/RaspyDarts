@@ -1743,6 +1743,7 @@ msgstr "Le Cricket classique.\n"
 "- Mutualisation : Les joueurs d'une même équipe partagent la même grille de scores.\n"
 "- Handicap : Ajoute un handicap à l'équipe la plus forte.\n"
 "- MPR : Affiche le MPR à côté du nom du joueur\n"
+"- Affichage : Classique (une colonne par joueur) ou Horizontal (une ligne par joueur).\n"
 " "
 
 msgid "Cricket-max_players"
@@ -4982,3 +4983,6 @@ msgstr "Horizontal"
 
 msgid "cricket-display-classic"
 msgstr "Classique"
+
+msgid "editor-image-none"
+msgstr "Aucune"

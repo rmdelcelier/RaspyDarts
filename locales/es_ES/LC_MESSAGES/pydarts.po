@@ -1721,6 +1721,7 @@ msgstr "Cricket clásico.\n"
 "- Puntuaciones compartidas: Los compañeros comparten la tabla de puntuación.\n"
 "- Hándicap: Añade hándicap al equipo más fuerte.\n"
 "- MPR: Muestra el MPR junto a los nombres de los jugadores.\n"
+"- Visualización: Clásica (una columna por jugador) u Horizontal (una línea por jugador).\n"
 " "
 
 msgid "Cricket-max_players"
@@ -4911,3 +4912,6 @@ msgstr "Horizontal"
 
 msgid "cricket-display-classic"
 msgstr "Clásica"
+
+msgid "editor-image-none"
+msgstr "Ninguna"

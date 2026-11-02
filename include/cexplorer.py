@@ -61,10 +61,22 @@ def listing(folder, translate):
         entries = []
     found = [{'kind': 'up', 'path': None, 'label': translate('editor-import-up')}]
     found += [{'kind': 'dir', 'path': entry.path, 'label': entry.name}
-              for entry in entries if entry.is_dir()]
+              for entry in entries if entry.is_dir() and not loops(entry, folder)]
     found += [{'kind': 'file', 'path': entry.path, 'label': entry.name}
               for entry in entries if entry.is_file() and entry.name.lower().endswith(IMAGES)]
     return found
+
+
+def loops(entry, folder):
+    '''
+    A link to this folder or to a folder above it (/usr/bin/X11 -> .) : opened, it showed the
+    same folder again and again
+    '''
+    if not entry.is_symlink():
+        return False
+    target = os.path.realpath(entry.path)
+    here = os.path.realpath(folder)
+    return here == target or here.startswith(target.rstrip(os.sep) + os.sep)
 
 
 def explore(screen, title, current=None, extra=()):

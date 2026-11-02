@@ -1737,6 +1737,7 @@ msgstr "Klassiek Cricket.\n"
 "- Delen: Spelers van hetzelfde team delen dezelfde scoreraster.\n"
 "- Handicap: Voegt een handicap toe aan het sterkste team.\n"
 "- MPR: Toont de MPR naast de naam van de speler.\n"
+"- Weergave: Klassiek (één kolom per speler) of Horizontaal (één regel per speler).\n"
 " "
 
 msgid "Cricket-max_players"
@@ -4960,3 +4961,6 @@ msgstr "Horizontaal"
 
 msgid "cricket-display-classic"
 msgstr "Klassiek"
+
+msgid "editor-image-none"
+msgstr "Geen"
