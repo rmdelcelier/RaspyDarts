@@ -7457,12 +7457,12 @@ class Screen(pygame.Surface):
             Screen.hidden_shortcuts = []
         self.logs.info(f"Menus : shortcuts {'shown' if Screen.revealed else 'as the theme wants'} (secret key)")
 
-    def run_menu(self, name, items, everything, hook=None, initial=None, title=None, subtitle=None):
+    def run_menu(self, name, items, everything, hook=None, initial=None, title=None, subtitle=None, columns=None):
         '''
         A menu of the files, drawn as a list of classic buttons (menu_item) and the buttons
         at its bottom (display_button) : returns the button chosen. items : buttons shown ;
         everything : all those which have a shortcut (hidden ones too) ; initial : id of the
-        button selected first. The background, the title and the informations are drawn
+        button selected first ; columns : 2, the list in two columns (the first half on the left). The background, the title and the informations are drawn
         once : moving only draws again the buttons whose look changes
         '''
         menus = self.menus()
@@ -7506,10 +7506,11 @@ class Screen(pygame.Surface):
         # A setting (a button with a value) : the line in two parts, as in the pages of settings,
         # all the lines of the menu as wide
         with_values = any('value' in button for button in listed)
+        half = (nb_listed + 1) // 2 if columns == 2 else None
 
         def look(index):
             # Selected or not (with 10 buttons or more, the corners of the neighbours change)
-            if index > nb_listed or nb_listed < 10 or layout != 'list':
+            if index > nb_listed or nb_listed < 10 or layout != 'list' or half:
                 return index == selected
             return (index, selected)
 
@@ -7527,10 +7528,13 @@ class Screen(pygame.Surface):
                 if 'value' in button:
                     kind = BTN_CHECK if isinstance(button['value'], bool) else BTN_DROPDOWN
                     value = button['value'] if kind == BTN_CHECK else self.lang.translate(str(button['value']))
+                column = None
+                if half:
+                    column = (0, half, index) if index <= half else (1, half, index - half)
                 rects[index] = self.menu_item((index, nb_listed, selected), (self.button_label(button, menu), self.button_text(button),
                                               kind, value), space=spaces[index - 1], exit=False,
                                               valid=not button.get('unavailable'), tabs=bool(subtitle) and nb_listed > 8,
-                                              align='Full' if with_values else None)
+                                              align='Full' if with_values else None, column=column)
             drawn[index] = look(index)
 
         while True:

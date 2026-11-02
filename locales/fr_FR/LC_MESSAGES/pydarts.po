@@ -4931,3 +4931,42 @@ msgstr "Aucun joueur"
 
 msgid "nl_NL"
 msgstr "Néerlandais"
+
+msgid "editor-name"
+msgstr "Nom"
+
+msgid "editor-icon"
+msgstr "Image de raccourci"
+
+msgid "editor-image-normal"
+msgstr "Image (normal)"
+
+msgid "editor-image-selected"
+msgstr "Image (sélectionné)"
+
+msgid "editor-image-disabled"
+msgstr "Image (désactivé)"
+
+msgid "editor-image-style"
+msgstr "Celle du style"
+
+msgid "editor-image-default"
+msgstr "Par défaut"
+
+msgid "explorer-places"
+msgstr "Emplacements"
+
+msgid "explorer-theme-images"
+msgstr "Images du thème"
+
+msgid "explorer-my-images"
+msgstr "Mes images"
+
+msgid "explorer-game-images"
+msgstr "Images du jeu"
+
+msgid "explorer-empty"
+msgstr "Aucune image dans ce dossier"
+
+msgid "explorer-unreadable"
+msgstr "Image illisible"

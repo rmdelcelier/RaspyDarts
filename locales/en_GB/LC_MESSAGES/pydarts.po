@@ -5127,3 +5127,42 @@ msgstr "Nombre de tours"
 
 msgid "nl_NL"
 msgstr "Dutch"
+
+msgid "editor-name"
+msgstr "Name"
+
+msgid "editor-icon"
+msgstr "Shortcut image"
+
+msgid "editor-image-normal"
+msgstr "Image (normal)"
+
+msgid "editor-image-selected"
+msgstr "Image (selected)"
+
+msgid "editor-image-disabled"
+msgstr "Image (disabled)"
+
+msgid "editor-image-style"
+msgstr "The style's one"
+
+msgid "editor-image-default"
+msgstr "Default"
+
+msgid "explorer-places"
+msgstr "Places"
+
+msgid "explorer-theme-images"
+msgstr "Theme images"
+
+msgid "explorer-my-images"
+msgstr "My images"
+
+msgid "explorer-game-images"
+msgstr "Game images"
+
+msgid "explorer-empty"
+msgstr "No image in this folder"
+
+msgid "explorer-unreadable"
+msgstr "Unreadable image"

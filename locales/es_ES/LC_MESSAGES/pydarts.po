@@ -4860,3 +4860,42 @@ msgstr "Cutthroat Mode"
 
 msgid "nl_NL"
 msgstr "Neerlandés"
+
+msgid "editor-name"
+msgstr "Nombre"
+
+msgid "editor-icon"
+msgstr "Imagen del acceso directo"
+
+msgid "editor-image-normal"
+msgstr "Imagen (normal)"
+
+msgid "editor-image-selected"
+msgstr "Imagen (seleccionado)"
+
+msgid "editor-image-disabled"
+msgstr "Imagen (desactivado)"
+
+msgid "editor-image-style"
+msgstr "La del estilo"
+
+msgid "editor-image-default"
+msgstr "Por defecto"
+
+msgid "explorer-places"
+msgstr "Ubicaciones"
+
+msgid "explorer-theme-images"
+msgstr "Imágenes del tema"
+
+msgid "explorer-my-images"
+msgstr "Mis imágenes"
+
+msgid "explorer-game-images"
+msgstr "Imágenes del juego"
+
+msgid "explorer-empty"
+msgstr "Ninguna imagen en esta carpeta"
+
+msgid "explorer-unreadable"
+msgstr "Imagen ilegible"

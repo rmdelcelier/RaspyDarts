@@ -4922,3 +4922,42 @@ msgstr "Nombre de tours"
 
 msgid "nl_NL"
 msgstr "Olandese"
+
+msgid "editor-name"
+msgstr "Nome"
+
+msgid "editor-icon"
+msgstr "Immagine della scorciatoia"
+
+msgid "editor-image-normal"
+msgstr "Immagine (normale)"
+
+msgid "editor-image-selected"
+msgstr "Immagine (selezionato)"
+
+msgid "editor-image-disabled"
+msgstr "Immagine (disattivato)"
+
+msgid "editor-image-style"
+msgstr "Quella dello stile"
+
+msgid "editor-image-default"
+msgstr "Predefinita"
+
+msgid "explorer-places"
+msgstr "Posizioni"
+
+msgid "explorer-theme-images"
+msgstr "Immagini del tema"
+
+msgid "explorer-my-images"
+msgstr "Le mie immagini"
+
+msgid "explorer-game-images"
+msgstr "Immagini del gioco"
+
+msgid "explorer-empty"
+msgstr "Nessuna immagine in questa cartella"
+
+msgid "explorer-unreadable"
+msgstr "Immagine illeggibile"

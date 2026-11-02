@@ -11,7 +11,6 @@ theme (themes/<theme>/menu/menus.yaml), the previous file kept as menus.yaml.bak
 """
 
 import copy
-import filecmp
 import os
 import re
 import shutil
@@ -19,6 +18,7 @@ import time
 
 import pygame
 
+from include import cexplorer
 from include import cmenus
 from include import cpaths
 from include import cmenustyle
@@ -59,14 +59,8 @@ SHAPES = ('rectangle', 'rounded', 'pill')
 # The version (V4.6) of the menus which show it : an element placed as the buttons, kept in
 # show_version of the menu (not in its buttons)
 VERSION_ID = '__version__'
-# Images a menu can have as background : in these folders of the theme and of ~/.raspydarts,
-# and those of the game named background...
-BACKGROUND_FOLDERS = (os.path.join('images', 'background'), os.path.join('images', 'menus'))
-IMAGES = ('.png', '.jpg', '.jpeg')
-# An image imported (from a USB key...) : copied there (in ~/.raspydarts), then offered with the others
-IMPORTED = os.path.join('images', 'menus')
-# Where the images to import are looked for : the USB keys mounted in these folders
-MOUNTS = ('/media', '/mnt')
+# The states of a button which can have an image of their own (normal : its background)
+STATES = ('normal', 'selected', 'disabled')
 # Buttons arranged in a zone : the spaces between them (parts of the screen), the zone drawn
 GAPS = (0, 0.005, 0.01, 0.02, 0.03, 0.05)
 FIRST_GAP = 2
@@ -115,8 +109,6 @@ class Editor:
         # Its background : the one of the files (None : the one of the theme), and the one
         # given back by Back while they are browsed
         self.backdrop = self.menu.get('background')
-        self.backdrop_before = None
-        self.backdrops = []
 
     @staticmethod
     def clean(button):
@@ -165,9 +157,6 @@ class Editor:
         return 1 if step == 0 else max(1, int(round(step * self.size[0 if axis == 'x' else 1])))
 
     def help_text(self):
-        if self.mode == 'backdrop':
-            number = self.backdrops.index(self.backdrop) + 1 if self.backdrop in self.backdrops else 1
-            return f"{self.translate(dict(SCREENS)[self.name])} · {self.backdrop_name(self.backdrop)} "                 f"({number}/{len(self.backdrops)}) · {self.translate('editor-help-background')}"
         key = {'move': 'editor-help-move', 'resize': 'editor-help-resize', 'zone': 'editor-help-zone'}.get(
             self.mode, 'editor-help-select')
         return f"{self.translate(dict(SCREENS)[self.name])} · {self.translate(key).replace('{step}', self.step_text())}"
@@ -245,7 +234,7 @@ class Editor:
             screen.screen.blit(veil, self.zone.topleft)
             pygame.draw.rect(screen.screen, MOVING, self.zone, 4)
             self.draw_handles(self.zone)
-        elif 1 <= self.selected <= len(self.items) and self.mode != 'backdrop':
+        elif 1 <= self.selected <= len(self.items):
             rect = self.items[self.selected - 1]['rect']
             # The button chosen framed : green, gold while it is moved or resized
             color = screen.colorset['menu-ok'] if self.mode == 'select' else MOVING
@@ -389,9 +378,6 @@ class Editor:
             # presses piled up are dropped
             pygame.event.clear(pygame.KEYDOWN)
             key = self.listen()
-            if self.mode == 'backdrop':
-                self.backdrop_key(key)
-                continue
             if isinstance(key, tuple):
                 choice = self.clicked(key)
                 if choice is not None:
@@ -558,171 +544,37 @@ class Editor:
         name = str(block.get('image') or block.get('color') or '') if isinstance(block, dict) else str(block)
         return name[7:] if name.startswith('images/') else name
 
-    def backdrop_choices(self):
+    def image_file(self, path):
         '''
-        The backgrounds offered : the one of the theme, then the images of the folders of the
-        theme, of ~/.raspydarts and of the game (written as the menus find them : from the
-        folder of the theme, of ~/.raspydarts or of the game) ; the one of the menu kept first
-        if it is none of them
+        The file of an image written in the menus (from the theme, ~/.raspydarts or the game)
         '''
-        theme_dir = getattr(self.screen.file_class, 'theme_dir', None)
-        places = []
-        if theme_dir:
-            places += [(theme_dir, folder, '') for folder in BACKGROUND_FOLDERS]
-        places += [(cpaths.user_dir(), folder, '') for folder in BACKGROUND_FOLDERS]
-        places.append((cpaths.ROOT_DIR, 'images', 'background'))
-        choices = [None]
-        for base, folder, start in places:
-            path = os.path.join(base, folder)
-            if not os.path.isdir(path):
-                continue
-            for name in sorted(os.listdir(path), key=str.lower):
-                if name.lower().endswith(IMAGES) and name.lower().startswith(start):
-                    block = {'image': f'{folder}/{name}'.replace(os.sep, '/'), 'fit': 'cover'}
-                    if block not in choices:
-                        choices.append(block)
-        if self.backdrop not in choices:
-            choices.insert(1, self.backdrop)
-        return choices
+        return self.screen.menu_painter().image_path(path) if path else None
 
-    def import_places(self):
+    def choose_image(self, title, current, extra, kind):
         '''
-        Where an image is looked for first : the USB keys, the home, the whole card
+        An image chosen in the explorer : its path as the menus write it (copied in
+        ~/.raspydarts/images/<kind> if it is elsewhere), or the id of an extra choice ; None :
+        nothing chosen
         '''
-        places = []
-        for base in MOUNTS:
-            for root, folders, _files in os.walk(base):
-                if root.count(os.sep) - base.count(os.sep) >= 2:
-                    folders.clear()
-                if os.path.ismount(root) and root != base:
-                    places.append((f'd:{root}', f"{self.translate('editor-import-usb')} : {os.path.basename(root)}"))
-        places.append((f"d:{os.path.expanduser('~')}", self.translate('editor-import-home')))
-        places.append(('d:/', self.translate('editor-import-root')))
-        return places
-
-    def import_backdrop(self):
-        '''
-        An image of the Raspberry (a USB key...) chosen folder by folder (Back : the folder
-        above), copied in ~/.raspydarts/images/menus : its background, None if none chosen
-        '''
-        screen = self.screen
-        folder = None
-        while True:
-            if folder is None:
-                values = self.import_places()
-            else:
-                try:
-                    entries = sorted((entry for entry in os.scandir(folder) if not entry.name.startswith('.')),
-                                     key=lambda entry: entry.name.lower())
-                except OSError:
-                    entries = []
-                values = [('up', self.translate('editor-import-up'))]
-                values += [(f'd:{entry.path}', f'{entry.name}/') for entry in entries if entry.is_dir()]
-                values += [(f'f:{entry.path}', entry.name) for entry in entries
-                           if entry.is_file() and entry.name.lower().endswith(IMAGES)]
-            chosen = screen.dropdown(screen.res['x'] * 4 / 16, 2 * screen.res_y_16, values, width=screen.res['x'] / 2)
-            if chosen in ('escape', 'up'):
-                if folder is None:
-                    return None
-                parent = os.path.dirname(folder.rstrip(os.sep))
-                folder = None if folder == os.sep or not parent else parent
-                continue
-            if chosen.startswith('d:'):
-                folder = chosen[2:]
-                continue
-            return self.imported(chosen[2:])
-
-    def imported(self, path):
-        '''
-        The image copied with the others (a name already taken by another image : numbered)
-        '''
-        try:
-            pygame.image.load(path)
-            target_dir = os.path.join(cpaths.user_dir(), IMPORTED)
-            os.makedirs(target_dir, exist_ok=True)
-            stem, extension = os.path.splitext(os.path.basename(path))
-            name, number = f'{stem}{extension}', 1
-            while os.path.exists(os.path.join(target_dir, name)) and \
-                    not filecmp.cmp(path, os.path.join(target_dir, name), shallow=False):
-                number += 1
-                name = f'{stem}_{number}{extension}'
-            shutil.copyfile(path, os.path.join(target_dir, name))
-        except Exception as error:    # pylint: disable=broad-except
-            self.screen.logs.error(f"Menus : image {path} not imported ({error})")
-            self.screen.message([self.translate('editor-import-failed')], 2500, 'menu-ko', 'middle', 'big')
-            return None
-        self.screen.logs.info(f"Menus : image {path} imported as {name}")
-        return {'image': f"{IMPORTED.replace(os.sep, '/')}/{name}", 'fit': 'cover'}
-
-    def forget_backdrop(self, block):
-        '''
-        The drawings of a background left while they are browsed forgotten : a full screen
-        image is 8 MB in 1920 x 1080, the painter keeps 128 of them (a Pi 3 has 1 GB)
-        '''
-        if not isinstance(block, dict) or not block.get('image') or block == self.backdrop_before:
-            return
-        painter = self.screen.menu_painter()
-        image = block['image']
-        for cache in (painter.backgrounds, painter.fills):
-            for key in [key for key in cache if image in str(key[0])]:
-                cache.pop(key, None)
-        painter.images.pop(painter.image_path(image), None)
+        chosen = cexplorer.explore(self.screen, title, self.image_file(current), extra)
+        if chosen is None or chosen in dict(extra):
+            return chosen
+        return cexplorer.portable(self.screen, chosen, kind)
 
     def choose_backdrop(self):
         '''
-        The backgrounds in a list (the last line : an image imported) ; the one chosen shown
-        under the buttons : Validate keeps it, Back gives the one before, right and left the
-        others
+        The background of the menu : the one of the theme, or an image chosen in the explorer
+        (shown at once under the buttons ; saved with the screen)
         '''
-        before = self.backdrop
-        choices = self.backdrop_choices()
-        values = [(str(index), self.backdrop_name(block)) for index, block in enumerate(choices)]
-        values.append(('import', self.translate('editor-import')))
-        current = str(choices.index(before)) if before in choices else '0'
-        chosen = self.screen.dropdown(self.size[0] * 4 / 16, 2 * self.screen.res_y_16, values,
-                                      navigate=current, width=self.size[0] / 2)
-        if chosen == 'escape':
+        current = self.backdrop.get('image') if isinstance(self.backdrop, dict) else None
+        chosen = self.choose_image(self.translate('editor-background'), current,
+                                   [('theme', self.translate('editor-background-theme'))], 'menus')
+        if chosen is None:
             return
-        if chosen == 'import':
-            block = self.import_backdrop()
-            if block is None:
-                return
-            choices = self.backdrop_choices()
-            if block not in choices:
-                choices.append(block)
-        else:
-            block = choices[int(chosen)]
-        self.backdrops = choices
-        self.backdrop_before = before
-        self.backdrop = block
-        self.mode = 'backdrop'
-
-    def backdrop_key(self, key):
-        '''
-        The backgrounds browsed under the buttons : right and left (or a touch on the right
-        or the left of the screen) the next one or the one before, Enter (or Menu) kept, Back
-        the one before given back
-        '''
-        step = 0
-        if isinstance(key, tuple):
-            if self.menu_rect.collidepoint(key):
-                key = 'menu'
-            else:
-                step = 1 if key[0] >= self.size[0] / 2 else -1
-        direction = self.direction_of(key)
-        if direction is not None:
-            step = 1 if direction in ('right', 'down') else -1
-        if step:
-            index = self.backdrops.index(self.backdrop) if self.backdrop in self.backdrops else 0
-            self.forget_backdrop(self.backdrop)
-            self.backdrop = self.backdrops[(index + step) % len(self.backdrops)]
-        elif self.key_in(key, 'validate') or key == 'menu':
-            self.changed = self.changed or self.backdrop != self.backdrop_before
-            self.mode = 'select'
-        elif self.key_in(key, 'back'):
-            self.forget_backdrop(self.backdrop)
-            self.backdrop = self.backdrop_before
-            self.mode = 'select'
+        block = None if chosen == 'theme' else {'image': chosen, 'fit': 'cover'}
+        if block != self.backdrop:
+            self.backdrop = block
+            self.changed = True
 
     def give_up(self):
         '''
@@ -740,42 +592,165 @@ class Editor:
 
     def button_actions(self):
         '''
-        The button chosen : moved, resized, its shortcut or its shape changed, or deleted
+        The element chosen : moved, resized or deleted ; a button : its name, its shortcut, its
+        shape, the image of its shortcut (its icon) and those of its states changed too. In two
+        columns
         '''
         item = self.items[self.selected - 1]
-        name = self.button_name(item['button'])
+        button = item['button']
+        name = self.button_name(button)
         choice = None
+        # The version and the panel of the players online : only placed
+        full = not button.get('version') and button.get('action') != 'online_players'
         while True:
-            items = [{'id': 'move', 'action': 'move', 'text': 'editor-move', 'shortcut': 'F1'},
-                     {'id': 'resize', 'action': 'resize', 'text': 'editor-resize', 'shortcut': 'F2'},
-                     {'id': 'shortcut', 'action': 'shortcut', 'shortcut': 'F3', 'text': 'editor-shortcut',
-                      'value': self.shortcut_text(item['button'])},
-                     {'id': 'shape', 'action': 'shape', 'shortcut': 'F4', 'text': 'editor-shape',
-                      'value': self.shape_text(item['button'])},
-                     {'id': 'delete', 'action': 'delete', 'text': 'editor-delete', 'shortcut': 'F5'}]
-            if item['button'].get('version'):
-                # The version : no shortcut nor shape, it is only a text
-                items = [entry for entry in items if entry['id'] not in ('shortcut', 'shape')]
+            items = [{'id': 'move', 'action': 'move', 'text': 'editor-move'},
+                     {'id': 'resize', 'action': 'resize', 'text': 'editor-resize'}]
+            if full:
+                items += [{'id': 'name', 'action': 'name', 'text': 'editor-name', 'value': self.button_name(button)},
+                          {'id': 'shortcut', 'action': 'shortcut', 'text': 'editor-shortcut',
+                           'value': self.shortcut_text(button)},
+                          {'id': 'shape', 'action': 'shape', 'text': 'editor-shape', 'value': self.shape_text(button)},
+                          {'id': 'icon', 'action': 'icon', 'text': 'editor-icon', 'value': self.icon_text(button)}]
+                items += [{'id': state, 'action': state, 'text': f'editor-image-{state}',
+                           'value': self.state_image_text(button, state)} for state in STATES]
+            items.append({'id': 'delete', 'action': 'delete', 'text': 'editor-delete'})
+            for number, entry in enumerate(items, 1):
+                entry['shortcut'] = f'F{number}'
             back = {'id': 'back', 'action': 'back', 'text': 'back', 'footer': 'left', 'shortcut': 'escape'}
             choice = self.screen.run_menu('editor_button', items + [back], items + [back], title=name,
-                                          initial=choice if choice in ('shortcut', 'shape') else None).get('id')
+                                          initial=choice, columns=2 if full else None).get('id')
             if choice == 'shortcut':
                 self.shortcut(item)
                 continue
             if choice == 'shape':
                 self.shape(item)
                 continue
+            if choice == 'name':
+                self.rename(button)
+                name = self.button_name(button)
+                continue
+            if choice == 'icon':
+                self.choose_icon(button)
+                continue
+            if choice in STATES:
+                self.choose_state_image(button, choice)
+                continue
             if choice in ('move', 'resize'):
                 self.mode = choice
                 self.handle = 4
             elif choice == 'delete' and self.screen.ask_yes_no(f"{self.translate('editor-delete-confirm')} ({name})"):
-                ident = self.menus.button_id(item['button'])
-                if not item.get('new') and not item['button'].get('version'):
+                ident = self.menus.button_id(button)
+                if not item.get('new') and not button.get('version'):
                     self.removed.append(ident)
                 del self.items[self.selected - 1]
                 self.selected = max(1, min(self.selected, len(self.items)))
                 self.changed = True
             return
+
+    def rename(self, button):
+        '''
+        The name of a button, typed : in the language of the borne (the others keep the
+        name they had) ; the name of always typed again : back to it
+        '''
+        screen = self.screen
+        before = self.button_name(button)
+        typed = screen.input_value_item('string', before, 1, 40, text='editor-name')
+        if typed in ('escape', False, None) or str(typed) == before:
+            return
+        typed = str(typed).strip()
+        language = str(screen.config.get_value('SectionGlobals', 'locale', False) or 'en')[:2]
+        text = button.get('text', self.menus.button_id(button))
+        look = None
+        if isinstance(text, dict) and not set(text) <= screen.LANGUAGES:
+            # The look of the text (size, font...) : its text in 'text'
+            look, text = text, text.get('text', self.menus.button_id(button))
+        if isinstance(text, dict):
+            names = dict(text)
+        else:
+            # The other languages : the name they had (a key of translation, translated)
+            names = {code: text for code in screen.LANGUAGES}
+        names[language] = typed
+        default = {code: value for code, value in names.items() if code != language}
+        if typed and all(value == names.get(language) for value in default.values()):
+            # Every language has this name : written once
+            names = typed
+        if look is not None:
+            look = dict(look)
+            look['text'] = names
+            button['text'] = look
+        else:
+            button['text'] = names
+        self.changed = True
+
+    def icon_text(self, button):
+        icon = button.get('icon')
+        path = icon.get('image') if isinstance(icon, dict) else icon
+        return os.path.basename(str(path)) if path else self.translate('editor-image-default')
+
+    @staticmethod
+    def state_block(button, state):
+        '''
+        The background of a state of a button (normal : its own), as a block
+        '''
+        holder = button if state == 'normal' else button.get(state)
+        block = holder.get('background') if isinstance(holder, dict) else None
+        if isinstance(block, str):
+            block = {'image': block} if '/' in block or block.lower().endswith(cexplorer.IMAGES) else {'color': block}
+        return block if isinstance(block, dict) else {}
+
+    def state_image_text(self, button, state):
+        image = self.state_block(button, state).get('image')
+        return os.path.basename(str(image)) if image else self.translate('editor-image-style')
+
+    def choose_icon(self, button):
+        '''
+        The image of the shortcut of a button (its icon) : chosen in the explorer, or the one of
+        always
+        '''
+        icon = button.get('icon')
+        current = icon.get('image') if isinstance(icon, dict) else icon
+        chosen = self.choose_image(self.translate('editor-icon'), current,
+                                   [('default', self.translate('editor-image-default'))], 'buttons')
+        if chosen is None:
+            return
+        if chosen == 'default':
+            if isinstance(icon, dict):
+                icon.pop('image', None)
+            else:
+                button.pop('icon', None)
+        elif isinstance(icon, dict):
+            icon['image'] = chosen
+        else:
+            button['icon'] = chosen
+        self.changed = True
+
+    def choose_state_image(self, button, state):
+        '''
+        The image of a state of a button (normal, selected, disabled) : chosen in the explorer
+        (it fills the button), or the one of its style
+        '''
+        block = dict(self.state_block(button, state))
+        chosen = self.choose_image(self.translate(f'editor-image-{state}'), block.get('image'),
+                                   [('style', self.translate('editor-image-style'))], 'buttons')
+        if chosen is None:
+            return
+        if chosen == 'style':
+            block.pop('image', None)
+            block.pop('fit', None)
+        else:
+            block['image'] = chosen
+            block.setdefault('fit', 'stretch')
+        holder = button if state == 'normal' else dict(button.get(state) or {})
+        if block:
+            holder['background'] = block
+        else:
+            holder.pop('background', None)
+        if state != 'normal':
+            if holder:
+                button[state] = holder
+            else:
+                button.pop(state, None)
+        self.changed = True
 
     @staticmethod
     def shape_text(button):

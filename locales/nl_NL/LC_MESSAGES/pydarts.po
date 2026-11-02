@@ -4909,3 +4909,42 @@ msgstr "Geen speler"
 
 msgid "nl_NL"
 msgstr "Nederlands"
+
+msgid "editor-name"
+msgstr "Naam"
+
+msgid "editor-icon"
+msgstr "Snelkoppelingsafbeelding"
+
+msgid "editor-image-normal"
+msgstr "Afbeelding (normaal)"
+
+msgid "editor-image-selected"
+msgstr "Afbeelding (geselecteerd)"
+
+msgid "editor-image-disabled"
+msgstr "Afbeelding (uitgeschakeld)"
+
+msgid "editor-image-style"
+msgstr "Die van de stijl"
+
+msgid "editor-image-default"
+msgstr "Standaard"
+
+msgid "explorer-places"
+msgstr "Locaties"
+
+msgid "explorer-theme-images"
+msgstr "Afbeeldingen van het thema"
+
+msgid "explorer-my-images"
+msgstr "Mijn afbeeldingen"
+
+msgid "explorer-game-images"
+msgstr "Afbeeldingen van het spel"
+
+msgid "explorer-empty"
+msgstr "Geen afbeelding in deze map"
+
+msgid "explorer-unreadable"
+msgstr "Onleesbare afbeelding"
