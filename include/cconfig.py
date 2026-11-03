@@ -40,7 +40,9 @@ DefaultConfig['SectionGlobals'] = {
     'font': '',
     'soundvolume': 100,
     'videos': 2,
-    'blinktime': 3000,
+    # Durée d'affichage des messages : after each dart, its score is shown this long before
+    # the next dart is read (3000 : darts thrown quickly were read one every 3 s)
+    'blinktime': 500,
     'pnj_time': 2000,
     'releasedartstime': 1800,
     'nextplayer_sound_duration': 11000,
