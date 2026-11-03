@@ -1438,9 +1438,6 @@ class Screen(pygame.Surface):
         if leds_ji == 'yes':
             if card == 'MMWVdarts':
                 self.config.set_mmworks_leds_config()
-            elif card == 'Mm':
-                # MM-Workshop DartCab : its own table (the one of Jimmy lit other segments)
-                self.config.set_mmworks_dartcab_leds_config()
             else:
                 self.config.set_ji_leds_config()
 
