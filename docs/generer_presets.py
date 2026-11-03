@@ -56,7 +56,7 @@ for code, (name, model, interior) in CARDS.items():
         'keys': config['KEYS'],
         'extended': {key: str(value) for key, value in config['EXTENDED'].items()},
         'interior': interior,
-        'target_leds': 'mmworks' if code == 'MMWVdarts' else 'ji',
+        'target_leds': {'MMWVdarts': 'mmworks', 'Mm': 'dartcab'}.get(code, 'ji'),
     }
 
 def po_labels(keys):
@@ -77,7 +77,8 @@ def po_labels(keys):
 data = {
     'groups': GROUPS,
     'cards': presets,
-    'target_leds': {'ji': cconfig.JiLedsConfig, 'mmworks': cconfig.MMWorkshopVdartsLedsConfig},
+    'target_leds': {'ji': cconfig.JiLedsConfig, 'mmworks': cconfig.MMWorkshopVdartsLedsConfig,
+                    'dartcab': cconfig.MMWorkshopDartCabLedsConfig},
     # Boutons, lumieres et jouets de la carte d'extension, et leur broche par defaut
     'extender': {key: str(value) for key, value in extender_defaults().items()},
     'inputs': list(cconfig.DefaultConfig['Raspberry_BoardPinsIns']),
