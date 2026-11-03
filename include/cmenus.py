@@ -38,6 +38,8 @@ ACTIONS = {
     'network_create': 'netcreate',
     'trophies': 'trophees',
     'gallery': 'gallery',
+    # Lecteur MP3 (include/cmusic.py)
+    'mp3': 'mp3',
     'infos': 'infos',
     'restart': 'restart',
     'desktop': 'quit',

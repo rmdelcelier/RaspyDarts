@@ -116,6 +116,12 @@ const MENUS_DATA = {
       "exhibition": true
      },
      {
+      "id": "mp3",
+      "action": "mp3",
+      "text": "music-player",
+      "exhibition": true
+     },
+     {
       "id": "infos",
       "action": "infos",
       "shortcut": "F9",
@@ -357,6 +363,9 @@ const MENUS_DATA = {
    },
    "favorite_game": {},
    "question": {},
+   "music_source": {
+    "title": "music-source"
+   },
    "favorite_save": {
     "title": "favorite-save",
     "subtitle": "favorite-save-sub"
@@ -459,6 +468,7 @@ const MENUS_DATA = {
   "gallery",
   "infos",
   "local_game",
+  "mp3",
   "network",
   "network_create",
   "network_join",
@@ -2246,6 +2256,8 @@ const MENUS_DATA = {
    "game-type-menu": "Raspydarts",
    "left": "Reste",
    "miscellaneous": "Divers (Favoris, paramétrage,...)",
+   "music-player": "Lecteur MP3",
+   "music-source": "Source des morceaux",
    "no": "Non",
    "online-accept": "Accepter",
    "online-change-account": "Changer de compte",
@@ -2359,6 +2371,8 @@ const MENUS_DATA = {
    "game-type-menu": "Raspydarts",
    "left": "Left",
    "miscellaneous": "Miscellaneous (Favorites, settings...)",
+   "music-player": "MP3 player",
+   "music-source": "Source of the tracks",
    "no": "No",
    "online-accept": "Accept",
    "online-change-account": "Change account",
@@ -2472,6 +2486,8 @@ const MENUS_DATA = {
    "game-type-menu": "Raspydarts",
    "left": "Verbleibend",
    "miscellaneous": "Verschiedenes (Favoriten, Einstellungen...)",
+   "music-player": "MP3-Player",
+   "music-source": "Quelle der Titel",
    "no": "Nein",
    "online-accept": "Annehmen",
    "online-change-account": "Konto wechseln",
@@ -2585,6 +2601,8 @@ const MENUS_DATA = {
    "game-type-menu": "Raspydarts",
    "left": "Quedan",
    "miscellaneous": "Varios (Favoritos, ajustes...)",
+   "music-player": "Reproductor MP3",
+   "music-source": "Fuente de las canciones",
    "no": "No",
    "online-accept": "Aceptar",
    "online-change-account": "Cambiar cuenta",
@@ -2698,6 +2716,8 @@ const MENUS_DATA = {
    "game-type-menu": "Raspydarts",
    "left": "Rimasti",
    "miscellaneous": "Varie (Preferiti, impostazioni...)",
+   "music-player": "Lettore MP3",
+   "music-source": "Sorgente dei brani",
    "no": "No",
    "online-accept": "Accetta",
    "online-change-account": "Cambia account",

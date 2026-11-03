@@ -67,6 +67,10 @@ menus:
         text: gallery
         shortcut: F6
         exhibition: true
+      - id: mp3
+        action: mp3
+        text: music-player
+        exhibition: true
       - id: infos
         action: infos
         shortcut: F9
@@ -244,6 +248,10 @@ menus:
 
   # A favorite game placed on a button fav1 to fav9 of the main menu, then how its players
   # are chosen
+  # Source of the tracks of the Lecteur MP3 (include/cscreen.py music_source_menu)
+  music_source:
+    title: music-source
+
   favorite_save:
     title: favorite-save
     subtitle: favorite-save-sub

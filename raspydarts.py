@@ -769,6 +769,8 @@ try:
                     display.infos_menu(Config)
                 elif game_type == 'gallery':
                     display.gallery_menu()
+                elif game_type == 'mp3':
+                    display.music_menu()
                 elif game_type != 'miscellaneous':
                     menu = 'players'
             elif menu == 'gametype' and skip_main :

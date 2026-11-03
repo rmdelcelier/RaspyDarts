@@ -228,6 +228,10 @@ class Screen(pygame.Surface):
             rpi.set_intro_end(INTRO_END_EVENT, self.show)
             Thread(target=self.watch_intro, daemon=True).start()
         self.dmd = dmd
+        # Music player (include/cmusic.py) : made at its first opening, or at the first press of
+        # one of its buttons
+        self.music = None
+        rpi.on_music = self.music_button
         self.video_player = video_player
         self.image_player = image_player
         self.game_options = []
@@ -4340,12 +4344,20 @@ class Screen(pygame.Surface):
     KEYBOARDS = {
         'azerty': [list('1234567890'), list('azertyuiop'), list('qsdfghjklm'),
                    [('shift', 1.5)] + list('wxcvbn') + ['.', '-', ('backspace', 1.5)],
-                   [('escape', 2)] + ['_', ':', '@', ('space', 4), ('enter', 2)]],
+                   [('escape', 2)] + ['_', ':', '/', '@', ('space', 3), ('enter', 2)]],
         'qwerty': [list('1234567890'), list('qwertyuiop'), list('asdfghjkl') + ['-'],
                    [('shift', 1.5)] + list('zxcvbnm') + ['.', ('backspace', 1.5)],
-                   [('escape', 2)] + ['_', ':', '@', ('space', 4), ('enter', 2)]],
+                   [('escape', 2)] + ['_', ':', '/', '@', ('space', 3), ('enter', 2)]],
     }
     KEY_TEXTS = {'backspace': 'vk-delete', 'enter': 'vk-ok', 'escape': 'vk-cancel', 'shift': 'vk-shift', 'space': 'vk-space'}
+    # A key held (as on a phone) : its accents or its symbols, above it (key_variant)
+    KEY_VARIANTS = {
+        'a': 'àâäáãåæ', 'e': 'éèêë', 'i': 'îïíì', 'o': 'ôöóòõœ', 'u': 'ùûüú', 'c': 'ç', 'n': 'ñ', 'y': 'ÿý',
+        's': 'ß', '1': '!¹', '2': '²', '3': '#³', '4': '$€£', '5': '%', '6': '&^', '7': '{}',
+        '8': '*', '9': '()', '0': '°=', '.': ",;!?'\"", '-': '+=*#%&', '_': '~|\\', ':': ';',
+        '/': '\\|', '@': '#&$€'}
+    # Held this long : its variants shown (seconds)
+    KEY_HOLD = 0.45
 
     def keyboard_wanted(self):
         '''
@@ -4396,6 +4408,90 @@ class Screen(pygame.Surface):
                 self.blit_text2(label, rect, self.colorset['menu-text-black'])
                 keys[(rect.x, rect.y, rect.w, rect.h)] = name
         return panel, keys
+
+    @staticmethod
+    def touch_position(event):
+        '''
+        Place of a finger (its x and y are fractions of the screen) or of the mouse
+        '''
+        if event.type in (pygame.FINGERDOWN, pygame.FINGERUP, pygame.FINGERMOTION):
+            width, height = pygame.display.get_surface().get_size()
+            return (int(event.x * width), int(event.y * height))
+        return event.pos
+
+    def key_variant(self, name, zone, shift, panel):
+        '''
+        A key of the keyboard on the screen held, as on a phone : its accents or symbols
+        (KEY_VARIANTS) shown above it ; the one the finger slides to and is lifted on, or then
+        touched, is typed. The touch is read when the finger is put down : held, it is not
+        lifted within KEY_HOLD. None : lifted at once (the key itself), '' : nothing chosen
+        '''
+        variants = self.KEY_VARIANTS.get(name)
+        if not variants:
+            return None
+        ups = (pygame.FINGERUP, pygame.MOUSEBUTTONUP)
+        end = time.monotonic() + self.KEY_HOLD
+        while time.monotonic() < end:
+            if pygame.event.get(ups):
+                return None
+            time.sleep(0.02)
+        variants = [variant.upper() if shift else variant for variant in variants]
+        zone = pygame.Rect(zone)
+        margin = max(2, int(self.res_y_16 / 12))
+        width = zone.w * len(variants)
+        popup = pygame.Rect(max(panel.x, min(zone.centerx - width // 2, panel.right - width)),
+                            zone.y - zone.h - 2 * margin, width, zone.h + 2 * margin)
+        cells = [pygame.Rect(popup.x + index * zone.w, popup.y + margin, zone.w - margin, zone.h)
+                 for index in range(len(variants))]
+        under = self.screen.subsurface(popup).copy()
+
+        def draw(chosen):
+            self.new_blit_rect2(popup, self.colorset['menu-border'], corners='All', border_radius=int(zone.h / 4), alpha=255)
+            for index, cell in enumerate(cells):
+                self.new_blit_rect2(cell, self.colorset['menu-selected'] if index == chosen else self.colorset['menu-buttons'],
+                                    corners='All', border_radius=int(cell.h / 4), alpha=255)
+                self.blit_text2(variants[index], cell, self.colorset['menu-text-black'])
+            self.update_screen(rect_array=[popup])
+
+        def under_finger(position):
+            return next((index for index, cell in enumerate(cells) if cell.collidepoint(position)), None)
+
+        chosen = None
+        lifted = False
+        draw(chosen)
+        result = ''
+        # Without a choice for a while : closed
+        end = time.monotonic() + 8
+        try:
+            while time.monotonic() < end:
+                for event in pygame.event.get((pygame.FINGERMOTION, pygame.FINGERUP, pygame.FINGERDOWN,
+                                               pygame.MOUSEMOTION, pygame.MOUSEBUTTONUP, pygame.MOUSEBUTTONDOWN)):
+                    if getattr(event, 'touch', False):
+                        # The click simulated by SDL for a finger : the finger is read
+                        continue
+                    index = under_finger(self.touch_position(event))
+                    if event.type in (pygame.FINGERMOTION, pygame.MOUSEMOTION):
+                        if index != chosen:
+                            chosen = index
+                            draw(chosen)
+                    elif event.type in ups and not lifted:
+                        # Slid onto a variant and lifted : typed ; lifted elsewhere : the
+                        # variants stay, one is touched
+                        if index is not None:
+                            result = variants[index]
+                            return result
+                        lifted = True
+                    elif event.type in (pygame.FINGERDOWN, pygame.MOUSEBUTTONDOWN):
+                        # Touched after : a variant, or elsewhere (closed)
+                        result = variants[index] if index is not None else ''
+                        return result
+                time.sleep(0.02)
+            return result
+        finally:
+            self.screen.blit(under, popup)
+            self.update_screen(rect_array=[popup])
+            # The lifting of the finger which chose is not read as a new touch
+            pygame.event.clear(ups)
 
     # Choices of the wheel of characters of a knob, besides the characters : delete the last one,
     # end the typing
@@ -4525,7 +4621,8 @@ class Screen(pygame.Surface):
 
             if isinstance(key, tuple):
                 # A touch : a key of the keyboard on the screen, or the field (opens it)
-                pressed = next((name for zone, name in keyboard_keys.items() if pygame.Rect(zone).collidepoint(key)), None)
+                zone, pressed = next(((zone, name) for zone, name in keyboard_keys.items()
+                                      if pygame.Rect(zone).collidepoint(key)), (None, None))
                 if pressed is None and not keyboard and rect.collidepoint(key):
                     keyboard = True
                     continue
@@ -4534,7 +4631,11 @@ class Screen(pygame.Surface):
                     continue
                 if pressed is None:
                     continue
-                key = pressed.upper() if shift and len(pressed) == 1 else pressed
+                # Held : one of its accents or symbols
+                variant = self.key_variant(pressed, zone, shift, panel)
+                if variant == '':
+                    continue
+                key = variant or (pressed.upper() if shift and len(pressed) == 1 else pressed)
             elif keyboard and key not in (None, False) and not getattr(self.rpi, 'last_input_touch', False):
                 # A real keyboard is used : the one on the screen goes away
                 keyboard = False
@@ -9460,6 +9561,224 @@ class Screen(pygame.Surface):
                     continue
                 dispatcher.mqtt_publish(self.RASPY2DMD_TOPIC, commands[selected - 1][1])
                 self.message([self.lang.translate('raspy2dmd-sent')], 1000, self.colorset['menu-ok'], 'middle', 'big')
+
+    def music_player(self):
+        '''
+        The music player (include/cmusic.py), made at its first opening : the music goes on in
+        the menus and during the games
+        '''
+        if self.music is None:
+            from include import cmusic
+            self.music = cmusic.MusicPlayer(self.config, self.logs, self.dmd,
+                                            in_game=lambda: getattr(self.rpi.usb_pads, 'context', '') == 'game')
+        return self.music
+
+    def music_button(self, key):
+        '''
+        A button of the player (BTN_MUSIC_..., USB pad or MCP23017) read anywhere : the player
+        does it, the screen shown is left as it is (Raspberry.listen_inputs)
+        '''
+        self.music_player().button(key)
+
+    MUSIC_ACTIONS = [('pause', 'music-play-pause'), ('previous', 'music-previous'), ('next', 'music-next'),
+                     ('voldown', 'music-volume-down'), ('volup', 'music-volume-up'), ('stop', 'music-stop'),
+                     ('source', 'music-source'), ('back', 'back')]
+
+    def music_menu(self):
+        '''
+        Lecteur MP3 (action mp3) : the tracks of the source on the left, the commands on the
+        right, the track played and its spectrum at the bottom. Left and right go from a column
+        to the other. The background and the lists are drawn again when they change only, the
+        bar at the bottom 20 times a second
+        '''
+        player = self.music_player()
+        # A key plugged since the last time
+        player.refresh()
+        rows = 8
+        step = self.res_y_16
+        height = int(step * .85)
+        tracks_x, tracks_w = self.res_x_16, int(9 * self.res_x_16)
+        actions_x = int(10.5 * self.res_x_16)
+        actions_w = int(15 * self.res_x_16) - actions_x
+        top = 3 * self.res_y_16
+        notice = pygame.Rect(self.res_x_16, int(top + rows * step), 14 * self.res_x_16, int(step * .8))
+        bar = pygame.Rect(self.res_x_16, 12 * self.res_y_16, 14 * self.res_x_16, int(2.8 * self.res_y_16))
+        spectrum = pygame.Rect(bar.x + int(bar.width * .62), bar.y + int(step / 4),
+                               int(bar.width * .36), bar.height - int(step / 2))
+        column = 0 if player.tracks else 1
+        selected = [max(0, player.index), 0]
+        drawn = None
+        pristine = None
+        try:
+            while True:
+                with player.lock:
+                    tracks = list(player.tracks)
+                    playing = player.index
+                if not tracks:
+                    column = 1
+                selected[0] = min(selected[0], max(0, len(tracks) - 1))
+                first = max(0, min(selected[0] - rows // 2, len(tracks) - rows))
+                look = (column, tuple(selected), first, len(tracks), playing, player.status, player.error,
+                        player.source(), tuple(self.screen.get_size()))
+                zones = {}
+                for row, index in enumerate(range(first, min(first + rows, len(tracks)))):
+                    zones[f'track{index}'] = pygame.Rect(tracks_x, int(top + row * step), tracks_w, height)
+                for row in range(len(self.MUSIC_ACTIONS)):
+                    zones[f'action{row}'] = pygame.Rect(actions_x, int(top + row * step), actions_w, height)
+                if look != drawn:
+                    self.display_background()
+                    self.menu_header(self.lang.translate('music-player'), self.music_source_text(player.source()))
+                    for name, rect in zones.items():
+                        is_track = name.startswith('track')
+                        index = int(name[5:] if is_track else name[6:])
+                        chosen = (column, selected[column]) == (0 if is_track else 1, index)
+                        if is_track:
+                            text = os.path.splitext(os.path.basename(tracks[index]))[0]
+                            text = f"> {text}" if index == playing else text
+                        else:
+                            text = self.lang.translate(self.MUSIC_ACTIONS[index][1])
+                        self.new_blit_rect2(rect, self.colorset['menu-selected'] if chosen
+                                            else self.menu_color(self.colorset['menu-buttons']), corners='All',
+                                            border_radius=self.get_radius(int(height / 4)))
+                        self.blit_text(text, rect.x + self.margin, rect.y, rect.width - 2 * self.margin, rect.height,
+                                       self.colorset['menu-text-black'], align='Left' if is_track else 'Center')
+                    self.blit_text(self.music_status_text(player, len(tracks)), notice.x, notice.y, notice.width,
+                                   notice.height, self.colorset['menu-text-white'])
+                    pristine = self.screen.copy()
+                    drawn = look
+                    self.music_bar(player, bar, spectrum)
+                    self.update_screen()
+                else:
+                    self.screen.blit(pristine, bar, bar)
+                    self.music_bar(player, bar, spectrum)
+                    self.update_screen(rect_array=[bar])
+
+                key = self.rpi.listen_inputs(['arrows'], ['escape', 'enter', 'PLAYERBUTTON', 'BACKUPBUTTON', 'GAMEBUTTON',
+                                                          'single-click', 'resize', 'VOLUME-UP', 'VOLUME-DOWN'], timeout=50)
+                clicked = self.is_clicked(zones, key)
+                if clicked:
+                    column = 0 if clicked.startswith('track') else 1
+                    selected[column] = int(clicked[5:] if column == 0 else clicked[6:])
+                    key = 'enter'
+                if key == 'resize':
+                    drawn = None
+                elif key in ESCAPE_KEYS or key in ('BACKUPBUTTON', 'BTN_BACKUPBUTTON'):
+                    return
+                elif key in UP_KEYS or key in DOWN_KEYS:
+                    count = len(tracks) if column == 0 else len(self.MUSIC_ACTIONS)
+                    selected[column] = (selected[column] + (-1 if key in UP_KEYS else 1)) % count
+                elif (key in LEFT_KEYS or key in RIGHT_KEYS) and tracks:
+                    column = 1 - column
+                elif key == 'VOLUME-UP':
+                    player.action('volup')
+                elif key == 'VOLUME-DOWN':
+                    player.action('voldown')
+                elif key in ENTER_KEYS or key in ('GAMEBUTTON', 'PLAYERBUTTON'):
+                    if column == 0:
+                        player.play(selected[0])
+                        continue
+                    action = self.MUSIC_ACTIONS[selected[1]][0]
+                    if action == 'back':
+                        return
+                    if action == 'source':
+                        self.music_source_menu(player)
+                        drawn = None
+                        column = 1
+                    else:
+                        player.action(action)
+        finally:
+            player.save_volume()
+
+    def music_bar(self, player, bar, spectrum):
+        '''
+        The track played (title, artist), its state and the volume, and the spectrum
+        '''
+        margin = int(self.res_y_16 / 4)
+        self.new_blit_rect2(bar, self.menu_color(self.colorset['menu-buttons']), corners='All',
+                            border_radius=self.get_radius(margin * 2))
+        width = spectrum.x - bar.x - 2 * margin
+        line = int((bar.height - 2 * margin) / 3)
+        with player.lock:
+            title = player.title if player.index >= 0 else self.lang.translate('music-no-title')
+            artist = player.artist if player.index >= 0 else ''
+            state = f"{self.lang.translate(player.state())} · " \
+                    f"{self.lang.translate('music-volume').replace('{volume}', str(player.volume))}"
+            if player.error:
+                state = self.lang.translate(player.error)
+        color = self.colorset['menu-text-black']
+        self.blit_text(title, bar.x + margin, bar.y + margin, width, line, color, align='Left')
+        if artist:
+            self.blit_text(artist, bar.x + margin, bar.y + margin + line, width, line, color, align='Left')
+        self.blit_text(state, bar.x + margin, bar.y + margin + 2 * line, width, line, color, align='Left')
+        player.draw_spectrum(self.screen, spectrum)
+
+    def music_source_text(self, source):
+        '''
+        The source, as shown : Clé USB, or the folder / the address of the share
+        '''
+        from include import cmusic
+        kind = cmusic.kind_of(source)
+        name = self.lang.translate(f'music-source-{kind}')
+        return name if kind == 'usb' else f"{name} : {source}"
+
+    def music_status_text(self, player, count):
+        '''
+        The search of the tracks : in progress, their number, or why there is none
+        '''
+        if player.status == 'music-ready':
+            return f"{self.lang.translate('music-tracks').replace('{count}', str(count))} · {self.lang.translate('music-help')}"
+        return self.lang.translate(player.status)
+
+    def music_source_menu(self, player):
+        '''
+        Source of the tracks : the USB keys, a folder of the cabinet, a share of Windows or of
+        a NAS (address, user and password : none, guest) or a share NFS. Kept in
+        raspydarts.cfg, the user and the password apart (include/cmusic.py)
+        '''
+        from include import cmusic
+        source = player.source()
+        kind = cmusic.kind_of(source)
+        back = {'id': 'back', 'action': 'back', 'text': 'back', 'footer': 'left', 'shortcut': 'escape'}
+        items = [{'id': name, 'action': name, 'text': f'music-source-{name}', 'shortcut': f'F{number}'}
+                 for number, name in enumerate(('usb', 'folder', 'smb', 'nfs'), 1)]
+        previous = self.current_look
+        self.current_look = None
+        try:
+            choice = self.run_menu('music_source', items + [back], items + [back], initial=kind,
+                                   subtitle=self.lang.translate('music-source-current').replace(
+                                       '{source}', self.music_source_text(source))).get('id')
+            if choice == 'back':
+                return
+            if choice == 'usb':
+                player.set_source('')
+                return
+            current = source if choice == kind else ''
+            if choice == 'folder':
+                typed = self.input_value_item('string', current or os.path.expanduser('~/Musique'), 2, 200,
+                                              text='music-folder-path')
+            elif choice == 'smb':
+                typed = self.input_value_item('string', current or '//', 5, 200, text='music-smb-address')
+            else:
+                typed = self.input_value_item('string', current, 4, 200, text='music-nfs-address')
+            if typed in (False, None, 'escape'):
+                return
+            typed = cmusic.normalized(typed)
+            parts = [part for part in typed[2:].split('/') if part] if choice == 'smb' else []
+            if cmusic.kind_of(typed) != choice or (choice == 'smb' and len(parts) < 2):
+                self.message([self.lang.translate('music-bad-address')], 2500, self.colorset['menu-ko'], 'middle', 'big')
+                return
+            user = password = ''
+            if choice == 'smb':
+                user = self.input_value_item('string', player.user() if kind == 'smb' else '', 0, 64, text='music-smb-user')
+                if user in (False, None, 'escape'):
+                    return
+                if user:
+                    password = self.input_value_item('string', '', 0, 64, text='music-smb-password', hidden=True)
+                    if password in (False, None, 'escape'):
+                        return
+            player.set_source(typed, user, password)
+        finally:
+            self.current_look = previous
 
     def gallery_menu(self):
         '''

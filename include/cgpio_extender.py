@@ -58,6 +58,12 @@ DEFAULTS = {
     # A shock sensor is rare : on a free pin (read as pressed, its logic is reversed) it
     # was banned at each start
     'PIN_MISSDART':'',
+    'PIN_MUSIC_PLAY':'',
+    'PIN_MUSIC_NEXT':'',
+    'PIN_MUSIC_PREVIOUS':'',
+    'PIN_MUSIC_VOLUME_UP':'',
+    'PIN_MUSIC_VOLUME_DOWN':'',
+    'PIN_MUSIC_STOP':'',
     'LIGHT_NEXTPLAYER':'',
     'LIGHT_BACK':'',
     'LIGHT_NAVIGATE':'',

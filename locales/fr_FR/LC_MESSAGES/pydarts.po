@@ -4989,3 +4989,132 @@ msgstr "Aucune"
 
 msgid "infos-identifier"
 msgstr "Identifiant : {id}"
+
+msgid "music-player"
+msgstr "Lecteur MP3"
+
+msgid "music-searching"
+msgstr "Recherche des morceaux…"
+
+msgid "music-tracks"
+msgstr "{count} morceaux"
+
+msgid "music-none"
+msgstr "Aucun morceau MP3 dans cette source"
+
+msgid "music-folder-missing"
+msgstr "Dossier introuvable"
+
+msgid "music-share-failed"
+msgstr "Partage inaccessible (adresse, identifiant ou mot de passe)"
+
+msgid "music-unreadable"
+msgstr "Lecture impossible : choisissez un autre morceau"
+
+msgid "music-playing"
+msgstr "Lecture"
+
+msgid "music-paused"
+msgstr "Pause"
+
+msgid "music-stopped"
+msgstr "Arrêt"
+
+msgid "music-volume"
+msgstr "Volume {volume} %"
+
+msgid "music-play-pause"
+msgstr "Lecture / Pause"
+
+msgid "music-previous"
+msgstr "Précédent"
+
+msgid "music-next"
+msgstr "Suivant"
+
+msgid "music-volume-down"
+msgstr "Volume -"
+
+msgid "music-volume-up"
+msgstr "Volume +"
+
+msgid "music-stop"
+msgstr "Arrêter"
+
+msgid "music-source"
+msgstr "Source des morceaux"
+
+msgid "music-source-usb"
+msgstr "Clé USB"
+
+msgid "music-source-folder"
+msgstr "Dossier de la borne"
+
+msgid "music-source-smb"
+msgstr "Partage Windows / NAS"
+
+msgid "music-source-nfs"
+msgstr "Partage NFS"
+
+msgid "music-source-current"
+msgstr "Source actuelle : {source}"
+
+msgid "music-folder-path"
+msgstr "Chemin du dossier (ex. /home/raspydarts/Musique)"
+
+msgid "music-smb-address"
+msgstr "Adresse du partage (ex. //nas/musique)"
+
+msgid "music-smb-user"
+msgstr "Identifiant du partage (vide : invité)"
+
+msgid "music-smb-password"
+msgstr "Mot de passe du partage"
+
+msgid "music-nfs-address"
+msgstr "Adresse du partage NFS (ex. nas:/volume1/musique)"
+
+msgid "music-bad-address"
+msgstr "Adresse non reconnue"
+
+msgid "music-help"
+msgstr "Gauche / Droite : morceaux ou commandes"
+
+msgid "music-no-title"
+msgstr "Aucun morceau choisi"
+
+msgid "usb-pads-music-play"
+msgstr "MP3 : lecture / pause"
+
+msgid "PIN_MUSIC_PLAY"
+msgstr "MP3 : lecture / pause"
+
+msgid "usb-pads-music-next"
+msgstr "MP3 : suivant"
+
+msgid "PIN_MUSIC_NEXT"
+msgstr "MP3 : suivant"
+
+msgid "usb-pads-music-previous"
+msgstr "MP3 : précédent"
+
+msgid "PIN_MUSIC_PREVIOUS"
+msgstr "MP3 : précédent"
+
+msgid "usb-pads-music-volume-up"
+msgstr "MP3 : volume +"
+
+msgid "PIN_MUSIC_VOLUME_UP"
+msgstr "MP3 : volume +"
+
+msgid "usb-pads-music-volume-down"
+msgstr "MP3 : volume -"
+
+msgid "PIN_MUSIC_VOLUME_DOWN"
+msgstr "MP3 : volume -"
+
+msgid "usb-pads-music-stop"
+msgstr "MP3 : arrêter"
+
+msgid "PIN_MUSIC_STOP"
+msgstr "MP3 : arrêter"

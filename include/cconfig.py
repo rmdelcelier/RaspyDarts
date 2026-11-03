@@ -79,7 +79,11 @@ DefaultConfig['SectionGlobals'] = {
     'check_for_updates': True,
     # Output of the sound : auto (a USB card when plugged, else HDMI), hdmi, jack, usb
     # (include/caudio.py)
-    'sound_output': 'auto'
+    'sound_output': 'auto',
+    # Lecteur MP3 (include/cmusic.py) : source of the tracks (empty : the USB keys, /a/folder,
+    # //server/share, server:/path) and volume (percent)
+    'music_source': '',
+    'music_volume': 35
     }
 #
 DefaultConfig['SectionAdvanced'] = {
@@ -194,6 +198,12 @@ DefaultConfig['Raspberry'] = {
     'PIN_VOLUME_MUTE': '0',
     'PIN_CPTPLAYER': '0',
     'PIN_MISSDART': '0',
+    'PIN_MUSIC_PLAY': '',
+    'PIN_MUSIC_NEXT': '',
+    'PIN_MUSIC_PREVIOUS': '',
+    'PIN_MUSIC_VOLUME_UP': '',
+    'PIN_MUSIC_VOLUME_DOWN': '',
+    'PIN_MUSIC_STOP': '',
     'LIGHT_NEXTPLAYER':'',
     'LIGHT_NAVIGATE':'',
     'LIGHT_VALIDATE':'',
@@ -402,6 +412,12 @@ AlternateConfig['Raspberry'] = {
     'PIN_VOLUME_MUTE':'',
     'PIN_CPTPLAYER':'',
     'PIN_MISSDART':'',
+    'PIN_MUSIC_PLAY': '',
+    'PIN_MUSIC_NEXT': '',
+    'PIN_MUSIC_PREVIOUS': '',
+    'PIN_MUSIC_VOLUME_UP': '',
+    'PIN_MUSIC_VOLUME_DOWN': '',
+    'PIN_MUSIC_STOP': '',
     'LIGHT_NEXTPLAYER':'',
     'LIGHT_NAVIGATE':'',
     'LIGHT_VALIDATE':'',
@@ -564,7 +580,9 @@ EXTENDED_CONFIG = {
         'PIN_UP': 'A0', 'PIN_DOWN': 'A1', 'PIN_LEFT': 'A2', 'PIN_RIGHT': 'A3',
         'PIN_MINUS': 'A5', 'PIN_PLUS': 'A4', 'PIN_VALIDATE': 'A6', 'PIN_CANCEL': 'B1', 'PIN_NEXTPLAYER': 'B0',
         'PIN_BACK': 'A7', 'PIN_GAMEBUTTON': '', 'PIN_VOLUME_UP': '', 'PIN_VOLUME_DOWN': '',
-        'PIN_VOLUME_MUTE': '', 'PIN_CPTPLAYER': '', 'PIN_MISSDART': '', 'LIGHT_NAVIGATE': '',
+        'PIN_VOLUME_MUTE': '', 'PIN_CPTPLAYER': '', 'PIN_MISSDART': '',
+        'PIN_MUSIC_PLAY': '', 'PIN_MUSIC_NEXT': '', 'PIN_MUSIC_PREVIOUS': '', 'PIN_MUSIC_VOLUME_UP': '',
+        'PIN_MUSIC_VOLUME_DOWN': '', 'PIN_MUSIC_STOP': '', 'LIGHT_NAVIGATE': '',
         'LIGHT_NEXTPLAYER': '', 'LIGHT_BACK': '', 'LIGHT_PLAYERS': '', 'LIGHT_LASER': '', 'LIGHT_FLASH': '',
         'LIGHT_VALIDATE': '', 'LIGHT_CELEBRATION' :'', 'LIGHT_CELEBRATION2' :'', 'LIGHT_LIGHT': '',
         'TOY1': 0, 'TOY2': 0, 'TOY3': 0, 'TOY4': 0
@@ -1315,6 +1333,9 @@ class Config:
         self.conf += f"check_for_updates:{Global['check_for_updates']}\n"
         self.conf += "### Output of the sound : auto (USB sound card when plugged, else HDMI), hdmi, jack, usb\n"
         self.conf += f"sound_output:{Global.get('sound_output', 'auto')}\n"
+        self.conf += "### Lecteur MP3 : source of the tracks (empty : USB keys, /a/folder, //server/share, server:/path) and volume\n"
+        self.conf += f"music_source:{Global.get('music_source', '')}\n"
+        self.conf += f"music_volume:{Global.get('music_volume', 35)}\n"
 
         Advanced = self.config["SectionAdvanced"]
 
