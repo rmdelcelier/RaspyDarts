@@ -372,6 +372,9 @@ progress_sprite = Sprite ();
 global.progress_last = -1;
 
 fun progress_callback (duration, progress) {
+	# duration : les secondes ecoulees depuis le debut du demarrage, l'horloge de la pulsation
+	global.boot_seconds = duration;
+	pulse ();
 	percent = Math.Int (progress * 100);
 	if (percent > 100)
 		percent = 100;
@@ -384,6 +387,54 @@ fun progress_callback (duration, progress) {
 }
 
 Plymouth.SetBootProgressFunction (progress_callback);
+
+# Logo de RaspyDarts eclaire par derriere : sa lumiere (raspydarts_halo.png) pulse. Images
+# faites pour un ecran de 1920 pixels de large (scripts/boot_logo.py), a l'echelle de l'ecran
+if (Plymouth.GetMode () != "shutdown") {
+	logo_scale = Window.GetWidth () / 1920;
+	logo_image = Image ("raspydarts_logo.png");
+	logo_image = logo_image.Scale (logo_image.GetWidth () * logo_scale, logo_image.GetHeight () * logo_scale);
+	halo_image = Image ("raspydarts_halo.png");
+	halo_image = halo_image.Scale (halo_image.GetWidth () * logo_scale, halo_image.GetHeight () * logo_scale);
+	logo_x = (Window.GetWidth () - logo_image.GetWidth ()) / 2;
+	logo_y = Window.GetHeight () * 0.43 - logo_image.GetHeight () / 2;
+	halo_sprite = Sprite (halo_image);
+	halo_sprite.SetPosition (logo_x - (halo_image.GetWidth () - logo_image.GetWidth ()) / 2,
+	                         logo_y - (halo_image.GetHeight () - logo_image.GetHeight ()) / 2, -50);
+	logo_sprite = Sprite (logo_image);
+	logo_sprite.SetPosition (logo_x, logo_y, -40);
+}
+
+# Une pulsation en 2,5 s, calculee sur le temps ecoule et non sur le nombre d'images : le
+# Raspberry Pi dessine sans carte graphique pendant que tout demarre, il en saute (compter
+# les images faisait monter la lumiere au fil du chargement). 12 niveaux de lumiere : elle
+# n'est redessinee que quand son niveau change (une dizaine de fois par seconde)
+PULSE_PERIOD = 2.5;
+PULSE_LEVELS = 12;
+REFRESH_RATE = 15;
+global.boot_seconds = 0;
+global.pulse_level = -1;
+
+fun pulse () {
+	if (halo_sprite) {
+		phase = 0.5 - 0.5 * Math.Cos (global.boot_seconds * 2 * Math.Pi / PULSE_PERIOD);
+		level = Math.Int (phase * PULSE_LEVELS + 0.5);
+		if (level != global.pulse_level) {
+			global.pulse_level = level;
+			halo_sprite.SetOpacity (0.25 + 0.75 * level / PULSE_LEVELS);
+		}
+	}
+}
+
+# Entre deux avancements du demarrage (qui redonnent l'heure exacte), le temps avance d'un
+# appel a l'autre
+fun pulse_callback () {
+	global.boot_seconds = global.boot_seconds + 1 / REFRESH_RATE;
+	pulse ();
+}
+
+Plymouth.SetRefreshRate (REFRESH_RATE);
+Plymouth.SetRefreshFunction (pulse_callback);
 # --- RaspyDarts (fin) ---
 EOF
 }
@@ -423,7 +474,8 @@ patch_config_txt() {
     sed -i 's/^dtoverlay=vc4-kms-v3d.*/#& (RaspyDarts : affichage gere par le firmware)/; s/^dtoverlay=vc4-fkms-v3d.*/#& (RaspyDarts : affichage gere par le firmware)/' "$1"
     remove_block "$1"
     sed -i '/^gpu_mem=/d' "$1"
-    printf '%s\n[all]\n# memoire du decodeur video du firmware (omxplayer)\ngpu_mem=128\n%s\n' "$MARK_BEGIN" "$MARK_END" >> "$1"
+    sed -i '/^disable_splash=/d' "$1"
+    printf '%s\n[all]\n# memoire du decodeur video du firmware (omxplayer)\ngpu_mem=128\n# pas de nuancier de couleurs du firmware a la mise sous tension\ndisable_splash=1\n%s\n' "$MARK_BEGIN" "$MARK_END" >> "$1"
 }
 
 # cmdline.txt : messages du demarrage sur une console invisible (tty3), plus rien n'est ecrit
@@ -1135,10 +1187,15 @@ fi
 
 # Habillage du demarrage : splash, ecran de connexion et bureau aux couleurs de RaspyDarts
 SPLASH=/usr/share/plymouth/themes/pix/splash.png
-if [ -f "$SPLASH" ] && [ -f "$PYDARTS/images/background_clear.png" ]; then
+if [ -f "$SPLASH" ] && [ -f "$PYDARTS/images/boot_background.png" ]; then
     [ -f "$SPLASH.origine" ] || cp "$SPLASH" "$SPLASH.origine"
-    cp "$PYDARTS/images/background_clear.png" "$SPLASH"
+    cp "$PYDARTS/images/boot_background.png" "$SPLASH"
     chmod 644 "$SPLASH"
+    # Logo et sa lumiere qui pulse (pix.script, patch_plymouth_script)
+    for IMAGE in logo halo; do
+        [ -f "$PYDARTS/images/boot_$IMAGE.png" ] && install -m 644 "$PYDARTS/images/boot_$IMAGE.png" \
+            "/usr/share/plymouth/themes/pix/raspydarts_$IMAGE.png"
+    done
     PLYMOUTH_SCRIPT=/usr/share/plymouth/themes/pix/pix.script
     if [ -f "$PLYMOUTH_SCRIPT" ]; then
         [ -f "$PLYMOUTH_SCRIPT.origine" ] || cp "$PLYMOUTH_SCRIPT" "$PLYMOUTH_SCRIPT.origine"
