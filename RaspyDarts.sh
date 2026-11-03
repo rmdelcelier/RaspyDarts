@@ -37,5 +37,12 @@ do
 	sudo kill -9 `ps -lef | grep 'Server.py' | sed -e 's/  */ /g' | cut -f4 -d' '` 2> /dev/null
 
 	python3 raspydarts.py > logs/raspydarts.log 2>&1
+	status=$?
+	# Stopped by an error : the end of its log here too (everything else goes to the log only)
+	if [ $status -ne 0 ]
+	then
+		echo "RaspyDarts s'est arrete sur une erreur (code $status). Fin de logs/raspydarts.log :"
+		tail -n 25 logs/raspydarts.log
+	fi
 done
 

@@ -2710,6 +2710,8 @@ try:
                 direct_play = False
 
 finally:
+    # An error (not Quitter, Arret, Redemarrer) : it goes on once this block is done
+    crashed = sys.exc_info()[0] is not None
     rpi.gpio_flush()
     # Quit or restart
     if dispatcher.target_leds and p_target.poll() is not None:
@@ -2764,3 +2766,13 @@ finally:
             logs.debug("Restart")
         except:
             logs.debug("Unable to create restart file")
+
+    if crashed:
+        # Stopped by an error : its trace in the log, then the same forced exit as Quitter.
+        # Without it, a thread still active kept Python running : the window gone, the
+        # terminal of RaspyDarts.sh waited for ever (it shows the end of the log)
+        import traceback
+        traceback.print_exc()
+        sys.stdout.flush()
+        sys.stderr.flush()
+        os._exit(1)
