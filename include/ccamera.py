@@ -56,6 +56,10 @@ LEVELS = ((True, 'h264_v4l2m2m'), (False, 'h264_v4l2m2m'), (False, 'libx264'), (
 STALLED_LEVEL = 3
 # The last picture is older than this while ffmpeg runs : ffmpeg is stuck
 STALLED_AFTER = 4
+# Its first picture is awaited this long after its start : 1.5 s on a Pi 3 at rest, 2.7 s with
+# the sound of the webcam, more while the game runs. With 4 s, ffmpeg was killed just before its
+# first picture, then again and again : no picture at all, « stuck » in the log
+FIRST_PICTURE_AFTER = 10
 
 
 def _die_with_parent():
@@ -84,6 +88,7 @@ class Recorder:
         self.cleaner = None
         self.level = 0
         self.started = 0
+        self.started_at = 0
         self.confirmed = False
         # Increased at each game : a game which ends does not stop the next one
         self.game = 0
@@ -192,6 +197,7 @@ class Recorder:
     def launch(self, settings, level):
         self.level = level
         self.started = time.monotonic()
+        self.started_at = time.time()
         self.confirmed = False
         try:
             # Its messages in a file : a pipe nobody reads would block it once full
@@ -263,15 +269,22 @@ class Recorder:
                 self.process = None
                 return
             try:
-                age = time.time() - os.path.getmtime(f'{RECORD_DIR}/last.jpg')
+                picture = os.path.getmtime(f'{RECORD_DIR}/last.jpg')
             except OSError:
-                age = STALLED_AFTER + 1
-            if age > STALLED_AFTER:
+                picture = 0
+            if picture < self.started_at:
+                # No picture of this ffmpeg yet : its first one is awaited longer
+                stalled = time.time() - self.started_at > FIRST_PICTURE_AFTER
+            else:
+                stalled = time.time() - picture > STALLED_AFTER
+            if stalled:
                 # Stuck : the H.264 encoder of the Pi does not answer any more (its driver
                 # crashed after quick restarts). Recorded again without it : photos go on,
                 # clips are encoded by the processor
+                encoder = LEVELS[self.level][1] is not None
                 self.logs.error("Webcam : ffmpeg stuck, recorded again without live clips. "
-                                "The H.264 encoder of the Pi does not answer : restart the Pi")
+                                + ("The H.264 encoder of the Pi does not answer : restart the Pi" if encoder
+                                   else "No picture from the webcam"))
                 self.encoder_stalled = True
                 process.kill()
                 self.process = None
