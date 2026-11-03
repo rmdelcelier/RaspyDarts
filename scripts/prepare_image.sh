@@ -10,6 +10,9 @@
 # Removed or reset :
 #   - ~/.raspydarts : replaced by the archive of the release « exemple » (as install.sh puts it) :
 #     settings, players, scores, favorites, online session, coin acceptor, gallery password...
+#     and without raspydarts.cfg (made again by the game at the first start)
+#   - Raspy2DMD (installed in mode Pico seul, required) : its configuration written again with
+#     the settings of that installation only, its backups and logs removed
 #   - photos and clips of the gallery, logs of the game, files left in the personal folder
 #     (whatever is not a folder of a new Raspberry Pi OS or of the installation)
 #   - Wi-Fi and network (NetworkManager, netplan), what Raspberry Pi Imager wrote on the boot
@@ -53,18 +56,19 @@ if [ $APPLY -eq 0 ]; then
     say "SIMULATION : rien n'est modifie. Relancer avec --appliquer pour le faire (la carte s'eteint a la fin)."
 fi
 
-# Raspy2DMD is installed from the menu of the game, never in the image
-if [ -d /Raspy2DMD ]; then
-    say "Raspy2DMD est installe (/Raspy2DMD) : il ne doit pas etre dans l'image. Le desinstaller d'abord :"
-    say "  curl -sSL https://raw.githubusercontent.com/rmdelcelier/Raspy2DMD/main/scripts/uninstall_raspy2dmd.sh | sudo bash"
+# Raspy2DMD is in the image, installed in mode « Pico seul » (Paramètres > Afficheur DMD)
+if [ ! -f /Raspy2DMD/.pico_seul ]; then
+    say "Raspy2DMD n'est pas installe en mode Pico seul (/Raspy2DMD/.pico_seul absent) : l'installer"
+    say "d'abord depuis le jeu (Parametres > Afficheur DMD (Raspy2DMD)), puis relancer ce script."
     exit 1
 fi
 
-step "Jeu arrete"
+step "Jeu et Raspy2DMD arretes"
 run pkill -f "RaspyDarts.sh"
 run pkill -f "python3 raspydarts.py"
 run pkill -f "Leds_Server"
 run pkill -f "ctarget_reader"
+run bash /Raspy2DMD/StopAllRaspy2DMD.sh
 
 step "Donnees du jeu (~/.raspydarts) : remplacees par l'archive de la release exemple"
 ARCHIVE=/tmp/raspydarts_example.zip
@@ -75,13 +79,53 @@ if [ $APPLY -eq 1 ]; then
     mkdir -p "$USER_DIR"
     python3 -m zipfile -e "$ARCHIVE" "$USER_DIR" || { say "Extraction de l'exemple echouee."; exit 1; }
     rm -f "$ARCHIVE"
+    # The configuration of the game : made again by it at the first start (or the one put on
+    # the boot partition from the page of the installation)
+    rm -f "$USER_DIR/raspydarts.cfg" "$USER_DIR/pydarts.cfg"
     chown -R "$TARGET_USER:$TARGET_USER" "$USER_DIR"
     chmod -R 777 "$USER_DIR"
-    say "   $(find "$USER_DIR" -type f | wc -l) fichiers remis"
+    say "   $(find "$USER_DIR" -type f | wc -l) fichiers remis, sans raspydarts.cfg (recree au 1er demarrage)"
 else
-    say "   (ferait) telecharger $EXAMPLE_URL, vider $USER_DIR et y extraire l'archive"
+    say "   (ferait) telecharger $EXAMPLE_URL, vider $USER_DIR et y extraire l'archive, sans raspydarts.cfg"
     find "$USER_DIR" -maxdepth 1 -type f -printf '   reglage retire : %f\n' 2>/dev/null
 fi
+
+step "Raspy2DMD : configuration remise a celle de son installation en mode Pico, journaux"
+# Its general defaults would make sound and look for the game at raspydarts.local : the file is
+# written again with the settings of its installation in mode Pico seul only
+# (install_raspy2dmd.sh --pico-seul), what the tests changed is lost
+R2D_CFG=/Medias/Raspy2DMD.cfg
+say "   $R2D_CFG remis a neuf (sortie Pico, RaspyDarts sur cette machine, son coupe, sans bouton)"
+if [ $APPLY -eq 1 ]; then
+    cat > "$R2D_CFG" <<'R2DCFG'
+[DMDRenderer]
+pico_reconnect_timeout = 5
+interrupteur = 0
+
+[HDMI]
+display_output = pico
+hide_console = 0
+
+[Pico]
+pico_auto_detect = 1
+pico_display_enabled = 1
+
+[Running]
+raspydarts_enabled = 1
+raspydarts = localhost
+raspydartscanal = raspydarts/dmd
+default = 0
+
+[Sound]
+volume = 0
+R2DCFG
+    id raspy2dmd >/dev/null 2>&1 && chown raspy2dmd:raspy2dmd "$R2D_CFG"
+    chmod 666 "$R2D_CFG"
+fi
+for path in /Medias/.config_backups /Medias/Logs/*; do
+    [ -e "$path" ] || continue
+    remove "$path"
+done
 
 step "Dossier personnel : fichiers laisses par les essais"
 for entry in "$TARGET_HOME"/* "$TARGET_HOME"/.[!.]*; do
