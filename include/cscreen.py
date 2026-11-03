@@ -1332,15 +1332,20 @@ class Screen(pygame.Surface):
         new_leds = {}
         totalLeds = len(self.config.leds)
 
+        # Steps of the leds : pin, brightness, type of the target, then pin, number, brightness,
+        # type of the strip. Escape : the step shown before (its pin given again), on the first
+        # one the wizard is left. No pin : no leds of this kind, its other steps skipped.
+        # Escape on the type went on (the type « escape » kept) : Escape on the pin of the strip
+        # and on the type of the target sent from one to the other for ever
+        keys = list(self.config.leds)
+        history = []
+        pin_of_step = {}
         j = 0
         while j < totalLeds:
             self.display_background()    # display basic screen
 
-            key = list(self.config.leds)[j]
-            if j == 0:
-                esc_text = self.lang.translate('conf-esc1')
-            else:
-                esc_text = self.lang.translate('conf-esc2')
+            key = keys[j]
+            esc_text = self.lang.translate('conf-esc1' if not history else 'conf-esc2')
 
             if key.startswith('PIN_'):
                 subtxt = self.lang.translate('conf-pin1').format(self.lang.translate(key), esc_text)
@@ -1350,45 +1355,48 @@ class Screen(pygame.Surface):
             self.menu_header(self.lang.translate('conf-leds'))
             self.message([f"{self.lang.translate('conf-fillin')} {self.lang.translate(key)}"], 0, None, 'fullbottom', 'big', refresh=False)
             self.update_screen()
-            
+
             if key in ('PIN_STRIPLED', 'PIN_TARGETLED'):
                 tmp = self.input_value_item('pins', '', 1, 27, align='Center')
             elif key in ('BRI_STRIPLED', 'BRI_TARGETLED'):
                 tmp = self.input_value_item('number', '', 1, 100, align='Center')
             elif key in ('TYP_STRIPLED', 'TYP_TARGETLED'):
                 tmp = self.dropdown(self.res['x'] * 6 / 16, 3 * self.res_y_16, [['rgb','RGB'], ['grb','GRB']])
-            elif key == 'NBR_STRIPLED':
-                tmp = self.input_value_item('number', '', 1, 1000, align='Center')
-            
-            if tmp in ('', 'space'):
-                new_leds[key] = '0'
-                if key == 'PIN_STRIPLED':
-                    j += 3
-                    new_leds['NBR_STRIPLED'] = 0
-                    new_leds['BRI_STRIPLED'] = 0
-                elif key == 'PIN_TARGETLED':
-                    j += 2
-                    new_leds['BRI_TARGETLED'] = 0
-                elif key.startswith('BRI') or key == 'NBR_STRIPLED':
-                    if key in ('NBR_STRIPLED', 'BRI_TARGETLED'):
-                        used_pins.pop()
-                    j-=1
-                else:
-                    tmp = 'escape'
-            elif key in ('TYP_STRIPLED', 'TYP_TARGETLED'):
-                new_leds[key] = tmp
-                j+=1
-            elif tmp == 'escape':
-                j-=1
-                if j < 0:
-                    return False
-            elif key in ('PIN_STRIPLED', 'PIN_TARGETLED') and tmp in used_pins:
-                self.message([self.lang.translate('config-already')], 2000, None, 'fullbottom', 'big')
             else:
-                new_leds[key] = tmp
-                if key.startswith('PIN'):
-                    used_pins.append(tmp)
-                j+=1
+                tmp = self.input_value_item('number', '', 1, 1000, align='Center')
+
+            if tmp == 'escape':
+                if not history:
+                    return False
+                j = history.pop()
+                new_leds.pop(keys[j], None)
+                pin = pin_of_step.pop(j, None)
+                if pin in used_pins:
+                    used_pins.remove(pin)
+                continue
+
+            if key in ('PIN_STRIPLED', 'PIN_TARGETLED'):
+                if tmp in ('', 'space'):
+                    # No leds of this kind
+                    new_leds[key] = '0'
+                    skipped = ['NBR_STRIPLED', 'BRI_STRIPLED', 'TYP_STRIPLED'] if key == 'PIN_STRIPLED' \
+                        else ['BRI_TARGETLED', 'TYP_TARGETLED']
+                    for other in skipped:
+                        new_leds[other] = 'grb' if other.startswith('TYP') else 0
+                    history.append(j)
+                    j += 1 + len(skipped)
+                    continue
+                if tmp in used_pins:
+                    self.message([self.lang.translate('config-already')], 2000, None, 'fullbottom', 'big')
+                    continue
+                used_pins.append(tmp)
+                pin_of_step[j] = tmp
+            elif tmp in ('', 'space'):
+                # A number is needed : asked again
+                continue
+            new_leds[key] = tmp
+            history.append(j)
+            j += 1
 
         self.rpi.set_leds_conf(new_leds)
 
