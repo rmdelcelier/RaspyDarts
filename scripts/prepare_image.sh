@@ -97,6 +97,9 @@ step "Raspy2DMD : configuration remise a celle de son installation en mode Pico,
 R2D_CFG=/Medias/Raspy2DMD.cfg
 say "   $R2D_CFG remis a neuf (sortie Pico, RaspyDarts sur cette machine, son coupe, sans bouton)"
 if [ $APPLY -eq 1 ]; then
+    # Its owner and rights kept (Raspy2DMD keeps it readable by itself only : 600)
+    R2D_MODE=$(stat -c %a "$R2D_CFG" 2>/dev/null || echo 600)
+    R2D_OWNER=$(stat -c %U:%G "$R2D_CFG" 2>/dev/null || echo raspy2dmd:raspy2dmd)
     cat > "$R2D_CFG" <<'R2DCFG'
 [DMDRenderer]
 pico_reconnect_timeout = 5
@@ -119,8 +122,8 @@ default = 0
 [Sound]
 volume = 0
 R2DCFG
-    id raspy2dmd >/dev/null 2>&1 && chown raspy2dmd:raspy2dmd "$R2D_CFG"
-    chmod 666 "$R2D_CFG"
+    chown "$R2D_OWNER" "$R2D_CFG"
+    chmod "$R2D_MODE" "$R2D_CFG"
 fi
 for path in /Medias/.config_backups /Medias/Logs/*; do
     [ -e "$path" ] || continue
