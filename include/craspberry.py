@@ -253,6 +253,8 @@ class Craspberry():
         self.target_enabled = True
         self.intro_end_event = None
         self.on_intro_end = None
+        # Buttons of the music player : done by it (Screen.music_button)
+        self.on_music = None
         self.send_insult = None
         self.t_event = t_event
         self.sleep = False
@@ -683,9 +685,18 @@ class Craspberry():
     def listen_inputs(self, *args, **kwargs):
         """
         Read input (see read_inputs). The time of an input is kept : the screen logs the
-        delay until it shows its result (Screen.update_screen, debug level)
+        delay until it shows its result (Screen.update_screen, debug level).
+        A button of the music player (BTN_MUSIC_..., include/cmusic.py) is done here, in the
+        menus as in a game, and the reading goes on : the screen shown never sees it
         """
-        key = self.read_inputs(*args, **kwargs)
+        while True:
+            key = self.read_inputs(*args, **kwargs)
+            if not (isinstance(key, str) and key.startswith('BTN_MUSIC_') and self.on_music is not None):
+                break
+            try:
+                self.on_music(key)
+            except Exception as error:    # pylint: disable=broad-except
+                self.logs.error(f"Music : {key} ({error})")
         if kwargs.get('timeout', 0) > 0:
             # The delay given ends with this reading : left running (a key read before it), it
             # ended the next reading, of another screen, as if its own delay had passed (False)

@@ -5073,3 +5073,39 @@ msgstr "Sinistra / Destra: brani o comandi"
 
 msgid "music-no-title"
 msgstr "Nessun brano scelto"
+
+msgid "usb-pads-music-play"
+msgstr "MP3: riproduci / pausa"
+
+msgid "PIN_MUSIC_PLAY"
+msgstr "MP3: riproduci / pausa"
+
+msgid "usb-pads-music-next"
+msgstr "MP3: successivo"
+
+msgid "PIN_MUSIC_NEXT"
+msgstr "MP3: successivo"
+
+msgid "usb-pads-music-previous"
+msgstr "MP3: precedente"
+
+msgid "PIN_MUSIC_PREVIOUS"
+msgstr "MP3: precedente"
+
+msgid "usb-pads-music-volume-up"
+msgstr "MP3: volume +"
+
+msgid "PIN_MUSIC_VOLUME_UP"
+msgstr "MP3: volume +"
+
+msgid "usb-pads-music-volume-down"
+msgstr "MP3: volume -"
+
+msgid "PIN_MUSIC_VOLUME_DOWN"
+msgstr "MP3: volume -"
+
+msgid "usb-pads-music-stop"
+msgstr "MP3: ferma"
+
+msgid "PIN_MUSIC_STOP"
+msgstr "MP3: ferma"

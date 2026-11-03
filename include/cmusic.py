@@ -13,6 +13,9 @@ The source (music_source of raspydarts.cfg) :
 - server:/path : a share NFS
 A share is mounted by the cabinet itself (sudo mount, read only) in MOUNT_POINT. The tracks are
 searched in a thread : a share or a big key does not stop the screen.
+
+Buttons of the player (BUTTONS) : keys and knobs of a USB pad, inputs of a MCP23017, read
+wherever the game is (Raspberry.listen_inputs). The track which starts scrolls on the DMD.
 """
 
 import json
@@ -38,8 +41,12 @@ DEFAULT_VOLUME = 35
 BANDS = 18
 # FFT of 1024 samples at 16 kHz : a frame every 64 ms
 RATE, SIZE, FRAME_MS = 16000, 1024, 64
-# Messages to the DMD : 10 a second at most
-DMD_DELAY = 0.1
+# Buttons of the player (keys and knobs of a USB pad, inputs of a MCP23017 : PIN_MUSIC_...),
+# read in the menus and during the games : their command
+BUTTONS = {'BTN_MUSIC_PLAY': 'pause', 'BTN_MUSIC_NEXT': 'next', 'BTN_MUSIC_PREVIOUS': 'previous',
+           'BTN_MUSIC_VOLUME_UP': 'volup', 'BTN_MUSIC_VOLUME_DOWN': 'voldown', 'BTN_MUSIC_STOP': 'stop'}
+# Volume changed by a button : kept in raspydarts.cfg once it stops changing (a knob turned)
+VOLUME_SAVE_DELAY = 3
 
 
 def normalized(source):
@@ -81,7 +88,7 @@ class MusicPlayer:
     the music goes on when its screen is left
     '''
 
-    def __init__(self, config, logs, dmd):
+    def __init__(self, config, logs, dmd, in_game=lambda: False):
         self.config = config
         self.logs = logs
         self.dmd = dmd
@@ -102,9 +109,13 @@ class MusicPlayer:
         self.frames = {}
         self.peaks = [0.0] * BANDS
         self.draw_time = time.monotonic()
-        self.dmd_time = 0.0
+        self.in_game = in_game
+        # Text of the track last sent to the DMD
         self.dmd_sent = None
-        self.dmd_error_time = 0.0
+        # Lecture asked by a button before the tracks were found : played once found
+        self.wanted = False
+        self.scanned = False
+        self.volume_timer = None
         threading.Thread(target=self.worker, daemon=True).start()
 
     # ----- Source -----
@@ -171,6 +182,7 @@ class MusicPlayer:
         The tracks searched again (a key plugged since...), in a thread
         '''
         with self.lock:
+            self.scanned = True
             self.scan_generation += 1
             self.status = 'music-searching'
             generation = self.scan_generation
@@ -213,6 +225,9 @@ class MusicPlayer:
             self.tracks = tracks
             self.index = tracks.index(current) if current in tracks else -1
             self.status = status
+            if self.wanted:
+                self.wanted = False
+                self.play(0)
         self.logs.info(f"Music : {len(tracks)} tracks ({self.kind()})")
 
     def mount(self, source, kind):
@@ -281,6 +296,8 @@ class MusicPlayer:
                 self.paused = False
                 self.playing = True
                 self.error = ''
+                # Sent to the DMD once the tags are read (tags) : a single text for a track
+                self.dmd_sent = None
                 generation = self.generation
                 threading.Thread(target=self.tags, args=(filename, generation), daemon=True).start()
                 threading.Thread(target=self.spectrum_decode, args=(filename, generation), daemon=True).start()
@@ -317,6 +334,29 @@ class MusicPlayer:
                 if pygame.mixer.get_init():
                     pygame.mixer.music.set_volume(self.volume / 100)
 
+    def button(self, key):
+        '''
+        A button of the player (BUTTONS), from a USB pad or a MCP23017, wherever the game is :
+        Lecture plays the first track when nothing was searched or played yet
+        '''
+        action = BUTTONS.get(key)
+        if action is None:
+            return
+        self.logs.info(f"Music : button {key}")
+        with self.lock:
+            if action == 'pause' and not self.playing and not self.tracks:
+                self.wanted = True
+                if not self.scanned or self.status != 'music-searching':
+                    self.refresh()
+                return
+            self.action(action)
+        if action in ('volup', 'voldown'):
+            if self.volume_timer is not None:
+                self.volume_timer.cancel()
+            self.volume_timer = threading.Timer(VOLUME_SAVE_DELAY, self.save_volume)
+            self.volume_timer.daemon = True
+            self.volume_timer.start()
+
     def worker(self):
         '''
         The next track when one is over, in the menus and during the games
@@ -345,16 +385,19 @@ class MusicPlayer:
         try:
             result = subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format_tags=artist,title',
                                      '-of', 'json', filename], capture_output=True, timeout=3, check=False)
-            if result.returncode != 0:
-                return
-            tags = json.loads(result.stdout.decode('utf-8')).get('format', {}).get('tags', {})
-            tags = {key.lower(): value for key, value in tags.items()}
-            with self.lock:
-                if generation == self.generation:
-                    self.artist = str(tags.get('artist') or self.artist)
-                    self.title = str(tags.get('title') or self.title)
+            if result.returncode == 0:
+                tags = json.loads(result.stdout.decode('utf-8')).get('format', {}).get('tags', {})
+                tags = {key.lower(): value for key, value in tags.items()}
+                with self.lock:
+                    if generation == self.generation:
+                        self.artist = str(tags.get('artist') or self.artist)
+                        self.title = str(tags.get('title') or self.title)
         except Exception:    # pylint: disable=broad-except
             pass
+        with self.lock:
+            # Those of the tags, else those of the name of the file
+            if generation == self.generation:
+                self.send_dmd()
 
     # ----- Spectrum -----
 
@@ -478,28 +521,21 @@ class MusicPlayer:
 
     # ----- DMD -----
 
-    def send_dmd(self, active=True):
+    def send_dmd(self):
         '''
-        The track, its state and its bands to the DMD (music|{...}) while the screen is shown
+        « Artist - Title » of the track which starts, scrolling from right to left on the DMD
+        (msg|text|left, as the other texts of the game). Not during a game : the DMD shows it
         '''
-        now = time.monotonic()
-        if active and now - self.dmd_time < DMD_DELAY:
+        if self.in_game():
             return
-        self.dmd_time = now
+        text = ' - '.join(part for part in (self.artist, self.title) if part)
+        # | separates the fields of the message
+        text = text.replace('|', '/').strip()[:160]
+        if not text or text == self.dmd_sent:
+            return
+        self.dmd_sent = text
         try:
-            if not active:
-                message = 'music|{"active":false}'
-            else:
-                data = {'active': True, 'artist': self.artist[:120], 'title': self.title[:160],
-                        'bands': [int(round(100 * value)) for value in self.levels()],
-                        'state': {'music-paused': 'Pause', 'music-playing': 'Lecture'}.get(self.state(), 'Arret')}
-                message = 'music|' + json.dumps(data, ensure_ascii=True, separators=(',', ':'))
-            # The same message again (stopped, paused) : not sent
-            if message != self.dmd_sent:
-                self.dmd.send(message)
-                self.dmd_sent = message
+            self.dmd.send(f'msg|{text}|left')
         except Exception as error:    # pylint: disable=broad-except
             # The player is still used when the DMD is not reached
-            if now - self.dmd_error_time > 10:
-                self.dmd_error_time = now
-                self.logs.warning(f"Music : DMD ({error})")
+            self.logs.warning(f"Music : DMD ({error})")

@@ -5060,3 +5060,39 @@ msgstr "Links / Rechts: nummers of opdrachten"
 
 msgid "music-no-title"
 msgstr "Geen nummer gekozen"
+
+msgid "usb-pads-music-play"
+msgstr "MP3: afspelen / pauze"
+
+msgid "PIN_MUSIC_PLAY"
+msgstr "MP3: afspelen / pauze"
+
+msgid "usb-pads-music-next"
+msgstr "MP3: volgende"
+
+msgid "PIN_MUSIC_NEXT"
+msgstr "MP3: volgende"
+
+msgid "usb-pads-music-previous"
+msgstr "MP3: vorige"
+
+msgid "PIN_MUSIC_PREVIOUS"
+msgstr "MP3: vorige"
+
+msgid "usb-pads-music-volume-up"
+msgstr "MP3: volume +"
+
+msgid "PIN_MUSIC_VOLUME_UP"
+msgstr "MP3: volume +"
+
+msgid "usb-pads-music-volume-down"
+msgstr "MP3: volume -"
+
+msgid "PIN_MUSIC_VOLUME_DOWN"
+msgstr "MP3: volume -"
+
+msgid "usb-pads-music-stop"
+msgstr "MP3: stoppen"
+
+msgid "PIN_MUSIC_STOP"
+msgstr "MP3: stoppen"

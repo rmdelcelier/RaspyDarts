@@ -5011,3 +5011,39 @@ msgstr "Izquierda / Derecha: canciones o comandos"
 
 msgid "music-no-title"
 msgstr "Ninguna canción elegida"
+
+msgid "usb-pads-music-play"
+msgstr "MP3: reproducir / pausa"
+
+msgid "PIN_MUSIC_PLAY"
+msgstr "MP3: reproducir / pausa"
+
+msgid "usb-pads-music-next"
+msgstr "MP3: siguiente"
+
+msgid "PIN_MUSIC_NEXT"
+msgstr "MP3: siguiente"
+
+msgid "usb-pads-music-previous"
+msgstr "MP3: anterior"
+
+msgid "PIN_MUSIC_PREVIOUS"
+msgstr "MP3: anterior"
+
+msgid "usb-pads-music-volume-up"
+msgstr "MP3: volumen +"
+
+msgid "PIN_MUSIC_VOLUME_UP"
+msgstr "MP3: volumen +"
+
+msgid "usb-pads-music-volume-down"
+msgstr "MP3: volumen -"
+
+msgid "PIN_MUSIC_VOLUME_DOWN"
+msgstr "MP3: volumen -"
+
+msgid "usb-pads-music-stop"
+msgstr "MP3: detener"
+
+msgid "PIN_MUSIC_STOP"
+msgstr "MP3: detener"

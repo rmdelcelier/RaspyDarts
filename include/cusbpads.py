@@ -61,7 +61,14 @@ ACTIONS = [('', 'usb-pads-none-action', True, True),
            ('BTN_VOLUME_DOWN', 'usb-pads-volume-down', True, True),
            ('BTN_VOLUME_MUTE', 'usb-pads-volume-mute', True, True),
            ('SYSTEM_VOLUME_UP', 'usb-pads-system-volume-up', True, True),
-           ('SYSTEM_VOLUME_DOWN', 'usb-pads-system-volume-down', True, True)]
+           ('SYSTEM_VOLUME_DOWN', 'usb-pads-system-volume-down', True, True),
+           # Music player (include/cmusic.py) : done wherever the game is
+           ('BTN_MUSIC_PLAY', 'usb-pads-music-play', True, True),
+           ('BTN_MUSIC_NEXT', 'usb-pads-music-next', True, True),
+           ('BTN_MUSIC_PREVIOUS', 'usb-pads-music-previous', True, True),
+           ('BTN_MUSIC_VOLUME_UP', 'usb-pads-music-volume-up', True, True),
+           ('BTN_MUSIC_VOLUME_DOWN', 'usb-pads-music-volume-down', True, True),
+           ('BTN_MUSIC_STOP', 'usb-pads-music-stop', True, True)]
 # Volume of the system (not the one of the game) : changed by the pad itself, the game is not
 # told. PipeWire (Trixie), else ALSA
 SYSTEM_VOLUME = {'SYSTEM_VOLUME_UP': '5%+', 'SYSTEM_VOLUME_DOWN': '5%-'}

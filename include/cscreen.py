@@ -228,8 +228,10 @@ class Screen(pygame.Surface):
             rpi.set_intro_end(INTRO_END_EVENT, self.show)
             Thread(target=self.watch_intro, daemon=True).start()
         self.dmd = dmd
-        # Music player (include/cmusic.py) : made at its first opening
+        # Music player (include/cmusic.py) : made at its first opening, or at the first press of
+        # one of its buttons
         self.music = None
+        rpi.on_music = self.music_button
         self.video_player = video_player
         self.image_player = image_player
         self.game_options = []
@@ -9470,8 +9472,16 @@ class Screen(pygame.Surface):
         '''
         if self.music is None:
             from include import cmusic
-            self.music = cmusic.MusicPlayer(self.config, self.logs, self.dmd)
+            self.music = cmusic.MusicPlayer(self.config, self.logs, self.dmd,
+                                            in_game=lambda: getattr(self.rpi.usb_pads, 'context', '') == 'game')
         return self.music
+
+    def music_button(self, key):
+        '''
+        A button of the player (BTN_MUSIC_..., USB pad or MCP23017) read anywhere : the player
+        does it, the screen shown is left as it is (Raspberry.listen_inputs)
+        '''
+        self.music_player().button(key)
 
     MUSIC_ACTIONS = [('pause', 'music-play-pause'), ('previous', 'music-previous'), ('next', 'music-next'),
                      ('voldown', 'music-volume-down'), ('volup', 'music-volume-up'), ('stop', 'music-stop'),
@@ -9545,7 +9555,6 @@ class Screen(pygame.Surface):
                     self.screen.blit(pristine, bar, bar)
                     self.music_bar(player, bar, spectrum)
                     self.update_screen(rect_array=[bar])
-                player.send_dmd(True)
 
                 key = self.rpi.listen_inputs(['arrows'], ['escape', 'enter', 'PLAYERBUTTON', 'BACKUPBUTTON', 'GAMEBUTTON',
                                                           'single-click', 'resize', 'VOLUME-UP', 'VOLUME-DOWN'], timeout=50)
@@ -9575,7 +9584,6 @@ class Screen(pygame.Surface):
                     if action == 'back':
                         return
                     if action == 'source':
-                        player.send_dmd(False)
                         self.music_source_menu(player)
                         drawn = None
                         column = 1
@@ -9583,7 +9591,6 @@ class Screen(pygame.Surface):
                         player.action(action)
         finally:
             player.save_volume()
-            player.send_dmd(False)
 
     def music_bar(self, player, bar, spectrum):
         '''
