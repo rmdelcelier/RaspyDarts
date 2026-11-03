@@ -35,13 +35,15 @@ DefaultConfig['SectionGlobals'] = {
     'locale': 'fr_FR',
     # Theme of the example configuration (~/.raspydarts/themes/sombre) ; clear if missing
     'colorset': 'sombre',
-    'font': 'Fabrik.ttf',
+    # Empty : the font of the theme (a font chosen in the settings is used over it : Fabrik
+    # given here replaced CompactaBT of the theme sombre on every new cabinet)
+    'font': '',
     'soundvolume': 100,
     'videos': 2,
     'blinktime': 3000,
     'pnj_time': 2000,
     'releasedartstime': 1800,
-    'nextplayer_sound_duration': 7000,
+    'nextplayer_sound_duration': 11000,
     # The music played at the start of each turn (next_player) : False, none
     'nextplayer_music': True,
     'waitevent_time': 30000,

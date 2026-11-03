@@ -6649,7 +6649,9 @@ class Screen(pygame.Surface):
             if option in ('startpercent', 'nbcol', 'resx', 'resy', 
                     'masterserver', 'endgamestats', 'videosound_multiplier', 'pnj_time',
                     'exhibition_mode', 'exhibition_items', 'illumination_mode', 'illumination_color',
-                    'idle_light_color', 'colorset', 'font'):
+                    'idle_light_color', 'colorset', 'font',
+                    # Lecteur MP3 : set in its own screen (include/cmusic.py)
+                    'music_source', 'music_volume'):
                 avoid.append([option, customization[option], '', 0, []])
                 continue
 
@@ -6910,8 +6912,9 @@ class Screen(pygame.Surface):
                     tmp = self.slider(title, act_value, min_value, max_value, step=step, diviser=diviser)
                     if tmp != 'escape':
                         selected_customization[selected - 1][1] = str(tmp)
-                    # Force refresh off screen
+                    # Force refresh off screen : the slider stayed drawn under the list
                     selection = None
+                    refresh = True
                     
                 elif selected_customization[selected - 1][2] == 'dropdown_colors':
                     tmp = self.dropdown(self.res['x'] * 6 / 16, 3 * self.res_y_16,
@@ -11756,8 +11759,8 @@ class Screen(pygame.Surface):
         # Transparency
         self.alpha = 210
         self.alpha2 = 168
-        # Default font path
-        if Font is None:
+        # Default font path (no font in the settings, empty : the one of the theme)
+        if not Font:
             try :    # Already define
                 self.defaultfontpath = self.defaultfontpath
             except :    # 1st define
