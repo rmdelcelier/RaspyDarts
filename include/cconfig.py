@@ -60,7 +60,9 @@ DefaultConfig['SectionGlobals'] = {
     'play_firstname': True,
     'print_dartstroke': True,
     'light_target': False,
-    'light_strip': False,
+    # Allumer les leds de la couleur du joueur : during a game, the strip lit in the colour of the
+    # player whose turn it is
+    'light_strip': True,
     # Strip and target lit all the time out of games, without the animations of the events
     # (menu, wait...) : the colour of the strip (off : off) and of the target (off, origin : the
     # colours of the segments, as light_target)
