@@ -255,7 +255,8 @@ run journalctl --rotate
 run journalctl --vacuum-time=1s
 if [ $APPLY -eq 1 ]; then
     # The journal of systemd : by journalctl above (its files are not truncated)
-    find /var/log -path /var/log/journal -prune -o -type f \( -name '*.gz' -o -name '*.[0-9]' -o -name '*.old' \) -print -delete >/dev/null
+    # -exec rm, not -delete : find refuses -delete with -prune (the old logs were kept)
+    find /var/log -path /var/log/journal -prune -o -type f \( -name '*.gz' -o -name '*.[0-9]' -o -name '*.old' \) -exec rm -f {} +
     find /var/log -path /var/log/journal -prune -o -type f -exec truncate -s 0 {} +
     rm -rf /var/tmp/* /tmp/* 2>/dev/null
 else
