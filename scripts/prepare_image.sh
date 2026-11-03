@@ -198,6 +198,18 @@ fi
 say "   cloud-init : etat efface, les reglages de Imager s'appliquent au 1er demarrage de chaque carte"
 run cloud-init clean --logs
 
+step "Partition agrandie au 1er demarrage de chaque carte"
+# « resize » in cmdline.txt : at the first start, the initramfs grows the partition to the whole
+# card (resize_early), gives the card a disk id of its own (set_partuuid) and removes the word ;
+# rpi-resize.service grows the file system (first boot, see machine-id below). The image is
+# shrunk without its own growing (pishrink.sh -s, publish_image.ps1)
+say "   cmdline.txt : « resize » ajoute, identifiant de Raspberry Pi Imager (ds=nocloud;i=...) retire"
+if [ $APPLY -eq 1 ]; then
+    sed -i 's/ ds=nocloud;[^ ]*//g; s/ resize\b//g; s/[[:space:]]*$/ resize/' "$BOOT/cmdline.txt"
+    say "   $(cat "$BOOT/cmdline.txt")"
+fi
+run systemctl enable rpi-resize.service
+
 step "Identite de la machine (refaite au 1er demarrage de chaque carte)"
 say "   machine-id vide : nouvel identifiant et nouvelles cles SSH au 1er demarrage"
 if [ $APPLY -eq 1 ]; then
