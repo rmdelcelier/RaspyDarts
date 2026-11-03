@@ -4350,6 +4350,14 @@ class Screen(pygame.Surface):
                    [('escape', 2)] + ['_', ':', '/', '@', ('space', 3), ('enter', 2)]],
     }
     KEY_TEXTS = {'backspace': 'vk-delete', 'enter': 'vk-ok', 'escape': 'vk-cancel', 'shift': 'vk-shift', 'space': 'vk-space'}
+    # A key held (as on a phone) : its accents or its symbols, above it (key_variant)
+    KEY_VARIANTS = {
+        'a': 'àâäáãåæ', 'e': 'éèêë', 'i': 'îïíì', 'o': 'ôöóòõœ', 'u': 'ùûüú', 'c': 'ç', 'n': 'ñ', 'y': 'ÿý',
+        's': 'ß', '1': '!¹', '2': '²', '3': '#³', '4': '$€£', '5': '%', '6': '&^', '7': '{}',
+        '8': '*', '9': '()', '0': '°=', '.': ",;!?'\"", '-': '+=*#%&', '_': '~|\\', ':': ';',
+        '/': '\\|', '@': '#&$€'}
+    # Held this long : its variants shown (seconds)
+    KEY_HOLD = 0.45
 
     def keyboard_wanted(self):
         '''
@@ -4400,6 +4408,90 @@ class Screen(pygame.Surface):
                 self.blit_text2(label, rect, self.colorset['menu-text-black'])
                 keys[(rect.x, rect.y, rect.w, rect.h)] = name
         return panel, keys
+
+    @staticmethod
+    def touch_position(event):
+        '''
+        Place of a finger (its x and y are fractions of the screen) or of the mouse
+        '''
+        if event.type in (pygame.FINGERDOWN, pygame.FINGERUP, pygame.FINGERMOTION):
+            width, height = pygame.display.get_surface().get_size()
+            return (int(event.x * width), int(event.y * height))
+        return event.pos
+
+    def key_variant(self, name, zone, shift, panel):
+        '''
+        A key of the keyboard on the screen held, as on a phone : its accents or symbols
+        (KEY_VARIANTS) shown above it ; the one the finger slides to and is lifted on, or then
+        touched, is typed. The touch is read when the finger is put down : held, it is not
+        lifted within KEY_HOLD. None : lifted at once (the key itself), '' : nothing chosen
+        '''
+        variants = self.KEY_VARIANTS.get(name)
+        if not variants:
+            return None
+        ups = (pygame.FINGERUP, pygame.MOUSEBUTTONUP)
+        end = time.monotonic() + self.KEY_HOLD
+        while time.monotonic() < end:
+            if pygame.event.get(ups):
+                return None
+            time.sleep(0.02)
+        variants = [variant.upper() if shift else variant for variant in variants]
+        zone = pygame.Rect(zone)
+        margin = max(2, int(self.res_y_16 / 12))
+        width = zone.w * len(variants)
+        popup = pygame.Rect(max(panel.x, min(zone.centerx - width // 2, panel.right - width)),
+                            zone.y - zone.h - 2 * margin, width, zone.h + 2 * margin)
+        cells = [pygame.Rect(popup.x + index * zone.w, popup.y + margin, zone.w - margin, zone.h)
+                 for index in range(len(variants))]
+        under = self.screen.subsurface(popup).copy()
+
+        def draw(chosen):
+            self.new_blit_rect2(popup, self.colorset['menu-border'], corners='All', border_radius=int(zone.h / 4), alpha=255)
+            for index, cell in enumerate(cells):
+                self.new_blit_rect2(cell, self.colorset['menu-selected'] if index == chosen else self.colorset['menu-buttons'],
+                                    corners='All', border_radius=int(cell.h / 4), alpha=255)
+                self.blit_text2(variants[index], cell, self.colorset['menu-text-black'])
+            self.update_screen(rect_array=[popup])
+
+        def under_finger(position):
+            return next((index for index, cell in enumerate(cells) if cell.collidepoint(position)), None)
+
+        chosen = None
+        lifted = False
+        draw(chosen)
+        result = ''
+        # Without a choice for a while : closed
+        end = time.monotonic() + 8
+        try:
+            while time.monotonic() < end:
+                for event in pygame.event.get((pygame.FINGERMOTION, pygame.FINGERUP, pygame.FINGERDOWN,
+                                               pygame.MOUSEMOTION, pygame.MOUSEBUTTONUP, pygame.MOUSEBUTTONDOWN)):
+                    if getattr(event, 'touch', False):
+                        # The click simulated by SDL for a finger : the finger is read
+                        continue
+                    index = under_finger(self.touch_position(event))
+                    if event.type in (pygame.FINGERMOTION, pygame.MOUSEMOTION):
+                        if index != chosen:
+                            chosen = index
+                            draw(chosen)
+                    elif event.type in ups and not lifted:
+                        # Slid onto a variant and lifted : typed ; lifted elsewhere : the
+                        # variants stay, one is touched
+                        if index is not None:
+                            result = variants[index]
+                            return result
+                        lifted = True
+                    elif event.type in (pygame.FINGERDOWN, pygame.MOUSEBUTTONDOWN):
+                        # Touched after : a variant, or elsewhere (closed)
+                        result = variants[index] if index is not None else ''
+                        return result
+                time.sleep(0.02)
+            return result
+        finally:
+            self.screen.blit(under, popup)
+            self.update_screen(rect_array=[popup])
+            # The lifting of the finger which chose is not read as a new touch
+            pygame.event.clear(ups)
 
     # Choices of the wheel of characters of a knob, besides the characters : delete the last one,
     # end the typing
@@ -4529,7 +4621,8 @@ class Screen(pygame.Surface):
 
             if isinstance(key, tuple):
                 # A touch : a key of the keyboard on the screen, or the field (opens it)
-                pressed = next((name for zone, name in keyboard_keys.items() if pygame.Rect(zone).collidepoint(key)), None)
+                zone, pressed = next(((zone, name) for zone, name in keyboard_keys.items()
+                                      if pygame.Rect(zone).collidepoint(key)), (None, None))
                 if pressed is None and not keyboard and rect.collidepoint(key):
                     keyboard = True
                     continue
@@ -4538,7 +4631,11 @@ class Screen(pygame.Surface):
                     continue
                 if pressed is None:
                     continue
-                key = pressed.upper() if shift and len(pressed) == 1 else pressed
+                # Held : one of its accents or symbols
+                variant = self.key_variant(pressed, zone, shift, panel)
+                if variant == '':
+                    continue
+                key = variant or (pressed.upper() if shift and len(pressed) == 1 else pressed)
             elif keyboard and key not in (None, False) and not getattr(self.rpi, 'last_input_touch', False):
                 # A real keyboard is used : the one on the screen goes away
                 keyboard = False
