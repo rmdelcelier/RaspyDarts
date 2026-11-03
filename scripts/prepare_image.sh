@@ -63,6 +63,14 @@ if [ ! -f /Raspy2DMD/.pico_seul ]; then
     exit 1
 fi
 
+if [ $APPLY -eq 1 ]; then
+    # What is done is also written here, shown on the screen of the cabinet (below)
+    LOG=/run/prepare_image.log
+    : > "$LOG"
+    chmod 644 "$LOG"
+    exec > >(tee -a "$LOG") 2>&1
+fi
+
 step "Jeu et Raspy2DMD arretes"
 run pkill -f "RaspyDarts.sh"
 run pkill -f "python3 raspydarts.py"
@@ -70,11 +78,22 @@ run pkill -f "Leds_Server"
 run pkill -f "ctarget_reader"
 run bash /Raspy2DMD/StopAllRaspy2DMD.sh
 
+if [ $APPLY -eq 1 ] && [ -S /tmp/.X11-unix/X0 ]; then
+    # The game stopped : the progress on the screen of the cabinet, in a terminal on the desktop
+    sudo -u "$TARGET_USER" DISPLAY=:0 XAUTHORITY="$TARGET_HOME/.Xauthority" setsid \
+        lxterminal --geometry=110x35 --title="RaspyDarts : preparation de l'image" \
+        -e "tail -n +1 -f $LOG" >/dev/null 2>&1 &
+fi
+
 step "Donnees du jeu (~/.raspydarts) : remplacees par l'archive de la release exemple"
-ARCHIVE=/tmp/raspydarts_example.zip
+# On the disk : /tmp is in the memory of the Pi (435 MB on a Pi 3), the archive (390 MB) filled it
+# and the download stopped
+ARCHIVE=/var/tmp/raspydarts_example.zip
 if [ $APPLY -eq 1 ]; then
     # Downloaded first : nothing is removed without it
-    curl -fsSL --retry 3 -o "$ARCHIVE" "$EXAMPLE_URL" || { say "Telechargement de l'exemple impossible (Internet ?) : rien n'est modifie."; exit 1; }
+    say "   telechargement de l'archive exemple (environ 390 Mo)..."
+    curl -fL -# --retry 3 -o "$ARCHIVE" "$EXAMPLE_URL" || { rm -f "$ARCHIVE"; say "Telechargement de l'exemple impossible (Internet ?) : rien n'est modifie."; exit 1; }
+    say "   extraction..."
     rm -rf "$USER_DIR"
     mkdir -p "$USER_DIR"
     python3 -m zipfile -e "$ARCHIVE" "$USER_DIR" || { say "Extraction de l'exemple echouee."; exit 1; }
@@ -244,8 +263,9 @@ else
 fi
 
 if [ $APPLY -eq 1 ]; then
-    step "Termine : la carte s'eteint. Ensuite : lire la carte en image (RaspyDarts_vX.Y.Z.img) et la publier"
+    step "Termine : la carte s'eteint dans 20 secondes. Ensuite : la lire en image (RaspyDarts_vX.Y.Z.img) SANS la redemarrer, et la publier"
     sync
+    sleep 20
     poweroff
 else
     step "Simulation terminee : relire la liste ci-dessus, puis relancer avec --appliquer"
