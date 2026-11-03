@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 import time
+import os
+# Blinka 10 : no dependency check (see include/cgpio_extender.py)
+os.environ.setdefault('BLINKA_SKIP_DEPENDENCY_CHECK', '1')
 import board
 import neopixel
 import sys

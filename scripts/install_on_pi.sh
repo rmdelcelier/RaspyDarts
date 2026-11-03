@@ -1307,7 +1307,9 @@ MISSING=""
 # Depuis le dossier personnel : RPi.GPIO (rpi-lgpio) cree un fichier dans le dossier courant,
 # l'import echouait si le script etait lance depuis un dossier non inscriptible (/)
 for module in $PY_CHECK; do
-    ( cd "$TARGET_HOME" && sudo -u "$TARGET_USER" python3 -c "import $module" ) >/dev/null 2>&1 || MISSING="$MISSING $module"
+    # Sans la verification des dependances de Blinka 10 (comme le jeu, include/cgpio_extender.py) :
+    # elle echoue au hasard sur un Pi occupe, ici pendant l'installation
+    ( cd "$TARGET_HOME" && sudo -u "$TARGET_USER" BLINKA_SKIP_DEPENDENCY_CHECK=1 python3 -c "import $module" ) >/dev/null 2>&1 || MISSING="$MISSING $module"
 done
 if [ -z "$MISSING" ]; then
     ok "Tous les modules Python sont importables par $TARGET_USER"

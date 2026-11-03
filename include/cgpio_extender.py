@@ -10,9 +10,18 @@ light_buttons and toys_buttons are a dictionnary of tuples:
         }
 """
 
+import os
 import time
-import board
-import busio
+
+# Blinka 10 checks its dependencies when board is imported. It refuses the gpiod of Debian
+# (labelled 2.2.0, in fact the fixed 2.2.1) unless dpkg-query answers within 3 seconds : 2.4 to
+# 2.7 s on a Pi 3 at rest the first time, more when it is busy (just after a crash, at boot),
+# and the game did not start (« Blinka found installed platform dependencies with unsupported
+# versions »). The installation puts those dependencies (python3-libgpiod, the PWM module)
+os.environ.setdefault('BLINKA_SKIP_DEPENDENCY_CHECK', '1')
+
+import board    # pylint: disable=wrong-import-position
+import busio    # pylint: disable=wrong-import-position
 
 from digitalio import Direction, Pull
 from adafruit_mcp230xx.mcp23017 import MCP23017
