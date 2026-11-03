@@ -4913,3 +4913,96 @@ msgstr "Keine"
 
 msgid "infos-identifier"
 msgstr "Kennung: {id}"
+
+msgid "music-player"
+msgstr "MP3-Player"
+
+msgid "music-searching"
+msgstr "Titel werden gesucht…"
+
+msgid "music-tracks"
+msgstr "{count} Titel"
+
+msgid "music-none"
+msgstr "Keine MP3-Titel in dieser Quelle"
+
+msgid "music-folder-missing"
+msgstr "Ordner nicht gefunden"
+
+msgid "music-share-failed"
+msgstr "Freigabe nicht erreichbar (Adresse, Benutzer oder Passwort)"
+
+msgid "music-unreadable"
+msgstr "Wiedergabe nicht möglich: anderen Titel wählen"
+
+msgid "music-playing"
+msgstr "Wiedergabe"
+
+msgid "music-paused"
+msgstr "Pause"
+
+msgid "music-stopped"
+msgstr "Gestoppt"
+
+msgid "music-volume"
+msgstr "Lautstärke {volume} %"
+
+msgid "music-play-pause"
+msgstr "Wiedergabe / Pause"
+
+msgid "music-previous"
+msgstr "Zurück"
+
+msgid "music-next"
+msgstr "Weiter"
+
+msgid "music-volume-down"
+msgstr "Lautstärke -"
+
+msgid "music-volume-up"
+msgstr "Lautstärke +"
+
+msgid "music-stop"
+msgstr "Stoppen"
+
+msgid "music-source"
+msgstr "Quelle der Titel"
+
+msgid "music-source-usb"
+msgstr "USB-Stick"
+
+msgid "music-source-folder"
+msgstr "Ordner des Automaten"
+
+msgid "music-source-smb"
+msgstr "Windows- / NAS-Freigabe"
+
+msgid "music-source-nfs"
+msgstr "NFS-Freigabe"
+
+msgid "music-source-current"
+msgstr "Aktuelle Quelle: {source}"
+
+msgid "music-folder-path"
+msgstr "Pfad des Ordners (z. B. /home/raspydarts/Musik)"
+
+msgid "music-smb-address"
+msgstr "Adresse der Freigabe (z. B. //nas/musik)"
+
+msgid "music-smb-user"
+msgstr "Benutzer der Freigabe (leer: Gast)"
+
+msgid "music-smb-password"
+msgstr "Passwort der Freigabe"
+
+msgid "music-nfs-address"
+msgstr "Adresse der NFS-Freigabe (z. B. nas:/volume1/musik)"
+
+msgid "music-bad-address"
+msgstr "Adresse nicht erkannt"
+
+msgid "music-help"
+msgstr "Links / Rechts: Titel oder Befehle"
+
+msgid "music-no-title"
+msgstr "Kein Titel gewählt"

@@ -79,7 +79,11 @@ DefaultConfig['SectionGlobals'] = {
     'check_for_updates': True,
     # Output of the sound : auto (a USB card when plugged, else HDMI), hdmi, jack, usb
     # (include/caudio.py)
-    'sound_output': 'auto'
+    'sound_output': 'auto',
+    # Lecteur MP3 (include/cmusic.py) : source of the tracks (empty : the USB keys, /a/folder,
+    # //server/share, server:/path) and volume (percent)
+    'music_source': '',
+    'music_volume': 35
     }
 #
 DefaultConfig['SectionAdvanced'] = {
@@ -1315,6 +1319,9 @@ class Config:
         self.conf += f"check_for_updates:{Global['check_for_updates']}\n"
         self.conf += "### Output of the sound : auto (USB sound card when plugged, else HDMI), hdmi, jack, usb\n"
         self.conf += f"sound_output:{Global.get('sound_output', 'auto')}\n"
+        self.conf += "### Lecteur MP3 : source of the tracks (empty : USB keys, /a/folder, //server/share, server:/path) and volume\n"
+        self.conf += f"music_source:{Global.get('music_source', '')}\n"
+        self.conf += f"music_volume:{Global.get('music_volume', 35)}\n"
 
         Advanced = self.config["SectionAdvanced"]
 

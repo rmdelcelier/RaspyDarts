@@ -4918,3 +4918,96 @@ msgstr "Ninguna"
 
 msgid "infos-identifier"
 msgstr "Identificador: {id}"
+
+msgid "music-player"
+msgstr "Reproductor MP3"
+
+msgid "music-searching"
+msgstr "Buscando canciones…"
+
+msgid "music-tracks"
+msgstr "{count} canciones"
+
+msgid "music-none"
+msgstr "Ninguna canción MP3 en esta fuente"
+
+msgid "music-folder-missing"
+msgstr "Carpeta no encontrada"
+
+msgid "music-share-failed"
+msgstr "Recurso compartido inaccesible (dirección, usuario o contraseña)"
+
+msgid "music-unreadable"
+msgstr "No se puede reproducir: elija otra canción"
+
+msgid "music-playing"
+msgstr "Reproduciendo"
+
+msgid "music-paused"
+msgstr "Pausa"
+
+msgid "music-stopped"
+msgstr "Detenido"
+
+msgid "music-volume"
+msgstr "Volumen {volume} %"
+
+msgid "music-play-pause"
+msgstr "Reproducir / Pausa"
+
+msgid "music-previous"
+msgstr "Anterior"
+
+msgid "music-next"
+msgstr "Siguiente"
+
+msgid "music-volume-down"
+msgstr "Volumen -"
+
+msgid "music-volume-up"
+msgstr "Volumen +"
+
+msgid "music-stop"
+msgstr "Detener"
+
+msgid "music-source"
+msgstr "Fuente de las canciones"
+
+msgid "music-source-usb"
+msgstr "Memoria USB"
+
+msgid "music-source-folder"
+msgstr "Carpeta de la máquina"
+
+msgid "music-source-smb"
+msgstr "Recurso compartido Windows / NAS"
+
+msgid "music-source-nfs"
+msgstr "Recurso compartido NFS"
+
+msgid "music-source-current"
+msgstr "Fuente actual: {source}"
+
+msgid "music-folder-path"
+msgstr "Ruta de la carpeta (ej. /home/raspydarts/Musica)"
+
+msgid "music-smb-address"
+msgstr "Dirección del recurso (ej. //nas/musica)"
+
+msgid "music-smb-user"
+msgstr "Usuario del recurso (vacío: invitado)"
+
+msgid "music-smb-password"
+msgstr "Contraseña del recurso"
+
+msgid "music-nfs-address"
+msgstr "Dirección del recurso NFS (ej. nas:/volume1/musica)"
+
+msgid "music-bad-address"
+msgstr "Dirección no reconocida"
+
+msgid "music-help"
+msgstr "Izquierda / Derecha: canciones o comandos"
+
+msgid "music-no-title"
+msgstr "Ninguna canción elegida"

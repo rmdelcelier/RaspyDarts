@@ -4967,3 +4967,96 @@ msgstr "Geen"
 
 msgid "infos-identifier"
 msgstr "Kenmerk: {id}"
+
+msgid "music-player"
+msgstr "MP3-speler"
+
+msgid "music-searching"
+msgstr "Nummers zoeken…"
+
+msgid "music-tracks"
+msgstr "{count} nummers"
+
+msgid "music-none"
+msgstr "Geen MP3-nummers in deze bron"
+
+msgid "music-folder-missing"
+msgstr "Map niet gevonden"
+
+msgid "music-share-failed"
+msgstr "Gedeelde map niet bereikbaar (adres, gebruiker of wachtwoord)"
+
+msgid "music-unreadable"
+msgstr "Afspelen niet mogelijk: kies een ander nummer"
+
+msgid "music-playing"
+msgstr "Speelt af"
+
+msgid "music-paused"
+msgstr "Pauze"
+
+msgid "music-stopped"
+msgstr "Gestopt"
+
+msgid "music-volume"
+msgstr "Volume {volume} %"
+
+msgid "music-play-pause"
+msgstr "Afspelen / Pauze"
+
+msgid "music-previous"
+msgstr "Vorige"
+
+msgid "music-next"
+msgstr "Volgende"
+
+msgid "music-volume-down"
+msgstr "Volume -"
+
+msgid "music-volume-up"
+msgstr "Volume +"
+
+msgid "music-stop"
+msgstr "Stoppen"
+
+msgid "music-source"
+msgstr "Bron van de nummers"
+
+msgid "music-source-usb"
+msgstr "USB-stick"
+
+msgid "music-source-folder"
+msgstr "Map van de automaat"
+
+msgid "music-source-smb"
+msgstr "Windows- / NAS-share"
+
+msgid "music-source-nfs"
+msgstr "NFS-share"
+
+msgid "music-source-current"
+msgstr "Huidige bron: {source}"
+
+msgid "music-folder-path"
+msgstr "Pad van de map (bijv. /home/raspydarts/Muziek)"
+
+msgid "music-smb-address"
+msgstr "Adres van de share (bijv. //nas/muziek)"
+
+msgid "music-smb-user"
+msgstr "Gebruiker van de share (leeg: gast)"
+
+msgid "music-smb-password"
+msgstr "Wachtwoord van de share"
+
+msgid "music-nfs-address"
+msgstr "Adres van de NFS-share (bijv. nas:/volume1/muziek)"
+
+msgid "music-bad-address"
+msgstr "Adres niet herkend"
+
+msgid "music-help"
+msgstr "Links / Rechts: nummers of opdrachten"
+
+msgid "music-no-title"
+msgstr "Geen nummer gekozen"
