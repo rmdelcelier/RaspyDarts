@@ -1344,6 +1344,8 @@ class Game(cgame.Game):
                     continue
                 if value is True:
                     self.display.blit_text(f'{game}-{option}', right_x, option_y, right_width, option_height, color=self.display.colorset['menu-ok'], align='Right', margin=False, divider=1, game=game)
+                elif value is False:
+                    self.display.blit_text(f'{game}-{option}', right_x, option_y, right_width, option_height, color=self.display.colorset['menu-ko'], align='Right', margin=False, divider=1, game=game)
                 else:
                     self.display.blit_text(f'{self.display.lang.translate(game + "-" + option, game)} : {value}', right_x, option_y, right_width, option_height, color=self.display.colorset['game-option'], align='Right', margin=False, divider=1, game=game)
                 option_y -= option_height
