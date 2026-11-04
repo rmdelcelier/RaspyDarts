@@ -2082,6 +2082,59 @@ msgstr "Super shoot out"
 msgid "High_Score-segment"
 msgstr "Segment"
 
+######## CHTI 501 ######
+
+msgid "Chti_501-name"
+msgstr "Ch'ti 501"
+
+msgid "Description-Chti_501"
+msgstr ""
+"501, the Ch'ti way.\n"
+"\n"
+"As in '01: you start at 501, the first to reach exactly 0 wins.\n"
+"If you go over, the score goes back to the start of the round.\n"
+"-----\n"
+"On top of that:\n"
+"- 421 bonus: S4, S2 and S1 in the same round, in any order, take off another 100 points (if the score stays above 0).\n"
+"- Zap Mode: equal an opponent's score and they go back to 501. The points that allow it are shown in yellow.\n"
+"- League Mode: teams of 2 (4, 6 or 8 players), shared score.\n"
+"\n"
+"Other options (as in '01): Double in, Double out, Master in, Master out, Single bull 25, Equal."
+
+msgid "Chti_501-max_players"
+msgstr "8 max"
+
+msgid "Chti_501-startingat"
+msgstr "Starting score"
+
+msgid "Chti_501-double_in"
+msgstr "Double In"
+
+msgid "Chti_501-double_out"
+msgstr "Double Out"
+
+msgid "Chti_501-master_in"
+msgstr "Master In"
+
+msgid "Chti_501-master_out"
+msgstr "Master Out"
+
+msgid "Chti_501-split_bull"
+msgstr "Single bull 25"
+
+msgid "Chti_501-zap"
+msgstr "Zap Mode"
+
+msgid "Chti_501-equal"
+msgstr "Allow all players to finish turn"
+
+msgid "Chti_501-league"
+msgstr "League Mode (teams of 2: 4, 6 or 8 players)"
+
+msgid "Chti_501-421"
+msgstr "421 bonus (-100 points)"
+
+
 ######## HO ONE ######
 
 msgid "Ho_One-name"

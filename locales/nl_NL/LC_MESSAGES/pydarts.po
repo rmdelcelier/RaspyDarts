@@ -2127,6 +2127,59 @@ msgstr "Super shoot out"
 msgid "High_Score-segment"
 msgstr "Segment"
 
+######## CHTI 501 ######
+
+msgid "Chti_501-name"
+msgstr "Ch'ti 501"
+
+msgid "Description-Chti_501"
+msgstr ""
+"501 op z'n Ch'ti's.\n"
+"\n"
+"Zoals bij '01: je begint op 501, wie als eerste precies 0 bereikt, wint.\n"
+"Gooi je eroverheen, dan gaat de score terug naar het begin van de beurt.\n"
+"-----\n"
+"Daarnaast:\n"
+"- 421-bonus: S4, S2 en S1 in dezelfde beurt, in willekeurige volgorde, halen er nog eens 100 punten af (als de score boven 0 blijft).\n"
+"- Zap-modus: evenaar de score van een tegenstander en hij begint weer op 501. De punten waarmee dat kan, worden geel getoond.\n"
+"- League-modus: teams van 2 (4, 6 of 8 spelers), gezamenlijke score.\n"
+"\n"
+"Andere opties (zoals bij '01): Double in, Double out, Master in, Master out, Single bull 25, Equal."
+
+msgid "Chti_501-max_players"
+msgstr "Max 8"
+
+msgid "Chti_501-startingat"
+msgstr "Beginscore"
+
+msgid "Chti_501-double_in"
+msgstr "Double In"
+
+msgid "Chti_501-double_out"
+msgstr "Double Out"
+
+msgid "Chti_501-master_in"
+msgstr "Master In"
+
+msgid "Chti_501-master_out"
+msgstr "Master Out"
+
+msgid "Chti_501-split_bull"
+msgstr "Enkele bull 25"
+
+msgid "Chti_501-zap"
+msgstr "Zap-modus"
+
+msgid "Chti_501-equal"
+msgstr "Laat elke speler zijn beurt afmaken"
+
+msgid "Chti_501-league"
+msgstr "League-modus (teams van 2: 4, 6 of 8 spelers)"
+
+msgid "Chti_501-421"
+msgstr "421-bonus (-100 punten)"
+
+
 ######## HO ONE ######
 
 msgid "Ho_One-name"
