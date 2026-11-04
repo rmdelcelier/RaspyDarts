@@ -653,12 +653,6 @@ class Game(cgame.Game):
                 winning_player.score = 0
                 self.update_stats(players, actual_player, hit)
 
-                # ==========================================
-                # TROPHEES : Fin de partie en X fléchettes (Atteinte de 0)
-                # ==========================================
-                total_darts = winning_player.stat_darts
-                ctrophies.check_ho_one_finish_trophies(winning_player, self.starting_at, total_darts, winning_dart=hit)
-                
                 if self.equal and actual_player < len(players)-1:
                     # Next player can equal
                     handler['return_code'] = 1 # pas le dernier joueur
@@ -669,7 +663,7 @@ class Game(cgame.Game):
                     # ==========================================
                     # STATS : Enregistrement des stats de fin de partie
                     # ==========================================
-                    ctrophies.check_game_end_stats(players, winning_player, "HO-ONE")
+                    ctrophies.check_game_end_stats(players, winning_player, "CHTI-501")
 
             # else it is a fail
             else:
@@ -804,15 +798,10 @@ class Game(cgame.Game):
             self.winner = self.check_winner(players)
             if self.winner is not None:
                 handler['return_code'] = 3
-                # ==========================================
-                # TROPHEES : Fin de partie sur dernier round
-                # ==========================================
+                # Statistiques de fin de partie (les siennes, pas celles du '01 : pas de trophées
+                # « 501 en X fléchettes », que le bonus 421 fausserait)
                 winning_player = players[self.winner]
-                total_darts = winning_player.stat_darts
-                winning_dart = hit if winning_player == players[actual_player] else None
-                ctrophies.check_ho_one_finish_trophies(winning_player, self.starting_at, total_darts)
-
-                ctrophies.check_game_end_stats(players, winning_player, "HO-ONE")
+                ctrophies.check_game_end_stats(players, winning_player, "CHTI-501")
                 
         # Store what he played in the table
         players[actual_player].columns[player_launch - 1] = (self.score_map[hit], 'int')
@@ -1059,8 +1048,8 @@ class Game(cgame.Game):
         Check for handicap and record appropriate marks for player
         '''
         self.logs.debug("Checking for handicaps!")
-        # Average PPD of each player in Ho-One (trophies statistics)
-        list_ppd = [ctrophies.player_average_ppd(player.name, 'ho-one') for player in players]
+        # Average PPD of each player in Chti 501 (trophies statistics)
+        list_ppd = [ctrophies.player_average_ppd(player.name, 'chti-501') for player in players]
         return self.handicap.hoonehandicap(list_ppd, self.starting_at, players)
 
     def check_players_allowed(self, nb_players):

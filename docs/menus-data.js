@@ -2096,6 +2096,7 @@ const MENUS_DATA = {
    "images/logos_menu/Castle.png": "assets/img/sombre/images/logos_menu/Castle.webp",
    "images/logos_menu/Challenge.png": "assets/img/sombre/images/logos_menu/Challenge.webp",
    "images/logos_menu/Chaos.png": "assets/img/sombre/images/logos_menu/Chaos.webp",
+   "images/logos_menu/Chti_501.png": "assets/img/sombre/images/logos_menu/Chti_501.webp",
    "images/logos_menu/Color.png": "assets/img/sombre/images/logos_menu/Color.webp",
    "images/logos_menu/Conquer.png": "assets/img/sombre/images/logos_menu/Conquer.webp",
    "images/logos_menu/Cricket.png": "assets/img/sombre/images/logos_menu/Cricket.webp",
