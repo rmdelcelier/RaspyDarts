@@ -11,8 +11,6 @@
 #   - ~/.raspydarts : replaced by the archive of the release « exemple » (as install.sh puts it) :
 #     settings, players, scores, favorites, online session, coin acceptor, gallery password...
 #     and without raspydarts.cfg (made again by the game at the first start)
-#   - Raspy2DMD (installed in mode Pico seul, required) : its configuration written again with
-#     the settings of that installation only, its backups and logs removed
 #   - photos and clips of the gallery, logs of the game, files left in the personal folder
 #     (whatever is not a folder of a new Raspberry Pi OS or of the installation)
 #   - Wi-Fi and network (NetworkManager, netplan), what Raspberry Pi Imager wrote on the boot
@@ -21,6 +19,8 @@
 #   - identity : machine-id (the SSH keys are made again at the first start :
 #     regenerate_ssh_host_keys.service, ConditionFirstBoot), key of the VNC server, histories,
 #     caches, known SSH hosts
+# Refused : a card where Raspy2DMD is installed (the image compressed went over the 2 GiB of a
+# file of a GitHub release : 2989 MB with it, 03/11/2026) ; it is installed from the game.
 # Kept : the user raspydarts / raspydarts, SSH and VNC enabled (checked here), the game in
 # /raspydarts, the system and its settings (config.txt, boot screen...).
 
@@ -56,10 +56,10 @@ if [ $APPLY -eq 0 ]; then
     say "SIMULATION : rien n'est modifie. Relancer avec --appliquer pour le faire (la carte s'eteint a la fin)."
 fi
 
-# Raspy2DMD is in the image, installed in mode « Pico seul » (Paramètres > Afficheur DMD)
-if [ ! -f /Raspy2DMD/.pico_seul ]; then
-    say "Raspy2DMD n'est pas installe en mode Pico seul (/Raspy2DMD/.pico_seul absent) : l'installer"
-    say "d'abord depuis le jeu (Parametres > Afficheur DMD (Raspy2DMD)), puis relancer ce script."
+# Raspy2DMD is not in the image : installed from the game (Paramètres > Afficheur DMD)
+if [ -d /Raspy2DMD ] || [ -d /Medias ]; then
+    say "Raspy2DMD est installe (/Raspy2DMD, /Medias) : l'image depasserait les 2 Gio d'un fichier"
+    say "de release GitHub. Partir d'une carte sans Raspy2DMD."
     exit 1
 fi
 
@@ -71,12 +71,11 @@ if [ $APPLY -eq 1 ]; then
     exec > >(tee -a "$LOG") 2>&1
 fi
 
-step "Jeu et Raspy2DMD arretes"
+step "Jeu arrete"
 run pkill -f "RaspyDarts.sh"
 run pkill -f "python3 raspydarts.py"
 run pkill -f "Leds_Server"
 run pkill -f "ctarget_reader"
-run bash /Raspy2DMD/StopAllRaspy2DMD.sh
 
 if [ $APPLY -eq 1 ] && [ -S /tmp/.X11-unix/X0 ]; then
     # The game stopped : the progress on the screen of the cabinet, in a terminal on the desktop
@@ -108,46 +107,6 @@ else
     say "   (ferait) telecharger $EXAMPLE_URL, vider $USER_DIR et y extraire l'archive, sans raspydarts.cfg"
     find "$USER_DIR" -maxdepth 1 -type f -printf '   reglage retire : %f\n' 2>/dev/null
 fi
-
-step "Raspy2DMD : configuration remise a celle de son installation en mode Pico, journaux"
-# Its general defaults would make sound and look for the game at raspydarts.local : the file is
-# written again with the settings of its installation in mode Pico seul only
-# (install_raspy2dmd.sh --pico-seul), what the tests changed is lost
-R2D_CFG=/Medias/Raspy2DMD.cfg
-say "   $R2D_CFG remis a neuf (sortie Pico, RaspyDarts sur cette machine, son coupe, sans bouton)"
-if [ $APPLY -eq 1 ]; then
-    # Its owner and rights kept (Raspy2DMD keeps it readable by itself only : 600)
-    R2D_MODE=$(stat -c %a "$R2D_CFG" 2>/dev/null || echo 600)
-    R2D_OWNER=$(stat -c %U:%G "$R2D_CFG" 2>/dev/null || echo raspy2dmd:raspy2dmd)
-    cat > "$R2D_CFG" <<'R2DCFG'
-[DMDRenderer]
-pico_reconnect_timeout = 5
-interrupteur = 0
-
-[HDMI]
-display_output = pico
-hide_console = 0
-
-[Pico]
-pico_auto_detect = 1
-pico_display_enabled = 1
-
-[Running]
-raspydarts_enabled = 1
-raspydarts = localhost
-raspydartscanal = raspydarts/dmd
-default = 0
-
-[Sound]
-volume = 0
-R2DCFG
-    chown "$R2D_OWNER" "$R2D_CFG"
-    chmod "$R2D_MODE" "$R2D_CFG"
-fi
-for path in /Medias/.config_backups /Medias/Logs/*; do
-    [ -e "$path" ] || continue
-    remove "$path"
-done
 
 step "Dossier personnel : fichiers laisses par les essais"
 for entry in "$TARGET_HOME"/* "$TARGET_HOME"/.[!.]*; do
@@ -262,6 +221,10 @@ if [ $APPLY -eq 1 ]; then
 else
     say "   (ferait) vider /var/log, /var/tmp et /tmp"
 fi
+
+step "Place occupee sur la carte (l'image compressee doit rester sous 2 Gio)"
+df -h / | sed 's/^/   /'
+du -xsh /usr /raspydarts "$USER_DIR" /var /opt /home 2>/dev/null | sort -rh | sed 's/^/   /'
 
 if [ $APPLY -eq 1 ]; then
     step "Termine : la carte s'eteint dans 20 secondes. Ensuite : la lire en image (RaspyDarts_vX.Y.Z.img) SANS la redemarrer, et la publier"
