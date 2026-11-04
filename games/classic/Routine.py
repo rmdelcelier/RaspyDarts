@@ -6,10 +6,11 @@ import pygame
 from include import craspberry
 from include import cplayer
 from include import cgame
+from include import ctrophies
 
 VERSION = '1.14'
 #OPTIONS = {'theme': 'default', 'max_round': 15, 'start_drill' : 1, 'max_retries': 3, 'teste' : False, 'nb_repetition' : 5'}
-OPTIONS = {'theme': 'default', 'max_round': 35, 'start_drill' : 1, 'max_retries': 3, 'teste': False, 'nb_repetition': 3}
+OPTIONS = {'theme': 'default', 'start_drill' : 1, 'teste': False, 'max_retries': 3,  'nb_repetition': 3}
 GAME_RECORDS = {'Points Per Round': 'DESC', 'Points Per Dart': 'DESC'}
 LOGO = 'Routine.png'
 HEADERS = ['Statut', 'Etape', 'Réussites', 'Échecs', 'Score']
@@ -80,7 +81,7 @@ class Game(cgame.Game):
         self.logo = LOGO
         self.headers = HEADERS
         self.options = options
-        self.max_round = int(options.get('max_round', 35))
+        self.max_round = 35   ###int(options.get('max_round', 35))
         self.start_drill = int(options.get('start_drill', 1))
         self.max_retries = int(options.get('max_retries', 3))
         self.teste = bool(self.options.get('teste', False))
@@ -455,6 +456,9 @@ class Game(cgame.Game):
         player.current_drill_hits.append(hit)
         player.darts.append(hit)
         
+        ### TROPHEES : pour compter fleches, triples, doubles, ....
+        ctrophies.process_single_dart(player, hit)
+        
         drill_success = self.evaluate_drill(drill, player.current_drill_hits, player.current_drill_score, player)
 
         darts_left = max_drill_darts - player.drill_darts_count
@@ -551,6 +555,10 @@ class Game(cgame.Game):
         if is_drill_finished and drill_success:
             player.score += 1
             player.successes += 1
+            
+            # --- APPEL DU DÉDIÉ TROPHÉES POUR CE NIVEAU ---
+            ctrophies.check_routine_level_trophies(player, real_drill_id, drill_success)
+            
             
             if drill_type == "prog_finisher":
                 player.prog_finisher_target += 5

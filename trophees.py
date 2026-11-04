@@ -176,7 +176,45 @@ ALL_TROPHIES = [
     {"id": "6_MARK_MICKEY", "name": "6 Mark Mickey", "desc": "Réaliser 6 marques au Mickey", "img": "mickey 6 mark", "category": "Cricket / Mickey"},
     {"id": "7_MARK_MICKEY", "name": "7 Mark Mickey", "desc": "Réaliser 7 marques au Mickey", "img": "mickey 7 mark", "category": "Cricket / Mickey"},
     {"id": "8_MARK_MICKEY", "name": "8 Mark Mickey", "desc": "Réaliser 8 marques au Mickey", "img": "mickey 8 mark", "category": "Cricket / Mickey"},
-    {"id": "9_MARK_MICKEY", "name": "9 Mark Mickey", "desc": "Réaliser 9 marques au Mickey", "img": "mickey 9 mark", "category": "Cricket / Mickey"}
+    {"id": "9_MARK_MICKEY", "name": "9 Mark Mickey", "desc": "Réaliser 9 marques au Mickey", "img": "mickey 9 mark", "category": "Cricket / Mickey"},
+
+# --- 9. ROUTINE ---
+    {"id": "ROUTINE_NV1", "name": "Routine - Niveau 1", "desc": "Valider le défi 1 de Routine", "img": "routine_nv1", "category": "Routine"},
+    {"id": "ROUTINE_NV2", "name": "Routine - Niveau 2", "desc": "Valider le défi 2 de Routine", "img": "routine_nv2", "category": "Routine"},
+    {"id": "ROUTINE_NV3", "name": "Routine - Niveau 3", "desc": "Valider le défi 3 de Routine", "img": "routine_nv3", "category": "Routine"},
+    {"id": "ROUTINE_NV4", "name": "Routine - Niveau 4", "desc": "Valider le défi 4 de Routine", "img": "routine_nv4", "category": "Routine"},
+    {"id": "ROUTINE_NV5", "name": "Routine - Niveau 5", "desc": "Valider le défi 5 de Routine", "img": "routine_nv5", "category": "Routine"},
+    {"id": "ROUTINE_NV6", "name": "Routine - Niveau 6", "desc": "Valider le défi 6 de Routine", "img": "routine_nv6", "category": "Routine"},
+    {"id": "ROUTINE_NV7", "name": "Routine - Niveau 7", "desc": "Valider le défi 7 de Routine", "img": "routine_nv7", "category": "Routine"},
+    {"id": "ROUTINE_NV8", "name": "Routine - Niveau 8", "desc": "Valider le défi 8 de Routine", "img": "routine_nv8", "category": "Routine"},
+    {"id": "ROUTINE_NV9", "name": "Routine - Niveau 9", "desc": "Valider le défi 9 de Routine", "img": "routine_nv9", "category": "Routine"},
+    {"id": "ROUTINE_NV10", "name": "Routine - Niveau 10", "desc": "Valider le défi 10 de Routine", "img": "routine_nv10", "category": "Routine"},
+    {"id": "ROUTINE_NV11", "name": "Routine - Niveau 11", "desc": "Valider le défi 11 de Routine", "img": "routine_nv11", "category": "Routine"},
+    {"id": "ROUTINE_NV12", "name": "Routine - Niveau 12", "desc": "Valider le défi 12 de Routine", "img": "routine_nv12", "category": "Routine"},
+    {"id": "ROUTINE_NV13", "name": "Routine - Niveau 13", "desc": "Valider le défi 13 de Routine", "img": "routine_nv13", "category": "Routine"},
+    {"id": "ROUTINE_NV14", "name": "Routine - Niveau 14", "desc": "Valider le défi 14 de Routine", "img": "routine_nv14", "category": "Routine"},
+    {"id": "ROUTINE_NV15", "name": "Routine - Niveau 15", "desc": "Valider le défi 15 de Routine", "img": "routine_nv15", "category": "Routine"},
+    {"id": "ROUTINE_NV16", "name": "Routine - Niveau 16", "desc": "Valider le défi 16 de Routine", "img": "routine_nv16", "category": "Routine"},
+    {"id": "ROUTINE_NV17", "name": "Routine - Niveau 17", "desc": "Valider le défi 17 de Routine", "img": "routine_nv17", "category": "Routine"},
+    {"id": "ROUTINE_NV18", "name": "Routine - Niveau 18", "desc": "Valider le défi 18 de Routine", "img": "routine_nv18", "category": "Routine"},
+    {"id": "ROUTINE_NV19", "name": "Routine - Niveau 19", "desc": "Valider le défi 19 de Routine", "img": "routine_nv19", "category": "Routine"},
+    {"id": "ROUTINE_NV20", "name": "Routine - Niveau 20", "desc": "Valider le défi 20 de Routine", "img": "routine_nv20", "category": "Routine"},
+    {"id": "ROUTINE_NV21", "name": "Routine - Niveau 21", "desc": "Valider le défi 21 de Routine", "img": "routine_nv21", "category": "Routine"},
+    {"id": "ROUTINE_NV22", "name": "Routine - Niveau 22", "desc": "Valider le défi 22 de Routine", "img": "routine_nv22", "category": "Routine"},
+    {"id": "ROUTINE_NV23", "name": "Routine - Niveau 23", "desc": "Valider le défi 23 de Routine", "img": "routine_nv23", "category": "Routine"},
+    {"id": "ROUTINE_NV24", "name": "Routine - Niveau 24", "desc": "Valider le défi 24 de Routine", "img": "routine_nv24", "category": "Routine"},
+    {"id": "ROUTINE_NV25", "name": "Routine - Niveau 25", "desc": "Valider le défi 25 de Routine", "img": "routine_nv25", "category": "Routine"},
+    {"id": "ROUTINE_NV26", "name": "Routine - Niveau 26", "desc": "Valider le défi 26 de Routine", "img": "routine_nv26", "category": "Routine"},
+    {"id": "ROUTINE_NV27", "name": "Routine - Niveau 27", "desc": "Valider le défi 27 de Routine", "img": "routine_nv27", "category": "Routine"},
+    {"id": "ROUTINE_NV28", "name": "Routine - Niveau 28", "desc": "Valider le défi 28 de Routine", "img": "routine_nv28", "category": "Routine"},
+    {"id": "ROUTINE_NV29", "name": "Routine - Niveau 29", "desc": "Valider le défi 29 de Routine", "img": "routine_nv29", "category": "Routine"},
+    {"id": "ROUTINE_NV30", "name": "Routine - Niveau 30", "desc": "Valider le défi 30 de Routine", "img": "routine_nv30", "category": "Routine"},
+    {"id": "ROUTINE_NV31", "name": "Routine - Niveau 31", "desc": "Valider le défi 31 de Routine", "img": "routine_nv31", "category": "Routine"},
+    {"id": "ROUTINE_NV32", "name": "Routine - Niveau 32", "desc": "Valider le défi 32 de Routine", "img": "routine_nv32", "category": "Routine"},
+    {"id": "ROUTINE_NV33", "name": "Routine - Niveau 33", "desc": "Valider le défi 33 de Routine", "img": "routine_nv33", "category": "Routine"},
+    {"id": "ROUTINE_NV34", "name": "Routine - Niveau 34", "desc": "Valider le défi 34 de Routine", "img": "routine_nv34", "category": "Routine"},
+    {"id": "ROUTINE_NV35", "name": "Routine - Niveau 35", "desc": "Valider le défi 35 de Routine", "img": "routine_nv35", "category": "Routine"}
+
 ]
 
 
@@ -538,6 +576,7 @@ class CategorySelectionScreen:
             "Scores spécifiques",
             "Cricket / Mickey",
             "Ho-One",
+            "Routine",
             "Doubles",
             "Triples"
         ]
@@ -588,9 +627,9 @@ class CategorySelectionScreen:
             title_rect = title_text.get_rect(center=(width // 2, int(50 * scale)))
             self.screen.blit(title_text, title_rect)
             
-            start_y = int(100 * scale)
+            start_y = int(95 * scale)
             button_width = int(650 * scale)
-            button_height = int(55 * scale)
+            button_height = int(50 * scale)
             button_x = (width - button_width) // 2
             
             for idx, cat_name in enumerate(self.categories):
@@ -690,7 +729,10 @@ class TrophiesScreen:
         self.unlocked_trophies = player_info.get("trophies", [])
         
         self.filtered_trophies = [t for t in ALL_TROPHIES if t["category"] == self.category]
-        self.items_per_page = 21
+        if self.category.lower() == "ho-one":
+            self.items_per_page = 21
+        else:
+            self.items_per_page = 20
         self.current_page = 0
         self.total_pages = max(1, (len(self.filtered_trophies) + self.items_per_page - 1) // self.items_per_page)
 

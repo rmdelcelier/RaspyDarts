@@ -413,7 +413,19 @@ def check_cricket_mickey_mark(player, darts, game):
 
     return trophies_to_unlock
 
-    
+
+def check_routine_level_trophies(player, drill_id, success):
+    """Routine : un trophée par défi réussi (ROUTINE_NV1 à ROUTINE_NV35)."""
+    if not success:
+        return
+    try:
+        level = int(drill_id)
+    except (TypeError, ValueError):
+        return
+    if 1 <= level <= 35:
+        save_unlocked_trophy(player.name, f"ROUTINE_NV{level}")
+
+
 def check_ho_one_finish_trophies(player, game_type, total_darts_used, winning_dart=None):
     """Vérifie les trophées spécifiques de fin de partie Ho-One."""
     if winning_dart and winning_dart.startswith('D'):
