@@ -159,9 +159,15 @@ body.wide main { max-width: 1800px; }
     <p><a class="button" href="https://www.raspberrypi.com/software/" target="_blank" rel="noopener" data-t="s1-download"></a></p>
   </section>
 
-  <!-- 2. Graver : captures de Raspberry Pi Imager 2.0.12 -->
+  <!-- 2. Graver l'image (captures de Raspberry Pi Imager 2.0.12) ou installer sur un Raspberry Pi OS deja grave -->
   <section class="step" data-step="2">
     <h2 data-t="s2-title"></h2>
+    <p data-t="s2-intro"></p>
+    <div class="choicebar">
+      <button class="main big" id="write-image" data-t="s2-choice-image"></button>
+      <button class="main big ghost" id="write-install" data-t="s2-choice-install"></button>
+    </div>
+    <div id="write-image-box" class="hidden">
     <div class="carousel" id="carousel">
       <div class="carousel-nav">
         <button class="main arrow" id="slide-prev" aria-label="‹">‹</button>
@@ -197,6 +203,18 @@ body.wide main { max-width: 1800px; }
         <figure><a href="images/imager/imager-13-confirmation.png" target="_blank" rel="noopener"><img src="images/imager/imager-13-confirmation.png" alt="" loading="lazy" width="682" height="482"></a></figure></div>
     </div>
     <div class="note" data-t="s2-access"></div>
+    </div>
+    <div id="write-install-box" class="hidden">
+      <ol>
+        <li data-t="s2i-os"></li>
+        <li data-t="s2i-start"></li>
+        <li><span data-t="s2i-command"></span>
+          <div class="codebox"><span id="install-cmd">curl -fsSL https://raw.githubusercontent.com/rmdelcelier/RaspyDarts/main/install.sh | sudo bash</span><button class="small" data-copy="install-cmd" data-t="copy"></button></div></li>
+        <li data-t="s2i-wait"></li>
+        <li data-t="s2i-restart"></li>
+      </ol>
+      <div class="note" data-t="s2i-next"></div>
+    </div>
   </section>
 
   <!-- 3. Configurer -->
@@ -1056,6 +1074,17 @@ function offerCopy() {
   if (step === 4 && ['make', 'edit', 'own'].includes(stored('menus-choice')) && menusData() && stored('menus-saved') !== menusYaml() &&
       confirm(t('save-before-next-menus'))) copyMenus();
 }
+// Etape 2 : graver l'image, ou installer sur un Raspberry Pi OS deja grave
+function updateWrite() {
+  const choice = stored('write-choice') || '';
+  $('write-image').classList.toggle('chosen', choice === 'image');
+  $('write-install').classList.toggle('chosen', choice === 'install');
+  $('write-image-box').classList.toggle('hidden', choice !== 'image');
+  $('write-install-box').classList.toggle('hidden', choice !== 'install');
+}
+$('write-image').addEventListener('click', () => { store('write-choice', 'image'); updateWrite(); });
+$('write-install').addEventListener('click', () => { store('write-choice', 'install'); updateWrite(); });
+
 function updateMenus() {
   const choice = stored('menus-choice') || '';
   [['make', 'menus-make'], ['edit', 'menus-edit'], ['own', 'menus-have'], ['skip', 'menus-skip']].forEach(([value, id]) => $(id).classList.toggle('chosen', choice === value));
@@ -1166,6 +1195,7 @@ $('menus-save-sd').addEventListener('click', async () => {
 
 // ------------------------------------------------------------------ start
 $('repo-url').textContent = REPO_URL;
+updateWrite();
 pinFields($('outputs'), PRESETS.outputs, 'out');
 pinFields($('inputs'), PRESETS.inputs, 'in');
 const browser = (navigator.language || 'fr').slice(0, 2);
