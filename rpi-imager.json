@@ -1,0 +1,35 @@
+{
+    "imager":  {
+                   "latest_version":  "2.0.6",
+                   "url":  ""
+               },
+    "os_list":  [
+                    {
+                        "name":  "RaspyDarts v4.6.1",
+                        "description":  "Jeu de flechettes electroniques - Pi Zero 2 W / Pi 3 / Pi 4",
+                        "icon":  "https://raw.githubusercontent.com/rmdelcelier/RaspyDarts/main/images/icon.png",
+                        "url":  "https://images.raspyhub.fr/Raspydarts_v4.6.1.img.xz",
+                        "extract_size":  6807757312,
+                        "extract_sha256":  {
+                                               "value":  "e067cc102cd0ec589634e4d021b0d3b4e184b3e177a29d3efaf55417572fc5ad",
+                                               "PSComputerName":  "localhost",
+                                               "RunspaceId":  "21f9440a-9338-45f4-99bc-6108540d8c6a",
+                                               "PSShowComputerName":  false
+                                           },
+                        "image_download_size":  2497774840,
+                        "release_date":  "2026-11-04",
+                        "init_format":  "systemd",
+                        "devices":  [
+                                        "pi4-32bit",
+                                        "pi3-32bit"
+                                    ],
+                        "matching_type":  "inclusive"
+                    },
+                    {
+                        "name":  "Raspberry Pi OS (Officiel)",
+                        "description":  "Toutes les images officielles Raspberry Pi",
+                        "icon":  "https://downloads.raspberrypi.com/raspios_armhf/Raspberry_Pi_OS_(32-bit).png",
+                        "subitems_url":  "https://downloads.raspberrypi.com/os_list_imagingutility_v4.json"
+                    }
+                ]
+}
