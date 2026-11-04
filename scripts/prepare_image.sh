@@ -16,6 +16,8 @@
 #   - Wi-Fi and network (NetworkManager, netplan), what Raspberry Pi Imager wrote on the boot
 #     partition (user, Wi-Fi : user-data, network-config), state of cloud-init : the settings
 #     chosen in Imager for each card are applied at its first start
+#   - Firefox, guide and books of Raspberry Pi OS ; translations of the system other than the
+#     languages of the game, documentation of the packages (not put back by the updates)
 #   - identity : machine-id (the SSH keys are made again at the first start :
 #     regenerate_ssh_host_keys.service, ConditionFirstBoot), key of the VNC server, histories,
 #     caches, known SSH hosts
@@ -207,6 +209,55 @@ if [ $APPLY -eq 1 ]; then
     systemctl is-enabled ssh.service >/dev/null 2>&1 && say "   SSH active" || say "   ATTENTION : SSH non active"
     systemctl is-enabled vncserver-x11-serviced.service >/dev/null 2>&1 && say "   VNC active" || say "   ATTENTION : VNC non active"
 fi
+
+step "Logiciels inutiles a une borne, traductions et documentation du systeme (place dans l'image)"
+# Firefox (Chromium kept), guide and books of Raspberry Pi OS, its wallpapers (the desktop and
+# the login screen show the one of the game), Vulkan (used by neither the game nor Chromium on the
+# Pi), English speech recognition (the announcements are made by espeak), headers of the kernel
+# (to build drivers only), kernel v6 (Pi 1 and Zero, not supported) ; Thonny kept (some use it)
+UNUSED_PACKAGES="firefox rpi-firefox-mods rpi-userguide rp-bookshelf rpd-wallpaper rpd-wallpaper-trixie
+mesa-vulkan-drivers pocketsphinx-en-us linux-headers-* linux-image-rpi-v6 linux-image-*-rpi-v6"
+# The patterns are for dpkg-query, not for the shell
+set -f
+installed=$(dpkg-query -W -f='${db:Status-Abbrev} ${Package}\n' $UNUSED_PACKAGES 2>/dev/null | awk '/^ii/ {print $2}')
+set +f
+if [ -n "$installed" ]; then
+    apt-get -s purge --autoremove $installed 2>/dev/null | awk '/^Purg/ {print "   retire : paquet " $2}'
+    [ $APPLY -eq 1 ] && DEBIAN_FRONTEND=noninteractive apt-get purge -y -q --autoremove $installed >/dev/null
+fi
+# Translations : the languages of the game only ; the updates do not put the others back
+keep_lang() { case "$1" in fr*|en*|de*|es*|it*|nl*|C|locale.alias) return 0 ;; esac; return 1; }
+freed=0
+for base in /usr/share/locale /usr/share/help /usr/lib/chromium/locales; do
+    for entry in "$base"/*; do
+        [ -e "$entry" ] || continue
+        keep_lang "$(basename "$entry")" && continue
+        freed=$((freed + $(du -sk "$entry" | cut -f1)))
+        [ $APPLY -eq 1 ] && rm -rf "$entry"
+    done
+done
+# Documentation of the packages : their licence (copyright) kept
+freed=$((freed + $(find /usr/share/doc -mindepth 1 ! -type d ! -name copyright -print0 | du -ck --files0-from=- 2>/dev/null | tail -1 | cut -f1)))
+if [ $APPLY -eq 1 ]; then
+    find /usr/share/doc -mindepth 1 ! -type d ! -name copyright -exec rm -f {} +
+    find /usr/share/doc -mindepth 1 -type d -empty -delete
+    cat > /etc/dpkg/dpkg.cfg.d/raspydarts-allegement <<'DPKG'
+# RaspyDarts (scripts/prepare_image.sh) : traductions des langues du jeu seulement, sans documentation
+path-exclude=/usr/share/locale/*
+path-include=/usr/share/locale/locale.alias
+path-exclude=/usr/share/help/*
+path-include=/usr/share/help/C/*
+path-exclude=/usr/lib/chromium/locales/*
+path-exclude=/usr/share/doc/*
+path-include=/usr/share/doc/*/copyright
+DPKG
+    for lang in fr en de es it nl; do
+        printf 'path-include=/usr/share/locale/%s*\npath-include=/usr/share/help/%s*\npath-include=/usr/lib/chromium/locales/%s*\n' \
+            "$lang" "$lang" "$lang" >> /etc/dpkg/dpkg.cfg.d/raspydarts-allegement
+    done
+fi
+say "   traductions (hors fr, en, de, es, it, nl) et documentation : $((freed / 1024)) Mo retires"
+say "   /etc/dpkg/dpkg.cfg.d/raspydarts-allegement : les mises a jour ne les remettent pas"
 
 step "Journaux et caches du systeme"
 run apt-get clean
