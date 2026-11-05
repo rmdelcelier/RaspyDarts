@@ -5,14 +5,14 @@
                },
     "os_list":  [
                     {
-                        "name":  "RaspyDarts bêta v4.6.1",
+                        "name":  "RaspyDarts bêta v4.6.2",
                         "description":  "Jeu de flechettes electroniques - Pi Zero 2 W / Pi 3 / Pi 4",
                         "icon":  "https://raw.githubusercontent.com/rmdelcelier/RaspyDarts/main/images/imager-icon.png",
-                        "url":  "https://images.raspyhub.fr/beta/Raspydarts_v4.6.1.img.xz",
-                        "extract_size":  6807757312,
-                        "extract_sha256":  "e067cc102cd0ec589634e4d021b0d3b4e184b3e177a29d3efaf55417572fc5ad",
-                        "image_download_size":  2497774840,
-                        "release_date":  "2026-11-04",
+                        "url":  "https://images.raspyhub.fr/beta/Raspydarts_v4.6.2.img.xz",
+                        "extract_size":  6807929344,
+                        "extract_sha256":  "8808ad5e1b1d190e335c0c7fab9ed1c14e8a415e83cda1aeef83d95c649c4159",
+                        "image_download_size":  2628275992,
+                        "release_date":  "2026-11-05",
                         "init_format":  "cloudinit-rpi",
                         "devices":  [
                                         "pi4-32bit",
