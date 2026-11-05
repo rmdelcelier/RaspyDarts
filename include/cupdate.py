@@ -12,7 +12,9 @@ import shutil
 import filecmp
 import tarfile
 import json
+import getpass
 import hashlib
+import subprocess
 import requests
 
 from threading import Thread
@@ -295,6 +297,34 @@ def apply_update(logs, update):
         set_version(logs, f"{update['version']}_{time.strftime('%Y%m%d%H%M')}")
 
     return get_version(logs)
+
+# Settings of the system which change with RaspyDarts (boot screen, MQTT, desktop) : the script
+# of the installation, run again by the game when its version changed. The version done is
+# written by the script : an installed cabinet gets them with the update, without reinstalling
+SYSTEM_SETTINGS_SCRIPT = f'{RASPYDARTS_HOME}/scripts/reglages_systeme.sh'
+SYSTEM_SETTINGS_STATE = '/var/lib/raspydarts/reglages-systeme'
+SYSTEM_SETTINGS_LOG = f'{RASPYDARTS_HOME}/logs/reglages_systeme.log'
+
+def apply_system_settings(logs, version):
+    """
+    Run scripts/reglages_systeme.sh (sudo, without password since the installation) if it was
+    not run for this version. In the background : the initramfs may be rebuilt (a minute)
+    """
+    try:
+        with open(SYSTEM_SETTINGS_STATE, encoding='utf-8') as state:
+            done = state.read().strip()
+    except OSError:
+        done = None
+    if done == version.strip() or not os.path.isfile(SYSTEM_SETTINGS_SCRIPT):
+        return
+    logs.info(f"System settings for {version} (done for {done}) : {SYSTEM_SETTINGS_SCRIPT}")
+    try:
+        with open(SYSTEM_SETTINGS_LOG, 'a', encoding='utf-8') as log_file:
+            subprocess.Popen(['sudo', '-n', 'bash', SYSTEM_SETTINGS_SCRIPT, getpass.getuser()], # pylint: disable=consider-using-with
+                             stdout=log_file, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL,
+                             start_new_session=True)
+    except OSError as exc:
+        logs.error(f"Unable to run {SYSTEM_SETTINGS_SCRIPT} ({exc})")
 
 # Statistics of the games : the server of raspyhub (contract : README of the project
 # « Raspy2DMD Serveur Télémétrie », section Statistiques RaspyDarts). The second address, in http,

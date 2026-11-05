@@ -357,88 +357,6 @@ exit 0
 EOF
 }
 
-# Image de demarrage : les messages du systeme en cours de chargement sont masques et
-# remplaces par un pourcentage d'avancement
-patch_plymouth_script() {
-    sed -i '/^# --- RaspyDarts (debut) ---$/,/^# --- RaspyDarts (fin) ---$/d' "$1"
-    cat >> "$1" <<'EOF'
-# --- RaspyDarts (debut) ---
-fun raspydarts_no_status (text) {
-}
-
-Plymouth.SetUpdateStatusFunction (raspydarts_no_status);
-
-progress_sprite = Sprite ();
-global.progress_last = -1;
-
-fun progress_callback (duration, progress) {
-	# duration : les secondes ecoulees depuis le debut du demarrage, l'horloge de la pulsation
-	global.boot_seconds = duration;
-	pulse ();
-	percent = Math.Int (progress * 100);
-	if (percent > 100)
-		percent = 100;
-	if (percent != global.progress_last) {
-		global.progress_last = percent;
-		progress_image = Image.Text (percent + " %", 1, 1, 1, 1, "Sans Bold 28");
-		progress_sprite.SetImage (progress_image);
-		progress_sprite.SetPosition ((Window.GetWidth () - progress_image.GetWidth ()) / 2, Window.GetHeight () * 0.88, 10000);
-	}
-}
-
-Plymouth.SetBootProgressFunction (progress_callback);
-
-# Logo de RaspyDarts eclaire par derriere : sa lumiere (raspydarts_halo.png) pulse. Images
-# faites pour un ecran de 1920 pixels de large (scripts/boot_logo.py), a l'echelle de l'ecran
-if (Plymouth.GetMode () != "shutdown") {
-	logo_scale = Window.GetWidth () / 1920;
-	logo_image = Image ("raspydarts_logo.png");
-	logo_image = logo_image.Scale (logo_image.GetWidth () * logo_scale, logo_image.GetHeight () * logo_scale);
-	halo_image = Image ("raspydarts_halo.png");
-	halo_image = halo_image.Scale (halo_image.GetWidth () * logo_scale, halo_image.GetHeight () * logo_scale);
-	logo_x = (Window.GetWidth () - logo_image.GetWidth ()) / 2;
-	logo_y = Window.GetHeight () * 0.43 - logo_image.GetHeight () / 2;
-	halo_sprite = Sprite (halo_image);
-	halo_sprite.SetPosition (logo_x - (halo_image.GetWidth () - logo_image.GetWidth ()) / 2,
-	                         logo_y - (halo_image.GetHeight () - logo_image.GetHeight ()) / 2, -50);
-	logo_sprite = Sprite (logo_image);
-	logo_sprite.SetPosition (logo_x, logo_y, -40);
-}
-
-# Une pulsation en 2,5 s, calculee sur le temps ecoule et non sur le nombre d'images : le
-# Raspberry Pi dessine sans carte graphique pendant que tout demarre, il en saute (compter
-# les images faisait monter la lumiere au fil du chargement). 12 niveaux de lumiere : elle
-# n'est redessinee que quand son niveau change (une dizaine de fois par seconde)
-PULSE_PERIOD = 2.5;
-PULSE_LEVELS = 12;
-REFRESH_RATE = 15;
-global.boot_seconds = 0;
-global.pulse_level = -1;
-
-fun pulse () {
-	if (halo_sprite) {
-		phase = 0.5 - 0.5 * Math.Cos (global.boot_seconds * 2 * Math.Pi / PULSE_PERIOD);
-		level = Math.Int (phase * PULSE_LEVELS + 0.5);
-		if (level != global.pulse_level) {
-			global.pulse_level = level;
-			halo_sprite.SetOpacity (0.25 + 0.75 * level / PULSE_LEVELS);
-		}
-	}
-}
-
-# Entre deux avancements du demarrage (qui redonnent l'heure exacte), le temps avance d'un
-# appel a l'autre
-fun pulse_callback () {
-	global.boot_seconds = global.boot_seconds + 1 / REFRESH_RATE;
-	pulse ();
-}
-
-Plymouth.SetRefreshRate (REFRESH_RATE);
-Plymouth.SetRefreshFunction (pulse_callback);
-# --- RaspyDarts (fin) ---
-EOF
-}
-
 # Bulles de notification du panneau (connexion Wi-Fi, memoire, mises a jour...) :
 # elles s'affichent par-dessus le jeu
 patch_panel() {
@@ -857,7 +775,6 @@ if [ "${1:-}" = "--test-patch" ]; then
     patch_smb_conf "$2/smb.conf"
     patch_lightdm "$2/lightdm.conf"
     write_display_setup_script "$2/raspydarts-display-setup"
-    patch_plymouth_script "$2/pix.script"
     patch_panel "$2/panel"
     patch_greeter "$2/pi-greeter.conf"
     patch_desktop "$2/desktop-items-0.conf"
@@ -1185,31 +1102,8 @@ if [ -f "$PYDARTS/desktop/Raspydarts.desktop" ]; then
     ok 'Raccourci sur le bureau'
 fi
 
-# Habillage du demarrage : splash, ecran de connexion et bureau aux couleurs de RaspyDarts
-SPLASH=/usr/share/plymouth/themes/pix/splash.png
-if [ -f "$SPLASH" ] && [ -f "$PYDARTS/images/boot_background.png" ]; then
-    [ -f "$SPLASH.origine" ] || cp "$SPLASH" "$SPLASH.origine"
-    cp "$PYDARTS/images/boot_background.png" "$SPLASH"
-    chmod 644 "$SPLASH"
-    # Logo et sa lumiere qui pulse (pix.script, patch_plymouth_script)
-    for IMAGE in logo halo; do
-        [ -f "$PYDARTS/images/boot_$IMAGE.png" ] && install -m 644 "$PYDARTS/images/boot_$IMAGE.png" \
-            "/usr/share/plymouth/themes/pix/raspydarts_$IMAGE.png"
-    done
-    PLYMOUTH_SCRIPT=/usr/share/plymouth/themes/pix/pix.script
-    if [ -f "$PLYMOUTH_SCRIPT" ]; then
-        [ -f "$PLYMOUTH_SCRIPT.origine" ] || cp "$PLYMOUTH_SCRIPT" "$PLYMOUTH_SCRIPT.origine"
-        patch_plymouth_script "$PLYMOUTH_SCRIPT"
-    fi
-    # Le splash est embarque dans l'initramfs
-    if command -v update-initramfs >/dev/null; then
-        update-initramfs -u >/dev/null 2>&1 || warn "Reconstruction de l'initramfs echouee : splash d'origine conserve"
-    fi
-    ok "Ecran de demarrage RaspyDarts avec pourcentage d'avancement"
-else
-    warn 'Ecran de demarrage non personnalise (theme plymouth pix ou image absente)'
-fi
-
+# Habillage du demarrage (image de demarrage : scripts/reglages_systeme.sh, en fin d'etape),
+# ecran de connexion et bureau aux couleurs de RaspyDarts
 # L'image de demarrage reste a l'ecran jusqu'a la video d'introduction : elle n'est
 # effacee ni a la fin du demarrage, ni au lancement du serveur graphique
 mkdir -p /etc/systemd/system/plymouth-quit.service.d
@@ -1296,6 +1190,14 @@ else
     warn 'Configuration du panneau introuvable : notifications non desactivees'
 fi
 chown -R "$TARGET_USER:$TARGET_USER" "$TARGET_HOME/.config"
+
+# Reglages du systeme qui evoluent avec RaspyDarts (image de demarrage, MQTT, bureau) : le meme
+# script est relance par le jeu apres une mise a jour (bornes deja installees)
+if [ -f "$PYDARTS/scripts/reglages_systeme.sh" ]; then
+    bash "$PYDARTS/scripts/reglages_systeme.sh" "$TARGET_USER"
+else
+    warn "$PYDARTS/scripts/reglages_systeme.sh absent : image de demarrage, MQTT et bureau non regles"
+fi
 
 # ============================================================
 # ETAPE 7 : Controle de l'installation

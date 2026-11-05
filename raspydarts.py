@@ -353,6 +353,8 @@ game_type = None
 display.init_colorset()
 
 version = cupdate.get_version(logs)
+# After an update (the game restarted) : the settings of the system of the new version
+cupdate.apply_system_settings(logs, version)
 if Config.get_value('SectionGlobals', 'check_for_updates', False):
     try:
         display.message(['update-check'], 0, None, 'middle')
