@@ -13,7 +13,7 @@
                         "extract_sha256":  "e067cc102cd0ec589634e4d021b0d3b4e184b3e177a29d3efaf55417572fc5ad",
                         "image_download_size":  2497774840,
                         "release_date":  "2026-11-04",
-                        "init_format":  "systemd",
+                        "init_format":  "cloudinit-rpi",
                         "devices":  [
                                         "pi4-32bit",
                                         "pi3-32bit"
