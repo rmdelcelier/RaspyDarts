@@ -167,9 +167,10 @@ def archive_members(archive, full):
         if member.isfile() or member.isdir():
             yield member, '/'.join(parts)
 
-def download_update(logs, update):
+def download_update(logs, update, progress=None):
     """
     Download an update returned by get_last in backup folder and check it
+    progress(done, total) : called after each piece received, in bytes (total 0 if unknown)
     """
 
     file_name = f"{BACKUP_PATH}/{update['file']}"
@@ -178,9 +179,14 @@ def download_update(logs, update):
     try:
         with requests.get(update['url'], headers=HEADERS, stream=True, timeout=TIMEOUT) as res:
             res.raise_for_status()
+            total = int(res.headers.get('Content-Length') or update['size'] or 0)
+            done = 0
             with open(partial, 'wb') as downloaded:
                 for chunk in res.iter_content(chunk_size=1024 * 1024):
                     downloaded.write(chunk)
+                    done += len(chunk)
+                    if progress is not None:
+                        progress(done, total)
 
         file_size = os.path.getsize(partial)
         if update['size'] is not None and file_size != update['size']:
@@ -204,17 +210,22 @@ def download_update(logs, update):
     logs.debug(f"{update['file']} correctly downloaded ({file_size} bytes)")
     return True
 
-def install_archive(file_name, full, rollback=None):
+def install_archive(file_name, full, rollback=None, progress=None):
     """
     Copy files of an archive in the game folder. Identical files are left untouched
     Replaced files are first saved in rollback archive, if given
+    progress(done, total) : called after each file or folder of the archive
     Return number of written files
     """
 
     count = 0
 
     with tarfile.open(file_name, 'r:gz') as archive:
-        for member, relative in archive_members(archive, full):
+        # Listed first, for the progress (the archive is then read forward, as before)
+        members = list(archive_members(archive, full))
+        for index, (member, relative) in enumerate(members, 1):
+            if progress is not None:
+                progress(index, len(members))
             target = os.path.join(RASPYDARTS_HOME, relative)
             if member.isdir():
                 os.makedirs(target, exist_ok=True)
@@ -253,11 +264,12 @@ def install_archive(file_name, full, rollback=None):
 
     return count
 
-def apply_update(logs, update):
+def apply_update(logs, update, progress=None):
     """
     Apply an update downloaded by download_update
     Replaced files are saved in backup folder, in update_<previous version>_<date>.tgz
     (restorable with Backup.sh r <file>), and restored if update fails
+    progress(done, total) : files of the update installed (see install_archive)
     Return new version, None if update failed
     """
 
@@ -268,7 +280,7 @@ def apply_update(logs, update):
     error = None
     rollback = tarfile.open(rollback_name, 'w:gz')
     try:
-        count = install_archive(file_name, update['full'], rollback)
+        count = install_archive(file_name, update['full'], rollback, progress)
     except Exception as exc: # pylint: disable=broad-except
         error = exc
     saved = len(rollback.getmembers())

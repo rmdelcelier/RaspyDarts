@@ -4231,8 +4231,9 @@ class Screen(pygame.Surface):
         self.update_screen()
         self.wait_touch()
 
+        # Shown once : marked as read (.1 : shown once already by a version which showed it twice)
         if action == 'move':
-            os.system(f"mv {self.config.changelogFile}.{version} {self.config.changelogFile}.{version}.1")
+            os.system(f"mv {self.config.changelogFile}.{version} {self.config.changelogFile}.{version}.read")
         elif action == 'delete':
             os.system(f"mv {self.config.changelogFile}.{version}.1 {self.config.changelogFile}.{version}.read")
 

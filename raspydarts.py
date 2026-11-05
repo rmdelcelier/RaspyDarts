@@ -355,6 +355,25 @@ display.init_colorset()
 version = cupdate.get_version(logs)
 # After an update (the game restarted) : the settings of the system of the new version
 cupdate.apply_system_settings(logs, version)
+
+def update_progress(key, unit=''):
+    '''
+    Progress of the download (unit 'Mo' : bytes shown in Mo) or of the installation of an
+    update, under its message : drawn again only when the figure shown changes
+    '''
+    shown = [None]
+    def progress(done, total):
+        if unit == 'Mo':
+            figure = f"{done * 100 // total} % ({done / 1048576:.0f} / {total / 1048576:.0f} Mo)" if total \
+                else f"{done / 1048576:.0f} Mo"
+        else:
+            figure = f"{done} / {total}"
+        if figure != shown[0]:
+            shown[0] = figure
+            display.message([f"{Lang.translate(key)} {figure}"], 0, None, 'middle')
+    return progress
+
+
 if Config.get_value('SectionGlobals', 'check_for_updates', False):
     try:
         display.message(['update-check'], 0, None, 'middle')
@@ -365,9 +384,9 @@ if Config.get_value('SectionGlobals', 'check_for_updates', False):
             if response:
                 display.message(['update-download'], 0, None, 'middle')
                 new_version = None
-                if cupdate.download_update(logs, update):
+                if cupdate.download_update(logs, update, update_progress('update-download', 'Mo')):
                     display.message(['updating'], 0, None, 'middle')
-                    new_version = cupdate.apply_update(logs, update)
+                    new_version = cupdate.apply_update(logs, update, update_progress('updating'))
 
                 if new_version is None:
                     display.message(['update-failed'], 1500, None, 'middle')
@@ -442,8 +461,10 @@ if game_type != 'restart' and rpi_error is None:
     #display.nice_shot(Lang.translate('Welcome'))
     rpi.light_toys(['LIGHT_CELEBRATION'], False)
 
-# If exists, display version's changelog
-display.display_changelog(version)
+# If exists, display version's changelog : not just before the restart which follows an update,
+# the new version shows it once restarted
+if game_type != 'restart':
+    display.display_changelog(version)
 
 # Sound volume
 if volume:
