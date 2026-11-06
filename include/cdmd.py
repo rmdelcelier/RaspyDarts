@@ -111,15 +111,9 @@ class Cdmd():
     def send_text(self, text, tempo=None, sens=None, iteration=None):
         """
         Function used to send text to dmd. In a game, with the option : in the colour of the
-        player (msgcolor|text|R;G;B|0;0;0|sens|iterations : all its fields given)
+        player (msgcolor|text|R;G;B|0;0;0|sens|iterations : all its fields given, the same
+        direction and passes as without colour)
         """
-        color = self.rgb(self.player_color) if self.player_color is not None else None
-        if color:
-            if not sens and len(text) > 22:
-                sens = 'left'
-            self.send(f"msgcolor|{text}|{color}|0;0;0|{sens or ''}|{(iteration or 1) if sens else ''}")
-            return
-
         if sens :
             if iteration :
                 msg = 'msgmovebcl|{}'
@@ -131,6 +125,12 @@ class Cdmd():
                 sens = 'left'
             else :
                 msg = 'msg|{}'
+
+        color = self.rgb(self.player_color) if self.player_color is not None else None
+        if color:
+            # The same text, direction and passes as msg / msgmove / msgmovebcl, in the colour
+            self.send(f"msgcolor|{text}|{color}|0;0;0|{sens or ''}|{iteration or ''}")
+            return
 
         msg = msg.format(text)
         if sens :
