@@ -1734,6 +1734,7 @@ msgstr "Klassiek Cricket.\n"
 "- Drink score (\"Trakteer\"): Als de score >= 200 is in Cut Throat, trakteert de speler.\n"
 "- Volgorde (Enculette): Verplichte volgorde: De doelen (20, 19, 18, 17, 16, 15 en Bull)\n"
 "  moeten strikt in deze volgorde worden gesloten, anders worden strafpunten afgetrokken.\n"
+"- No Score: Spelen zonder punten, wie als eerste alle doelen sluit, wint.\n"
 "- Teamspel: 2 teams van 2.\n"
 "- Delen: Spelers van hetzelfde team delen dezelfde scoreraster.\n"
 "- Handicap: Voegt een handicap toe aan het sterkste team.\n"
@@ -1766,6 +1767,9 @@ msgstr "MPR"
 
 msgid "Cricket-enculette"
 msgstr "Vaste volgorde"
+
+msgid "Cricket-noscore"
+msgstr "No Score"
 
 
 ######## DRAGON ########
@@ -2456,6 +2460,7 @@ msgstr "Koreaanse Cricket.\n"
 "- Cut-Throat (Punten naar tegenstanders): De laagste score wint.\n"
 "- Volgorde (Enculette): Verplichte volgorde: De doelen (20, 19, 18, 17, 16, 15 en Bull)\n"
 "  moeten strikt in deze volgorde worden gesloten, anders worden strafpunten afgetrokken.\n"
+"- No Score: Spelen zonder punten, wie als eerste alle doelen sluit, wint.\n"
 "- Teamspel: Maakt 2 tegen 2 spelen mogelijk (tot 4 teams).\n"
 "- Delen: Spelers van hetzelfde team delen het scoreraster.\n"
 "- Handicap: Kent een handicap toe aan het sterkste team om de kansen te gelijken.\n"
@@ -2491,6 +2496,9 @@ msgstr "Gekleurd bord"
 
 msgid "Mickey-enculette"
 msgstr "Vaste volgorde"
+
+msgid "Mickey-noscore"
+msgstr "No Score"
 
 
 

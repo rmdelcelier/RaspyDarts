@@ -1717,6 +1717,7 @@ msgstr "Klassisches Cricket.\n"
 "- Drink Score: Score >= 200 in Cut-Throat lädt zu Runde ein.\n"
 "- Strenge Reihenfolge: Ziele in Reihenfolge schließen (20 bis Bull);\n"
 "  falsche Segmente ziehen Punkte ab.\n"
+"- No Score: Ohne Punkte spielen, wer zuerst alle Ziele schließt, gewinnt.\n"
 "- Teamspiel: 2 gegen 2 Format.\n"
 "- Geteilte Scores: Teammitglieder teilen sich die Punktetabelle.\n"
 "- Handicap: Fügt dem stärksten Team ein Handicap hinzu.\n"
@@ -1749,6 +1750,9 @@ msgstr "MPR"
 
 msgid "Cricket-enculette"
 msgstr "Strenge Reihenfolge"
+
+msgid "Cricket-noscore"
+msgstr "No Score"
 
 ######## DRAGON ########
 
@@ -2399,6 +2403,7 @@ msgstr "Koreanisches Cricket.\n"
 "- Cut-Throat (Punkte an Gegner): Niedrigster Score gewinnt.\n"
 "- Strenge Reihenfolge: Ziele in Reihenfolge schließen (20 bis Bull);\n"
 "  falsche Segmente ziehen Punkte ab.\n"
+"- No Score: Ohne Punkte spielen, wer zuerst alle Ziele schließt, gewinnt.\n"
 "- Teamspiel: 2v2 Format (bis zu 4 Teams).\n"
 "- Geteilte Scores: Teammitglieder teilen sich die Punktetabelle.\n"
 "- Handicap: Gleicht Teams mit Handicap aus.\n"
@@ -2434,6 +2439,9 @@ msgstr "Farbiges Board"
 
 msgid "Mickey-enculette"
 msgstr "Strenge Reihenfolge"
+
+msgid "Mickey-noscore"
+msgstr "No Score"
 
 ######## MORPION ######
 

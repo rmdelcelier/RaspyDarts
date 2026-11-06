@@ -1718,6 +1718,7 @@ msgstr "Classic Cricket.\n"
 "- Drink score: Score >= 200 in Cut-Throat buys a round.\n"
 "- Strict Order: Must close targets in order (20 down to Bull);\n"
 "  wrong targets deduct points.\n"
+"- No Score: Play without points, the first to close all targets wins.\n"
 "- Team game: 2 vs 2 format.\n"
 "- Shared scores: Teammates share score grid.\n"
 "- Handicap: Adds handicap to stronger team.\n"
@@ -1750,6 +1751,9 @@ msgstr "MPR"
 
 msgid "Cricket-enculette"
 msgstr "Strict Order"
+
+msgid "Cricket-noscore"
+msgstr "No Score"
 
 ######## DRAGON ########
 
@@ -2400,6 +2404,7 @@ msgstr "Korean Cricket.\n"
 "- Cut-Throat: Lowest score wins.\n"
 "- Strict Order: Must close targets in sequence (20 to Bull);\n"
 "  wrong targets deduct points.\n"
+"- No Score: Play without points, the first to close all targets wins.\n"
 "- Team game: 2v2 format (up to 4 teams).\n"
 "- Shared scores: Teammates share score grid.\n"
 "- Handicap: Balance teams with handicap.\n"
@@ -2435,6 +2440,9 @@ msgstr "Colorized target"
 
 msgid "Mickey-enculette"
 msgstr "Strict Order"
+
+msgid "Mickey-noscore"
+msgstr "No Score"
 
 ######## MORPION ######
 

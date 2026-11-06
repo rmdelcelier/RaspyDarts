@@ -1718,6 +1718,7 @@ msgstr "Cricket clásico.\n"
 "- Pagar ronda (Drink score): Puntuación >= 200 en Degollina invita a una ronda.\n"
 "- Orden estricto: Debe cerrar objetivos en orden (del 20 al Bull);\n"
 "  los objetivos incorrectos deducen puntos.\n"
+"- No Score: Jugar sin puntos, gana el primero que cierra todos los objetivos.\n"
 "- Juego en equipo: Formato 2 vs 2.\n"
 "- Puntuaciones compartidas: Los compañeros comparten la tabla de puntuación.\n"
 "- Hándicap: Añade hándicap al equipo más fuerte.\n"
@@ -1750,6 +1751,9 @@ msgstr "MPR"
 
 msgid "Cricket-enculette"
 msgstr "Orden estricto"
+
+msgid "Cricket-noscore"
+msgstr "No Score"
 
 ######## DRAGON ########
 
@@ -2400,6 +2404,7 @@ msgstr "Cricket coreano.\n"
 "- Degollina (Cut-Throat): Gana la puntuación más baja.\n"
 "- Orden estricto: Debe cerrar objetivos en secuencia (del 20 al Bull);\n"
 "  los objetivos incorrectos deducen puntos.\n"
+"- No Score: Jugar sin puntos, gana el primero que cierra todos los objetivos.\n"
 "- Juego en equipo: Formato 2v2 (hasta 4 equipos).\n"
 "- Puntuaciones compartidas: Los compañeros comparten la tabla de puntuación.\n"
 "- Hándicap: Equilibra equipos con hándicap.\n"
@@ -2435,6 +2440,9 @@ msgstr "Diana colorizada"
 
 msgid "Mickey-enculette"
 msgstr "Orden estricto"
+
+msgid "Mickey-noscore"
+msgstr "No Score"
 
 ######## MORPION ######
 

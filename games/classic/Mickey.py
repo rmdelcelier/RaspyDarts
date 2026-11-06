@@ -24,7 +24,7 @@ HEADERS = ['20', '19', '18', '17', '16', '15', '14', '13', '12', 'B']
 HEADERSDT = ['D', 'T']
 #OPTIONS = {'theme': 'default', 'max_round': 20, 'optioncrazy': False, 'optioncutthroat': False, 'enculette': False, 'Teaming': False, 'optionteamscore': False, 'mpr': False, 'colorised': False}
 
-OPTIONS = {'theme': 'default', 'display': 'classic', 'max_round': 20, 'optioncrazy': False, 'optioncutthroat': False, 'enculette': False, 'Teaming': False, 'optionteamscore': False, 'mpr': False, 'colorised': False}
+OPTIONS = {'theme': 'default', 'display': 'classic', 'max_round': 20, 'optioncrazy': False, 'optioncutthroat': False, 'enculette': False, 'noscore' : False, 'Teaming': False, 'optionteamscore': False, 'mpr': False, 'colorised': False}
 # Options with a list of values (the screen of the options : a dropdown) : value, its text
 OPTION_CHOICES = {'display': [('horizontal', 'mickey-display-horizontal'), ('classic', 'mickey-display-classic')]}
 
@@ -103,7 +103,7 @@ class Game(cgame.Game):
         self.crazy = options['optioncrazy']
         self.show_mpr = options['mpr']
         self.game_is_ok_for_color = options['colorised']
-        
+        self.noscore = options['noscore']
         self.enculette = options['enculette']  # Option L'Enculette
         
         # drawn on the dart), or horizontal (the players in lines)
@@ -346,7 +346,11 @@ class Game(cgame.Game):
         # Add points ? Only if column is already open
         if overtouched > 0:
             # Score to add
-            score_to_add = overtouched * self.score_map[f'S{value}']
+            if not self.noscore :
+                score_to_add = overtouched * self.score_map[f'S{value}']
+            else :
+                score_to_add = 0
+            
 
             play_scored = True
             if not self.teaming:

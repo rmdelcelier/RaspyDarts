@@ -19,7 +19,7 @@ HEADERS = ['20', '19', '18', '17', '16', '15', 'B']
 #OPTIONS = {'theme': 'default', 'max_round': 20, 'optioncrazy': False, 'optioncutthroat': False, 'drinkscore': 200,
 #        'Teaming': False, 'optionteamscore': False, 'optionhandicap': False, 'mpr': False, 'colorised': False}
         
-OPTIONS = {'theme': 'default', 'display': 'classic', 'max_round': 20, 'optioncrazy': False, 'optioncutthroat': False, 'enculette': False, 'drinkscore': 200,
+OPTIONS = {'theme': 'default', 'display': 'classic', 'max_round': 20, 'optioncrazy': False, 'optioncutthroat': False, 'enculette': False, 'noscore' : False, 'drinkscore': 200,
         'Teaming': False, 'optionteamscore': False, 'optionhandicap': False, 'mpr': False, 'colorised': False}
       
 # Options with a list of values (the screen of the options : a dropdown) : value, its text
@@ -86,7 +86,7 @@ class Game(cgame.Game):
         else:
             self.display.teaming = True
             
-        
+        self.noscore = options['noscore']
         self.enculette = options['enculette']  # Option L'Enculette
         # Display : classic (the one of always, by default : the players in columns, the hits
         # drawn on the dart), or horizontal (the players in lines)
@@ -225,7 +225,11 @@ class Game(cgame.Game):
             # Add points ? Only if column is already open
             if overtouched > 0:
                 # Score to add
-                score_to_add = overtouched * self.score_map[f'S{value}']
+                if not self.noscore :
+                    score_to_add = overtouched * self.score_map[f'S{value}']
+                else :
+                    score_to_add = 0
+                
 
                 play_scored = True
                 if not self.teaming:

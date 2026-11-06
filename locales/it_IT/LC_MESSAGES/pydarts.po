@@ -1718,6 +1718,7 @@ msgstr "Cricket classico.\n"
 "- Drink Score: Punteggio >= 200 in Cut-Throat offre un giro da bere.\n"
 "- Ordine rigido: Chiudi i bersagli in ordine (da 20 a Bull);\n"
 "  i segmenti sbagliati sottraggono punti.\n"
+"- No Score: Si gioca senza punti, vince il primo che chiude tutti i bersagli.\n"
 "- Gioco a squadre: Formato 2 contro 2.\n"
 "- Punteggi condivisi: I membri della squadra condividono la tabella punti.\n"
 "- Handicap: Aggiunge un handicap alla squadra più forte.\n"
@@ -1750,6 +1751,9 @@ msgstr "MPR"
 
 msgid "Cricket-enculette"
 msgstr "Ordine rigido"
+
+msgid "Cricket-noscore"
+msgstr "No Score"
 
 ######## DRAGON ########
 
@@ -2400,6 +2404,7 @@ msgstr "Cricket coreano.\n"
 "- Cut-Throat (Punti agli avversari): Vince il punteggio più basso.\n"
 "- Ordine rigido: Chiudi i bersagli in ordine (da 20 a Bull);\n"
 "  i segmenti sbagliati sottraggono punti.\n"
+"- No Score: Si gioca senza punti, vince il primo che chiude tutti i bersagli.\n"
 "- Gioco a squadre: Formato 2v2 (fino a 4 squadre).\n"
 "- Punteggi condivisi: I membri della squadra condividono la tabella punti.\n"
 "- Handicap: Bilancia le squadre con un handicap.\n"
@@ -2435,6 +2440,9 @@ msgstr "Bersaglio colorato"
 
 msgid "Mickey-enculette"
 msgstr "Ordine rigido"
+
+msgid "Mickey-noscore"
+msgstr "No Score"
 
 ######## MORPION ######
 

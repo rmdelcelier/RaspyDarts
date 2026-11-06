@@ -1740,6 +1740,7 @@ msgstr "Le Cricket classique.\n"
 "- L'Enculette : Ordre imposé : Les cibles (20, 19, 18, 17, 16, 15 et le Bull) \n"
 "  doivent obligatoirement être fermées dans cet ordre, sinon les points du\n"
 "  mauvais segment seront décompté. \n"
+"- No Score : Jouer sans les points, le premier qui ferme tous les segments gagne.\n"
 "- Jeu en équipe : 2 équipes de 2.\n"
 "- Mutualisation : Les joueurs d'une même équipe partagent la même grille de scores.\n"
 "- Handicap : Ajoute un handicap à l'équipe la plus forte.\n"
@@ -1772,6 +1773,9 @@ msgstr "MPR"
 
 msgid "Cricket-enculette"
 msgstr "L'enculette"
+
+msgid "Cricket-noscore"
+msgstr "No Score"
 
 
 ######## DRAGON ########
@@ -2469,6 +2473,7 @@ msgstr "Le Cricket coréen.\n"
 "- L'Enculette : Ordre imposé : Les cibles (20, 19, 18, 17, 16, 15 et le Bull) \n"
 "  doivent obligatoirement être fermées dans cet ordre, sinon les points du\n"
 "  mauvais segment seront décompté. \n"
+"- No Score : Jouer sans les points, le premier qui ferme tous les segments gagne.\n"
 "- Jeu en équipe : Permet de jouer à 2 contre 2 (jusqu'à 4 équipes).\n"
 "- Mutualisation : Les joueurs d'une même équipe partagent la même grille de scores.\n"
 "- Handicap : Attribue un handicap à l'équipe la plus forte pour équilibrer la partie.\n"
@@ -2504,6 +2509,9 @@ msgstr "Cible colorisée"
 
 msgid "Mickey-enculette"
 msgstr "L'enculette"
+
+msgid "Mickey-noscore"
+msgstr "No Score"
 
 
 
