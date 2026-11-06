@@ -5100,3 +5100,22 @@ msgstr "MP3: detener"
 
 msgid "PIN_MUSIC_STOP"
 msgstr "MP3: detener"
+
+msgid "Mickey-display"
+msgstr "Visualización"
+
+msgid "mickey-display-horizontal"
+msgstr "Horizontal"
+
+msgid "mickey-display-classic"
+msgstr "Clásica"
+
+msgid "Ho_One-display"
+msgstr "Visualización"
+
+msgid "ho_one-display-horizontal"
+msgstr "Horizontal"
+
+msgid "ho_one-display-classic"
+msgstr "Clásica"
+

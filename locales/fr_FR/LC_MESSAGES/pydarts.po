@@ -5037,6 +5037,25 @@ msgstr "Horizontal"
 msgid "cricket-display-classic"
 msgstr "Classique"
 
+msgid "Mickey-display"
+msgstr "Affichage"
+
+msgid "mickey-display-horizontal"
+msgstr "Horizontal"
+
+msgid "mickey-display-classic"
+msgstr "Classique"
+
+msgid "Ho_One-display"
+msgstr "Affichage"
+
+msgid "ho_one-display-horizontal"
+msgstr "Horizontal"
+
+msgid "ho_one-display-classic"
+msgstr "Classique"
+
+
 msgid "editor-image-none"
 msgstr "Aucune"
 

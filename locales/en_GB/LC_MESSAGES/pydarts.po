@@ -5367,3 +5367,22 @@ msgstr "MP3: stop"
 
 msgid "PIN_MUSIC_STOP"
 msgstr "MP3: stop"
+
+msgid "Mickey-display"
+msgstr "Display"
+
+msgid "mickey-display-horizontal"
+msgstr "Horizontal"
+
+msgid "mickey-display-classic"
+msgstr "Classic"
+
+msgid "Ho_One-display"
+msgstr "Display"
+
+msgid "ho_one-display-horizontal"
+msgstr "Horizontal"
+
+msgid "ho_one-display-classic"
+msgstr "Classic"
+

@@ -5162,3 +5162,22 @@ msgstr "MP3: ferma"
 
 msgid "PIN_MUSIC_STOP"
 msgstr "MP3: ferma"
+
+msgid "Mickey-display"
+msgstr "Visualizzazione"
+
+msgid "mickey-display-horizontal"
+msgstr "Orizzontale"
+
+msgid "mickey-display-classic"
+msgstr "Classica"
+
+msgid "Ho_One-display"
+msgstr "Visualizzazione"
+
+msgid "ho_one-display-horizontal"
+msgstr "Orizzontale"
+
+msgid "ho_one-display-classic"
+msgstr "Classica"
+
