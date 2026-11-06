@@ -5133,3 +5133,16 @@ msgstr "Tasten angelernt: ausprobieren, dann speichern"
 msgid "usb-pads-button"
 msgstr "Taste"
 
+
+msgid "error-report-title"
+msgstr "Ein Fehler ist aufgetreten"
+
+msgid "error-report-crash"
+msgstr "RaspyDarts wurde beendet und neu gestartet"
+
+msgid "error-report-error"
+msgstr "Das Spiel hatte ein Problem"
+
+msgid "error-report-scan"
+msgstr "Scannen Sie den QR-Code, um es uns auf GitHub zu melden"
+

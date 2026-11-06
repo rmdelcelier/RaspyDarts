@@ -5200,3 +5200,16 @@ msgstr "Pulsanti imparati: provateli, poi salvate"
 msgid "usb-pads-button"
 msgstr "Pulsante"
 
+
+msgid "error-report-title"
+msgstr "Si è verificato un errore"
+
+msgid "error-report-crash"
+msgstr "RaspyDarts si è arrestato ed è ripartito"
+
+msgid "error-report-error"
+msgstr "Il gioco ha avuto un problema"
+
+msgid "error-report-scan"
+msgstr "Scansionate il codice QR per segnalarcelo su GitHub"
+

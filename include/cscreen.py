@@ -8491,6 +8491,39 @@ class Screen(pygame.Surface):
                     else:
                         selected = (selected + move) % len(order)
 
+    def error_report_screen(self, report, wait=60):
+        '''
+        An error to report (include/cerrors.py) : what happened, a QR code opening a new issue
+        on GitHub filled with its report (read with a phone). Gone with any button, or after
+        « wait » seconds without one (exhibition mode : the borne goes on alone)
+        '''
+        from include import cerrors
+        url = cerrors.issue_url(report)
+        side = min(int(self.res['y'] * .5), int(self.res['x'] * .3))
+        code = self.online_qrcode(url, side)
+        translate = self.lang.translate
+        crash = report.get('kind') == 'crash'
+        line = int(self.res['y'] / 22)
+        end = time.monotonic() + wait
+        while time.monotonic() < end:
+            self.display_background()
+            self.menu_header(translate('error-report-title'),
+                             translate('error-report-crash' if crash else 'error-report-error'))
+            pos_y = int(self.res['y'] * .2)
+            self.blit(code, (int((self.res['x'] - side) / 2), pos_y))
+            pos_y += side + self.margin * 2
+            self.blit_text(translate('error-report-scan'), 0, pos_y, self.res['x'], line,
+                           self.colorset['menu-text-white'])
+            self.blit_text(report.get('error', '')[:90], 0, pos_y + line + self.margin, self.res['x'],
+                           int(line * .7), self.colorset['menu-text-white'])
+            click_zones = {'continue': self.display_button(True, 'continue', special='return')}
+            self.update_screen()
+            key = self.rpi.listen_inputs(['arrows', 'fx'], ['escape', 'enter', 'space', 'single-click'],
+                                         timeout=1000)
+            if self.is_clicked(click_zones, key) or key in ENTER_KEYS or key in ESCAPE_KEYS or \
+                    key in ('escape', 'enter', 'space'):
+                return
+
     def online_qrcode(self, url, side):
         '''
         QR code of an address, at this size (made once : about 200 ms on a Pi 3)

@@ -5405,3 +5405,16 @@ msgstr "Buttons learnt: try them, then save"
 msgid "usb-pads-button"
 msgstr "Button"
 
+
+msgid "error-report-title"
+msgstr "An error occurred"
+
+msgid "error-report-crash"
+msgstr "RaspyDarts stopped and restarted"
+
+msgid "error-report-error"
+msgstr "The game ran into a problem"
+
+msgid "error-report-scan"
+msgstr "Scan the QR code to report it to us on GitHub"
+

@@ -35,6 +35,7 @@ from subprocess import Popen
 
 ### ajout trophee
 from include import ctrophies
+from include import cerrors
 
 from threading import Event
 
@@ -652,8 +653,23 @@ spectators_error = False
 # The game is loaded : show its window, hidden if the intro video was playing
 display.show()
 
+def report_error(context):
+    '''
+    A serious error caught (a game which fails) : its report, shown at the next menu
+    '''
+    cerrors.record('error', version, context=context,
+                   game=globals().get('Game') or globals().get('selected_game'))
+
 try:
     while game_type not in ('restart', 'quit', 'shutdown'):
+
+        # An error to report (a crash before this start, a game which failed) : once
+        error_report = cerrors.take()
+        if error_report:
+            try:
+                display.error_report_screen(error_report)
+            except Exception as error:    # pylint: disable=broad-except
+                logs.error(f"Error report not shown : {error}")
 
         # Init (or reset) network status
         net_status = None  # Master or slave
@@ -852,6 +868,7 @@ try:
                                 menu = 'gameoptions'
                     except Exception as error:    # pylint: disable=broad-except
                         logs.error(f"Favorite {name} not started : {error}")
+                        report_error(f"Favori {name}")
                         display.message([Lang.translate('favorite-empty')], 2500, 'menu-ko', 'middle', 'big')
 
             ########
@@ -2116,6 +2133,7 @@ try:
                             publish_match()
                         except Exception as error:
                             logs.error(f"EARLYPLAYERBUTTON is not handled properly by this game. Error was {error}")
+                            report_error("Joueur suivant avant la 3e fléchette")
                             early_player_button = 1
 
                         for i in range(0, game.nb_darts - player_launch):
@@ -2307,6 +2325,7 @@ try:
 
                         except Exception as e:
                             logs.error("MISSDART is not handled properly by this game. Error was {}".format(e))
+                            report_error("Fléchette ratée")
                             # Show message on screen
                             display.message([Lang.translate('Missed !')], None, None, 'middle', 'big')
                     else:
@@ -2705,6 +2724,7 @@ try:
                     game.game_stats(players, actual_round, scores)
                 except Exception as e:
                     logs.error("Problem inserting stats")
+                    report_error("Statistiques de fin de partie")
 
                 try:
                     first = True
@@ -2727,6 +2747,7 @@ try:
                     stats_screen = 'escape'
                     logs.error(f"Problem displaying Stats table with screen.")
                     logs.error(f"DisplayRecords method : {exception}")
+                    report_error("Tableau des records")
 
             # Exiting if it was direct_play mode and that the user pressed escape
             if stats_screen == 'escape' and direct_play:
@@ -2735,6 +2756,9 @@ try:
 finally:
     # An error (not Quitter, Arret, Redemarrer) : it goes on once this block is done
     crashed = sys.exc_info()[0] is not None
+    if crashed and not issubclass(sys.exc_info()[0], (KeyboardInterrupt, SystemExit)):
+        # Its report, shown once RaspyDarts.sh has started the game again (include/cerrors.py)
+        cerrors.record('crash', version, game=globals().get('Game') or globals().get('selected_game'))
     rpi.gpio_flush()
     # Quit or restart
     if dispatcher.target_leds and p_target.poll() is not None:

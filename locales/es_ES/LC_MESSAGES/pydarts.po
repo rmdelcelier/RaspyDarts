@@ -5138,3 +5138,16 @@ msgstr "Botones aprendidos: pruébelos y luego guarde"
 msgid "usb-pads-button"
 msgstr "Botón"
 
+
+msgid "error-report-title"
+msgstr "Se ha producido un error"
+
+msgid "error-report-crash"
+msgstr "RaspyDarts se detuvo y se reinició"
+
+msgid "error-report-error"
+msgstr "El juego tuvo un problema"
+
+msgid "error-report-scan"
+msgstr "Escanee el código QR para informarnos en GitHub"
+

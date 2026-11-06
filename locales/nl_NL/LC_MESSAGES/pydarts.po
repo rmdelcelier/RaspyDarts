@@ -5187,3 +5187,16 @@ msgstr "Knoppen aangeleerd: probeer ze en sla dan op"
 msgid "usb-pads-button"
 msgstr "Knop"
 
+
+msgid "error-report-title"
+msgstr "Er is een fout opgetreden"
+
+msgid "error-report-crash"
+msgstr "RaspyDarts is gestopt en opnieuw gestart"
+
+msgid "error-report-error"
+msgstr "Het spel liep tegen een probleem aan"
+
+msgid "error-report-scan"
+msgstr "Scan de QR-code om het ons op GitHub te melden"
+
