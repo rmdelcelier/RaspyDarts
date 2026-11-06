@@ -161,4 +161,9 @@ class Cdmd():
         else:
             return
 
+        # In the colour of the player (option) : score|X - X - X||R;G;B (Raspy2DMD 1.6.1.2 ; an
+        # older one shows it in its colour, the field ignored)
+        color = self.rgb(self.player_color) if self.player_color is not None else None
+        if color:
+            text += f'||{color}'
         self.send(text)
