@@ -316,26 +316,60 @@ def apply_update(logs, update, progress=None):
 SYSTEM_SETTINGS_SCRIPT = f'{RASPYDARTS_HOME}/scripts/reglages_systeme.sh'
 SYSTEM_SETTINGS_STATE = '/var/lib/raspydarts/reglages-systeme'
 SYSTEM_SETTINGS_LOG = f'{RASPYDARTS_HOME}/logs/reglages_systeme.log'
+# Listening of the MQTT server on the network, put by the script ; a second file declaring the
+# same port (Raspy2DMD installed afterwards : raspy2dmd.conf) stops mosquitto from starting
+MQTT_CONF_DIR = '/etc/mosquitto/conf.d'
+MQTT_OWN_CONF = f'{MQTT_CONF_DIR}/raspydarts.conf'
+MQTT_LISTENER = re.compile(r'^\s*listener\s+1883(\s|$)', re.MULTILINE)
+
+def mqtt_listener_doubled():
+    """
+    True if the listening of the script and another one on the same port are both declared
+    """
+    if not os.path.isfile(MQTT_OWN_CONF):
+        return False
+    try:
+        others = [os.path.join(MQTT_CONF_DIR, name) for name in os.listdir(MQTT_CONF_DIR)
+                  if name.endswith('.conf') and os.path.join(MQTT_CONF_DIR, name) != MQTT_OWN_CONF]
+    except OSError:
+        return False
+    for other in others + ['/etc/mosquitto/mosquitto.conf']:
+        try:
+            with open(other, encoding='utf-8', errors='replace') as conf:
+                if MQTT_LISTENER.search(conf.read()):
+                    return True
+        except OSError:
+            continue
+    return False
 
 def apply_system_settings(logs, version):
     """
     Run scripts/reglages_systeme.sh (sudo, without password since the installation) if it was
-    not run for this version. In the background : the initramfs may be rebuilt (a minute)
+    not run for this version : in the background, the initramfs may be rebuilt (a minute).
+    Also when the listening of the MQTT server is declared twice : at once, the LED need it
     """
     try:
         with open(SYSTEM_SETTINGS_STATE, encoding='utf-8') as state:
             done = state.read().strip()
     except OSError:
         done = None
-    if done == version.strip() or not os.path.isfile(SYSTEM_SETTINGS_SCRIPT):
+    if not os.path.isfile(SYSTEM_SETTINGS_SCRIPT):
         return
-    logs.info(f"System settings for {version} (done for {done}) : {SYSTEM_SETTINGS_SCRIPT}")
+    doubled = mqtt_listener_doubled()
+    if done == version.strip() and not doubled:
+        return
+    logs.info(f"System settings for {version} (done for {done}, MQTT listener doubled : {doubled}) : "
+              f"{SYSTEM_SETTINGS_SCRIPT}")
+    command = ['sudo', '-n', 'bash', SYSTEM_SETTINGS_SCRIPT, getpass.getuser()]
     try:
         with open(SYSTEM_SETTINGS_LOG, 'a', encoding='utf-8') as log_file:
-            subprocess.Popen(['sudo', '-n', 'bash', SYSTEM_SETTINGS_SCRIPT, getpass.getuser()], # pylint: disable=consider-using-with
-                             stdout=log_file, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL,
-                             start_new_session=True)
-    except OSError as exc:
+            if doubled:
+                subprocess.run(command, stdout=log_file, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL,
+                               timeout=180, check=False)
+            else:
+                subprocess.Popen(command, stdout=log_file, stderr=subprocess.STDOUT, # pylint: disable=consider-using-with
+                                 stdin=subprocess.DEVNULL, start_new_session=True)
+    except (OSError, subprocess.TimeoutExpired) as exc:
         logs.error(f"Unable to run {SYSTEM_SETTINGS_SCRIPT} ({exc})")
 
 # Statistics of the games : the server of raspyhub (contract : README of the project

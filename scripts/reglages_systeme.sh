@@ -34,6 +34,9 @@ warn() { printf '  \033[33m[!]\033[0m %s\n' "$1"; }
 # Raspy2DMD sur une autre machine se connecte au MQTT de la borne (raspydarts.local) pour
 # recevoir ses messages. mosquitto 2 (Trixie) n'ecoute que sur la machine elle-meme si rien
 # n'est dit ; mosquitto 1 (Buster) ecoutait sur le reseau, sans mot de passe.
+# Une seule ecoute par port : deux fichiers qui declarent « listener 1883 » empechent mosquitto
+# de demarrer (plus de LED, demarrage lent). L'installation de Raspy2DMD sur la borne pose deja
+# la sienne (raspy2dmd.conf) : la notre n'est alors pas mise (constate le 05/11 sur la 4.6.2)
 MQTT_CONF=/etc/mosquitto/conf.d/raspydarts.conf
 if [ -d /etc/mosquitto/conf.d ]; then
     NEW_MQTT=$(printf '%s\n' \
@@ -41,11 +44,29 @@ if [ -d /etc/mosquitto/conf.d ]; then
         '# comme sous Buster : Raspy2DMD sur une autre machine recoit les messages de la borne' \
         'listener 1883' \
         'allow_anonymous true')
-    if [ "$(cat "$MQTT_CONF" 2>/dev/null)" != "$NEW_MQTT" ]; then
+    OTHER_LISTENER=$(grep -l -E '^[[:space:]]*listener[[:space:]]+1883([[:space:]]|$)' \
+        /etc/mosquitto/mosquitto.conf /etc/mosquitto/conf.d/*.conf 2>/dev/null | grep -v -x "$MQTT_CONF" | head -1)
+    BEFORE_MQTT=$(cat "$MQTT_CONF" 2>/dev/null)
+    if [ -n "$OTHER_LISTENER" ]; then
+        rm -f "$MQTT_CONF"
+    else
         printf '%s\n' "$NEW_MQTT" > "$MQTT_CONF"
+    fi
+    if [ "$(cat "$MQTT_CONF" 2>/dev/null)" != "$BEFORE_MQTT" ] || ! systemctl is-active --quiet mosquitto; then
+        systemctl reset-failed mosquitto >/dev/null 2>&1
         systemctl restart mosquitto >/dev/null 2>&1
     fi
-    ok 'Serveur MQTT ouvert au reseau local (Raspy2DMD sur une autre machine)'
+    if ! systemctl is-active --quiet mosquitto && [ -f "$MQTT_CONF" ]; then
+        # Le serveur MQTT ne demarre pas avec notre ecoute : sans elle (LED d'abord)
+        rm -f "$MQTT_CONF"
+        systemctl reset-failed mosquitto >/dev/null 2>&1
+        systemctl restart mosquitto >/dev/null 2>&1
+        warn "mosquitto ne demarrait pas avec $MQTT_CONF : retire"
+    elif [ -n "$OTHER_LISTENER" ]; then
+        ok "Serveur MQTT ouvert au reseau local (par $OTHER_LISTENER)"
+    else
+        ok 'Serveur MQTT ouvert au reseau local (Raspy2DMD sur une autre machine)'
+    fi
 else
     warn 'mosquitto absent : MQTT non ouvert au reseau local'
 fi
