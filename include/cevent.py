@@ -303,7 +303,10 @@ class Event:
                     elif event == 'SB':
                         messages = ['stroke:SB']
                     elif event == 'quit' and device == 'DMD':
-                        messages = ['shutdwn|']
+                        # Nothing : powering off Raspy2DMD is the choice of « Éteindre Raspy2DMD
+                        # avec RaspyDarts » (cdmd.shutdown) ; shutdwn| here powered it off anyway, and
+                        # the one of this machine (Pico seul) powered the borne off at once
+                        messages = ['']
                         ack = False
                     elif event == 'quit':
                         messages = ['quit']
