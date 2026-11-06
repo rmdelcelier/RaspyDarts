@@ -28,8 +28,15 @@ from adafruit_mcp230xx.mcp23017 import MCP23017
 from threading import Thread
 from .ccoins import I2C_LOCK
 
-LAST_BUTTON = None
-COUNT_BUTTON = 0
+# A button counts once per press (passing from released to pressed) : read while held, a long press
+# or a bouncing contact moved several lines (MCP buttons, 06/11). Contact bounces under
+# DEBOUNCE are ignored ; arrows held repeat (REPEAT_DELAY, then every REPEAT_EVERY) to scroll
+DEBOUNCE = 0.05
+REPEAT_DELAY = 0.5
+REPEAT_EVERY = 0.15
+REPEATED = ('PIN_LEFT', 'PIN_RIGHT', 'PIN_UP', 'PIN_DOWN')
+# Held longer : a stuck button (wiring), banned until released
+STUCK = 10
 
 # Register of the MCP23017 used to recognise it : input polarity of the bank A (0 for the
 # game). Another chip on 0x20-0x27 (PCF8574 of a LCD, ...) does not give back what is written
@@ -169,6 +176,11 @@ class Gpio_extender:
             self.logs.info("No MCP found (addresses 0x20 to 0x27)")
 
         self.banned_button = None
+        # Button pressed at the last read, since when, last time it was returned, release time
+        self.held_button = None
+        self.held_since = 0
+        self.held_returned = 0
+        self.released_at = {}
         # TODO REMOVE RD
         #self._gpio_read_total = 0.0
         #self._gpio_read_count = 0
@@ -250,57 +262,48 @@ class Gpio_extender:
 
     def read_entries(self):
         """
-        Read the cards holding buttons
+        Read the cards holding buttons : the button just pressed, an arrow held (repeated), else None
         """
-        global LAST_BUTTON
-        global COUNT_BUTTON
         # False/0 si appuie sur le bouton
-        return_value = None
-        ban_value = None
-        
-        # TODO REMOVE RD
-        #t0 = time.perf_counter()
+        pressed = None
+
         # One read per card holding buttons
         # (the bus shared with the thread of the coin acceptor : include/ccoins.py)
         with I2C_LOCK:
             values = {index: self.chips[index].gpio for index in {index for index, _pin in self.pin_switcher}}
-        #t1 = time.perf_counter()
-        
-        ## Update cumulative stats (keep total in seconds)
-        #self._gpio_read_total += (t1 - t0)
-        #self._gpio_read_count += 1
-
-        ## Compute duration in milliseconds
-        #duration_ms = (t1 - t0) * 1000
-
-        ## Only log when the read took longer than 10 ms
-        #if duration_ms > 10.0:
-        #    print(f"(TIME MANAGER - EXCESSIVE READING) extended GPIO read duration: {duration_ms:.3f} ms")
-        #    self.logs.debug(
-        #        f"(TIME MANAGER - EXCESSIVE READING) extended GPIO read duration: {duration_ms:.3f} ms"
-        #    )
-        # TODO REMOVE RD
 
         for (index, pin), button in self.pin_switcher.items():
             value = values[index]
             if ((not value & 2**pin and button != 'PIN_MISSDART')
-                or (value & 2**pin and button == 'PIN_MISSDART')):
-                if button != self.banned_button:
-                    return_value = button
-                else:
-                    ban_value = button
+                    or (value & 2**pin and button == 'PIN_MISSDART')):
+                pressed = button
 
-        if return_value is not None and return_value == LAST_BUTTON:
-            COUNT_BUTTON += 1
-            if COUNT_BUTTON > 30:
-                self.banned_button = return_value
-                self.logs.warning(f"Button {self.banned_button} is banned !")
-        elif ban_value is None:
-            COUNT_BUTTON = 0
-            LAST_BUTTON = return_value
-            self.banned_button = None
+        now = time.monotonic()
+        if pressed != self.held_button:
+            # Released, or another button : a new press (unless a bounce of a release just before)
+            if self.held_button is not None:
+                self.released_at[self.held_button] = now
+            if self.banned_button is not None and pressed != self.banned_button:
+                self.logs.info(f"Button {self.banned_button} released : no longer banned")
+                self.banned_button = None
+            self.held_button = pressed
+            self.held_since = now
+            if pressed is None or now - self.released_at.get(pressed, 0) < DEBOUNCE:
+                return None
+            self.held_returned = now
+            return pressed
 
-        return return_value
+        if pressed is None or pressed == self.banned_button:
+            return None
+        if now - self.held_since > STUCK:
+            self.banned_button = pressed
+            self.logs.warning(f"Button {self.banned_button} is banned ! (held more than {STUCK} s)")
+            return None
+        # Held : only the arrows repeat
+        if pressed in REPEATED and now - self.held_since >= REPEAT_DELAY and now - self.held_returned >= REPEAT_EVERY:
+            self.held_returned = now
+            return pressed
+        return None
 
     def test_entries(self):
         """
