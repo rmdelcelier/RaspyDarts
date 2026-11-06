@@ -2317,12 +2317,18 @@ try:
                                 game.display_hit(ClickZones, players, actual_player, player_launch, 'MISS')
 
                             if early_player_button > 0 and post_dart != 3:
-                                for i in range(1, game.nb_darts - player_launch + 1):
-                                    players[actual_player].count_dart()
-                                    game.miss_button(players, actual_player, actual_round, player_launch + i)
-                                    publish_match()
-                                    if hasattr(game, "display_hit") and callable(game.display_hit):
-                                        game.display_hit(ClickZones, players, actual_player, player_launch, 'MISS')
+                                # The other darts missed at once : their « miss » (« penality ») not played again
+                                # (the one of the first dart heard : one sound, not one a dart)
+                                display.muted_sounds = ('miss', 'penality')
+                                try:
+                                    for i in range(1, game.nb_darts - player_launch + 1):
+                                        players[actual_player].count_dart()
+                                        game.miss_button(players, actual_player, actual_round, player_launch + i)
+                                        publish_match()
+                                        if hasattr(game, "display_hit") and callable(game.display_hit):
+                                            game.display_hit(ClickZones, players, actual_player, player_launch, 'MISS')
+                                finally:
+                                    display.muted_sounds = ()
                                 player_launch = game.nb_darts
                             if player_launch == game.nb_darts:
                                 ClickZones = game.refresh_game_screen(players, actual_round, game.max_round,

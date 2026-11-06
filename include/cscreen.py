@@ -12716,7 +12716,11 @@ class Screen(pygame.Surface):
     def play_sound(self, filename='beep1', wait_finish=False, duration=0):
         '''
         Play given sound. Search first in the home folder, then play default sound, or beep1 if not found.
+        Not the sounds of muted_sounds (the darts missed added at once by Joueur suivant : one
+        « miss » heard, not one a dart)
         '''
+        if filename in getattr(self, 'muted_sounds', ()):
+            return
         if self.audio_deferred:
             # Audio output opened at the first sound after the intro video
             self.show()
