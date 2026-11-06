@@ -1711,7 +1711,11 @@ class Screen(pygame.Surface):
                     'z': 'a'
                 }
 
-        return next_key.get(character, chr(ord(character) + 1))
+        # Not .get(character, chr(...)) : its default is computed first, and ord() refuses ', '
+        # (2 characters, LED numbers) : the input of the LED of the target ended the game
+        if character in next_key:
+            return next_key[character]
+        return chr(ord(character) + 1)
 
     def previous_key(self, character, context=None):
         '''
@@ -1746,7 +1750,10 @@ class Screen(pygame.Surface):
                     'é': 'e',
                     }
 
-        return previous_key.get(character, chr(ord(character)-1))
+        # Not .get(character, chr(...)) : see next_key
+        if character in previous_key:
+            return previous_key[character]
+        return chr(ord(character) - 1)
 
     def no_doubles(self, edit, players, selected):
         '''
