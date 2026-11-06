@@ -704,7 +704,26 @@ class Craspberry():
             pygame.event.clear(USEREVENT)
         if key not in (None, False):
             self.input_time = time.perf_counter()
+            self.confirm_screen_mode()
         return key
+
+    # Mode of the screen being tried (raspydarts-display, scripts/raspydarts_display.py) : kept at
+    # the first action on the cabinet, a sign that the screen shows the game
+    DISPLAY_TRIAL = '/run/raspydarts-display-essai'
+
+    def confirm_screen_mode(self):
+        """
+        At the first action of a start where the mode of the screen is tried : it is kept
+        """
+        if getattr(self, 'display_trial_done', False) or not os.path.exists(self.DISPLAY_TRIAL):
+            return
+        self.display_trial_done = True
+        try:
+            subprocess.Popen(['sudo', '-n', '/usr/local/bin/raspydarts-display', '--valider'], # pylint: disable=consider-using-with
+                             stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            self.logs.info("Mode of the screen tried : kept (first action on the cabinet)")
+        except OSError as error:
+            self.logs.error(f"Unable to keep the mode of the screen tried ({error})")
 
     def read_inputs(self, k_type=['num', 'alpha', 'fx', 'arrows'], 
                       specials=['enter', 'tab', 'backspace', 'left shift', 'escape', 'space', 'double-click', 'single-click', 'resize'],

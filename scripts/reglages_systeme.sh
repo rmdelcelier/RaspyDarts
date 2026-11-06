@@ -72,6 +72,16 @@ else
 fi
 
 # ------------------------------------------------------------
+# Mode de l'ecran (affichage gere par le firmware)
+# ------------------------------------------------------------
+# raspydarts-display (scripts/raspydarts_display.py) : mode natif de preference par son numero
+# standard, a l'essai jusqu'a la premiere action sur la borne, sortie HDMI forcee
+if [ -f /etc/systemd/system/raspydarts-display.service ]; then
+    install -m 755 "$PYDARTS/scripts/raspydarts_display.py" /usr/local/bin/raspydarts-display
+    ok "Mode de l'ecran : mode standard d'abord, a l'essai, sortie HDMI forcee"
+fi
+
+# ------------------------------------------------------------
 # Ecran de demarrage : logo qui pulse, pourcentage et ce qui se passe (pix.script)
 # ------------------------------------------------------------
 # Les messages du systeme sont masques et remplaces par un pourcentage d'avancement et une

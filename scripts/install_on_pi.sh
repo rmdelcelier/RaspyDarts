@@ -499,156 +499,6 @@ WantedBy=sysinit.target
 EOF
 }
 
-write_display_script() {
-    cat > "$1" <<'PYEOF'
-#!/usr/bin/python3
-"""
-RaspyDarts : adapte le mode HDMI du firmware a l'ecran branche (affichage gere par le
-firmware, comme sous Buster).
-
-Le firmware choisit seul le mode natif des ecrans standards (televisions, moniteurs). Pour
-un ecran au mode non standard (ex : 7 pouces en 1024x600), il prend un mode standard
-(720x576...) : le mode natif, lu dans l'EDID de l'ecran, est alors ecrit dans config.txt,
-puis le Pi redemarre une fois. Un autre ecran branche plus tard est traite de la meme facon.
-Jamais deux redemarrages pour le meme ecran.
-"""
-import hashlib
-import os
-import re
-import subprocess
-import sys
-
-CONFIG = '/boot/firmware/config.txt'
-STATE = '/var/lib/raspydarts/display'
-TVSERVICE = '/opt/vc/bin/tvservice'
-EDID_FILE = '/run/raspydarts-edid.dat'
-BEGIN = '# --- RaspyDarts : mode de l ecran (debut, gere par raspydarts-display) ---'
-END = '# --- RaspyDarts : mode de l ecran (fin) ---'
-# Rapports d'image connus de hdmi_timings (dernier parametre)
-ASPECTS = {1: 4 / 3, 2: 14 / 9, 3: 16 / 9, 4: 5 / 4, 5: 16 / 10, 6: 15 / 9, 7: 21 / 9, 8: 64 / 27}
-
-
-def log(message):
-    print(f"raspydarts-display : {message}", flush=True)
-
-
-def tvservice(*args):
-    return subprocess.run([TVSERVICE, *args], capture_output=True, text=True, check=False)
-
-
-def native_mode(edid):
-    """ Mode natif : premier descripteur de timing detaille de l'EDID """
-    d = edid[54:72]
-    clock = (d[0] | d[1] << 8) * 10000
-    if clock == 0:
-        return None
-    h_active = d[2] | (d[4] & 0xF0) << 4
-    h_blank = d[3] | (d[4] & 0x0F) << 8
-    v_active = d[5] | (d[7] & 0xF0) << 4
-    v_blank = d[6] | (d[7] & 0x0F) << 8
-    h_front = d[8] | (d[11] & 0xC0) << 2
-    h_sync = d[9] | (d[11] & 0x30) << 4
-    v_front = (d[10] >> 4) | (d[11] & 0x0C) << 2
-    v_sync = (d[10] & 0x0F) | (d[11] & 0x03) << 4
-    if d[17] & 0x80:
-        return None    # entrelace : laisse au firmware
-    h_pol = 1 if d[17] & 0x02 else 0
-    v_pol = 1 if d[17] & 0x04 else 0
-    rate = round(clock / ((h_active + h_blank) * (v_active + v_blank)))
-    aspect = min(ASPECTS, key=lambda key: abs(ASPECTS[key] - h_active / v_active))
-    timings = (f"{h_active} {h_pol} {h_front} {h_sync} {h_blank - h_front - h_sync} "
-               f"{v_active} {v_pol} {v_front} {v_sync} {v_blank - v_front - v_sync} "
-               f"0 0 0 {rate} 0 {clock} {aspect}")
-    return h_active, v_active, rate, timings
-
-
-def read_state():
-    try:
-        with open(STATE, encoding='utf-8') as state:
-            fingerprint, kind = state.read().split()[:2]
-            return fingerprint, kind
-    except (OSError, ValueError):
-        return None, None
-
-
-def write_state(fingerprint, kind):
-    os.makedirs(os.path.dirname(STATE), exist_ok=True)
-    with open(STATE, 'w', encoding='utf-8') as state:
-        state.write(f"{fingerprint} {kind}\n")
-
-
-def write_block(lines):
-    """ Remplace le bloc gere dans config.txt (lines vide : bloc retire) """
-    with open(CONFIG, encoding='utf-8') as config:
-        text = config.read()
-    text = re.sub(re.escape(BEGIN) + r'.*?' + re.escape(END) + r'\n?', '', text, flags=re.S)
-    if lines:
-        if not text.endswith('\n'):
-            text += '\n'
-        # Section [all] : s'applique quel que soit le modele de Pi
-        text += BEGIN + '\n[all]\n' + '\n'.join(lines) + '\n' + END + '\n'
-    with open(CONFIG + '.raspydarts', 'w', encoding='utf-8') as config:
-        config.write(text)
-    os.replace(CONFIG + '.raspydarts', CONFIG)
-
-
-def reboot(reason):
-    log(f"{reason} : redemarrage")
-    subprocess.run(['systemctl', '--no-block', 'reboot'], check=False)
-
-
-def main():
-    if os.path.exists('/dev/dri/card0') or not os.path.exists(TVSERVICE):
-        log("affichage gere par Linux (KMS) : rien a faire")
-        return
-    if tvservice('-d', EDID_FILE).returncode != 0 or not os.path.exists(EDID_FILE):
-        log("pas d'ecran (EDID illisible) : rien a faire")
-        return
-    with open(EDID_FILE, 'rb') as edid_file:
-        edid = edid_file.read()
-    if len(edid) < 128 or edid[:8] != b'\x00\xff\xff\xff\xff\xff\xff\x00':
-        log("EDID invalide : rien a faire")
-        return
-    mode = native_mode(edid)
-    if mode is None:
-        log("pas de mode natif utilisable dans l'EDID : rien a faire")
-        return
-    width, height, rate, timings = mode
-    current = re.search(r'(\d+)x(\d+) @', tvservice('-s').stdout)
-    fingerprint = hashlib.sha1(edid[:128]).hexdigest()[:16]
-    known, kind = read_state()
-    with open(CONFIG, encoding='utf-8') as config:
-        has_block = BEGIN in config.read()
-
-    if current and (int(current.group(1)), int(current.group(2))) == (width, height):
-        log(f"ecran en mode natif {width}x{height} @ {rate} Hz")
-        if known != fingerprint:
-            write_state(fingerprint, 'timings' if has_block else 'auto')
-        return
-    now = f"{current.group(1)}x{current.group(2)}" if current else "inconnu"
-    if known == fingerprint and kind == 'timings':
-        log(f"mode natif {width}x{height} deja impose mais ecran en {now} : rien de plus")
-        return
-    if has_block:
-        # Mode impose pour un autre ecran : le firmware choisit d'abord seul pour celui-ci
-        write_block([])
-        write_state(fingerprint, 'auto')
-        reboot(f"nouvel ecran ({now}, natif {width}x{height}), mode impose retire")
-        return
-    write_block(['hdmi_group=2', 'hdmi_mode=87', f'hdmi_timings={timings}', 'hdmi_drive=2'])
-    write_state(fingerprint, 'timings')
-    reboot(f"ecran en {now} au lieu de son mode natif {width}x{height} @ {rate} Hz, mode impose")
-
-
-if __name__ == '__main__':
-    try:
-        main()
-    except Exception as error:    # jamais bloquer le demarrage
-        log(f"erreur : {error}")
-        sys.exit(0)
-PYEOF
-}
-
 # Connexions reseau enregistrees par NetworkManager lui-meme, sans netplan
 write_network_unit() {
     cat > "$1" <<'EOF'
@@ -787,7 +637,7 @@ if [ "${1:-}" = "--test-patch" ]; then
     write_intro_unit "$2/raspydarts-intro.service"
     write_game_user_unit "$2/raspydarts.service"
     write_display_unit "$2/raspydarts-display.service"
-    write_display_script "$2/raspydarts-display"
+    cp "$(dirname "$0")/raspydarts_display.py" "$2/raspydarts-display"
     write_network_unit "$2/raspydarts-network.service"
     write_network_script "$2/raspydarts-network"
     exit 0
@@ -1054,8 +904,9 @@ if [ "$BUSTER_MODE" = "1" ]; then
     write_lightdm_unit /etc/systemd/system/lightdm.service
     ok "Affichage gere par le firmware (config.txt.kms : reglage d'origine)"
 
-    write_display_script /usr/local/bin/raspydarts-display
-    chmod 755 /usr/local/bin/raspydarts-display
+    # Mode de l'ecran : script du depot (scripts/raspydarts_display.py), remis a jour par
+    # scripts/reglages_systeme.sh
+    install -m 755 "$PYDARTS/scripts/raspydarts_display.py" /usr/local/bin/raspydarts-display
     write_display_unit /etc/systemd/system/raspydarts-display.service
     write_network_script /usr/local/bin/raspydarts-network
     chmod 755 /usr/local/bin/raspydarts-network
