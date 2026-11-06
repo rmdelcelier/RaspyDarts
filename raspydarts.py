@@ -2816,7 +2816,9 @@ finally:
     elif game_type == 'shutdown':
         import subprocess
         logs.debug("Shutdown")
-        dmd.shutdown(bool(Config.get_value('SectionGlobals', 'dmd_shutdown', False, True)))
+        # Default False : get_value gives the default for a value False (« Non » read as Oui) ;
+        # the default Oui comes from the default settings (cconfig)
+        dmd.shutdown(bool(Config.get_value('SectionGlobals', 'dmd_shutdown', False)))
         subprocess.call(['poweroff'], shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     elif game_type == 'restart':
         try:
