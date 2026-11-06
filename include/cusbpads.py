@@ -15,6 +15,12 @@ Programming protocol : the one of ch57x-keyboard-tool (github.com/kriomant/ch57x
 MIT licence), model 8890. The pad tells neither its keys nor its settings : the numbers of keys
 and knobs are given by the user. No serial number either : two pads are told apart by the USB
 port they are plugged in.
+
+Gamepads and « zero delay » cards (arcade buttons in USB, seen as a joystick) : read the same
+way, nothing to program. Their buttons (j + code of the system), their cross or stick (up,
+down, left, right) ; their settings kept by model (joy-vendor-product : any port, the same for
+two gamepads alike). A press counts once, only the directions held repeat (as the buttons of
+the MCP, include/cgpio_extender.py).
 """
 
 import json
@@ -81,6 +87,19 @@ DEFAULT_KNOB = {'menus': ['BTN_LEFT', 'BTN_VALIDATE', 'BTN_BACK', 'BTN_RIGHT'],
 
 # Codes of the keyboard (HID usage) : F13 for the keys, the 9 ones after F24 for the knobs ; the
 # codes the system gives for the latter (evdev)
+# Gamepads and zero delay cards : buttons of a joystick or a gamepad (BTN_JOYSTICK...BTN_THUMBR,
+# then BTN_TRIGGER_HAPPY...) ; a stick turned beyond half of its way is a direction, back under
+# a third it is released ; a direction held repeats (as the arrows of the MCP)
+JOYSTICK_BUTTONS = (range(0x120, 0x140), range(0x2c0, 0x2e8))
+DIRECTIONS = ('up', 'down', 'left', 'right')
+STICK_ON = 0.5
+STICK_OFF = 0.3
+REPEAT_DELAY = 0.5
+REPEAT_EVERY = 0.15
+# Buttons given to a gamepad never set : directions, then its buttons in their order
+DEFAULT_JOYSTICK = {'menus': (['BTN_UP', 'BTN_DOWN', 'BTN_LEFT', 'BTN_RIGHT'], ['BTN_VALIDATE', 'BTN_BACK']),
+                    'game': (['', '', '', ''], ['BTN_NEXTPLAYER', 'BTN_BACK', 'MISS'])}
+
 HID_F13 = 0x68
 HID_KNOBS = 0x74
 KNOB_KEYS = ('KEY_OPEN', 'KEY_HELP', 'KEY_PROPS', 'KEY_FRONT', 'KEY_STOP', 'KEY_AGAIN', 'KEY_UNDO',
@@ -131,6 +150,47 @@ def default_settings(keys=3, knobs=1):
     return settings
 
 
+def is_joystick_id(port):
+    """
+    True for the name of a gamepad (joy-vendor-product), False for the port of a pad
+    """
+    return str(port).startswith('joy-')
+
+
+def joystick_buttons(device):
+    """
+    Codes of the buttons of a gamepad or a zero delay card, sorted ; [] for another device
+    (a touch screen or a mouse : not a gamepad)
+    """
+    from evdev import ecodes    # pylint: disable=import-outside-toplevel
+    keys = device.capabilities().get(ecodes.EV_KEY, [])
+    if ecodes.BTN_TOUCH in keys or ecodes.BTN_LEFT in keys:
+        return []
+    return sorted(code for code in keys if any(code in codes for codes in JOYSTICK_BUTTONS))
+
+
+def default_joystick(name, buttons):
+    """
+    Settings of a gamepad never set : its directions and its buttons (DEFAULT_JOYSTICK)
+    """
+    names = list(DIRECTIONS) + [f'j{code}' for code in buttons]
+    settings = {'type': 'joystick', 'name': name, 'elements': names}
+    for context, (directions, firsts) in DEFAULT_JOYSTICK.items():
+        given = list(directions) + list(firsts)
+        settings[context] = {element: given[index] if index < len(given) else ''
+                             for index, element in enumerate(names)}
+    return settings
+
+
+def elements_of(pad):
+    """
+    Names of the elements of a pad or of a gamepad (settings of the screen)
+    """
+    if pad.get('type') == 'joystick':
+        return list(pad['elements'])
+    return elements(pad['keys'], pad['knobs'])
+
+
 def element_of(code):
     """
     Element of a pad which sent this code (evdev), None for a code not written by the game
@@ -172,7 +232,11 @@ class UsbPads:
         self.turns = []
         self.inputs = queue.Queue()
         self.devices = {}       # path -> (device, port)
-        self.ports = {}         # port -> name of the pad
+        self.ports = {}         # port -> name of the pad (joy-vendor-product for a gamepad)
+        # Gamepads : path -> their buttons, the bounds of their axes, the direction of each axis ;
+        # the directions held (path -> {direction: [since, last given, port]})
+        self.joysticks = {}
+        self.directions = {}
         self.lock = Lock()
         self.available = True
         try:
@@ -214,14 +278,18 @@ class UsbPads:
 
     def settings_of(self, port):
         """
-        Settings of the pad of this port. A pad moved to another port keeps those of the
-        only pad set, if there is one
+        Settings of the pad of this port (or of this gamepad). A pad moved to another port
+        keeps those of the only pad set, if there is one
         """
         with self.lock:
             if port in self.settings:
                 return self.settings[port]
-            if len(self.settings) == 1:
-                return next(iter(self.settings.values()))
+            if is_joystick_id(port):
+                buttons = next((info['buttons'] for info in self.joysticks.values() if info['id'] == port), [])
+                return default_joystick(self.ports.get(port, port), buttons)
+            pads = [settings for name, settings in self.settings.items() if not is_joystick_id(name)]
+            if len(pads) == 1:
+                return pads[0]
         return default_settings()
 
     def take(self):
@@ -247,10 +315,13 @@ class UsbPads:
             if not devices:
                 time.sleep(SCAN_DELAY)
                 continue
-            # A press held : woken up when it becomes a long one
+            # A press held : woken up when it becomes a long one ; a direction held, when it repeats
             wait = SCAN_DELAY
             if self.held:
                 wait = max(0.01, min(LONG_PRESS - (time.monotonic() - held[2]) for held in list(self.held.values())))
+            repeat = self.next_repeat()
+            if repeat is not None:
+                wait = max(0.01, min(wait, repeat))
             try:
                 ready, _w, _x = select.select(list(devices), [], [], min(wait, SCAN_DELAY))
             except (OSError, ValueError):
@@ -260,6 +331,7 @@ class UsbPads:
             for descriptor in ready:
                 self.read(devices[descriptor])
             self.long_presses()
+            self.repeat_directions()
 
     def scan(self):
         """
@@ -277,25 +349,34 @@ class UsbPads:
                 device = evdev.InputDevice(path)
             except OSError:
                 continue
+            buttons = []
             if (device.info.vendor, device.info.product) not in SUPPORTED:
-                device.close()
-                continue
+                buttons = joystick_buttons(device)
+                if not buttons:
+                    device.close()
+                    continue
             try:
                 # Its keys for the game only (not typed on the desktop as well)
                 device.grab()
             except OSError as error:
                 self.logs.warning(f"USB pad {path} not taken : {error}")
-            port = port_of(device.phys)
+            if buttons:
+                port = f'joy-{device.info.vendor:04x}-{device.info.product:04x}'
+                self.joysticks[path] = {'id': port, 'buttons': buttons, 'axes': self.axes_of(device), 'state': {}}
+            else:
+                port = port_of(device.phys)
             with self.lock:
                 self.devices[path] = (device, port)
                 self.ports[port] = device.name
-            self.logs.info(f"USB pad plugged : {device.name} on port {port} ({path})")
+            self.logs.info(f"USB {'gamepad' if buttons else 'pad'} plugged : {device.name} as {port} ({path})")
 
     def forget(self, path):
         """
         Pad unplugged
         """
         self.held.pop(path, None)
+        self.joysticks.pop(path, None)
+        self.directions.pop(path, None)
         with self.lock:
             device, port = self.devices.pop(path)
             if port not in [other for _d, other in self.devices.values()]:
@@ -318,6 +399,9 @@ class UsbPads:
             return
         with self.lock:
             port = self.devices.get(device.path, (None, None))[1]
+        if device.path in self.joysticks:
+            self.read_joystick(device.path, port, events)
+            return
         for event in events:
             # Pressed or released (not repeated by the system)
             if event.type != ecodes.EV_KEY or event.value == 2:
@@ -343,6 +427,86 @@ class UsbPads:
                 self.held[device.path] = [element, port, time.monotonic(), False]
             else:
                 self.press(port, element)
+
+    @staticmethod
+    def axes_of(device):
+        """
+        Axes of a gamepad giving directions : code -> (minimum, maximum). Its cross (hat) and
+        its first stick (or the joystick of a zero delay card)
+        """
+        from evdev import ecodes    # pylint: disable=import-outside-toplevel
+        axes = {}
+        for code, info in device.capabilities().get(ecodes.EV_ABS, []):
+            if code in (ecodes.ABS_X, ecodes.ABS_Y, ecodes.ABS_HAT0X, ecodes.ABS_HAT0Y) and info.max > info.min:
+                axes[code] = (info.min, info.max)
+        return axes
+
+    def read_joystick(self, path, port, events):
+        """
+        Buttons and directions of a gamepad : given once when pressed, the directions held repeat
+        """
+        from evdev import ecodes    # pylint: disable=import-outside-toplevel
+        info = self.joysticks[path]
+        for event in events:
+            if event.type == ecodes.EV_KEY and event.value == 1 and \
+                    any(event.code in codes for codes in JOYSTICK_BUTTONS):
+                self.give(port, f'j{event.code}')
+            elif event.type == ecodes.EV_ABS and event.code in info['axes']:
+                low, high = info['axes'][event.code]
+                # -1 .. 1 around the middle of the axis
+                value = (2 * (event.value - low) / (high - low)) - 1
+                vertical = event.code in (ecodes.ABS_Y, ecodes.ABS_HAT0Y)
+                before = info['state'].get(event.code)
+                if value >= STICK_ON:
+                    now = 'down' if vertical else 'right'
+                elif value <= -STICK_ON:
+                    now = 'up' if vertical else 'left'
+                elif abs(value) < STICK_OFF:
+                    now = None
+                else:
+                    now = before
+                if now == before:
+                    continue
+                info['state'][event.code] = now
+                held = self.directions.setdefault(path, {})
+                if before is not None:
+                    held.pop(before, None)
+                if now is not None:
+                    held[now] = [time.monotonic(), time.monotonic(), port]
+                    self.give(port, now)
+
+    def give(self, port, element):
+        """
+        An element of a gamepad pressed : shown on the screen of the settings, else its button
+        """
+        if self.capture:
+            self.inputs.put(f"USBPAD:{port}:{element}")
+        else:
+            self.press(port, element)
+
+    def next_repeat(self):
+        """
+        Seconds until a direction held repeats, None if none is held
+        """
+        now = time.monotonic()
+        waits = [max(REPEAT_DELAY - (now - since), REPEAT_EVERY - (now - last))
+                 for held in list(self.directions.values()) for since, last, _port in list(held.values())]
+        return min(waits) if waits else None
+
+    def repeat_directions(self):
+        """
+        Directions held long enough : given again (to go down a list), not on the screen of the
+        settings
+        """
+        if self.capture:
+            return
+        now = time.monotonic()
+        for held in list(self.directions.values()):
+            for times in list(held.values()):
+                since, last, port = times
+                if now - since >= REPEAT_DELAY and now - last >= REPEAT_EVERY:
+                    times[1] = now
+                    self.press(port, [name for name, value in held.items() if value is times][0])
 
     def button(self, port, element):
         """

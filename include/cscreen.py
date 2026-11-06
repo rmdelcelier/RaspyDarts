@@ -8640,7 +8640,9 @@ class Screen(pygame.Surface):
         '''
         Paramètres > Pavés USB : the pad chosen (several can be plugged), its numbers of keys
         and knobs, written in it (« Programmer le pavé »), then the button of each key in the
-        menus and in a game. A key pressed on a pad is lit on the screen (include/cusbpads.py)
+        menus and in a game. A key pressed on a pad is lit on the screen (include/cusbpads.py).
+        A gamepad or a zero delay card : nothing to program, its buttons learnt (« Apprendre
+        les boutons » : each action asked in turn, the button pressed is given it)
         '''
         from include import cusbpads    # pylint: disable=import-outside-toplevel
         pads = self.rpi.usb_pads
@@ -8667,9 +8669,11 @@ class Screen(pygame.Surface):
             if port is not None and port not in settings:
                 settings[port] = json.loads(json.dumps(pads.settings_of(port)))
             pad = settings.get(port)
-            names = cusbpads.elements(pad['keys'], pad['knobs']) if pad else []
-            # Lines : 0 the pad, 1 menus, 2 game, 3 back and save
-            lengths = [4, len(names), len(names), 2] if pad else [0, 0, 0, 1]
+            names = cusbpads.elements_of(pad) if pad else []
+            joystick = cusbpads.is_joystick_id(port)
+            # Lines : 0 the pad (a gamepad : its name, learn its buttons), 1 menus, 2 game, 3 back
+            # and save
+            lengths = [2 if joystick else 4, len(names), len(names), 2] if pad else [0, 0, 0, 1]
             if lengths[row] == 0:
                 row = 3
             column = min(column, lengths[row] - 1)
@@ -8731,9 +8735,12 @@ class Screen(pygame.Surface):
                 if row == 0 and column == 3:
                     status = self.usb_pads_program(pads, settings, port)
                     continue
+                if row == 0 and column == 1 and joystick:
+                    status = self.usb_pads_learn(cusbpads, pads, pad, port)
+                    continue
                 # The values of the cell : its list (as the pins of the MCP), + and - go one by one
                 if row == 0 and column == 0:
-                    values = [[number, f"{self.lang.translate('usb-pads-pad')} {number + 1} (USB {name})"]
+                    values = [[number, self.usb_pads_device(cusbpads, pads, name, number)]
                               for number, name in enumerate(plugged)]
                     current = plugged.index(port)
                 elif row == 0:
@@ -8762,6 +8769,55 @@ class Screen(pygame.Surface):
                         status = ('usb-pads-to-program', self.colorset['menu-warning'])
                 else:
                     pad[context][names[column]] = chosen
+
+    def usb_pads_device(self, cusbpads, pads, port, number):
+        '''
+        Name of a device of the screen of the USB pads : Boîtier 1 (USB 1.3), or the name of a
+        gamepad
+        '''
+        if cusbpads.is_joystick_id(port):
+            return f"{self.lang.translate('usb-pads-gamepad')} : {' '.join(str(pads.ports.get(port, port)).split())}"
+        return f"{self.lang.translate('usb-pads-pad')} {number + 1} (USB {port})"
+
+    # Actions asked in turn by « Apprendre les boutons » : (context, button)
+    USB_PADS_LEARN = (('menus', 'BTN_VALIDATE'), ('menus', 'BTN_BACK'), ('menus', 'BTN_UP'), ('menus', 'BTN_DOWN'),
+                      ('menus', 'BTN_LEFT'), ('menus', 'BTN_RIGHT'), ('game', 'BTN_NEXTPLAYER'), ('game', 'MISS'),
+                      ('game', 'BTN_BACK'), ('game', 'BTN_GAMEBUTTON'))
+
+    def usb_pads_learn(self, cusbpads, pads, pad, port):
+        '''
+        « Apprendre les boutons » of a gamepad : each action asked in turn, the button pressed on
+        the gamepad is given it (taken from the element which had it). Échap : passer, Entrée :
+        terminer. Kept by « Enregistrer ». Returns the line of state of the screen
+        '''
+        texts = {action[0]: self.lang.translate(action[1]) for action in cusbpads.ACTIONS}
+        labels = {'menus': self.lang.translate('usb-pads-menus'), 'game': self.lang.translate('usb-pads-game')}
+        learnt = 0
+        for context, button in self.USB_PADS_LEARN:
+            self.display_background()
+            self.menu_header(self.lang.translate('usb-pads'), self.usb_pads_device(cusbpads, pads, port, 0))
+            self.message([f"{self.lang.translate('usb-pads-learn-press')} {labels[context]} : {texts[button]}"],
+                         0, None, 'middle', 'big', refresh=False)
+            self.blit_text(self.lang.translate('usb-pads-learn-hint'), self.res_x_16, 11 * self.res_y_16,
+                           14 * self.res_x_16, self.res_y_16, self.colorset['menu-text-white'])
+            self.update_screen()
+            while True:
+                key = self.rpi.listen_inputs([], ['escape', 'enter'], timeout=1000)
+                if isinstance(key, str) and key.startswith('USBPAD:'):
+                    _usbpad, pressed_port, element = key.split(':')
+                    if pressed_port != port or element not in pad[context]:
+                        continue
+                    for other in pad[context]:
+                        if pad[context][other] == button:
+                            pad[context][other] = ''
+                    pad[context][element] = button
+                    learnt += 1
+                    break
+                if key == 'escape' or key in ESCAPE_KEYS:
+                    break
+                if key == 'enter' or key in ENTER_KEYS:
+                    return ('usb-pads-learnt', self.colorset['menu-ok']) if learnt else None
+        return ('usb-pads-learnt', self.colorset['menu-ok']) if learnt else None
 
     def usb_pads_choose(self, values, current):
         '''
@@ -8836,11 +8892,15 @@ class Screen(pygame.Surface):
 
         # Line of the pad
         translate = self.lang.translate
-        texts = [(f"{translate('usb-pads-pad')} {plugged.index(port) + 1}/{len(plugged)} (USB {port})", None),
-                 (translate('usb-pads-keys'), str(pad['keys'])),
-                 (translate('usb-pads-knobs'), str(pad['knobs'])),
-                 (translate('usb-pads-program'), None)]
-        width = (14 * unit_x - 3 * gap) / 4
+        if cusbpads.is_joystick_id(port):
+            texts = [(f"{self.usb_pads_device(cusbpads, self.rpi.usb_pads, port, 0)} ({plugged.index(port) + 1}/{len(plugged)})", None),
+                     (translate('usb-pads-learn'), None)]
+        else:
+            texts = [(f"{translate('usb-pads-pad')} {plugged.index(port) + 1}/{len(plugged)} (USB {port})", None),
+                     (translate('usb-pads-keys'), str(pad['keys'])),
+                     (translate('usb-pads-knobs'), str(pad['knobs'])),
+                     (translate('usb-pads-program'), None)]
+        width = (14 * unit_x - (len(texts) - 1) * gap) / len(texts)
         for index, (text, value) in enumerate(texts):
             cell((unit_x + index * (width + gap), 3 * unit_y, width, unit_y), text, *colors(selected == (0, index)),
                  f'cell:0:{index}', value)
@@ -8865,7 +8925,7 @@ class Screen(pygame.Surface):
                     label_y = pos_y + heights[0] + gap + number * (heights[1] + gap)
                     self.blit_text(labels[context], unit_x, label_y, label_width, heights[1], self.colorset['menu-text-white'], align='Left')
             header = self.colorset['menu-ok'] if name in lit else self.colorset['menu-shortcut']
-            cell((pos_x, pos_y, width, heights[0]), self.usb_pads_element(name), header, self.colorset['menu-text-black'], None)
+            cell((pos_x, pos_y, width, heights[0]), self.usb_pads_element(name, pad), header, self.colorset['menu-text-black'], None)
             for number, context in enumerate(('menus', 'game')):
                 cell((pos_x, pos_y + heights[0] + gap + number * (heights[1] + gap), width, heights[1]),
                      texts.get(pad[context].get(name, ''), ''), *colors(selected == (number + 1, index)),
@@ -8875,11 +8935,16 @@ class Screen(pygame.Surface):
         click_zones['save'] = self.display_button(selected == (3, 1), 'save', special='return')
         return click_zones
 
-    def usb_pads_element(self, name):
+    def usb_pads_element(self, name, pad=None):
         '''
         Name of an element of a pad shown : Touche 1, Molette gauche (Molette gauche 2 with
-        several knobs)
+        several knobs) ; of a gamepad : Haut, Bas, Gauche, Droite, Bouton 1...
         '''
+        if name in ('up', 'down', 'left', 'right'):
+            return self.lang.translate(f'usb-pads-{name}')
+        if name.startswith('j'):
+            buttons = [element for element in (pad or {}).get('elements', []) if element.startswith('j')]
+            return f"{self.lang.translate('usb-pads-button')} {buttons.index(name) + 1 if name in buttons else name[1:]}"
         if name.startswith('k'):
             return f"{self.lang.translate('usb-pads-key')} {name[1:]}"
         knob, action = name[1:].split('-')

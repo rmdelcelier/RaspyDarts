@@ -4268,13 +4268,13 @@ msgid "editor-shape-pill"
 msgstr "tondo (pulsante quadrato: cerchio)"
 
 msgid "usb-pads"
-msgstr "Configurazione pulsanti e manopole USB"
+msgstr "Configurazione pulsanti, manopole e gamepad USB"
 
 msgid "usb-pads-sub"
 msgstr "I tasti premuti o le manopole ruotate si illumineranno qui"
 
 msgid "usb-pads-none"
-msgstr "Nessun keypad USB collegato"
+msgstr "Nessun keypad o gamepad USB collegato"
 
 msgid "usb-pads-pad"
 msgstr "Controller"
@@ -5180,4 +5180,23 @@ msgstr "Orizzontale"
 
 msgid "ho_one-display-classic"
 msgstr "Classica"
+
+
+msgid "usb-pads-gamepad"
+msgstr "Gamepad"
+
+msgid "usb-pads-learn"
+msgstr "Imparare i pulsanti"
+
+msgid "usb-pads-learn-press"
+msgstr "Premete il pulsante per"
+
+msgid "usb-pads-learn-hint"
+msgstr "Esc: salta questa azione · Invio: termina"
+
+msgid "usb-pads-learnt"
+msgstr "Pulsanti imparati: provateli, poi salvate"
+
+msgid "usb-pads-button"
+msgstr "Pulsante"
 

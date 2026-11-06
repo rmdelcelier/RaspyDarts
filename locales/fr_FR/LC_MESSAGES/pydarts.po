@@ -4411,13 +4411,13 @@ msgstr "rond (bouton carré : cercle)"
 
 
 msgid "usb-pads"
-msgstr "Paramétrage boutons et molettes USB"
+msgstr "Paramétrage boutons, molettes et manettes USB"
 
 msgid "usb-pads-sub"
 msgstr "Une touche ou la molette actionnée s'allume ici"
 
 msgid "usb-pads-none"
-msgstr "Aucun boîtier USB de boutons branché"
+msgstr "Aucun boîtier de boutons ni manette USB branché"
 
 msgid "usb-pads-pad"
 msgstr "Boîtier"
@@ -5190,3 +5190,22 @@ msgstr "MP3 : arrêter"
 
 msgid "PIN_MUSIC_STOP"
 msgstr "MP3 : arrêter"
+
+msgid "usb-pads-gamepad"
+msgstr "Manette"
+
+msgid "usb-pads-learn"
+msgstr "Apprendre les boutons"
+
+msgid "usb-pads-learn-press"
+msgstr "Appuyez sur le bouton pour"
+
+msgid "usb-pads-learn-hint"
+msgstr "Échap : passer cette action · Entrée : terminer"
+
+msgid "usb-pads-learnt"
+msgstr "Boutons appris : essayez-les, puis enregistrez"
+
+msgid "usb-pads-button"
+msgstr "Bouton"
+

@@ -4267,13 +4267,13 @@ msgid "editor-shape-pill"
 msgstr "rund (quadratischer Button: Kreis)"
 
 msgid "usb-pads"
-msgstr "USB-Tasten- und Drehregler-Konfiguration"
+msgstr "USB-Tasten-, Drehregler- und Gamepad-Konfiguration"
 
 msgid "usb-pads-sub"
 msgstr "Gedrückte Tasten oder gedrehte Regler leuchten hier auf"
 
 msgid "usb-pads-none"
-msgstr "Kein USB-Tastenfeld angeschlossen"
+msgstr "Kein USB-Tastenfeld und kein Gamepad angeschlossen"
 
 msgid "usb-pads-pad"
 msgstr "Steuerbox"
@@ -5113,4 +5113,23 @@ msgstr "Horizontal"
 
 msgid "ho_one-display-classic"
 msgstr "Klassisch"
+
+
+msgid "usb-pads-gamepad"
+msgstr "Gamepad"
+
+msgid "usb-pads-learn"
+msgstr "Tasten anlernen"
+
+msgid "usb-pads-learn-press"
+msgstr "Drücken Sie die Taste für"
+
+msgid "usb-pads-learn-hint"
+msgstr "Esc: diese Aktion überspringen · Enter: beenden"
+
+msgid "usb-pads-learnt"
+msgstr "Tasten angelernt: ausprobieren, dann speichern"
+
+msgid "usb-pads-button"
+msgstr "Taste"
 

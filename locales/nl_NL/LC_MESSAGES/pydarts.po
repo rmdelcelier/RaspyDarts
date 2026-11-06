@@ -4389,13 +4389,13 @@ msgstr "rond (vierkante knop: cirkel)"
 
 
 msgid "usb-pads"
-msgstr "Instellingen USB-knoppen en draaiknoppen"
+msgstr "Instellingen USB-knoppen, draaiknoppen en gamepads"
 
 msgid "usb-pads-sub"
 msgstr "Een ingedrukte toets of gedraaide knop licht hier op"
 
 msgid "usb-pads-none"
-msgstr "Geen USB-knoppenbehuizing aangesloten"
+msgstr "Geen USB-knoppenbehuizing of gamepad aangesloten"
 
 msgid "usb-pads-pad"
 msgstr "Behuizing"
@@ -5167,4 +5167,23 @@ msgstr "Horizontaal"
 
 msgid "ho_one-display-classic"
 msgstr "Klassiek"
+
+
+msgid "usb-pads-gamepad"
+msgstr "Gamepad"
+
+msgid "usb-pads-learn"
+msgstr "Knoppen aanleren"
+
+msgid "usb-pads-learn-press"
+msgstr "Druk op de knop voor"
+
+msgid "usb-pads-learn-hint"
+msgstr "Esc: deze actie overslaan · Enter: afronden"
+
+msgid "usb-pads-learnt"
+msgstr "Knoppen aangeleerd: probeer ze en sla dan op"
+
+msgid "usb-pads-button"
+msgstr "Knop"
 

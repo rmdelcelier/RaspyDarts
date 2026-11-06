@@ -4272,13 +4272,13 @@ msgid "editor-shape-pill"
 msgstr "round (square button: circle)"
 
 msgid "usb-pads"
-msgstr "USB buttons and knobs setup"
+msgstr "USB buttons, knobs and gamepads setup"
 
 msgid "usb-pads-sub"
 msgstr "Pressed buttons or turned knobs illuminate here"
 
 msgid "usb-pads-none"
-msgstr "No USB button box connected"
+msgstr "No USB button box or gamepad connected"
 
 msgid "usb-pads-pad"
 msgstr "Control box"
@@ -5385,4 +5385,23 @@ msgstr "Horizontal"
 
 msgid "ho_one-display-classic"
 msgstr "Classic"
+
+
+msgid "usb-pads-gamepad"
+msgstr "Gamepad"
+
+msgid "usb-pads-learn"
+msgstr "Learn the buttons"
+
+msgid "usb-pads-learn-press"
+msgstr "Press the button for"
+
+msgid "usb-pads-learn-hint"
+msgstr "Esc: skip this action · Enter: finish"
+
+msgid "usb-pads-learnt"
+msgstr "Buttons learnt: try them, then save"
+
+msgid "usb-pads-button"
+msgstr "Button"
 

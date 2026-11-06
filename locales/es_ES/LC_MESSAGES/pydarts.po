@@ -4272,13 +4272,13 @@ msgid "editor-shape-pill"
 msgstr "redondo (botón cuadrado: círculo)"
 
 msgid "usb-pads"
-msgstr "Configuración de botones y mandos USB"
+msgstr "Configuración de botones, mandos y gamepads USB"
 
 msgid "usb-pads-sub"
 msgstr "Los botones pulsados o mandos girados se iluminan aquí"
 
 msgid "usb-pads-none"
-msgstr "Ninguna botonera USB conectada"
+msgstr "Ninguna botonera ni gamepad USB conectado"
 
 msgid "usb-pads-pad"
 msgstr "Caja de control"
@@ -5118,4 +5118,23 @@ msgstr "Horizontal"
 
 msgid "ho_one-display-classic"
 msgstr "Clásica"
+
+
+msgid "usb-pads-gamepad"
+msgstr "Gamepad"
+
+msgid "usb-pads-learn"
+msgstr "Aprender los botones"
+
+msgid "usb-pads-learn-press"
+msgstr "Pulse el botón para"
+
+msgid "usb-pads-learn-hint"
+msgstr "Esc: saltar esta acción · Intro: terminar"
+
+msgid "usb-pads-learnt"
+msgstr "Botones aprendidos: pruébelos y luego guarde"
+
+msgid "usb-pads-button"
+msgstr "Botón"
 
