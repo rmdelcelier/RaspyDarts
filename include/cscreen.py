@@ -6665,7 +6665,8 @@ class Screen(pygame.Surface):
 
             if option in ('endgamestats', 'bypass-stats', 'onscreenbuttons', 'fullscreen',
                     'keeporder', 'play_firstname', 'nextplayer_music', 'print_dartstroke', 'light_target', 'light_strip', 'idle_light',
-                    'competition_mode', 'exhibition_mode', 'illumination_mode', 'fast_games_mode', 'only_favorites_games_mode', 'check_for_updates'):  
+                    'competition_mode', 'exhibition_mode', 'illumination_mode', 'fast_games_mode', 'only_favorites_games_mode', 'check_for_updates',
+                    'dmd_shutdown', 'dmd_player_color'):  
                 option_type = 'check'
                 option_values = []
                 if customization[option] == 'False' or customization[option] is False:
@@ -6756,7 +6757,8 @@ class Screen(pygame.Surface):
             
             if option in ('pnj_time', 'nextplayer_sound_duration', 'nextplayer_music', 'releasedartstime', 'onscreenbuttons', 'keeporder', 'videos', \
                 'play_firstname', 'print_dartstroke', 'light_target', 'light_strip', 'waitevent_time', 'competition_mode', \
-                'illumination_mode', 'illumination_color', 'idle_light', 'idle_strip_color', 'idle_target_color'):
+                'illumination_mode', 'illumination_color', 'idle_light', 'idle_strip_color', 'idle_target_color',
+                'dmd_player_color'):
                 game_customization.append([option, customization[option], option_type, max_value, option_values, min_value, zero])
             else:
                 general_customization.append([option, customization[option], option_type, max_value, option_values, min_value, zero])
@@ -9338,6 +9340,14 @@ class Screen(pygame.Surface):
     RASPY2DMD_VERSION = '/Raspy2DMD/web/VERSION'
     RASPY2DMD_CONFIG = '/Medias/Raspy2DMD.cfg'
     RASPY2DMD_UPDATE = 'update'
+    # Its removal (installed by this screen : « Pico seul », /Raspy2DMD/.pico_seul) : the script of
+    # Raspy2DMD (confirmed by « oui » on its input), then the settings of the system again (MQTT
+    # open to the network : the listener of Raspy2DMD may be gone with it)
+    RASPY2DMD_UNINSTALL = 'uninstall'
+    RASPY2DMD_UNINSTALLER = 'https://raw.githubusercontent.com/rmdelcelier/Raspy2DMD/main/scripts/uninstall_raspy2dmd.sh'
+    RASPY2DMD_UNINSTALL_UNIT = 'raspy2dmd-uninstall'
+    RASPY2DMD_UNINSTALL_LOG = 'logs/raspy2dmd_uninstall.log'
+    RASPY2DMD_PICO_SEUL = '/Raspy2DMD/.pico_seul'
     # Its update followed this long at most (download of about 40 MB, copy, its scripts)
     RASPY2DMD_UPDATE_TIME = 600
 
@@ -9605,6 +9615,59 @@ class Screen(pygame.Surface):
         self.message([translate('raspy2dmd-install-error')], 5000, self.colorset['menu-ko'], 'middle', 'big')
         return False
 
+    def raspy2dmd_uninstall(self):
+        '''
+        Raspy2DMD installed with RaspyDarts (Pico seul) removed : asked, then its script of
+        removal with everything (program, its medias /Medias, its databases), its database
+        server stopped (RaspyDarts does not use it), the settings of the system again. About a
+        minute, followed on the screen. True : removed
+        '''
+        translate = self.lang.translate
+        if not self.ask_yes_no(translate('raspy2dmd-uninstall-question'), translate('raspy2dmd-uninstall-explain')):
+            return False
+        import socket
+        try:
+            socket.create_connection(('raw.githubusercontent.com', 443), timeout=5).close()
+        except OSError:
+            self.message([translate('raspy2dmd-no-internet')], 3000, self.colorset['menu-ko'], 'middle', 'big')
+            return False
+        log = os.path.abspath(self.RASPY2DMD_UNINSTALL_LOG)
+        script = '/tmp/raspy2dmd_uninstall.sh'
+        settings = os.path.abspath(os.path.join('scripts', 'reglages_systeme.sh'))
+        user = os.environ.get('USER') or 'raspydarts'
+        command = (f"{{ curl -fsSL {self.RASPY2DMD_UNINSTALLER} -o {script} && echo oui | bash {script} --full; "
+                   f"status=$?; rm -f {script}; "
+                   f"[ -d {self.RASPY2DMD_DIR} ] || systemctl disable --now mariadb; "
+                   f"bash {settings} {user}; exit $status; }} > {log} 2>&1")
+        try:
+            subprocess.run(['sudo', 'systemd-run', f'--unit={self.RASPY2DMD_UNINSTALL_UNIT}', '--collect',
+                            '/bin/bash', '-c', command], check=True, timeout=30,
+                           stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            self.logs.info(f"Raspy2DMD : removal launched ({command})")
+        except Exception as error:    # pylint: disable=broad-except
+            self.logs.error(f"Raspy2DMD : removal not launched : {error}")
+            self.message([translate('raspy2dmd-uninstall-error')], 5000, self.colorset['menu-ko'], 'middle', 'big')
+            return False
+        started = time.monotonic()
+        while time.monotonic() - started < 300:
+            elapsed = int(time.monotonic() - started)
+            self.message([f"{translate('raspy2dmd-uninstalling')} ({elapsed // 60}:{elapsed % 60:02d})"],
+                         1000, None, 'middle', 'big')
+            try:
+                active = subprocess.run(['systemctl', 'is-active', '--quiet', self.RASPY2DMD_UNINSTALL_UNIT],
+                                        check=False, timeout=5).returncode == 0
+            except Exception:    # pylint: disable=broad-except
+                active = False
+            if not active:
+                break
+        if self.raspy2dmd_installed():
+            self.logs.error(f"Raspy2DMD : not removed (see {self.RASPY2DMD_UNINSTALL_LOG})")
+            self.message([translate('raspy2dmd-uninstall-error')], 5000, self.colorset['menu-ko'], 'middle', 'big')
+            return False
+        self.logs.info("Raspy2DMD : removed")
+        self.message([translate('raspy2dmd-uninstalled')], 3000, self.colorset['menu-ok'], 'middle', 'big')
+        return True
+
     def raspy2dmd_menu(self, dispatcher):
         '''
         The DMD display Raspy2DMD : the QR code of its web page (all its settings, from a
@@ -9636,6 +9699,8 @@ class Screen(pygame.Surface):
                         ('raspy2dmd-clock', 'time|start'),
                         ('raspy2dmd-demo', 'demo|gif')] if running else [('raspy2dmd-start', None)]
             commands.append(('raspy2dmd-check-update', self.RASPY2DMD_UPDATE))
+            if os.path.isfile(self.RASPY2DMD_PICO_SEUL):
+                commands.append(('raspy2dmd-uninstall', self.RASPY2DMD_UNINSTALL))
             nb_elements = len(commands)
             selected = min(selected, nb_elements + 1)
             self.display_background()
@@ -9675,6 +9740,10 @@ class Screen(pygame.Surface):
                     continue
                 if commands[selected - 1][1] == self.RASPY2DMD_UPDATE:
                     self.raspy2dmd_update()
+                    continue
+                if commands[selected - 1][1] == self.RASPY2DMD_UNINSTALL:
+                    if self.raspy2dmd_uninstall():
+                        return
                     continue
                 dispatcher.mqtt_publish(self.RASPY2DMD_TOPIC, commands[selected - 1][1])
                 self.message([self.lang.translate('raspy2dmd-sent')], 1000, self.colorset['menu-ok'], 'middle', 'big')

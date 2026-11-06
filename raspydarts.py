@@ -540,6 +540,7 @@ play_firstname = bool(Config.get_value('SectionGlobals', 'play_firstname'))
 # The music at the start of each turn (option nextplayer_music)
 nextplayer_music = bool(Config.get_value('SectionGlobals', 'nextplayer_music'))
 print_dartstroke = bool(Config.get_value('SectionGlobals', 'print_dartstroke'))
+dmd_player_color = bool(Config.get_value('SectionGlobals', 'dmd_player_color', False))
 light_target = bool(Config.get_value('SectionGlobals', 'light_target'))
 light_strip = bool(Config.get_value('SectionGlobals', 'light_strip'))
 illumination_mode = bool(Config.get_value('SectionGlobals', 'illumination_mode'))
@@ -662,6 +663,9 @@ def report_error(context):
 
 try:
     while game_type not in ('restart', 'quit', 'shutdown'):
+
+        # Out of a game : the texts of Raspy2DMD in its colours
+        dmd.player_color = None
 
         # An error to report (a crash before this start, a game which failed) : once
         error_report = cerrors.take()
@@ -1221,6 +1225,7 @@ try:
                         play_firstname = bool(Config.get_value('SectionGlobals', 'play_firstname'))
                         nextplayer_music = bool(Config.get_value('SectionGlobals', 'nextplayer_music'))
                         print_dartstroke = bool(Config.get_value('SectionGlobals', 'print_dartstroke'))
+                        dmd_player_color = bool(Config.get_value('SectionGlobals', 'dmd_player_color', False))
                         light_target = bool(Config.get_value('SectionGlobals', 'light_target'))
                         light_strip = bool(Config.get_value('SectionGlobals', 'light_strip'))
                         competition_mode = bool(Config.get_value('SectionGlobals', 'competition_mode'))
@@ -1748,6 +1753,8 @@ try:
                 # pre_dart - Is a game method that prepares game before each dart
                 next_stroke = None
                 ##############
+                # Its texts in the colour of the player whose turn it is (option)
+                dmd.player_color = players[actual_player].color if dmd_player_color else None
                 pre_dart = game.pre_dart_check(players, actual_round, actual_player, player_launch)
                 publish_match()
 
@@ -2803,7 +2810,7 @@ finally:
     elif game_type == 'shutdown':
         import subprocess
         logs.debug("Shutdown")
-        dmd.shutdown()
+        dmd.shutdown(bool(Config.get_value('SectionGlobals', 'dmd_shutdown', False, True)))
         subprocess.call(['poweroff'], shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     elif game_type == 'restart':
         try:

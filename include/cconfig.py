@@ -83,6 +83,10 @@ DefaultConfig['SectionGlobals'] = {
     'fast_games_mode': False,
     'only_favorites_games_mode': False,
     'check_for_updates': True,
+    # Raspy2DMD : powered off with RaspyDarts (Quitter : « shutdwn| » sent, the one of this
+    # machine stopped first) ; in a game, its texts in the colour of the player (« msgcolor »)
+    'dmd_shutdown': True,
+    'dmd_player_color': False,
     # Output of the sound : auto (a USB card when plugged, else HDMI), hdmi, jack, usb
     # (include/caudio.py)
     'sound_output': 'auto',
@@ -1354,6 +1358,9 @@ class Config:
         self.conf += f"only_favorites_games_mode:{Global['only_favorites_games_mode']}\n"
         self.conf += "### Check for update available\n"
         self.conf += f"check_for_updates:{Global['check_for_updates']}\n"
+        self.conf += "### Raspy2DMD : powered off with RaspyDarts ; its texts in the colour of the player in a game\n"
+        self.conf += f"dmd_shutdown:{Global.get('dmd_shutdown', True)}\n"
+        self.conf += f"dmd_player_color:{Global.get('dmd_player_color', False)}\n"
         self.conf += "### Output of the sound : auto (USB sound card when plugged, else HDMI), hdmi, jack, usb\n"
         self.conf += f"sound_output:{Global.get('sound_output', 'auto')}\n"
         self.conf += "### Lecteur MP3 : source of the tracks (empty : USB keys, /a/folder, //server/share, server:/path) and volume\n"

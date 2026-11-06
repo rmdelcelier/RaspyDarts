@@ -21,6 +21,9 @@ class Cdmd():
 
         self.init_insults()
         self.insults = False
+        # In a game, with « Afficher les textes Raspy2DMD à la couleur du joueur » : the colour
+        # of the player whose turn it is (its texts sent by msgcolor) ; None : msg, msgmove
+        self.player_color = None
 
     def init_insults(self):
         """
@@ -52,20 +55,70 @@ class Cdmd():
         """
         self.event.publish(msg, limit="DMD")
 
-    def shutdown(self):
+    def shutdown(self, enabled=True):
         """
-        Message to send in order to shutdown the rpi of the DMD. Not when Raspy2DMD is on this
-        machine : it would power it off at once (forced), while RaspyDarts powers it off cleanly
+        Raspy2DMD powered off with RaspyDarts (option « Éteindre Raspy2DMD avec RaspyDarts ») :
+        « shutdwn| » to all the Raspy2DMD listening (their own Raspberry). The one of this machine
+        (Pico seul) would power it off at once (forced), while RaspyDarts powers it off cleanly :
+        stopped first, it does not receive it (the others, on the network, do : mode double)
         """
-        if os.path.isdir('/Raspy2DMD'):
-            self.logs.debug("Raspy2DMD on this machine : no shutdwn sent, RaspyDarts powers off")
+        if not enabled:
+            self.logs.debug("Raspy2DMD not powered off with RaspyDarts (option)")
             return
+        if os.path.isdir('/Raspy2DMD'):
+            import subprocess
+            import time
+            pattern = 'python.*ServerRaspy2DMD[.]py'
+            try:
+                if os.path.isfile('/etc/systemd/system/raspy2dmd.service'):
+                    subprocess.run(['sudo', '-n', 'systemctl', 'stop', 'raspy2dmd'], check=False, timeout=15,
+                                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                subprocess.run(['sudo', '-n', 'pkill', '-f', pattern], check=False, timeout=10,
+                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                for _ in range(25):
+                    if subprocess.run(['pgrep', '-f', pattern], check=False, timeout=5,
+                                      stdout=subprocess.DEVNULL).returncode != 0:
+                        break
+                    time.sleep(0.2)
+                else:
+                    self.logs.warning("Raspy2DMD of this machine still running : no shutdwn sent")
+                    return
+            except Exception as error:    # pylint: disable=broad-except
+                self.logs.warning(f"Raspy2DMD of this machine not stopped ({error}) : no shutdwn sent")
+                return
+            self.logs.debug("Raspy2DMD of this machine stopped : shutdwn sent to the others")
         self.send('shutdwn|')
+        # Delivered before the Raspberry is powered off
+        import time
+        time.sleep(1)
+
+    @staticmethod
+    def rgb(color):
+        """
+        A colour of RaspyDarts (r, g, b), a name or #rrggbb) as Raspy2DMD wants it : R;G;B
+        """
+        try:
+            if isinstance(color, (tuple, list)):
+                red, green, blue = (int(value) for value in color[:3])
+            else:
+                import pygame    # pylint: disable=import-outside-toplevel
+                found = pygame.Color(str(color).strip())
+                red, green, blue = found.r, found.g, found.b
+            return f'{red};{green};{blue}'
+        except Exception:    # pylint: disable=broad-except
+            return None
 
     def send_text(self, text, tempo=None, sens=None, iteration=None):
         """
-        Function used to send text to dmd
+        Function used to send text to dmd. In a game, with the option : in the colour of the
+        player (msgcolor|text|R;G;B|0;0;0|sens|iterations : all its fields given)
         """
+        color = self.rgb(self.player_color) if self.player_color is not None else None
+        if color:
+            if not sens and len(text) > 22:
+                sens = 'left'
+            self.send(f"msgcolor|{text}|{color}|0;0;0|{sens or ''}|{(iteration or 1) if sens else ''}")
+            return
 
         if sens :
             if iteration :

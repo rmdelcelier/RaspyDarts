@@ -5159,3 +5159,29 @@ msgstr "El juego tuvo un problema"
 msgid "error-report-scan"
 msgstr "Escanee el código QR para informarnos en GitHub"
 
+
+msgid "raspy2dmd-uninstall"
+msgstr "Desinstalar Raspy2DMD"
+
+msgid "raspy2dmd-uninstall-question"
+msgstr "¿Desinstalar Raspy2DMD de la máquina?"
+
+msgid "raspy2dmd-uninstall-explain"
+msgstr "Se borran el programa, sus ajustes y sus medios (/Medias). Se necesita Internet, un minuto aprox."
+
+msgid "raspy2dmd-uninstalling"
+msgstr "Desinstalando Raspy2DMD"
+
+msgid "raspy2dmd-uninstalled"
+msgstr "Raspy2DMD está desinstalado"
+
+msgid "raspy2dmd-uninstall-error"
+msgstr "Desinstalación imposible (ver logs/raspy2dmd_uninstall.log)"
+
+
+msgid "dmd_shutdown"
+msgstr "Apagar Raspy2DMD con RaspyDarts"
+
+msgid "dmd_player_color"
+msgstr "Mostrar los textos de Raspy2DMD con el color del jugador"
+
