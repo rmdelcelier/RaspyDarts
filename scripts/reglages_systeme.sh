@@ -82,6 +82,27 @@ if [ -f /etc/systemd/system/raspydarts-display.service ]; then
 fi
 
 # ------------------------------------------------------------
+# Son : sans souffle
+# ------------------------------------------------------------
+# Le firmware ajoute un leger bruit (dither) au son de la sortie analogique : un souffle
+# continu entendu par les testeurs de la 4.6.2 (HDMI et adaptateurs HDMI-VGA, qui sortent le son
+# par le jack) ; disable_audio_dither=1 le retire (confirme par un testeur). Pris en compte au
+# prochain demarrage du Pi
+BOOT_CONFIG=/boot/firmware/config.txt
+[ -f "$BOOT_CONFIG" ] || BOOT_CONFIG=/boot/config.txt
+if [ -f "$BOOT_CONFIG" ]; then
+    if grep -q -E '^[[:space:]]*disable_audio_dither=1' "$BOOT_CONFIG"; then
+        ok 'Son sans souffle (deja en place)'
+    else
+        sed -i -E '/^[[:space:]]*#?[[:space:]]*disable_audio_dither=/d' "$BOOT_CONFIG"
+        printf '\n[all]\n# RaspyDarts (scripts/reglages_systeme.sh) : pas de souffle sur la sortie son\ndisable_audio_dither=1\n' >> "$BOOT_CONFIG"
+        ok 'Son sans souffle (disable_audio_dither=1, au prochain demarrage)'
+    fi
+else
+    warn 'config.txt introuvable : souffle du son non corrige'
+fi
+
+# ------------------------------------------------------------
 # Ecran de demarrage : logo qui pulse, pourcentage et ce qui se passe (pix.script)
 # ------------------------------------------------------------
 # Les messages du systeme sont masques et remplaces par un pourcentage d'avancement et une
