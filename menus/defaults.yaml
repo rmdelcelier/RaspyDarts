@@ -155,6 +155,9 @@ menus:
   settings:
     title: setup
     remember: true
+    # 4 columns arranged by themselves (a button added takes its place among the others)
+    layout: tiles
+    columns: 4
     buttons:
       - id: setup-buttons
         action: setup_buttons
@@ -186,22 +189,27 @@ menus:
         action: coins
         text: coins
         shortcut: F7
+      # LED of the buttons : their states and their blinking (include/cbuttonleds.py)
+      - id: button-leds
+        action: button_leds
+        text: button-leds
+        shortcut: F8
       - id: test-buttons
         action: test_buttons
         text: test-buttons
-        shortcut: F8
+        shortcut: F9
       - id: test-target
         action: test_target
         text: test-target
-        shortcut: F9
+        shortcut: F10
       - id: test-toys
         action: test_toys
         text: test-toys
-        shortcut: F10
+        shortcut: F11
       - id: reset
         action: reset
         text: reset
-        shortcut: F11
+        shortcut: F12
       - id: back
         action: back
         text: back

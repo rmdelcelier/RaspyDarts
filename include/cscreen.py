@@ -5922,7 +5922,7 @@ class Screen(pygame.Surface):
                 toys.append((self.rpi.buttons[toy], toy))
                 nb_elements += 1
 
-        self.rpi.light_toys(toys, state=False)
+        self.rpi.light_toys(toys, state=False, raw=True)
 
         while True:
             click_zones = {}
@@ -9099,6 +9099,156 @@ class Screen(pygame.Surface):
         taken = {str(value).upper() for value in (self.config.config.get('Raspberry') or {}).values()}
         return [(name, f'MCP {name}') for name in (getattr(coins.extender, 'all_io', None) or [])
                 if name not in taken or name == current]
+
+    def button_leds_menu(self):
+        '''
+        Paramétrage > LED des boutons : the LED of the buttons plugged on the MCP (those given a
+        pin in Paramétrage des boutons et toys), each with its settings (button_led_settings)
+        '''
+        from include import cbuttonleds    # pylint: disable=import-outside-toplevel
+        translate = self.lang.translate
+        gpio = getattr(self.rpi, 'gpio', None)
+        found = [led for led in cbuttonleds.LEDS if gpio is not None and led in getattr(gpio, 'toys_list', {})]
+        if not found:
+            self.message([translate('button-leds-none')], 3500, self.colorset['menu-ko'], 'middle', 'big')
+            return
+        settings = cbuttonleds.load(self.logs)
+        selected = 1
+        while True:
+            nb_elements = len(found)
+            self.display_background()
+            self.menu_header(translate('button-leds'), translate('button-leds-sub'))
+            click_zones = {}
+            for index, led in enumerate(found, 1):
+                click_zones[f'F{index}'] = self.menu_item((index, nb_elements, selected), (f'F{index}', led, BTN_DROPDOWN,
+                                                          self.button_led_summary(settings[led], led)), align='Full', tabs=True)
+            click_zones['escape'] = self.display_button(selected == nb_elements + 1, 'back', special='escape')
+            self.update_screen()
+            key = self.rpi.listen_inputs(['arrows', 'fx'], ['escape', 'enter', 'space', 'single-click', 'PLAYERBUTTON',
+                                                            'BACKUPBUTTON', 'GAMEBUTTON'])
+            clicked = self.is_clicked(click_zones, key)
+            if clicked:
+                key = clicked
+            if key in [f'F{index}' for index in range(1, nb_elements + 1)]:
+                selected = int(key[1:])
+                key = 'enter'
+            selected = self.navigate(selected, key, nb_elements, 1, 1)
+            if key in ESCAPE_KEYS or (key in ENTER_KEYS and selected == nb_elements + 1):
+                return
+            if key in ENTER_KEYS and 1 <= selected <= nb_elements:
+                if self.button_led_settings(found[selected - 1], settings):
+                    settings = cbuttonleds.load(self.logs)
+
+    def button_led_summary(self, values, led):
+        '''
+        The settings of a LED in short, on its line : its blinking (time lit / time off), or its
+        state when it is the same out of games and in a game
+        '''
+        translate = self.lang.translate
+        if 'wait' in values:
+            return f"{translate('button-leds-wait-' + values['wait'])} · {values['on_ms']} / {values['off_ms']} ms"
+        if 'flashes' in values:
+            return f"{values['flashes']} × · {values['on_ms']} / {values['off_ms']} ms"
+        return translate('button-leds-state-' + values['menus']) if values['menus'] == values['game'] else ''
+
+    def button_led_settings(self, led, all_settings):
+        '''
+        The settings of one LED of a button : its states out of games and in a game, its
+        blinking (while waiting for its button, or the flashes at a press), tried on the button
+        itself before being saved. True : saved
+        '''
+        from include import cbuttonleds    # pylint: disable=import-outside-toplevel
+        translate = self.lang.translate
+        values = dict(all_settings[led])
+        kind = cbuttonleds.KIND[led]
+        choose = lambda choices, current: self.dropdown(self.res['x'] * 6 / 16, 3 * self.res_y_16, choices, navigate=current)
+        selected = 1
+        while True:
+            rows = [('menus', 'button-leds-menus', translate(f"button-leds-state-{values['menus']}")),
+                    ('game', 'button-leds-game', translate(f"button-leds-state-{values['game']}"))]
+            if kind == 'wait':
+                rows.append(('wait', 'button-leds-wait', translate(f"button-leds-wait-{values['wait']}")))
+            if kind == 'press':
+                rows.append(('flashes', 'button-leds-flashes', str(values['flashes'])))
+            if kind in ('wait', 'press'):
+                rows += [('on_ms', 'button-leds-on-ms', f"{values['on_ms']} ms"),
+                         ('off_ms', 'button-leds-off-ms', f"{values['off_ms']} ms"),
+                         ('test', 'button-leds-test', '')]
+            nb_elements = len(rows)
+            self.display_background()
+            self.menu_header(translate(led), translate(f'button-leds-sub-{kind}'))
+            click_zones = {}
+            for index, (_name, label, value) in enumerate(rows, 1):
+                click_zones[f'F{index}'] = self.menu_item((index, nb_elements, selected), (f'F{index}', label, BTN_DROPDOWN, value),
+                                                          align='Full', tabs=True)
+            click_zones['escape'] = self.display_button(selected == nb_elements + 1, 'back', special='escape')
+            click_zones['save'] = self.display_button(selected == nb_elements + 2, 'save', special='return')
+            self.update_screen()
+            key = self.rpi.listen_inputs(['arrows', 'fx'], ['escape', 'enter', 'space', 'single-click', 'PLAYERBUTTON',
+                                                            'BACKUPBUTTON', 'GAMEBUTTON'])
+            clicked = self.is_clicked(click_zones, key)
+            if clicked:
+                key = clicked
+            if key in [f'F{index}' for index in range(1, nb_elements + 1)]:
+                selected = int(key[1:])
+                key = 'enter'
+            selected = self.navigate(selected, key, nb_elements, 2, 2, left_right=True)
+            if key in ESCAPE_KEYS or (key in ENTER_KEYS and selected == nb_elements + 1):
+                return False
+            if key == 'save' or key in SAVE_KEYS or (key in ENTER_KEYS and selected == nb_elements + 2):
+                all_settings[led] = values
+                if cbuttonleds.save(all_settings, self.logs):
+                    self.rpi.button_leds_reload()
+                    self.message([translate('button-leds-saved')], 1500, self.colorset['menu-ok'], 'middle', 'big')
+                    return True
+                self.message([translate('button-leds-not-saved')], 2500, self.colorset['menu-ko'], 'middle', 'big')
+                continue
+            if key not in ENTER_KEYS or not 1 <= selected <= nb_elements:
+                continue
+            name = rows[selected - 1][0]
+            if name in ('menus', 'game'):
+                chosen = choose([(state, f'button-leds-state-{state}') for state in cbuttonleds.STATES], values[name])
+            elif name == 'wait':
+                chosen = choose([(mode, f'button-leds-wait-{mode}') for mode in cbuttonleds.WAIT_MODES], values[name])
+            elif name == 'flashes':
+                chosen = choose([(str(number), str(number)) for number in cbuttonleds.FLASHES], str(values[name]))
+                chosen = chosen if chosen == 'escape' else int(chosen)
+            elif name in ('on_ms', 'off_ms'):
+                durations = sorted(set(cbuttonleds.DURATIONS) | {values[name]})
+                chosen = choose([(str(ms), f'{ms} ms') for ms in durations], str(values[name]))
+                chosen = chosen if chosen == 'escape' else int(chosen)
+            else:
+                self.button_led_try(led, kind, values)
+                continue
+            if chosen != 'escape':
+                values[name] = chosen
+
+    def button_led_try(self, led, kind, values):
+        '''
+        The blinking of a LED tried on its button with the values on the screen (not saved) :
+        while waiting for Joueur suivant (lit, blinking 4 s), or the flashes of a press
+        '''
+        gpio = self.rpi.gpio
+        before = bool(gpio.toys_list[led][1].value)
+        self.message([self.lang.translate('button-leds-trying')], 0, None, 'middle', 'big')
+        if kind == 'wait':
+            if values['wait'] == 'blink':
+                gpio.light_toys([led], True)
+                period = max(20, values['on_ms'] + values['off_ms'])
+                thread = gpio.blink_toy(led, max(1, int(4000 / period)), values['on_ms'], values['off_ms'])
+                if thread is not None:
+                    thread.join(timeout=10)
+            else:
+                gpio.light_toys([led], values['wait'] == 'on')
+                time.sleep(2)
+        else:
+            for _ in range(3):
+                thread = gpio.blink_toy(led, values['flashes'], values['on_ms'], values['off_ms'])
+                if thread is not None:
+                    thread.join(timeout=10)
+                time.sleep(0.6)
+        # Back to the state it had before the try
+        gpio.light_toys([led], before)
 
     def coins_menu(self):
         '''

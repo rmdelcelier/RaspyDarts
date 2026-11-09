@@ -338,6 +338,33 @@ class Gpio_extender:
             if iteration + 1 < iterations:
                 time.sleep(delay_off / 1000)
 
+    def blink_toy(self, toy, cycles, on_ms, off_ms):
+        '''
+        A LED of a button blinking from its state of the moment (each state written, not
+        switched) : lit, it goes off off_ms then lit again on_ms (the last time : it stays
+        lit) ; off, it lights on_ms then goes off off_ms. In a thread : returned (or None)
+        '''
+        element = self.toys_list.get(toy)
+        if element is None or cycles <= 0:
+            return None
+        pin = element[1]
+
+        def blink():
+            with I2C_LOCK:
+                lit = bool(pin.value)
+            for cycle in range(cycles):
+                with I2C_LOCK:
+                    pin.value = 0 if lit else 1
+                time.sleep((off_ms if lit else on_ms) / 1000)
+                with I2C_LOCK:
+                    pin.value = 1 if lit else 0
+                if cycle + 1 < cycles:
+                    time.sleep((on_ms if lit else off_ms) / 1000)
+
+        thread = Thread(target=blink, daemon=True)
+        thread.start()
+        return thread
+
     def strobe_toys(self, toys, iterations=3, delay_on=10, delay_off=100):
         """
         Strobe light

@@ -5,6 +5,7 @@ which shortcuts, and the action of each button
 """
 
 import os
+import shutil
 import time
 
 from include import cpaths
@@ -55,6 +56,7 @@ ACTIONS = {
     'raspy2dmd': 'raspy2dmd',
     'edit_screens': 'edit-screens',
     'usb_pads': 'usb-pads',
+    'button_leds': 'button-leds',
     'coins': 'coins',
     'update': 'update',
     'back': 'escape',
@@ -79,6 +81,72 @@ BUTTON_KEYS = {'btn:up': 'BTN_UP', 'btn:down': 'BTN_DOWN', 'btn:left': 'BTN_LEFT
                'btn:validate': 'BTN_VALIDATE', 'btn:back': 'BTN_BACK', 'btn:cancel': 'BTN_CANCEL',
                'btn:plus': 'BTN_PLUS', 'btn:minus': 'BTN_MINUS', 'btn:nextplayer': 'BTN_NEXTPLAYER',
                'btn:game': 'BTN_GAMEBUTTON'}
+
+
+# Paramétrage of the theme « sombre » as delivered (3 columns, each button placed by hand,
+# 03/11/2026) : moved to 4 columns arranged by themselves, with LED des boutons (4.6.4) ; a
+# page changed in the editor of the screens is left as it is
+SHIPPED_SETTINGS_PLACES = {
+    'setup-buttons': (0.1427, 0.1546), 'setup-pinleds': (0.3828, 0.1546), 'setup-leds': (0.6229, 0.1546),
+    'setup-couleurs-segments': (0.1427, 0.338), 'setup-cam': (0.3828, 0.338), 'usb-pads': (0.6229, 0.338),
+    'test-buttons': (0.6229, 0.5213), 'test-target': (0.1427, 0.5213), 'test-toys': (0.3828, 0.5213),
+    'reset': (0.8531, 0.8787), 'coins': (0.3828, 0.7046)}
+SETTINGS_ORDER = ('setup-buttons', 'setup-pinleds', 'setup-leds', 'setup-couleurs-segments', 'setup-cam', 'usb-pads',
+                  'coins', 'button-leds', 'test-buttons', 'test-target', 'test-toys', 'reset')
+
+
+def migrate_settings_page(logs, themes_dir):
+    '''
+    The page Paramétrage of the themes (themes/<theme>/menu/menus.yaml) still as delivered :
+    4 columns arranged by themselves, the button LED des boutons before the tests (Réinitialiser
+    keeps its place). The file before kept as menus.yaml.avant-4-colonnes. Done once : the page
+    changed is no longer the delivered one
+    '''
+    if yaml is None or not os.path.isdir(themes_dir):
+        return
+    for theme in sorted(os.listdir(themes_dir)):
+        path = os.path.join(themes_dir, theme, THEME_FILE)
+        if not os.path.isfile(path):
+            continue
+        try:
+            with open(path, encoding='utf-8') as file:
+                content = yaml.safe_load(file) or {}
+            menu = (content.get('menus') or {}).get('settings')
+            if not isinstance(menu, dict) or not isinstance(menu.get('buttons'), list):
+                continue
+            buttons = [button for button in menu['buttons'] if isinstance(button, dict)]
+            placed = {str(button.get('id')): button.get('place') for button in buttons if not button.get('footer')}
+            delivered = set(placed) == set(SHIPPED_SETTINGS_PLACES) and all(
+                isinstance(place, dict) and (place.get('x'), place.get('y')) == SHIPPED_SETTINGS_PLACES[ident]
+                for ident, place in placed.items())
+            if not delivered:
+                continue
+            by_id = {str(button.get('id')): dict(button) for button in buttons}
+            used = {button.get('shortcut') for button in buttons if button.get('shortcut')}
+            leds = {'id': 'button-leds', 'action': 'button_leds', 'text': 'button-leds'}
+            free = next((key for key in ('F10', 'F11', 'F12') if key not in used), None)
+            if free:
+                leds['shortcut'] = free
+            by_id['button-leds'] = leds
+            ordered = []
+            for ident in SETTINGS_ORDER:
+                button = by_id.pop(ident)
+                if ident != 'reset':
+                    button.pop('place', None)
+                ordered.append(button)
+            # The buttons at the bottom (Retour) after the others
+            ordered += [button for button in by_id.values()]
+            menu['buttons'] = ordered
+            menu['columns'] = 4
+            menu['layout'] = 'tiles'
+            shutil.copyfile(path, f'{path}.avant-4-colonnes')
+            temporary = f'{path}.tmp'
+            with open(temporary, 'w', encoding='utf-8') as file:
+                yaml.safe_dump(content, file, allow_unicode=True, sort_keys=False, default_flow_style=False)
+            os.replace(temporary, path)
+            logs.info(f"Menus : Paramétrage of the theme {theme} moved to 4 columns with LED des boutons ({path})")
+        except Exception as error:    # pylint: disable=broad-except
+            logs.warning(f"Menus : Paramétrage of the theme {theme} not moved to 4 columns ({error})")
 
 
 def merge(base, top):

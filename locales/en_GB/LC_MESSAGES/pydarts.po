@@ -5478,3 +5478,70 @@ msgstr "Title band"
 msgid "editor-title-text"
 msgstr "Title text"
 
+
+msgid "button-leds"
+msgstr "Button LEDs"
+
+msgid "button-leds-sub"
+msgstr "The button LEDs plugged on the MCP"
+
+msgid "button-leds-none"
+msgstr "No button LED plugged on the MCP (see buttons and toys setup)"
+
+msgid "button-leds-menus"
+msgstr "Out of games"
+
+msgid "button-leds-game"
+msgstr "In a game"
+
+msgid "button-leds-state-auto"
+msgstr "As the game decides"
+
+msgid "button-leds-state-on"
+msgstr "Always lit"
+
+msgid "button-leds-state-off"
+msgstr "Always off"
+
+msgid "button-leds-wait"
+msgstr "Waiting for Next player"
+
+msgid "button-leds-wait-blink"
+msgstr "Blinks"
+
+msgid "button-leds-wait-on"
+msgstr "Lit"
+
+msgid "button-leds-wait-off"
+msgstr "Off"
+
+msgid "button-leds-flashes"
+msgstr "Flashes at each press"
+
+msgid "button-leds-on-ms"
+msgstr "Time lit"
+
+msgid "button-leds-off-ms"
+msgstr "Time off"
+
+msgid "button-leds-test"
+msgstr "Try"
+
+msgid "button-leds-trying"
+msgstr "Trying on the button..."
+
+msgid "button-leds-saved"
+msgstr "Settings saved"
+
+msgid "button-leds-not-saved"
+msgstr "Settings not saved (see logs/raspydarts.log)"
+
+msgid "button-leds-sub-wait"
+msgstr "Blinks when the game waits for this button (end of the turn)"
+
+msgid "button-leds-sub-press"
+msgstr "Flashes at each press of these buttons"
+
+msgid "button-leds-sub-state"
+msgstr "Lit or off out of games and in a game"
+

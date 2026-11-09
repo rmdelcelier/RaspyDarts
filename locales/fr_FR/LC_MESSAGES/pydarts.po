@@ -5282,3 +5282,70 @@ msgstr "Bandeau du titre"
 msgid "editor-title-text"
 msgstr "Texte du titre"
 
+
+msgid "button-leds"
+msgstr "LED des boutons"
+
+msgid "button-leds-sub"
+msgstr "Les LED des boutons branchées sur le MCP"
+
+msgid "button-leds-none"
+msgstr "Aucune LED de bouton branchée sur le MCP (voir Paramétrage des boutons et toys)"
+
+msgid "button-leds-menus"
+msgstr "Hors partie"
+
+msgid "button-leds-game"
+msgstr "En partie"
+
+msgid "button-leds-state-auto"
+msgstr "Comme le jeu le décide"
+
+msgid "button-leds-state-on"
+msgstr "Toujours allumée"
+
+msgid "button-leds-state-off"
+msgstr "Toujours éteinte"
+
+msgid "button-leds-wait"
+msgstr "En attente de Joueur suivant"
+
+msgid "button-leds-wait-blink"
+msgstr "Clignote"
+
+msgid "button-leds-wait-on"
+msgstr "Allumée"
+
+msgid "button-leds-wait-off"
+msgstr "Éteinte"
+
+msgid "button-leds-flashes"
+msgstr "Éclats à chaque appui"
+
+msgid "button-leds-on-ms"
+msgstr "Durée allumée"
+
+msgid "button-leds-off-ms"
+msgstr "Durée éteinte"
+
+msgid "button-leds-test"
+msgstr "Tester"
+
+msgid "button-leds-trying"
+msgstr "Essai sur le bouton..."
+
+msgid "button-leds-saved"
+msgstr "Réglages enregistrés"
+
+msgid "button-leds-not-saved"
+msgstr "Réglages non enregistrés (voir logs/raspydarts.log)"
+
+msgid "button-leds-sub-wait"
+msgstr "Clignote quand le jeu attend ce bouton (fin du tour)"
+
+msgid "button-leds-sub-press"
+msgstr "Éclats à chaque appui sur ces boutons"
+
+msgid "button-leds-sub-state"
+msgstr "Allumée ou éteinte hors partie et en partie"
+

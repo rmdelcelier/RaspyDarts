@@ -356,6 +356,9 @@ display.init_colorset()
 version = cupdate.get_version(logs)
 # After an update (the game restarted) : the settings of the system of the new version
 cupdate.apply_system_settings(logs, version)
+# The page Paramétrage of the themes still as delivered : 4 columns, with LED des boutons
+from include import cmenus as cmenus_migration
+cmenus_migration.migrate_settings_page(logs, os.path.join(cpaths.user_dir(), 'themes'))
 
 def update_progress(key, unit=''):
     '''
@@ -1076,6 +1079,10 @@ try:
                             # USB BUTTONS AND KNOBS : programmed, tested, given a button
                             display.usb_pads_menu()
 
+                        elif setup == 'button-leds':
+                            # LED OF THE BUTTONS : their states and their blinking
+                            display.button_leds_menu()
+
                         elif setup == 'test-target':
                             display.test_target_menu()
 
@@ -1670,6 +1677,8 @@ try:
             logs.debug(f"Local game id is : {game_id}")
             # Reinit leds (no light out of games during the game)
             idle_light(False)
+            # LED of the buttons : their state in a game (LED des boutons)
+            rpi.button_leds_context(True)
             dispatcher.publish('newgame', limit=['TARGET', 'STRIP', 'OTHER', 'LIGHT', 'STROBE'])
             rpi.target_leds = ''
             rpi.target_leds_blink = ''
@@ -2396,7 +2405,7 @@ try:
                                 dart_stroke = rpi.listen_inputs(['num', 'alpha', 'fx', 'arrows'],
                                             ['PLAYERBUTTON', 'single-click'],
                                             context='game',
-                                            events=[(350, 'STROBE', ['LIGHT_NEXTPLAYER']), (wait_event_time, 'EVENT', 'wait'), \
+                                            events=[(rpi.button_led_period('LIGHT_NEXTPLAYER'), 'STROBE', ['LIGHT_NEXTPLAYER']), (wait_event_time, 'EVENT', 'wait'), \
                                                     (wait_event_time * 2, 'SOUND', 'snoring')], video_process=played_video, sound_process=played_sound)
 
                             logs.debug(f'dart_stroke = {dart_stroke}')
@@ -2724,6 +2733,8 @@ try:
             dispatcher.publish('off', limit=['TARGET', 'STRIP', 'OTHER'])
             # Out of the game : the light out of games again
             idle_light(True)
+            # LED of the buttons : their state out of games (LED des boutons)
+            rpi.button_leds_context(False)
 
             # Grab stats from the game and write them in local DB
             if last_game_screen == 'stats':
@@ -2782,8 +2793,9 @@ finally:
     if dispatcher.strip_leds and p_strip.poll() is not None:
         dispatcher.strip_leds = False
 
-    rpi.light_toys(['LIGHT_NEXTPLAYER', 'LIGHT_BACK', 'LIGHT_CELEBRATION', 'LIGHT_NAVIGATE'], \
-            False)
+    # Leaving : off, whatever the settings of the LED of the buttons
+    rpi.light_toys(['LIGHT_NEXTPLAYER', 'LIGHT_BACK', 'LIGHT_CELEBRATION', 'LIGHT_NAVIGATE', 'LIGHT_VALIDATE', 'LIGHT_PLAYERS'], \
+            False, raw=True)
 
     # Leaving : the light out of games off (the LEDs do not stay lit on the desktop)
     idle_light(False)

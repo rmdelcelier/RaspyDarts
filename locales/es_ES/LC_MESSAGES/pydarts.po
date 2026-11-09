@@ -5211,3 +5211,70 @@ msgstr "Banda del título"
 msgid "editor-title-text"
 msgstr "Texto del título"
 
+
+msgid "button-leds"
+msgstr "LED de los botones"
+
+msgid "button-leds-sub"
+msgstr "Los LED de botones conectados al MCP"
+
+msgid "button-leds-none"
+msgstr "Ningún LED de botón conectado al MCP (ver ajuste de botones y toys)"
+
+msgid "button-leds-menus"
+msgstr "Fuera de partida"
+
+msgid "button-leds-game"
+msgstr "En partida"
+
+msgid "button-leds-state-auto"
+msgstr "Como decida el juego"
+
+msgid "button-leds-state-on"
+msgstr "Siempre encendido"
+
+msgid "button-leds-state-off"
+msgstr "Siempre apagado"
+
+msgid "button-leds-wait"
+msgstr "Esperando Jugador siguiente"
+
+msgid "button-leds-wait-blink"
+msgstr "Parpadea"
+
+msgid "button-leds-wait-on"
+msgstr "Encendido"
+
+msgid "button-leds-wait-off"
+msgstr "Apagado"
+
+msgid "button-leds-flashes"
+msgstr "Destellos en cada pulsación"
+
+msgid "button-leds-on-ms"
+msgstr "Tiempo encendido"
+
+msgid "button-leds-off-ms"
+msgstr "Tiempo apagado"
+
+msgid "button-leds-test"
+msgstr "Probar"
+
+msgid "button-leds-trying"
+msgstr "Prueba en el botón..."
+
+msgid "button-leds-saved"
+msgstr "Ajustes guardados"
+
+msgid "button-leds-not-saved"
+msgstr "Ajustes no guardados (ver logs/raspydarts.log)"
+
+msgid "button-leds-sub-wait"
+msgstr "Parpadea cuando el juego espera este botón (fin del turno)"
+
+msgid "button-leds-sub-press"
+msgstr "Destellos en cada pulsación de estos botones"
+
+msgid "button-leds-sub-state"
+msgstr "Encendido o apagado fuera y en partida"
+

@@ -5273,3 +5273,70 @@ msgstr "Banda del titolo"
 msgid "editor-title-text"
 msgstr "Testo del titolo"
 
+
+msgid "button-leds"
+msgstr "LED dei pulsanti"
+
+msgid "button-leds-sub"
+msgstr "I LED dei pulsanti collegati al MCP"
+
+msgid "button-leds-none"
+msgstr "Nessun LED di pulsante collegato al MCP (vedi impostazione pulsanti e toys)"
+
+msgid "button-leds-menus"
+msgstr "Fuori partita"
+
+msgid "button-leds-game"
+msgstr "In partita"
+
+msgid "button-leds-state-auto"
+msgstr "Come decide il gioco"
+
+msgid "button-leds-state-on"
+msgstr "Sempre acceso"
+
+msgid "button-leds-state-off"
+msgstr "Sempre spento"
+
+msgid "button-leds-wait"
+msgstr "In attesa di Giocatore successivo"
+
+msgid "button-leds-wait-blink"
+msgstr "Lampeggia"
+
+msgid "button-leds-wait-on"
+msgstr "Acceso"
+
+msgid "button-leds-wait-off"
+msgstr "Spento"
+
+msgid "button-leds-flashes"
+msgstr "Lampi a ogni pressione"
+
+msgid "button-leds-on-ms"
+msgstr "Durata acceso"
+
+msgid "button-leds-off-ms"
+msgstr "Durata spento"
+
+msgid "button-leds-test"
+msgstr "Provare"
+
+msgid "button-leds-trying"
+msgstr "Prova sul pulsante..."
+
+msgid "button-leds-saved"
+msgstr "Impostazioni salvate"
+
+msgid "button-leds-not-saved"
+msgstr "Impostazioni non salvate (vedi logs/raspydarts.log)"
+
+msgid "button-leds-sub-wait"
+msgstr "Lampeggia quando il gioco attende questo pulsante (fine del turno)"
+
+msgid "button-leds-sub-press"
+msgstr "Lampi a ogni pressione di questi pulsanti"
+
+msgid "button-leds-sub-state"
+msgstr "Acceso o spento fuori e in partita"
+

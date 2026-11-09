@@ -5260,3 +5260,70 @@ msgstr "Titelbalk"
 msgid "editor-title-text"
 msgstr "Titeltekst"
 
+
+msgid "button-leds"
+msgstr "Knop-leds"
+
+msgid "button-leds-sub"
+msgstr "De knop-leds aangesloten op de MCP"
+
+msgid "button-leds-none"
+msgstr "Geen knop-led aangesloten op de MCP (zie instelling knoppen en toys)"
+
+msgid "button-leds-menus"
+msgstr "Buiten het spel"
+
+msgid "button-leds-game"
+msgstr "Tijdens het spel"
+
+msgid "button-leds-state-auto"
+msgstr "Zoals het spel beslist"
+
+msgid "button-leds-state-on"
+msgstr "Altijd aan"
+
+msgid "button-leds-state-off"
+msgstr "Altijd uit"
+
+msgid "button-leds-wait"
+msgstr "Wachten op Volgende speler"
+
+msgid "button-leds-wait-blink"
+msgstr "Knippert"
+
+msgid "button-leds-wait-on"
+msgstr "Aan"
+
+msgid "button-leds-wait-off"
+msgstr "Uit"
+
+msgid "button-leds-flashes"
+msgstr "Flitsen bij elke druk"
+
+msgid "button-leds-on-ms"
+msgstr "Tijd aan"
+
+msgid "button-leds-off-ms"
+msgstr "Tijd uit"
+
+msgid "button-leds-test"
+msgstr "Testen"
+
+msgid "button-leds-trying"
+msgstr "Test op de knop..."
+
+msgid "button-leds-saved"
+msgstr "Instellingen opgeslagen"
+
+msgid "button-leds-not-saved"
+msgstr "Instellingen niet opgeslagen (zie logs/raspydarts.log)"
+
+msgid "button-leds-sub-wait"
+msgstr "Knippert als het spel op deze knop wacht (einde van de beurt)"
+
+msgid "button-leds-sub-press"
+msgstr "Flitsen bij elke druk op deze knoppen"
+
+msgid "button-leds-sub-state"
+msgstr "Aan of uit buiten en tijdens het spel"
+

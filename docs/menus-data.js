@@ -243,6 +243,8 @@ const MENUS_DATA = {
    "settings": {
     "title": "setup",
     "remember": true,
+    "layout": "tiles",
+    "columns": 4,
     "buttons": [
      {
       "id": "setup-buttons",
@@ -287,28 +289,34 @@ const MENUS_DATA = {
       "shortcut": "F7"
      },
      {
+      "id": "button-leds",
+      "action": "button_leds",
+      "text": "button-leds",
+      "shortcut": "F8"
+     },
+     {
       "id": "test-buttons",
       "action": "test_buttons",
       "text": "test-buttons",
-      "shortcut": "F8"
+      "shortcut": "F9"
      },
      {
       "id": "test-target",
       "action": "test_target",
       "text": "test-target",
-      "shortcut": "F9"
+      "shortcut": "F10"
      },
      {
       "id": "test-toys",
       "action": "test_toys",
       "text": "test-toys",
-      "shortcut": "F10"
+      "shortcut": "F11"
      },
      {
       "id": "reset",
       "action": "reset",
       "text": "reset",
-      "shortcut": "F11"
+      "shortcut": "F12"
      },
      {
       "id": "back",
@@ -457,6 +465,7 @@ const MENUS_DATA = {
   "animations",
   "back",
   "backups",
+  "button_leds",
   "coins",
   "customization",
   "desktop",
@@ -2191,6 +2200,7 @@ const MENUS_DATA = {
    "back-to-desktop": "Revenir sur le bureau",
    "backups": "Gestion des sauvegardes",
    "btn_update": "Vérifier les mises à jour",
+   "button-leds": "LED des boutons",
    "coins": "Monnayeur",
    "continue": "Continuer",
    "customization": "Personnalisation du jeu",
@@ -2297,7 +2307,7 @@ const MENUS_DATA = {
    "test-toys": "Test des toys",
    "trophees": "Trophées et progression",
    "up": "Haut",
-   "usb-pads": "Paramétrage boutons et molettes USB",
+   "usb-pads": "Paramétrage boutons, molettes et manettes USB",
    "yes": "Oui"
   },
   "en": {
@@ -2306,6 +2316,7 @@ const MENUS_DATA = {
    "back-to-desktop": "Back to desktop",
    "backups": "Backup management",
    "btn_update": "Check for updates",
+   "button-leds": "Button LEDs",
    "coins": "Coin mechanism",
    "continue": "Continue",
    "customization": "Game customization",
@@ -2412,7 +2423,7 @@ const MENUS_DATA = {
    "test-toys": "Toys test",
    "trophees": "Trophies and progress",
    "up": "Up",
-   "usb-pads": "USB buttons and knobs setup",
+   "usb-pads": "USB buttons, knobs and gamepads setup",
    "yes": "Yes"
   },
   "de": {
@@ -2421,6 +2432,7 @@ const MENUS_DATA = {
    "back-to-desktop": "Zurück zum Desktop",
    "backups": "Sicherungsverwaltung",
    "btn_update": "Nach Updates suchen",
+   "button-leds": "Tasten-LEDs",
    "coins": "Münzprüfer",
    "continue": "Weiter",
    "customization": "Spielanpassung",
@@ -2527,7 +2539,7 @@ const MENUS_DATA = {
    "test-toys": "Toy-Test",
    "trophees": "Trophäen und Fortschritt",
    "up": "Oben",
-   "usb-pads": "USB-Tasten- und Drehregler-Konfiguration",
+   "usb-pads": "USB-Tasten-, Drehregler- und Gamepad-Konfiguration",
    "yes": "Ja"
   },
   "es": {
@@ -2536,6 +2548,7 @@ const MENUS_DATA = {
    "back-to-desktop": "Volver al escritorio",
    "backups": "Gestión de copias de seguridad",
    "btn_update": "Comprobar actualizaciones",
+   "button-leds": "LED de los botones",
    "coins": "Monedero",
    "continue": "Continuar",
    "customization": "Personalización del juego",
@@ -2642,7 +2655,7 @@ const MENUS_DATA = {
    "test-toys": "Prueba de toys",
    "trophees": "Trofeos y progreso",
    "up": "Arriba",
-   "usb-pads": "Configuración de botones y mandos USB",
+   "usb-pads": "Configuración de botones, mandos y gamepads USB",
    "yes": "Sí"
   },
   "it": {
@@ -2651,6 +2664,7 @@ const MENUS_DATA = {
    "back-to-desktop": "Torna al desktop",
    "backups": "Gestione backup",
    "btn_update": "Cerca aggiornamenti",
+   "button-leds": "LED dei pulsanti",
    "coins": "Gettoniera",
    "continue": "Continua",
    "customization": "Personalizzazione del gioco",
@@ -2757,7 +2771,7 @@ const MENUS_DATA = {
    "test-toys": "Test dei toys",
    "trophees": "Trofei e progressi",
    "up": "Su",
-   "usb-pads": "Configurazione pulsanti e manopole USB",
+   "usb-pads": "Configurazione pulsanti, manopole e gamepad USB",
    "yes": "Sì"
   }
  },

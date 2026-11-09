@@ -5206,3 +5206,70 @@ msgstr "Titelleiste"
 msgid "editor-title-text"
 msgstr "Titeltext"
 
+
+msgid "button-leds"
+msgstr "Tasten-LEDs"
+
+msgid "button-leds-sub"
+msgstr "Die am MCP angeschlossenen Tasten-LEDs"
+
+msgid "button-leds-none"
+msgstr "Keine Tasten-LED am MCP angeschlossen (siehe Einstellung Tasten und Toys)"
+
+msgid "button-leds-menus"
+msgstr "Außerhalb des Spiels"
+
+msgid "button-leds-game"
+msgstr "Im Spiel"
+
+msgid "button-leds-state-auto"
+msgstr "Wie das Spiel entscheidet"
+
+msgid "button-leds-state-on"
+msgstr "Immer an"
+
+msgid "button-leds-state-off"
+msgstr "Immer aus"
+
+msgid "button-leds-wait"
+msgstr "Warten auf Nächster Spieler"
+
+msgid "button-leds-wait-blink"
+msgstr "Blinkt"
+
+msgid "button-leds-wait-on"
+msgstr "An"
+
+msgid "button-leds-wait-off"
+msgstr "Aus"
+
+msgid "button-leds-flashes"
+msgstr "Blitze bei jedem Druck"
+
+msgid "button-leds-on-ms"
+msgstr "Dauer an"
+
+msgid "button-leds-off-ms"
+msgstr "Dauer aus"
+
+msgid "button-leds-test"
+msgstr "Testen"
+
+msgid "button-leds-trying"
+msgstr "Test an der Taste..."
+
+msgid "button-leds-saved"
+msgstr "Einstellungen gespeichert"
+
+msgid "button-leds-not-saved"
+msgstr "Einstellungen nicht gespeichert (siehe logs/raspydarts.log)"
+
+msgid "button-leds-sub-wait"
+msgstr "Blinkt, wenn das Spiel auf diese Taste wartet (Ende der Runde)"
+
+msgid "button-leds-sub-press"
+msgstr "Blitze bei jedem Druck auf diese Tasten"
+
+msgid "button-leds-sub-state"
+msgstr "An oder aus außerhalb und im Spiel"
+
