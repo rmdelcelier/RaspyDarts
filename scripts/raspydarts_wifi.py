@@ -238,7 +238,7 @@ def unblock():
 def found_files(boot):
     """
     The files dropped : wifi.txt (also wifi.txt.txt, the Notepad adding its extension) and
-    wpa_supplicant.conf, whatever their case
+    wpa_supplicant.conf (also .conf.txt, or .txt when Windows replaced its extension), whatever their case
     """
     files = []
     try:
@@ -249,7 +249,7 @@ def found_files(boot):
         lower = name.lower()
         if lower in ('wifi.txt', 'wifi.txt.txt', 'wifi'):
             files.append((os.path.join(boot, name), parse_wifi_txt))
-        elif lower in ('wpa_supplicant.conf', 'wpa_supplicant.conf.txt'):
+        elif lower in ('wpa_supplicant.conf', 'wpa_supplicant.conf.txt', 'wpa_supplicant.txt'):
             files.append((os.path.join(boot, name), parse_wpa_supplicant))
     return files
 
