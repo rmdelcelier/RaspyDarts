@@ -5412,3 +5412,13 @@ msgstr "Abbrechen"
 
 msgid "theme-back"
 msgstr "Zurück"
+
+msgid "theme-plate-borders"
+msgstr "Rahmen und Rundungen"
+
+msgid "theme-value"
+msgstr "Wert…"
+
+msgid "theme-round-max"
+msgstr "Maximum (Pille)"
+

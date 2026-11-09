@@ -5479,3 +5479,13 @@ msgstr "Annulla"
 
 msgid "theme-back"
 msgstr "Indietro"
+
+msgid "theme-plate-borders"
+msgstr "Bordi e arrotondamenti"
+
+msgid "theme-value"
+msgstr "Valore…"
+
+msgid "theme-round-max"
+msgstr "Massimo (pillola)"
+

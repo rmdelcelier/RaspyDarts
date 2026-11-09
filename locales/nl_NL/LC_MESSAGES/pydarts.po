@@ -5466,3 +5466,13 @@ msgstr "Annuleren"
 
 msgid "theme-back"
 msgstr "Terug"
+
+msgid "theme-plate-borders"
+msgstr "Randen en afrondingen"
+
+msgid "theme-value"
+msgstr "Waarde…"
+
+msgid "theme-round-max"
+msgstr "Maximaal (pil)"
+

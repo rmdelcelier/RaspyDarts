@@ -5417,3 +5417,13 @@ msgstr "Cancelar"
 
 msgid "theme-back"
 msgstr "Volver"
+
+msgid "theme-plate-borders"
+msgstr "Bordes y redondeos"
+
+msgid "theme-value"
+msgstr "Valor…"
+
+msgid "theme-round-max"
+msgstr "Máximo (píldora)"
+

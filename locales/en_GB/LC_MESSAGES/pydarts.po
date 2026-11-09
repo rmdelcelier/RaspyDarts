@@ -5684,3 +5684,13 @@ msgstr "Cancel"
 
 msgid "theme-back"
 msgstr "Back"
+
+msgid "theme-plate-borders"
+msgstr "Borders and rounding"
+
+msgid "theme-value"
+msgstr "Value…"
+
+msgid "theme-round-max"
+msgstr "Maximum (pill)"
+

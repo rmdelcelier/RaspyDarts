@@ -40,6 +40,11 @@ ALIGN_TAGS = ('main-sub-menu-text-align', 'parametrage-menu-text-align', 'player
 SHORTCUT_CHOICES = (('', 'theme-shortcut-keys'), (None, 'theme-shortcut-none'), ('>', '>'), ('-', '-'),
                     ('*', '*'), ('+', '+'))
 ALIGN_CHOICES = (('Left', 'theme-align-left'), ('Center', 'theme-align-center'), ('Right', 'theme-align-right'))
+# Shapes (not colours) : thickness of the border and margin of the item chosen, rounding of the
+# buttons and frames of the menus and of the buttons at the bottom ('max' : round)
+SHAPE_TAGS = ('border-size', 'padding', 'border-radius', 'button-radius')
+RADIUS_TAGS = ('border-radius', 'button-radius')
+SHAPE_LIMITS = {'border-size': 15, 'padding': 15, 'border-radius': 40, 'button-radius': 40}
 
 # Plates : (name, drawer, tags on the left [(tag, x, y)], tags on the right) ; x, y : the point
 # of the mock-up the arrow goes to (parts of the mock-up)
@@ -82,6 +87,9 @@ PLATES = (
       ('fighters-dead-player', 0.3, 0.55), ('fighters-medic', 0.3, 0.75)],
      [('fighters-targets', 0.75, 0.15), ('fighters-scores', 0.75, 0.35), ('fighters-darts', 0.75, 0.55),
       ('fighters-round', 0.75, 0.75)]),
+    ('theme-plate-borders', 'draw_borders',
+     [('border-size', 0.25, 0.26), ('padding', 0.3, 0.32)],
+     [('border-radius', 0.88, 0.5), ('button-radius', 0.8, 0.84)]),
     ('theme-plate-shortcuts', 'draw_shortcuts',
      [('main-sub-menu-shortcuts', 0.08, 0.15), ('parametrage-menu-shortcuts', 0.08, 0.4),
       ('players-menu-shortcuts', 0.08, 0.65), ('game-options-menu-shortcuts', 0.08, 0.88)],
@@ -92,7 +100,7 @@ PLATES = (
 
 # The plates by use : those of the menus, those of the games (a panel each on the first page)
 GROUPS = (('theme-group-menus', ('theme-plate-menus', 'theme-plate-settings', 'theme-plate-description',
-                                 'theme-plate-messages', 'theme-plate-shortcuts')),
+                                 'theme-plate-messages', 'theme-plate-shortcuts', 'theme-plate-borders')),
           ('theme-group-games', ('theme-plate-game', 'theme-plate-players', 'theme-plate-games',
                                  'theme-plate-bob27', 'theme-plate-fighters')))
 
@@ -189,17 +197,19 @@ class ThemeEditor:
                 if self.changed and self.screen.ask_yes_no(self.translate('theme-save-question')):
                     self.save()
                 return
-            per_group = len(GROUPS[0][1])
+            # Two columns (the panels) of their own lengths, then the two buttons at the bottom
+            first = len(GROUPS[0][1])
+            plates = first + len(GROUPS[1][1])
             if key in ('down', 'BTN_DOWN'):
                 selected = (selected + 1) % len(entries)
             elif key in ('up', 'BTN_UP'):
                 selected = (selected - 1) % len(entries)
-            elif key in ('right', 'BTN_RIGHT') and selected < per_group:
-                selected = min(selected + per_group, len(entries) - 1)
-            elif key in ('left', 'BTN_LEFT') and per_group <= selected < 2 * per_group:
-                selected -= per_group
-            elif key in ('right', 'BTN_RIGHT', 'left', 'BTN_LEFT') and selected >= 2 * per_group:
-                selected = len(entries) - 1 if selected == len(entries) - 2 else len(entries) - 2
+            elif key in ('right', 'BTN_RIGHT') and selected < first:
+                selected = min(first + selected, plates - 1)
+            elif key in ('left', 'BTN_LEFT') and first <= selected < plates:
+                selected = min(selected - first, first - 1)
+            elif key in ('right', 'BTN_RIGHT', 'left', 'BTN_LEFT') and selected >= plates:
+                selected = plates + 1 if selected == plates else plates
             elif key in self.keys['enter'] + ['space']:
                 entry = entries[selected]
                 if entry == 'quit':
@@ -396,6 +406,11 @@ class ThemeEditor:
 
     def draw_value(self, tag, rect, font):
         value = self.work.get(tag)
+        if tag in SHAPE_TAGS:
+            pygame.draw.rect(self.screen.screen, (30, 30, 30), rect)
+            text = font.render('M' if value == 'max' else str(value), True, (255, 255, 255))
+            self.screen.screen.blit(text, text.get_rect(center=rect.center))
+            return
         if tag in SHORTCUT_TAGS + ALIGN_TAGS:
             pygame.draw.rect(self.screen.screen, (30, 30, 30), rect)
             label = {'Left': 'G', 'Center': 'C', 'Right': 'D', None: '-', '': 'F'}.get(value, str(value)[:2])
@@ -578,6 +593,46 @@ class ThemeEditor:
                                              ('fighters-darts', 'o  o  o'), ('fighters-round', 'Round 3'))):
             self.text(text, self.part(mockup, 0.55, 0.08 + index * 0.2, 0.4, 0.15), tag, 0.55)
 
+    def radius(self, tag, rect, scale):
+        value = self.work.get(tag)
+        if value == 'max':
+            return rect.height // 2
+        try:
+            return min(rect.height // 2, int(int(value) * scale))
+        except (TypeError, ValueError):
+            return 0
+
+    def draw_borders(self, mockup):
+        '''
+        Buttons of a menu (the first one chosen : its border, its margin), and a button at the
+        bottom, drawn with the shapes of the moment (scaled as the mock-up)
+        '''
+        self.draw_background(mockup)
+        scale = mockup.height / self.size[1]
+        for index, label in enumerate(('Partie simple', 'Partie en réseau', 'Divers')):
+            row = self.part(mockup, 0.15, 0.2 + index * 0.18, 0.7, 0.13)
+            radius = self.radius('border-radius', row, scale)
+            chosen = index == 0
+            if chosen:
+                border = max(0, int(int(self.work.get('border-size') or 0) * scale * 2))
+                padding = max(0, int(int(self.work.get('padding') or 0) * scale * 2))
+                if self.color('menu-border') is not None and border:
+                    pygame.draw.rect(self.screen.screen, self.color('menu-border'), row, border, border_radius=radius)
+                inner = row.inflate(-2 * (border + padding), -2 * (border + padding))
+                if self.color('menu-selected') is not None:
+                    pygame.draw.rect(self.screen.screen, self.color('menu-selected'), inner,
+                                     border_radius=max(0, radius - border - padding))
+                self.text(label, inner, 'menu-text-white')
+            else:
+                if self.color('menu-buttons') is not None:
+                    pygame.draw.rect(self.screen.screen, self.color('menu-buttons'), row, border_radius=radius)
+                self.text(label, row, 'menu-text-black')
+        button = self.part(mockup, 0.62, 0.8, 0.3, 0.09)
+        if self.color('menu-buttons') is not None:
+            pygame.draw.rect(self.screen.screen, self.color('menu-buttons'), button,
+                             border_radius=self.radius('button-radius', button, scale * 2))
+        self.text('Sauvegarder', button, 'menu-text-black')
+
     def draw_shortcuts(self, mockup):
         self.draw_background(mockup)
         examples = (('main-sub-menu', 'Partie simple'), ('parametrage-menu', 'Paramétrage'),
@@ -602,6 +657,22 @@ class ThemeEditor:
         an alignment : its list)
         '''
         screen = self.screen
+        if tag in SHAPE_TAGS:
+            values = [['value', self.translate('theme-value')]]
+            if tag in RADIUS_TAGS:
+                values.append(['max', self.translate('theme-round-max')])
+            values.append(['origin', self.translate('theme-origin')])
+            chosen = screen.dropdown(screen.res['x'] * 6 / 16, 3 * screen.res_y_16, values,
+                                     navigate='max' if self.work.get(tag) == 'max' else 'value')
+            if chosen in ('origin', 'max'):
+                self.set(tag, chosen)
+            elif chosen == 'value':
+                current = self.work.get(tag)
+                current = int(current) if isinstance(current, (int, float)) else 10
+                number = screen.slider(f"{tag} (px)", min(current, SHAPE_LIMITS[tag]), 0, SHAPE_LIMITS[tag], step=1)
+                if number != 'escape':
+                    self.set(tag, int(number))
+            return
         if tag in SHORTCUT_TAGS + ALIGN_TAGS:
             choices = SHORTCUT_CHOICES if tag in SHORTCUT_TAGS else ALIGN_CHOICES
             values = [[str(index), self.translate(text)] for index, (_value, text) in enumerate(choices)]

@@ -5488,3 +5488,13 @@ msgstr "Annuler"
 
 msgid "theme-back"
 msgstr "Retour"
+
+msgid "theme-plate-borders"
+msgstr "Bordures et arrondis"
+
+msgid "theme-value"
+msgstr "Valeur…"
+
+msgid "theme-round-max"
+msgstr "Maximum (pilule)"
+
