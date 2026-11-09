@@ -5406,3 +5406,6 @@ msgstr "Menüs"
 
 msgid "theme-group-games"
 msgstr "Spiele"
+
+msgid "theme-cancel"
+msgstr "Abbrechen"

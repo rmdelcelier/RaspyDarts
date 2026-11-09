@@ -5473,3 +5473,6 @@ msgstr "Menu"
 
 msgid "theme-group-games"
 msgstr "Giochi"
+
+msgid "theme-cancel"
+msgstr "Annulla"

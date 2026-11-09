@@ -695,15 +695,97 @@ class ThemeEditor:
 
     def fine(self, tag):
         '''
-        Réglage fin : red, green, blue by sliders (from the colour of the moment)
+        Réglage fin : a window with the sliders red, green, blue (dragged or clicked with the
+        mouse ; up / down : a slider, left / right : its value by 5), the colour they give next
+        to the one before, OK and Annuler (Entrée, Échap). Returns the colour, None : cancelled
         '''
-        color = list(self.color(tag) or (128, 128, 128))
-        for index, name in enumerate(('theme-red', 'theme-green', 'theme-blue')):
-            value = self.screen.slider(f"{tag} · {self.translate(name)}", int(color[index]), 0, 255, step=5)
-            if value == 'escape':
-                return None
-            color[index] = max(0, min(255, int(value)))
-        return tuple(color)
+        screen = self.screen
+        width, height = self.size
+        before = tuple(self.color(tag) or (128, 128, 128))
+        color = list(before)
+        names = ('theme-red', 'theme-green', 'theme-blue')
+        tints = ((220, 40, 40), (40, 200, 60), (50, 90, 230))
+        active = 0
+        dragging = None
+        clock = pygame.time.Clock()
+        panel = pygame.Rect(int(width * 3.5 / 16), int(height * 3.2 / 16), int(width * 9 / 16), int(height * 9 / 16))
+        bars = [pygame.Rect(panel.x + int(panel.width * 0.2), panel.y + int(panel.height * (0.22 + 0.17 * index)),
+                            int(panel.width * 0.5), int(panel.height * 0.06)) for index in range(3)]
+        preview = pygame.Rect(panel.x + int(panel.width * 0.76), panel.y + int(panel.height * 0.2),
+                              int(panel.width * 0.2), int(panel.height * 0.5))
+        ok = pygame.Rect(panel.right - int(panel.width * 0.42), panel.bottom - int(panel.height * 0.16),
+                         int(panel.width * 0.18), int(panel.height * 0.11))
+        cancel = pygame.Rect(panel.right - int(panel.width * 0.22), ok.y, ok.width, ok.height)
+        font = screen.font(screen.defaultfontpath, max(12, int(panel.height * 0.06)))
+
+        def value_at(index, pos_x):
+            bar = bars[index]
+            return max(0, min(255, round((pos_x - bar.x) / bar.width * 255)))
+
+        def draw():
+            pygame.draw.rect(screen.screen, (20, 20, 20), panel, border_radius=16)
+            pygame.draw.rect(screen.screen, (200, 200, 200), panel, 2, border_radius=16)
+            title = font.render(f"{tag} · {self.translate('theme-fine')}", True, (255, 255, 255))
+            screen.screen.blit(title, (panel.x + 20, panel.y + 14))
+            for index, bar in enumerate(bars):
+                label = font.render(self.translate(names[index]), True, tints[index])
+                screen.screen.blit(label, (panel.x + 20, bar.centery - label.get_height() // 2))
+                # The bar shaded from 0 to 255 for this component, the others as they are
+                for step in range(0, bar.width, 4):
+                    shade = list(color)
+                    shade[index] = int(step / bar.width * 255)
+                    pygame.draw.rect(screen.screen, shade, (bar.x + step, bar.y, 4, bar.height))
+                pygame.draw.rect(screen.screen, CHOSEN if index == active else (120, 120, 120), bar, 3 if index == active else 1)
+                knob_x = bar.x + int(color[index] / 255 * bar.width)
+                pygame.draw.circle(screen.screen, (255, 255, 255), (knob_x, bar.centery), bar.height)
+                pygame.draw.circle(screen.screen, (0, 0, 0), (knob_x, bar.centery), bar.height, 2)
+                number = font.render(str(color[index]), True, (255, 255, 255))
+                screen.screen.blit(number, (bar.right + bar.height + 14, bar.centery - number.get_height() // 2))
+            # The colour before (top) and the one given (bottom)
+            half = preview.height // 2
+            pygame.draw.rect(screen.screen, before, (preview.x, preview.y, preview.width, half))
+            pygame.draw.rect(screen.screen, tuple(color), (preview.x, preview.y + half, preview.width, preview.height - half))
+            pygame.draw.rect(screen.screen, (255, 255, 255), preview, 2)
+            code = font.render(f"({color[0]}, {color[1]}, {color[2]})", True, (255, 255, 255))
+            screen.screen.blit(code, (preview.centerx - code.get_width() // 2, preview.bottom + 8))
+            for rect, text in ((ok, 'OK'), (cancel, self.translate('theme-cancel'))):
+                pygame.draw.rect(screen.screen, (70, 70, 70), rect, border_radius=10)
+                rendered = font.render(text, True, (255, 255, 255))
+                screen.screen.blit(rendered, rendered.get_rect(center=rect.center))
+            screen.update_screen(rect_array=[panel])
+
+        pygame.event.clear()
+        while True:
+            draw()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    return None
+                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                    if ok.collidepoint(event.pos):
+                        return tuple(color)
+                    if cancel.collidepoint(event.pos):
+                        return None
+                    for index, bar in enumerate(bars):
+                        if bar.inflate(0, bar.height * 2).collidepoint(event.pos):
+                            active, dragging = index, index
+                            color[index] = value_at(index, event.pos[0])
+                elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+                    dragging = None
+                elif event.type == pygame.MOUSEMOTION and dragging is not None:
+                    color[dragging] = value_at(dragging, event.pos[0])
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        return None
+                    if event.key in (pygame.K_RETURN, pygame.K_KP_ENTER):
+                        return tuple(color)
+                    if event.key == pygame.K_UP:
+                        active = (active - 1) % 3
+                    elif event.key == pygame.K_DOWN:
+                        active = (active + 1) % 3
+                    elif event.key in (pygame.K_LEFT, pygame.K_RIGHT):
+                        step = 1 if event.mod & pygame.KMOD_SHIFT else 5
+                        color[active] = max(0, min(255, color[active] + (step if event.key == pygame.K_RIGHT else -step)))
+            clock.tick(30)
 
     # ------------------------------------------------------------------ saving
     def save(self):

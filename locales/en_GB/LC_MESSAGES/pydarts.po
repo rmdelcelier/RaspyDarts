@@ -5678,3 +5678,6 @@ msgstr "Menus"
 
 msgid "theme-group-games"
 msgstr "Games"
+
+msgid "theme-cancel"
+msgstr "Cancel"
