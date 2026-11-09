@@ -5204,3 +5204,10 @@ msgstr "Tras el reinicio, pulse un botón: si no, vuelve la resolución anterior
 msgid "screen-mode-error"
 msgstr "Resolución no aplicada (ver logs/raspydarts.log)"
 
+
+msgid "editor-title-band"
+msgstr "Banda del título"
+
+msgid "editor-title-text"
+msgstr "Texto del título"
+

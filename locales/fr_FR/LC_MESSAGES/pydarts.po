@@ -5275,3 +5275,10 @@ msgstr "Au redémarrage, appuyez sur un bouton : sans action, l'ancienne résolu
 msgid "screen-mode-error"
 msgstr "Résolution non appliquée (voir logs/raspydarts.log)"
 
+
+msgid "editor-title-band"
+msgstr "Bandeau du titre"
+
+msgid "editor-title-text"
+msgstr "Texte du titre"
+

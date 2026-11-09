@@ -5266,3 +5266,10 @@ msgstr "Al riavvio premere un pulsante: altrimenti torna la risoluzione preceden
 msgid "screen-mode-error"
 msgstr "Risoluzione non applicata (vedi logs/raspydarts.log)"
 
+
+msgid "editor-title-band"
+msgstr "Banda del titolo"
+
+msgid "editor-title-text"
+msgstr "Testo del titolo"
+

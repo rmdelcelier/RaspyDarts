@@ -5471,3 +5471,10 @@ msgstr "After the restart, press a button: without it, the previous resolution c
 msgid "screen-mode-error"
 msgstr "Resolution not applied (see logs/raspydarts.log)"
 
+
+msgid "editor-title-band"
+msgstr "Title band"
+
+msgid "editor-title-text"
+msgstr "Title text"
+

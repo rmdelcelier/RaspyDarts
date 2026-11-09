@@ -5253,3 +5253,10 @@ msgstr "Druk na de herstart op een knop: anders komt de vorige resolutie terug"
 msgid "screen-mode-error"
 msgstr "Resolutie niet toegepast (zie logs/raspydarts.log)"
 
+
+msgid "editor-title-band"
+msgstr "Titelbalk"
+
+msgid "editor-title-text"
+msgstr "Titeltekst"
+

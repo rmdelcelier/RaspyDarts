@@ -5199,3 +5199,10 @@ msgstr "Nach dem Neustart eine Taste drücken: sonst kehrt die alte Auflösung z
 msgid "screen-mode-error"
 msgstr "Auflösung nicht übernommen (siehe logs/raspydarts.log)"
 
+
+msgid "editor-title-band"
+msgstr "Titelleiste"
+
+msgid "editor-title-text"
+msgstr "Titeltext"
+

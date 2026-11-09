@@ -59,6 +59,9 @@ SHAPES = ('rectangle', 'rounded', 'pill')
 # The version (V4.6) of the menus which show it : an element placed as the buttons, kept in
 # show_version of the menu (not in its buttons)
 VERSION_ID = '__version__'
+# The band of the title of the menu (« Raspydarts » on the main screen) : an element placed as
+# the buttons, renamed or deleted, kept in title of the menu (false : no title)
+TITLE_ID = '__title__'
 # The states of a button which can have an image of their own (normal : its background)
 STATES = ('normal', 'selected', 'disabled')
 # Buttons arranged in a zone : the spaces between them (parts of the screen), the zone drawn
@@ -105,6 +108,13 @@ class Editor:
         if self.version_shown:
             self.items.append({'button': {'id': VERSION_ID, 'version': True},
                                'rect': screen.menu_version_rect(self.version_shown)})
+        # The band of the title, as the screen shows it
+        self.title_value = copy.deepcopy(self.menu.get('title'))
+        self.title_shown = screen.menu_text_look(name, 'title')[0] is not None
+        if self.title_shown:
+            self.title_rect = screen.menu_title_rect(name)
+            self.items.append({'button': {'id': TITLE_ID, 'title': True, 'text': self.title_text_value(self.title_value)},
+                               'rect': pygame.Rect(self.title_rect)})
         self.selected = 1
         # Its background : the one of the files (None : the one of the theme), and the one
         # given back by Back while they are browsed
@@ -123,9 +133,38 @@ class Editor:
     def translate(self, key):
         return self.screen.lang.translate(key)
 
+    def title_text_value(self, value):
+        '''
+        The text of a title of the files : a text, a text per language, or a block with its look
+        '''
+        if isinstance(value, dict) and value and not set(value) <= self.screen.LANGUAGES:
+            return value.get('text')
+        return value
+
+    def title_look(self):
+        '''
+        The look of the title of the files (its block without its text and its place)
+        '''
+        value = self.title_value
+        if isinstance(value, dict) and value and not set(value) <= self.screen.LANGUAGES:
+            return {key: item for key, item in value.items() if key not in ('text', 'place')}
+        return {}
+
+    def title_text(self, button):
+        '''
+        The title as the screen shows it (the text of the language of the borne, translated)
+        '''
+        text = button.get('text')
+        if isinstance(text, dict):
+            language = str(self.screen.config.get_value('SectionGlobals', 'locale', False) or 'en')[:2]
+            text = text.get(language) or text.get('en') or next(iter(text.values()), '')
+        return self.translate(str(text or ''))
+
     def button_name(self, button):
         if button.get('version'):
             return self.translate('editor-version')
+        if button.get('title'):
+            return self.translate('editor-title-band')
         # A favorite : the name of its game, as on the screen
         return self.screen.lang.translate(self.screen.button_text(self.screen.favorite_button(button)))
 
@@ -143,11 +182,10 @@ class Editor:
             screen.screen.blit(screen.menu_painter().background(block, self.size), (0, 0))
         else:
             screen.display_background()
-        # Its own title : the screen stays recognisable
-        title = screen.menu_text_look(self.name, 'title')[0]
+        # Its subtitle (its title : an element of the editor, drawn with the buttons)
         subtitle = screen.menu_text_look(self.name, 'subtitle')[0]
-        if title or subtitle:
-            screen.styled_title(self.name, title, subtitle)
+        if subtitle:
+            screen.styled_title(self.name, None, subtitle)
 
     def step_text(self):
         step = STEPS[self.step]
@@ -215,6 +253,11 @@ class Editor:
             if button.get('version'):
                 # The version, as the menu shows it, filling its box
                 screen.draw_version(item['rect'], self.version_shown or True)
+                continue
+            if button.get('title'):
+                # The band of the title : untouched, as the screen shows it ; else as it will be saved
+                look = None if self.title_untouched(item) else                     self.saved_title_look(self.title_look() if self.title_shown else {})
+                screen.draw_menu_title(self.name, item['rect'], self.title_text(button), look=look)
                 continue
             if button.get('action') == 'online_players':
                 # The panel of the players online as it will be shown, at its size
@@ -601,11 +644,13 @@ class Editor:
         button = item['button']
         name = self.button_name(button)
         choice = None
-        # The version and the panel of the players online : only placed
-        full = not button.get('version') and button.get('action') != 'online_players'
+        # The version and the panel of the players online : only placed ; the title : renamed too
+        full = not button.get('version') and not button.get('title') and button.get('action') != 'online_players'
         while True:
             items = [{'id': 'move', 'action': 'move', 'text': 'editor-move'},
                      {'id': 'resize', 'action': 'resize', 'text': 'editor-resize'}]
+            if button.get('title'):
+                items.append({'id': 'name', 'action': 'name', 'text': 'editor-title-text', 'value': self.title_text(button)})
             if full:
                 items += [{'id': 'name', 'action': 'name', 'text': 'editor-name', 'value': self.button_name(button)},
                           {'id': 'shortcut', 'action': 'shortcut', 'text': 'editor-shortcut',
@@ -626,6 +671,9 @@ class Editor:
             if choice == 'shape':
                 self.shape(item)
                 continue
+            if choice == 'name' and button.get('title'):
+                self.rename_title(button)
+                continue
             if choice == 'name':
                 self.rename(button)
                 name = self.button_name(button)
@@ -641,12 +689,55 @@ class Editor:
                 self.handle = 4
             elif choice == 'delete' and self.screen.ask_yes_no(f"{self.translate('editor-delete-confirm')} ({name})"):
                 ident = self.menus.button_id(button)
-                if not item.get('new') and not button.get('version'):
+                if not item.get('new') and not button.get('version') and not button.get('title'):
                     self.removed.append(ident)
                 del self.items[self.selected - 1]
                 self.selected = max(1, min(self.selected, len(self.items)))
                 self.changed = True
             return
+
+    def rename_title(self, button):
+        '''
+        The text of the title, typed : in the language of the borne (the others keep theirs) ;
+        the same in every language : written once
+        '''
+        screen = self.screen
+        before = self.title_text(button)
+        typed = screen.input_value_item('string', before, 1, 60, text='editor-title-text')
+        if typed in ('escape', False, None) or str(typed) == before:
+            return
+        typed = str(typed).strip()
+        if not typed:
+            return
+        language = str(screen.config.get_value('SectionGlobals', 'locale', False) or 'en')[:2]
+        text = button.get('text')
+        # The other languages : the text they had (a key of translation stays one : translated
+        # in each language)
+        names = dict(text) if isinstance(text, dict) else {code: str(text or '') for code in screen.LANGUAGES}
+        names[language] = typed
+        button['text'] = typed if all(value == typed for value in names.values()) else names
+        self.changed = True
+
+    def title_untouched(self, item):
+        '''
+        The title as the files have it : neither moved, resized, renamed nor added again
+        '''
+        return (self.title_shown and not item.get('new') and item['rect'] == getattr(self, 'title_rect', None)
+                and item['button'].get('text') == self.title_text_value(self.title_value))
+
+    def saved_title_look(self, look):
+        '''
+        The look written for a title moved, resized or renamed : the one it had, else the look
+        of the header of always (band of the colour of the theme, text as high as the band)
+        '''
+        if look:
+            return dict(look)
+        saved = {'size': 'auto'}
+        if self.screen.colorset.get('menu-header') is not None:
+            # With the transparency of the header of always (new_blit_rect2 : alpha of the screen)
+            saved['background'] = {'color': 'menu-header',
+                                   'opacity': round(int(getattr(self.screen, 'alpha', 255)) / 255, 3)}
+        return saved
 
     def rename(self, button):
         '''
@@ -986,8 +1077,8 @@ class Editor:
         '''
         The buttons to arrange : all of them, or those whose centre is in the zone
         '''
-        # The version stays where it is
-        items = [item for item in self.items if not item['button'].get('version')]
+        # The version and the title stay where they are
+        items = [item for item in self.items if not item['button'].get('version') and not item['button'].get('title')]
         if not self.arrangement['inside']:
             return items
         return [item for item in items if self.zone.collidepoint(item['rect'].center)]
@@ -1104,6 +1195,11 @@ class Editor:
             # The version, deleted before
             if not any(item['button'].get('version') for item in self.items):
                 choices.append((self.translate('editor-version'), {'id': VERSION_ID, 'version': True}))
+        # The band of the title, deleted before (or never there) : with the title of always
+        if not any(item['button'].get('title') for item in self.items):
+            text = cmenus.Menus(self.screen.logs, None, None).menu(self.name).get('title') or 'game-type-menu'
+            choices.append((self.translate('editor-title-band'),
+                            {'id': TITLE_ID, 'title': True, 'text': self.title_text_value(text)}))
             # The panel of the players online (include/cscreen.py online_players_panel)
             if 'online_players' not in actions:
                 choices.append((self.translate('online-players-panel'),
@@ -1167,7 +1263,11 @@ class Editor:
         if button.get('version'):
             # The version : the size it has by default
             rect = self.screen.menu_version_rect(True)
-        rect.center = (self.size[0] // 2, self.size[1] // 2)
+        if button.get('title'):
+            # The title : back at the top, as the header of always
+            rect = pygame.Rect(0, int(self.size[1] / 30), self.size[0], int(self.size[1] / 15))
+        else:
+            rect.center = (self.size[0] // 2, self.size[1] // 2)
         self.items.append({'button': button, 'rect': rect, 'new': True})
         if ident in self.removed:
             self.removed.remove(ident)
@@ -1218,6 +1318,17 @@ class Editor:
                 menu['show_version'] = look
             elif self.version_shown:
                 menu['show_version'] = False
+            # The title : untouched, as it was ; moved, resized, renamed or added : with its place
+            # (and the look of the header of always if it had none) ; deleted : false
+            title = placed.pop(TITLE_ID, None)
+            if title is not None:
+                if not self.title_untouched(title):
+                    look = self.saved_title_look(self.title_look() if self.title_shown else {})
+                    look['text'] = title['button'].get('text')
+                    look['place'] = self.place_of(title['rect'])
+                    menu['title'] = look
+            elif self.title_shown:
+                menu['title'] = False
             buttons = []
             for button in self.menu.get('buttons') or []:
                 if not isinstance(button, dict):

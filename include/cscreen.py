@@ -7862,6 +7862,37 @@ class Screen(pygame.Surface):
             self.screen.blit(text, (area.x + margin + column * width, area.y + margin + row * step))
         return area
 
+    def menu_title_rect(self, name):
+        '''
+        The band of the title of a menu : its place in the files (place), else the one of always
+        '''
+        look = self.menu_text_look(name, 'title')[1]
+        default = pygame.Rect(0, int(self.res['y'] / 30), self.res['x'], int(self.res['y'] / 15))
+        place = look.get('place') if isinstance(look, dict) else None
+        if not isinstance(place, dict):
+            return default
+        units = cmenustyle.Units(self.screen.get_size(), self.menus().data.get('resolution'))
+        return pygame.Rect(int(units.length(place.get('x', 0), 'x')), int(units.length(place.get('y', 0), 'y')),
+                           int(units.length(place.get('width', '100%'), 'x')), int(units.length(place.get('height', '7%'), 'y')))
+
+    def draw_menu_title(self, name, rect, text, look=None):
+        '''
+        The band of the title of a menu in a rectangle (the editor of the screens) : with its
+        look of the files, else as the header of always (colours of the theme)
+        '''
+        look = self.menu_text_look(name, 'title')[1] if look is None else look
+        if look:
+            painter = self.menu_painter()
+            units = cmenustyle.Units(self.screen.get_size(), self.menus().data.get('resolution'))
+            settings = cmenustyle.merge(self.TITLE_LOOK, look)
+            if settings.get('background') is not None:
+                self.blit(painter.background(settings['background'], rect.size), rect.topleft)
+            painter.text(self.screen, self.lang.translate(str(text)), rect, settings, units)
+            return
+        if self.colorset['menu-header'] is not None:
+            self.new_blit_rect2(rect, self.colorset['menu-header'])
+        self.blit_text2(text, rect, self.colorset['menu-text'])
+
     def styled_title(self, name, title, subtitle):
         '''
         Title and subtitle of a menu drawn by cmenustyle (section 7.1) : their band and text
