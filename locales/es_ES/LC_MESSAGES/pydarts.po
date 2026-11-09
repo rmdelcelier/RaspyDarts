@@ -5364,7 +5364,7 @@ msgid "theme-plate-shortcuts"
 msgstr "Atajos y alineación de los textos"
 
 msgid "theme-help"
-msgstr "Flechas o rueda: una etiqueta · Validar: cambiar su color · Volver: las láminas (*: color elegido)"
+msgstr "Clic o flechas: una etiqueta · Clic o Intro: cambiar su color · Esc: los paneles (*: color elegido)"
 
 msgid "theme-save-question"
 msgstr "¿Guardar los colores elegidos?"
@@ -5402,3 +5402,12 @@ msgstr "Al centro"
 msgid "theme-align-right"
 msgstr "A la derecha"
 
+
+msgid "theme-keyboard-mouse"
+msgstr "El tema se personaliza con un teclado y un ratón"
+
+msgid "theme-group-menus"
+msgstr "Menús"
+
+msgid "theme-group-games"
+msgstr "Juegos"

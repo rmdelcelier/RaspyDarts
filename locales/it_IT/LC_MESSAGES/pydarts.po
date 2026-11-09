@@ -5426,7 +5426,7 @@ msgid "theme-plate-shortcuts"
 msgstr "Scorciatoie e allineamento dei testi"
 
 msgid "theme-help"
-msgstr "Frecce o manopola: un'etichetta · Conferma: cambiare il colore · Indietro: le tavole (*: colore scelto)"
+msgstr "Clic o frecce: un'etichetta · Clic o Invio: cambiare il colore · Esc: i pannelli (*: colore scelto)"
 
 msgid "theme-save-question"
 msgstr "Salvare i colori scelti?"
@@ -5464,3 +5464,12 @@ msgstr "Al centro"
 msgid "theme-align-right"
 msgstr "A destra"
 
+
+msgid "theme-keyboard-mouse"
+msgstr "Il tema si personalizza con tastiera e mouse"
+
+msgid "theme-group-menus"
+msgstr "Menu"
+
+msgid "theme-group-games"
+msgstr "Giochi"

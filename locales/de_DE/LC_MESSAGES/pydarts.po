@@ -5359,7 +5359,7 @@ msgid "theme-plate-shortcuts"
 msgstr "Tastenkürzel und Textausrichtung"
 
 msgid "theme-help"
-msgstr "Pfeile oder Drehknopf: ein Tag · Bestätigen: Farbe ändern · Zurück: die Tafeln (*: gewählte Farbe)"
+msgstr "Klick oder Pfeile: ein Tag · Klick oder Eingabe: Farbe ändern · Esc: die Tafeln (*: gewählte Farbe)"
 
 msgid "theme-save-question"
 msgstr "Gewählte Farben speichern?"
@@ -5397,3 +5397,12 @@ msgstr "Mitte"
 msgid "theme-align-right"
 msgstr "Rechts"
 
+
+msgid "theme-keyboard-mouse"
+msgstr "Das Thema wird mit Tastatur und Maus angepasst"
+
+msgid "theme-group-menus"
+msgstr "Menüs"
+
+msgid "theme-group-games"
+msgstr "Spiele"

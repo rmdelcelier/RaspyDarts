@@ -5435,7 +5435,7 @@ msgid "theme-plate-shortcuts"
 msgstr "Raccourcis et alignement des textes"
 
 msgid "theme-help"
-msgstr "Flèches ou molette : une balise · Valider : changer sa couleur · Retour : les planches (* : couleur choisie)"
+msgstr "Clic ou flèches : une balise · Clic ou Entrée : changer sa couleur · Échap : les panneaux (* : couleur choisie)"
 
 msgid "theme-save-question"
 msgstr "Enregistrer les couleurs choisies ?"
@@ -5473,3 +5473,12 @@ msgstr "Au centre"
 msgid "theme-align-right"
 msgstr "À droite"
 
+
+msgid "theme-keyboard-mouse"
+msgstr "La personnalisation du thème se fait avec un clavier et une souris"
+
+msgid "theme-group-menus"
+msgstr "Menus"
+
+msgid "theme-group-games"
+msgstr "Jeux"

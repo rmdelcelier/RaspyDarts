@@ -90,6 +90,13 @@ PLATES = (
 )
 
 
+# The plates by use : those of the menus, those of the games (a panel each on the first page)
+GROUPS = (('theme-group-menus', ('theme-plate-menus', 'theme-plate-settings', 'theme-plate-description',
+                                 'theme-plate-messages', 'theme-plate-shortcuts')),
+          ('theme-group-games', ('theme-plate-game', 'theme-plate-players', 'theme-plate-games',
+                                 'theme-plate-bob27', 'theme-plate-fighters')))
+
+
 def perso_path(screen):
     theme_dir = getattr(screen.file_class, 'theme_dir', None)
     return os.path.join(theme_dir, 'other', PERSO_NAME) if theme_dir else None
@@ -165,29 +172,89 @@ class ThemeEditor:
     # ------------------------------------------------------------------ main loop
     def run(self):
         '''
-        The list of the plates, a plate, until saved or left
+        The first page : the plates in two panels (menus, games), Quitter sans enregistrer and
+        Enregistrer et quitter at the bottom ; a plate chosen, then this page again
         '''
-        initial = None
+        entries = [name for _group, names in GROUPS for name in names] + ['quit', 'save']
+        selected = 0
         while True:
-            items = [{'id': name, 'action': name, 'text': name} for name, *_rest in PLATES]
-            for number, item in enumerate(items[:9], 1):
-                item['shortcut'] = f'F{number}'
-            items += [{'id': 'save', 'action': 'save', 'text': 'editor-save-quit'},
-                      {'id': 'quit', 'action': 'quit', 'text': 'editor-quit'}]
-            back = {'id': 'back', 'action': 'back', 'text': 'back', 'footer': 'left', 'shortcut': 'escape'}
-            choice = self.screen.run_menu('editor_menu', items + [back], items + [back],
-                                          title=self.translate('theme-customize'), initial=initial,
-                                          columns=2).get('id')
-            if choice in ('back', 'quit', None):
-                if choice == 'back' and self.changed and self.screen.ask_yes_no(self.translate('theme-save-question')):
+            zones = self.draw_first_page(entries, selected)
+            key = self.listen()
+            if isinstance(key, tuple):
+                hit = next((index for index, rect in zones.items() if pygame.Rect(rect).collidepoint(key)), None)
+                if hit is None:
+                    continue
+                selected, key = hit, 'enter'
+            if key in self.keys['escape']:
+                if self.changed and self.screen.ask_yes_no(self.translate('theme-save-question')):
                     self.save()
                 return
-            if choice == 'save':
-                self.save()
-                return
-            initial = choice
-            plate = next(plate for plate in PLATES if plate[0] == choice)
-            self.plate(plate)
+            per_group = len(GROUPS[0][1])
+            if key in ('down', 'BTN_DOWN'):
+                selected = (selected + 1) % len(entries)
+            elif key in ('up', 'BTN_UP'):
+                selected = (selected - 1) % len(entries)
+            elif key in ('right', 'BTN_RIGHT') and selected < per_group:
+                selected = min(selected + per_group, len(entries) - 1)
+            elif key in ('left', 'BTN_LEFT') and per_group <= selected < 2 * per_group:
+                selected -= per_group
+            elif key in ('right', 'BTN_RIGHT', 'left', 'BTN_LEFT') and selected >= 2 * per_group:
+                selected = len(entries) - 1 if selected == len(entries) - 2 else len(entries) - 2
+            elif key in self.keys['enter'] + ['space']:
+                entry = entries[selected]
+                if entry == 'quit':
+                    return
+                if entry == 'save':
+                    self.save()
+                    return
+                self.plate(next(plate for plate in PLATES if plate[0] == entry))
+
+    def listen(self):
+        return self.screen.rpi.listen_inputs(['arrows', 'fx'], ['escape', 'enter', 'space', 'single-click',
+                                                                 'PLAYERBUTTON', 'BACKUPBUTTON', 'GAMEBUTTON'])
+
+    def banner(self):
+        '''
+        This screen is used with a keyboard and a mouse : said in a band under the title
+        '''
+        width, height = self.size
+        band = pygame.Rect(0, int(height * 2.0 / 16), width, int(height * 0.85 / 16))
+        pygame.draw.rect(self.screen.screen, (255, 200, 0), band)
+        self.screen.blit_text(self.translate('theme-keyboard-mouse'), band.x, band.y, band.width, band.height, (0, 0, 0))
+
+    def draw_first_page(self, entries, selected):
+        '''
+        Two panels (menus, games) of buttons, the buttons at the bottom. Returns the zones
+        '''
+        screen = self.screen
+        width, height = self.size
+        screen.display_background()
+        screen.menu_header(self.translate('theme-customize'))
+        self.banner()
+        zones = {}
+        index = 0
+        for number, (group, names) in enumerate(GROUPS):
+            panel = pygame.Rect(int(width * (1 + number * 7.25) / 16), int(height * 3.3 / 16),
+                                int(width * 6.75 / 16), int(height * 9.8 / 16))
+            pygame.draw.rect(screen.screen, (30, 30, 30), panel, border_radius=18)
+            pygame.draw.rect(screen.screen, (140, 140, 140), panel, 2, border_radius=18)
+            title = pygame.Rect(panel.x, panel.y + int(height * 0.2 / 16), panel.width, int(height * 0.9 / 16))
+            screen.blit_text(self.translate(group), title.x, title.y, title.width, title.height, (255, 200, 0))
+            step = (panel.bottom - title.bottom - int(height * 0.3 / 16)) / len(names)
+            for row, name in enumerate(names):
+                rect = pygame.Rect(panel.x + int(width * 0.4 / 16), int(title.bottom + row * step + step * 0.12),
+                                   panel.width - int(width * 0.8 / 16), int(step * 0.76))
+                chosen = index == selected
+                pygame.draw.rect(screen.screen, (90, 80, 30) if chosen else (70, 70, 70), rect, border_radius=12)
+                if chosen:
+                    pygame.draw.rect(screen.screen, CHOSEN, rect, 3, border_radius=12)
+                screen.blit_text(self.translate(name), rect.x, rect.y, rect.width, rect.height, (255, 255, 255))
+                zones[index] = rect
+                index += 1
+        zones[index] = screen.display_button(index == selected, 'editor-quit', special='escape')
+        zones[index + 1] = screen.display_button(index + 1 == selected, 'editor-save-quit', special='return')
+        screen.update_screen()
+        return zones
 
     def plate(self, plate):
         '''
@@ -195,12 +262,13 @@ class ThemeEditor:
         changes its colour, Retour goes back to the plates
         '''
         name, drawer, left, right = plate
-        tags = [(tag, x, y, 'left') for tag, x, y in left] + [(tag, x, y, 'right') for tag, x, y in right]
+        tags = self.place_tags(left + right)
+        left = [tag for tag in tags if tag[3] == 'left']
+        right = [tag for tag in tags if tag[3] == 'right']
         selected = 0
         while True:
             zones = self.draw_plate(name, drawer, tags, selected)
-            key = self.screen.rpi.listen_inputs(['arrows', 'fx'], ['escape', 'enter', 'space', 'single-click',
-                                                                    'PLAYERBUTTON', 'BACKUPBUTTON', 'GAMEBUTTON'])
+            key = self.listen()
             if isinstance(key, tuple):
                 hit = next((index for index, rect in zones.items() if pygame.Rect(rect).collidepoint(key)), None)
                 if hit is None:
@@ -224,6 +292,47 @@ class ThemeEditor:
             elif key in self.keys['enter'] + ['space']:
                 self.choose(tags[selected][0])
 
+    def place_tags(self, points):
+        '''
+        The tags of a plate placed so that their arrows do not cross : each on the side of what
+        it colours (the sides balanced when one has too many), in the order of the heights of
+        their points. Returns [(tag, x, y, side)] in the order of the screen (left, then right)
+        '''
+        mockup = self.mockup_rect()
+        width, height = self.size
+        tag_h = max(20, int(height * 0.55 / 16))
+        room = max(1, int((height * 10.2 / 16) / (tag_h + 4)))
+        ordered = sorted(points, key=lambda point: point[1])
+        left = [point for point in ordered if point[1] < 0.5]
+        right = [point for point in ordered if point[1] >= 0.5]
+        # Too many on a side : those nearest the middle go to the other one
+        while len(left) > room and len(right) < room:
+            right.append(left.pop(max(range(len(left)), key=lambda index: left[index][1])))
+        while len(right) > room and len(left) < room:
+            left.append(right.pop(min(range(len(right)), key=lambda index: right[index][1])))
+        placed = []
+        for side, items in (('left', left), ('right', right)):
+            items = sorted(items, key=lambda point: (point[2], point[1] if side == 'left' else -point[1]))
+            placed += [(tag, x, y, side) for tag, x, y in items]
+        return placed
+
+    def tag_heights(self, items, mockup, tag_h):
+        '''
+        The tops of the tags of a side : each at the height of its point, moved apart just
+        enough not to overlap, kept between the title and the help
+        '''
+        width, height = self.size
+        low, high = int(height * 3.0 / 16), int(height * 13.5 / 16) - tag_h
+        gap = 4
+        tops = [min(high, max(low, int(mockup.y + mockup.height * y - tag_h / 2))) for _tag, _x, y, _side in items]
+        for index in range(1, len(tops)):
+            tops[index] = max(tops[index], tops[index - 1] + tag_h + gap)
+        if tops and tops[-1] > high:
+            tops[-1] = high
+            for index in range(len(tops) - 2, -1, -1):
+                tops[index] = min(tops[index], tops[index + 1] - tag_h - gap)
+        return tops
+
     # ------------------------------------------------------------------ drawing of a plate
     def mockup_rect(self):
         width, height = self.size
@@ -237,7 +346,8 @@ class ThemeEditor:
         screen = self.screen
         width, height = self.size
         screen.screen.fill((24, 24, 24))
-        screen.menu_header(self.translate('theme-customize'), self.translate(name))
+        screen.menu_header(f"{self.translate('theme-customize')} : {self.translate(name)}")
+        self.banner()
         mockup = self.mockup_rect()
         getattr(self, drawer)(mockup)
         pygame.draw.rect(screen.screen, (90, 90, 90), mockup, 2)
@@ -248,11 +358,11 @@ class ThemeEditor:
         for side, items in sides.items():
             if not items:
                 continue
-            step = mockup.height / len(items)
+            tops = self.tag_heights(items, mockup, tag_h)
             for number, (tag, point_x, point_y, _side) in enumerate(items):
                 index = tags.index((tag, point_x, point_y, side))
                 tag_x = int(width * 0.2 / 16) if side == 'left' else int(width * 12.2 / 16)
-                tag_y = int(mockup.y + step * number + (step - tag_h) / 2)
+                tag_y = tops[number]
                 rect = pygame.Rect(tag_x, tag_y, tag_w, tag_h)
                 zones[index] = rect
                 chosen = index == selected

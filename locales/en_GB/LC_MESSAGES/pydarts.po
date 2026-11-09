@@ -5631,7 +5631,7 @@ msgid "theme-plate-shortcuts"
 msgstr "Shortcuts and alignment of the texts"
 
 msgid "theme-help"
-msgstr "Arrows or knob: a tag · Validate: change its colour · Back: the plates (*: colour chosen)"
+msgstr "Click or arrows: a tag · Click or Enter: change its colour · Escape: the panels (*: colour chosen)"
 
 msgid "theme-save-question"
 msgstr "Save the colours chosen?"
@@ -5669,3 +5669,12 @@ msgstr "Centre"
 msgid "theme-align-right"
 msgstr "Right"
 
+
+msgid "theme-keyboard-mouse"
+msgstr "The theme is customised with a keyboard and a mouse"
+
+msgid "theme-group-menus"
+msgstr "Menus"
+
+msgid "theme-group-games"
+msgstr "Games"
