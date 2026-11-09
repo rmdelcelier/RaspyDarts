@@ -1,0 +1,616 @@
+"""
+Modifier les écrans > Personnaliser le thème : the colours of the theme (Colorset) changed on
+plates showing each screen (main menu, lists of settings, description of a game, messages,
+screen of a game, players, colours of games, Bob's 27, Fighters, shortcuts and texts). Each plate
+is a mock-up drawn with the colours of the moment, the tags of the Colorset on each side with an
+arrow to what they colour (as the document « Personnalisation du Colorset ») : a tag chosen, its
+colour is chosen in a palette, then set finely (red, green, blue), or back to the colour of the
+theme, or none (for the tags which can be None).
+
+The colours chosen are kept in other/Colorset_perso.cfg of the theme, over its own Colorset.cfg
+(left as it is) : the colour of the theme again = the tag removed from this file. Read by
+Screen.init_colorset after the theme, for every theme (also those the game knows by name)
+"""
+
+import ast
+import configparser
+import os
+import shutil
+
+import pygame
+
+PERSO_NAME = 'Colorset_perso.cfg'
+# Frame of the tag chosen
+CHOSEN = (255, 200, 0)
+ARROW = (255, 200, 0)
+# Palette : rows of 6
+PALETTE = [(255, 255, 255), (214, 214, 214), (160, 160, 160), (100, 100, 100), (48, 48, 48), (0, 0, 0),
+           (255, 0, 0), (194, 1, 1), (128, 0, 0), (255, 128, 0), (255, 215, 0), (255, 255, 0),
+           (128, 255, 0), (0, 255, 0), (0, 128, 0), (0, 128, 128), (0, 255, 255), (107, 134, 176),
+           (0, 128, 255), (0, 0, 255), (0, 0, 128), (128, 0, 255), (255, 0, 255), (255, 105, 180),
+           (139, 69, 19), (205, 127, 50), (213, 206, 186), (112, 156, 118), (205, 144, 110), (189, 108, 109)]
+# Tags which can be None (the code draws nothing then)
+NONE_ALLOWED = ('menu-header', 'game-bg', 'game-option', 'game-type', 'game-darts', 'fighters-dead-player',
+                'suggestion-color-allplayer')
+# Shortcuts and alignment of the texts (not colours)
+SHORTCUT_TAGS = ('main-sub-menu-shortcuts', 'parametrage-menu-shortcuts', 'players-menu-shortcuts',
+                 'game-options-menu-shortcuts')
+ALIGN_TAGS = ('main-sub-menu-text-align', 'parametrage-menu-text-align', 'players-menu-text-align',
+              'game-options-menu-text-align')
+SHORTCUT_CHOICES = (('', 'theme-shortcut-keys'), (None, 'theme-shortcut-none'), ('>', '>'), ('-', '-'),
+                    ('*', '*'), ('+', '+'))
+ALIGN_CHOICES = (('Left', 'theme-align-left'), ('Center', 'theme-align-center'), ('Right', 'theme-align-right'))
+
+# Plates : (name, drawer, tags on the left [(tag, x, y)], tags on the right) ; x, y : the point
+# of the mock-up the arrow goes to (parts of the mock-up)
+PLATES = (
+    ('theme-plate-menus', 'draw_menus',
+     [('menu-header', 0.15, 0.06), ('menu-text', 0.5, 0.06), ('menu-shortcut', 0.24, 0.23),
+      ('menu-border', 0.2, 0.28), ('menu-favorite', 0.55, 0.71), ('menu-inactive', 0.85, 0.87)],
+     [('menu-selected', 0.8, 0.23), ('menu-text-white', 0.55, 0.23), ('menu-buttons', 0.85, 0.39),
+      ('menu-text-black', 0.6, 0.39)]),
+    ('theme-plate-settings', 'draw_settings',
+     [('menu-alternate', 0.2, 0.22), ('menu-item-black', 0.12, 0.62), ('menu-item-white', 0.5, 0.6)],
+     [('menu-ok', 0.8, 0.82), ('menu-warning', 0.8, 0.88), ('menu-ko', 0.8, 0.94)]),
+    ('theme-plate-description', 'draw_description',
+     [('description-bg', 0.62, 0.7)],
+     [('description-game', 0.75, 0.2), ('description-text', 0.75, 0.42)]),
+    ('theme-plate-messages', 'draw_messages',
+     [('message-bg', 0.2, 0.5)],
+     [('message-text', 0.6, 0.5)]),
+    ('theme-plate-game', 'draw_game',
+     [('game-bg', 0.05, 0.5), ('bg-round-nb-header', 0.12, 0.08), ('bg-round-nb', 0.12, 0.2),
+      ('game-round', 0.12, 0.2), ('bg-darts-nb-header', 0.12, 0.36), ('bg-darts-nb', 0.12, 0.47),
+      ('game-darts', 0.12, 0.47), ('game-type', 0.12, 0.66), ('game-option', 0.12, 0.74)],
+     [('game-headers', 0.6, 0.06), ('game-alt-headers', 0.85, 0.06), ('game-player', 0.85, 0.2),
+      ('game-player-name', 0.5, 0.2), ('game-score', 0.95, 0.2), ('game-inactive', 0.85, 0.34),
+      ('game-dead', 0.85, 0.48), ('game-table', 0.6, 0.66), ('game-text', 0.75, 0.8),
+      ('game-title1', 0.6, 0.93), ('game-title2', 0.6, 0.93)]),
+    ('theme-plate-players', 'draw_players',
+     [(f'player{index}', 0.08 + 0.17 * ((index - 1) % 6), 0.3 if index <= 6 else 0.7) for index in range(1, 7)],
+     [(f'player{index}', 0.08 + 0.17 * ((index - 1) % 6), 0.7) for index in range(7, 13)]),
+    ('theme-plate-games', 'draw_swatches',
+     [('game-red', 0.1, 0.3), ('game-green', 0.3, 0.3), ('game-blue', 0.5, 0.3), ('game-purple', 0.7, 0.3),
+      ('game-grey', 0.9, 0.3)],
+     [('game-grey2', 0.1, 0.7), ('game-gold', 0.3, 0.7), ('game-silver', 0.5, 0.7), ('game-bronze', 0.7, 0.7),
+      ('suggestion-color-allplayer', 0.9, 0.7)]),
+    ('theme-plate-bob27', 'draw_bob27',
+     [('bob27-bg', 0.05, 0.5), ('bob27-blue', 0.3, 0.25), ('bob27-green', 0.3, 0.5), ('bob27-red', 0.3, 0.75)],
+     [('bob27-hit', 0.7, 0.25), ('bob27-miss', 0.7, 0.5), ('bob27-text', 0.62, 0.75)]),
+    ('theme-plate-fighters', 'draw_fighters',
+     [('fighters-actual-player', 0.3, 0.15), ('fighters-alive-player', 0.3, 0.35),
+      ('fighters-dead-player', 0.3, 0.55), ('fighters-medic', 0.3, 0.75)],
+     [('fighters-targets', 0.75, 0.15), ('fighters-scores', 0.75, 0.35), ('fighters-darts', 0.75, 0.55),
+      ('fighters-round', 0.75, 0.75)]),
+    ('theme-plate-shortcuts', 'draw_shortcuts',
+     [('main-sub-menu-shortcuts', 0.08, 0.15), ('parametrage-menu-shortcuts', 0.08, 0.4),
+      ('players-menu-shortcuts', 0.08, 0.65), ('game-options-menu-shortcuts', 0.08, 0.88)],
+     [('main-sub-menu-text-align', 0.7, 0.15), ('parametrage-menu-text-align', 0.7, 0.4),
+      ('players-menu-text-align', 0.7, 0.65), ('game-options-menu-text-align', 0.7, 0.88)]),
+)
+
+
+def perso_path(screen):
+    theme_dir = getattr(screen.file_class, 'theme_dir', None)
+    return os.path.join(theme_dir, 'other', PERSO_NAME) if theme_dir else None
+
+
+def read_perso(path):
+    """
+    The colours chosen for a theme : {tag: value}, {} if none
+    """
+    if not path or not os.path.isfile(path):
+        return {}
+    parser = configparser.ConfigParser(inline_comment_prefixes='#', interpolation=None)
+    parser.optionxform = str
+    try:
+        parser.read(path, encoding='utf-8')
+        values = {}
+        for key, value in (parser['Colorset'].items() if parser.has_section('Colorset') else []):
+            try:
+                values[key] = ast.literal_eval(value)
+            except (ValueError, SyntaxError):
+                continue
+        return values
+    except configparser.Error:
+        return {}
+
+
+def write_perso(path, values):
+    """
+    The colours chosen written (the file before kept as .bak) ; none : the file removed
+    """
+    if os.path.isfile(path):
+        shutil.copyfile(path, f'{path}.bak')
+    if not values:
+        if os.path.isfile(path):
+            os.remove(path)
+        return
+    lines = ['[Colorset]', '# Couleurs choisies dans Modifier les écrans > Personnaliser le thème,',
+             '# par-dessus Colorset.cfg (retirer une ligne : la couleur du thème revient)']
+    lines += [f'{key}: {value!r}' for key, value in sorted(values.items())]
+    temporary = f'{path}.tmp'
+    with open(temporary, 'w', encoding='utf-8') as file:
+        file.write('\n'.join(lines) + '\n')
+    os.replace(temporary, path)
+
+
+class ThemeEditor:
+    '''
+    The editor of the colours of the theme, drawn and driven by the Screen of the game
+    '''
+
+    def __init__(self, screen, keys):
+        self.screen = screen
+        self.keys = keys
+        self.path = perso_path(screen)
+        self.perso = read_perso(self.path)
+        # The colours of the theme itself (without the colours chosen : kept by init_colorset),
+        # and those of the moment
+        self.base = dict(getattr(screen, 'theme_colorset', None) or screen.colorset)
+        self.work = dict(self.base)
+        self.work.update(self.perso)
+        self.changed = False
+        self.size = screen.screen.get_size()
+
+    def translate(self, key):
+        return self.screen.lang.translate(key)
+
+    def color(self, tag):
+        value = self.work.get(tag)
+        if isinstance(value, (tuple, list)) and len(value) >= 3:
+            return tuple(int(part) for part in value[:3])
+        return None
+
+    # ------------------------------------------------------------------ main loop
+    def run(self):
+        '''
+        The list of the plates, a plate, until saved or left
+        '''
+        initial = None
+        while True:
+            items = [{'id': name, 'action': name, 'text': name} for name, *_rest in PLATES]
+            for number, item in enumerate(items[:9], 1):
+                item['shortcut'] = f'F{number}'
+            items += [{'id': 'save', 'action': 'save', 'text': 'editor-save-quit'},
+                      {'id': 'quit', 'action': 'quit', 'text': 'editor-quit'}]
+            back = {'id': 'back', 'action': 'back', 'text': 'back', 'footer': 'left', 'shortcut': 'escape'}
+            choice = self.screen.run_menu('editor_menu', items + [back], items + [back],
+                                          title=self.translate('theme-customize'), initial=initial,
+                                          columns=2).get('id')
+            if choice in ('back', 'quit', None):
+                if choice == 'back' and self.changed and self.screen.ask_yes_no(self.translate('theme-save-question')):
+                    self.save()
+                return
+            if choice == 'save':
+                self.save()
+                return
+            initial = choice
+            plate = next(plate for plate in PLATES if plate[0] == choice)
+            self.plate(plate)
+
+    def plate(self, plate):
+        '''
+        A plate : its mock-up and its tags ; arrows (or the knob) go from a tag to the next, Valider
+        changes its colour, Retour goes back to the plates
+        '''
+        name, drawer, left, right = plate
+        tags = [(tag, x, y, 'left') for tag, x, y in left] + [(tag, x, y, 'right') for tag, x, y in right]
+        selected = 0
+        while True:
+            zones = self.draw_plate(name, drawer, tags, selected)
+            key = self.screen.rpi.listen_inputs(['arrows', 'fx'], ['escape', 'enter', 'space', 'single-click',
+                                                                    'PLAYERBUTTON', 'BACKUPBUTTON', 'GAMEBUTTON'])
+            if isinstance(key, tuple):
+                hit = next((index for index, rect in zones.items() if pygame.Rect(rect).collidepoint(key)), None)
+                if hit is None:
+                    continue
+                selected, key = hit, 'enter'
+            if key in self.keys['escape']:
+                return
+            count = len(tags)
+            left_count = len(left)
+            if key in ('down', 'BTN_DOWN', 'right', 'BTN_RIGHT', 'S3', 'S6'):
+                if key in ('right', 'BTN_RIGHT', 'S6') and selected < left_count and right:
+                    # Right from the left column : the same height on the right one (a knob : the next)
+                    selected = min(left_count + selected, count - 1) if key == 'right' else (selected + 1) % count
+                else:
+                    selected = (selected + 1) % count
+            elif key in ('up', 'BTN_UP', 'left', 'BTN_LEFT', 'S20', 'S11'):
+                if key == 'left' and selected >= left_count:
+                    selected = min(selected - left_count, left_count - 1)
+                else:
+                    selected = (selected - 1) % count
+            elif key in self.keys['enter'] + ['space']:
+                self.choose(tags[selected][0])
+
+    # ------------------------------------------------------------------ drawing of a plate
+    def mockup_rect(self):
+        width, height = self.size
+        return pygame.Rect(int(width * 4.2 / 16), int(height * 3.4 / 16), int(width * 7.6 / 16), int(height * 9.9 / 16))
+
+    def draw_plate(self, name, drawer, tags, selected):
+        '''
+        The plate drawn : title, mock-up, tags with their colour and their arrow, help. Returns
+        the zones of the tags {index: rect}
+        '''
+        screen = self.screen
+        width, height = self.size
+        screen.screen.fill((24, 24, 24))
+        screen.menu_header(self.translate('theme-customize'), self.translate(name))
+        mockup = self.mockup_rect()
+        getattr(self, drawer)(mockup)
+        pygame.draw.rect(screen.screen, (90, 90, 90), mockup, 2)
+        zones = {}
+        sides = {'left': [tag for tag in tags if tag[3] == 'left'], 'right': [tag for tag in tags if tag[3] == 'right']}
+        tag_w, tag_h = int(width * 3.6 / 16), max(20, int(height * 0.55 / 16))
+        font = screen.font(screen.defaultfontpath, int(tag_h * 0.62))
+        for side, items in sides.items():
+            if not items:
+                continue
+            step = mockup.height / len(items)
+            for number, (tag, point_x, point_y, _side) in enumerate(items):
+                index = tags.index((tag, point_x, point_y, side))
+                tag_x = int(width * 0.2 / 16) if side == 'left' else int(width * 12.2 / 16)
+                tag_y = int(mockup.y + step * number + (step - tag_h) / 2)
+                rect = pygame.Rect(tag_x, tag_y, tag_w, tag_h)
+                zones[index] = rect
+                chosen = index == selected
+                pygame.draw.rect(screen.screen, (60, 60, 60) if not chosen else (90, 80, 30), rect, border_radius=tag_h // 3)
+                if chosen:
+                    pygame.draw.rect(screen.screen, CHOSEN, rect, 3, border_radius=tag_h // 3)
+                # Its value : a swatch (a colour), or its text (shortcuts, alignment)
+                swatch = pygame.Rect(rect.x + 4, rect.y + 4, tag_h - 8, tag_h - 8) if side == 'left' else \
+                    pygame.Rect(rect.right - tag_h + 4, rect.y + 4, tag_h - 8, tag_h - 8)
+                self.draw_value(tag, swatch, font)
+                text = font.render(tag + (' *' if tag in self.perso or (tag in self.work and self.work.get(tag) != self.base.get(tag)) else ''),
+                                   True, (255, 255, 255))
+                room = rect.width - tag_h - 12
+                if text.get_width() > room:
+                    text = pygame.transform.smoothscale(text, (room, text.get_height()))
+                text_x = swatch.right + 6 if side == 'left' else swatch.x - 6 - text.get_width()
+                screen.screen.blit(text, (text_x, rect.y + (rect.height - text.get_height()) // 2))
+                # The arrow to what it colours
+                target = (int(mockup.x + mockup.width * point_x), int(mockup.y + mockup.height * point_y))
+                start = (rect.right, rect.centery) if side == 'left' else (rect.x, rect.centery)
+                self.arrow(start, target, CHOSEN if chosen else (150, 150, 150), 3 if chosen else 1)
+        # Help, at the bottom
+        help_rect = pygame.Rect(0, int(height * 13.6 / 16), width, int(height * 0.6 / 16))
+        pygame.draw.rect(screen.screen, (0, 0, 0), help_rect)
+        screen.blit_text(self.translate('theme-help'), help_rect.x, help_rect.y, help_rect.width, help_rect.height,
+                         (255, 255, 255))
+        screen.update_screen()
+        return zones
+
+    def draw_value(self, tag, rect, font):
+        value = self.work.get(tag)
+        if tag in SHORTCUT_TAGS + ALIGN_TAGS:
+            pygame.draw.rect(self.screen.screen, (30, 30, 30), rect)
+            label = {'Left': 'G', 'Center': 'C', 'Right': 'D', None: '-', '': 'F'}.get(value, str(value)[:2])
+            text = font.render(label, True, (255, 255, 255))
+            self.screen.screen.blit(text, text.get_rect(center=rect.center))
+            return
+        color = self.color(tag)
+        if color is None:
+            pygame.draw.rect(self.screen.screen, (30, 30, 30), rect)
+            pygame.draw.line(self.screen.screen, (200, 0, 0), rect.topleft, rect.bottomright, 2)
+        else:
+            pygame.draw.rect(self.screen.screen, color, rect)
+            pygame.draw.rect(self.screen.screen, (255, 255, 255), rect, 1)
+
+    def arrow(self, start, end, color, width):
+        pygame.draw.line(self.screen.screen, color, start, end, width)
+        pygame.draw.circle(self.screen.screen, color, end, max(3, width + 2))
+
+    # ------------------------------------------------------------------ mock-ups
+    def text(self, text, rect, tag, size=0.6, align='center'):
+        color = self.color(tag)
+        if color is None:
+            return
+        font = self.screen.font(self.screen.defaultfontpath, max(8, int(rect.height * size)))
+        rendered = font.render(text, True, color)
+        if rendered.get_width() > rect.width - 4:
+            rendered = pygame.transform.smoothscale(rendered, (rect.width - 4, rendered.get_height()))
+        place = rendered.get_rect(center=rect.center)
+        if align == 'left':
+            place.x = rect.x + 6
+        elif align == 'right':
+            place.right = rect.right - 6
+        self.screen.screen.blit(rendered, place)
+
+    def box(self, rect, tag, radius=6, border=None):
+        color = self.color(tag)
+        if color is not None:
+            pygame.draw.rect(self.screen.screen, color, rect, border_radius=radius)
+        if border is not None and self.color(border) is not None:
+            pygame.draw.rect(self.screen.screen, self.color(border), rect, 3, border_radius=radius)
+
+    def part(self, mockup, x, y, w, h):
+        return pygame.Rect(int(mockup.x + mockup.width * x), int(mockup.y + mockup.height * y),
+                           int(mockup.width * w), int(mockup.height * h))
+
+    def draw_background(self, mockup):
+        pygame.draw.rect(self.screen.screen, (40, 40, 44), mockup)
+
+    def draw_menus(self, mockup):
+        self.draw_background(mockup)
+        header = self.part(mockup, 0, 0.02, 1, 0.08)
+        self.box(header, 'menu-header', 0)
+        self.text('Raspydarts', header, 'menu-text')
+        labels = ('Partie simple', 'Partie en réseau', 'Divers', 'Cricket (favori)', 'Revenir sur le bureau')
+        for index, label in enumerate(labels):
+            row = self.part(mockup, 0.2, 0.17 + index * 0.16, 0.7, 0.12)
+            short = pygame.Rect(row.x, row.y, int(row.height * 1.1), row.height)
+            if index == 4:
+                self.box(row, 'menu-inactive')
+                self.text(label, row, 'menu-text-black')
+                continue
+            selected = index == 0
+            self.box(row, 'menu-selected' if selected else 'menu-buttons', border='menu-border' if selected else None)
+            self.box(short, 'menu-shortcut')
+            self.text(f'F{index + 1}', short, 'menu-text-white')
+            text_rect = pygame.Rect(short.right, row.y, row.right - short.right, row.height)
+            self.text(label, text_rect, 'menu-favorite' if index == 3 else ('menu-text-white' if selected else 'menu-text-black'))
+
+    def draw_settings(self, mockup):
+        self.draw_background(mockup)
+        for index, (value, label) in enumerate((('Oui', 'Afficher le segment touché'), ('20', 'Nombre de tours'),
+                                                ('Non', 'Mode compétition'))):
+            row = self.part(mockup, 0.05, 0.12 + index * 0.14, 0.9, 0.1)
+            self.box(row, 'menu-buttons')
+            value_rect = pygame.Rect(row.x, row.y, int(row.width * 0.25), row.height)
+            self.box(value_rect, 'menu-alternate')
+            self.text(value, value_rect, 'menu-text-white')
+            self.text(label, pygame.Rect(value_rect.right, row.y, row.right - value_rect.right, row.height), 'menu-text-black')
+        panel = self.part(mockup, 0.05, 0.52, 0.55, 0.22)
+        self.box(panel, 'menu-item-black')
+        self.text('Nouveautés…', panel, 'menu-item-white', 0.3)
+        for index, tag in enumerate(('menu-ok', 'menu-warning', 'menu-ko')):
+            band = self.part(mockup, 0.62, 0.79 + index * 0.065, 0.36, 0.055)
+            self.box(band, tag, 3)
+            self.text(('Enregistré', 'Attention', 'Erreur')[index], band, 'menu-text-white', 0.7)
+
+    def draw_description(self, mockup):
+        self.draw_background(mockup)
+        for index in range(12):
+            logo = self.part(mockup, 0.04 + (index % 3) * 0.13, 0.12 + (index // 3) * 0.2, 0.11, 0.17)
+            pygame.draw.circle(self.screen.screen, (180, 30, 30), logo.center, logo.width // 2)
+            pygame.draw.circle(self.screen.screen, (240, 240, 240), logo.center, logo.width // 4)
+        title = self.part(mockup, 0.45, 0.12, 0.52, 0.12)
+        self.box(title, 'description-bg', 12)
+        self.text('Cricket', title, 'description-game')
+        body = self.part(mockup, 0.45, 0.28, 0.52, 0.62)
+        self.box(body, 'description-bg', 18)
+        for line in range(5):
+            self.text('Fermez les chiffres de 15 à 20…', self.part(mockup, 0.47, 0.32 + line * 0.07, 0.48, 0.06),
+                      'description-text', 0.7, 'left')
+
+    def draw_messages(self, mockup):
+        self.draw_background(mockup)
+        band = self.part(mockup, 0, 0.42, 1, 0.16)
+        self.box(band, 'message-bg', 0)
+        self.text('Retirez les fléchettes et appuyez sur « Joueur suivant »', band, 'message-text', 0.45)
+
+    def draw_game(self, mockup):
+        screen = self.screen
+        background = self.color('game-bg')
+        pygame.draw.rect(screen.screen, background if background is not None else (40, 40, 44), mockup)
+        round_header = self.part(mockup, 0.02, 0.03, 0.2, 0.08)
+        self.box(round_header, 'bg-round-nb-header', 4)
+        self.text('Round', round_header, 'game-headers')
+        round_box = self.part(mockup, 0.02, 0.12, 0.2, 0.16)
+        self.box(round_box, 'bg-round-nb', 4)
+        self.text('1 / 20', round_box, 'game-round')
+        darts_header = self.part(mockup, 0.02, 0.32, 0.2, 0.08)
+        self.box(darts_header, 'bg-darts-nb-header', 4)
+        self.text('Darts', darts_header, 'game-headers')
+        darts_box = self.part(mockup, 0.02, 0.41, 0.2, 0.12)
+        self.box(darts_box, 'bg-darts-nb', 4)
+        self.text('3', darts_box, 'game-darts')
+        self.text('Cricket', self.part(mockup, 0.02, 0.62, 0.2, 0.08), 'game-type')
+        self.text('Paye ton coup : 200', self.part(mockup, 0.02, 0.71, 0.2, 0.06), 'game-option')
+        header = self.part(mockup, 0.3, 0.02, 0.68, 0.08)
+        self.box(header, 'game-alt-headers', 0)
+        self.text('Joueur          Score', header, 'game-headers')
+        for index, (tag, name, score) in enumerate((('game-player', 'Joueur 1', '120'), ('game-inactive', 'Joueur 2', '80'),
+                                                    ('game-dead', 'Joueur 3', '0'))):
+            line = self.part(mockup, 0.3, 0.13 + index * 0.14, 0.68, 0.12)
+            self.box(line, tag, 0)
+            self.text(name, pygame.Rect(line.x, line.y, int(line.width * 0.6), line.height),
+                      'game-player-name' if index == 0 else 'game-text')
+            self.text(score, pygame.Rect(line.x + int(line.width * 0.6), line.y, int(line.width * 0.4), line.height), 'game-score')
+        table = self.part(mockup, 0.3, 0.58, 0.68, 0.18)
+        color = self.color('game-table')
+        if color is not None:
+            for row in range(4):
+                pygame.draw.line(screen.screen, color, (table.x, table.y + row * table.height // 3),
+                                 (table.right, table.y + row * table.height // 3), 2)
+        self.text('20   19   18   17', self.part(mockup, 0.3, 0.77, 0.68, 0.06), 'game-text')
+        title = self.part(mockup, 0.3, 0.88, 0.68, 0.1)
+        self.box(title, 'game-title1', 0)
+        self.text('Le gagnant est…', title, 'game-title2')
+
+    def draw_players(self, mockup):
+        self.draw_background(mockup)
+        for index in range(1, 13):
+            swatch = self.part(mockup, 0.02 + 0.17 * ((index - 1) % 6), 0.2 if index <= 6 else 0.6, 0.12, 0.2)
+            self.box(swatch, f'player{index}', 8)
+            self.text(str(index), swatch, 'menu-text-white' if index > 99 else 'color-black', 0.5)
+
+    def draw_swatches(self, mockup):
+        self.draw_background(mockup)
+        tags = ('game-red', 'game-green', 'game-blue', 'game-purple', 'game-grey',
+                'game-grey2', 'game-gold', 'game-silver', 'game-bronze', 'suggestion-color-allplayer')
+        for index, tag in enumerate(tags):
+            swatch = self.part(mockup, 0.03 + 0.2 * (index % 5), 0.2 if index < 5 else 0.6, 0.14, 0.2)
+            if self.color(tag) is None:
+                pygame.draw.rect(self.screen.screen, (90, 90, 90), swatch, 2, border_radius=8)
+            self.box(swatch, tag, 8)
+
+    def draw_bob27(self, mockup):
+        background = self.color('bob27-bg')
+        pygame.draw.rect(self.screen.screen, background or (40, 40, 44), mockup)
+        for index, tag in enumerate(('bob27-blue', 'bob27-green', 'bob27-red')):
+            bar = self.part(mockup, 0.15, 0.18 + index * 0.25, 0.4, 0.15)
+            self.box(bar, tag, 6)
+            self.text(('D1   D2   D3', '27 points', 'Touché / Raté')[index], bar, 'bob27-text', 0.5)
+        self.text('D1 : OK', self.part(mockup, 0.6, 0.18, 0.25, 0.15), 'bob27-hit')
+        self.text('D2 : X', self.part(mockup, 0.6, 0.43, 0.25, 0.15), 'bob27-miss')
+
+    def draw_fighters(self, mockup):
+        self.draw_background(mockup)
+        for index, (tag, name) in enumerate((('fighters-actual-player', '> Joueur 1'), ('fighters-alive-player', 'Joueur 2'),
+                                             ('fighters-dead-player', 'Joueur 3 (KO)'), ('fighters-medic', '+ Soin'))):
+            self.text(name, self.part(mockup, 0.05, 0.08 + index * 0.2, 0.45, 0.15), tag, 0.55, 'left')
+        for index, (tag, text) in enumerate((('fighters-targets', '20  19  18'), ('fighters-scores', '120'),
+                                             ('fighters-darts', 'o  o  o'), ('fighters-round', 'Round 3'))):
+            self.text(text, self.part(mockup, 0.55, 0.08 + index * 0.2, 0.4, 0.15), tag, 0.55)
+
+    def draw_shortcuts(self, mockup):
+        self.draw_background(mockup)
+        examples = (('main-sub-menu', 'Partie simple'), ('parametrage-menu', 'Paramétrage'),
+                    ('players-menu', 'Joueur 1'), ('game-options-menu', 'Nombre de tours'))
+        for index, (prefix, label) in enumerate(examples):
+            row = self.part(mockup, 0.05, 0.08 + index * 0.24, 0.9, 0.15)
+            self.box(row, 'menu-buttons')
+            shortcut = self.work.get(f'{prefix}-shortcuts')
+            align = str(self.work.get(f'{prefix}-text-align') or 'Center').lower()
+            shown = 'F1' if shortcut == '' else ('' if shortcut is None else str(shortcut))
+            short = pygame.Rect(row.x, row.y, int(row.height * 1.1), row.height)
+            if shown:
+                self.box(short, 'menu-shortcut')
+                self.text(shown, short, 'menu-text-white')
+            text_rect = pygame.Rect(short.right if shown else row.x, row.y, row.right - (short.right if shown else row.x), row.height)
+            self.text(label, text_rect, 'menu-text-black', 0.55, align if align in ('left', 'right') else 'center')
+
+    # ------------------------------------------------------------------ choosing
+    def choose(self, tag):
+        '''
+        A tag chosen : its value changed (a colour : palette, then fine, origin, none ; a shortcut,
+        an alignment : its list)
+        '''
+        screen = self.screen
+        if tag in SHORTCUT_TAGS + ALIGN_TAGS:
+            choices = SHORTCUT_CHOICES if tag in SHORTCUT_TAGS else ALIGN_CHOICES
+            values = [[str(index), self.translate(text)] for index, (_value, text) in enumerate(choices)]
+            values.append(['origin', self.translate('theme-origin')])
+            current = next((str(index) for index, (value, _text) in enumerate(choices) if value == self.work.get(tag)), None)
+            chosen = screen.dropdown(screen.res['x'] * 6 / 16, 3 * screen.res_y_16, values, navigate=current)
+            if chosen == 'escape':
+                return
+            self.set(tag, 'origin' if chosen == 'origin' else choices[int(chosen)][0])
+            return
+        chosen = self.palette(tag)
+        if chosen != 'back':
+            self.set(tag, chosen)
+
+    def set(self, tag, value):
+        if value == 'origin':
+            self.perso.pop(tag, None)
+            self.work[tag] = self.base.get(tag)
+        else:
+            self.perso[tag] = value
+            self.work[tag] = value
+        self.changed = True
+
+    def palette(self, tag):
+        '''
+        The palette of a tag : a colour, Réglage fin (red, green, blue), Couleur d'origine du
+        thème, Aucune (if it can be None). Returns the colour, None (Aucune), 'origin', or 'back'
+        '''
+        screen = self.screen
+        width, height = self.size
+        buttons = ['fine', 'origin'] + (['none'] if tag in NONE_ALLOWED else [])
+        cells = len(PALETTE) + len(buttons)
+        current = self.color(tag)
+        selected = PALETTE.index(current) if current in PALETTE else 0
+        columns = 6
+        while True:
+            panel = pygame.Rect(int(width * 4 / 16), int(height * 2.2 / 16), int(width * 8 / 16), int(height * 11 / 16))
+            pygame.draw.rect(screen.screen, (20, 20, 20), panel, border_radius=16)
+            pygame.draw.rect(screen.screen, (200, 200, 200), panel, 2, border_radius=16)
+            title = pygame.Rect(panel.x, panel.y + 8, panel.width, int(height * 0.8 / 16))
+            screen.blit_text(f"{tag}", title.x, title.y, title.width, title.height, (255, 255, 255))
+            gap = int(panel.width / 40)
+            size = int((panel.width - gap * (columns + 1)) / columns)
+            row_h = int(size * 0.55)
+            zones = {}
+            for index, color in enumerate(PALETTE):
+                cell = pygame.Rect(panel.x + gap + (index % columns) * (size + gap),
+                                   title.bottom + 10 + (index // columns) * (row_h + gap), size, row_h)
+                pygame.draw.rect(screen.screen, color, cell, border_radius=6)
+                pygame.draw.rect(screen.screen, CHOSEN if index == selected else (90, 90, 90), cell,
+                                 4 if index == selected else 1, border_radius=6)
+                zones[index] = cell
+            row_y = title.bottom + 10 + (len(PALETTE) // columns) * (row_h + gap) + gap
+            button_w = int((panel.width - gap * (len(buttons) + 1)) / len(buttons))
+            for number, name in enumerate(buttons):
+                index = len(PALETTE) + number
+                rect = pygame.Rect(panel.x + gap + number * (button_w + gap), row_y, button_w, int(height * 0.8 / 16))
+                pygame.draw.rect(screen.screen, (90, 80, 30) if index == selected else (70, 70, 70), rect, border_radius=10)
+                if index == selected:
+                    pygame.draw.rect(screen.screen, CHOSEN, rect, 3, border_radius=10)
+                screen.blit_text(self.translate(f'theme-{name}'), rect.x, rect.y, rect.width, rect.height, (255, 255, 255))
+                zones[index] = rect
+            screen.update_screen()
+            key = screen.rpi.listen_inputs(['arrows', 'fx'], ['escape', 'enter', 'space', 'single-click',
+                                                               'PLAYERBUTTON', 'BACKUPBUTTON', 'GAMEBUTTON'])
+            if isinstance(key, tuple):
+                hit = next((index for index, rect in zones.items() if rect.collidepoint(key)), None)
+                if hit is None:
+                    continue
+                selected, key = hit, 'enter'
+            if key in self.keys['escape']:
+                return 'back'
+            if key in ('right', 'BTN_RIGHT', 'S6'):
+                selected = (selected + 1) % cells
+            elif key in ('left', 'BTN_LEFT', 'S11'):
+                selected = (selected - 1) % cells
+            elif key in ('down', 'BTN_DOWN', 'S3'):
+                selected = min(selected + columns, cells - 1) if selected < len(PALETTE) else 0
+            elif key in ('up', 'BTN_UP', 'S20'):
+                selected = selected - columns if selected >= columns and selected < len(PALETTE) else \
+                    (len(PALETTE) - columns if selected >= len(PALETTE) else cells - 1)
+            elif key in self.keys['enter'] + ['space']:
+                if selected < len(PALETTE):
+                    return PALETTE[selected]
+                name = buttons[selected - len(PALETTE)]
+                if name == 'origin':
+                    return 'origin'
+                if name == 'none':
+                    return None
+                fine = self.fine(tag)
+                if fine is not None:
+                    return fine
+
+    def fine(self, tag):
+        '''
+        Réglage fin : red, green, blue by sliders (from the colour of the moment)
+        '''
+        color = list(self.color(tag) or (128, 128, 128))
+        for index, name in enumerate(('theme-red', 'theme-green', 'theme-blue')):
+            value = self.screen.slider(f"{tag} · {self.translate(name)}", int(color[index]), 0, 255, step=5)
+            if value == 'escape':
+                return None
+            color[index] = max(0, min(255, int(value)))
+        return tuple(color)
+
+    # ------------------------------------------------------------------ saving
+    def save(self):
+        '''
+        The colours chosen written in other/Colorset_perso.cfg of the theme, shown at once
+        '''
+        if self.path is None:
+            return False
+        values = dict(self.perso)
+        try:
+            os.makedirs(os.path.dirname(self.path), exist_ok=True)
+            write_perso(self.path, values)
+        except OSError as error:
+            self.screen.logs.error(f"Theme : {self.path} not written ({error})")
+            self.screen.message([self.translate('editor-not-saved')], 2500, 'menu-ko', 'middle', 'big')
+            return False
+        self.screen.logs.info(f"Theme : colours chosen written in {self.path} ({len(values)})")
+        self.screen.apply_look()
+        self.screen.message([self.translate('editor-saved')], 1500, None, 'middle', 'big')
+        return True

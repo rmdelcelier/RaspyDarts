@@ -5596,3 +5596,76 @@ msgstr "Lighting sent to the pad (Save to keep it)"
 msgid "usb-pads-led-error"
 msgstr "Lighting not sent (see logs/raspydarts.log)"
 
+
+msgid "theme-customize"
+msgstr "Customise the theme"
+
+msgid "theme-plate-menus"
+msgstr "Main screen"
+
+msgid "theme-plate-settings"
+msgstr "Lists of settings and state messages"
+
+msgid "theme-plate-description"
+msgstr "Description of a game"
+
+msgid "theme-plate-messages"
+msgstr "Messages"
+
+msgid "theme-plate-game"
+msgstr "Game screen"
+
+msgid "theme-plate-players"
+msgstr "Colours of the players"
+
+msgid "theme-plate-games"
+msgstr "Colours used by some games"
+
+msgid "theme-plate-bob27"
+msgstr "Bob's 27"
+
+msgid "theme-plate-fighters"
+msgstr "Fighters"
+
+msgid "theme-plate-shortcuts"
+msgstr "Shortcuts and alignment of the texts"
+
+msgid "theme-help"
+msgstr "Arrows or knob: a tag · Validate: change its colour · Back: the plates (*: colour chosen)"
+
+msgid "theme-save-question"
+msgstr "Save the colours chosen?"
+
+msgid "theme-fine"
+msgstr "Fine setting"
+
+msgid "theme-origin"
+msgstr "Colour of the theme"
+
+msgid "theme-none"
+msgstr "None"
+
+msgid "theme-red"
+msgstr "Red"
+
+msgid "theme-green"
+msgstr "Green"
+
+msgid "theme-blue"
+msgstr "Blue"
+
+msgid "theme-shortcut-keys"
+msgstr "Keys F1, F2…"
+
+msgid "theme-shortcut-none"
+msgstr "No shortcut"
+
+msgid "theme-align-left"
+msgstr "Left"
+
+msgid "theme-align-center"
+msgstr "Centre"
+
+msgid "theme-align-right"
+msgstr "Right"
+

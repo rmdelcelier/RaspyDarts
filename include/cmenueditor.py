@@ -1393,7 +1393,7 @@ def screens_menu(screen, keys):
     # pylint: disable=import-outside-toplevel
     from include.cscreen import BTN_CHOICE, BTN_DROPDOWN
     translate = screen.lang.translate
-    rows = [name for name, _text in SCREENS] + ['theme', 'font']
+    rows = [name for name, _text in SCREENS] + ['theme', 'theme-colors', 'font']
     nb_elements = len(rows)
     selected = 1
     while True:
@@ -1406,6 +1406,8 @@ def screens_menu(screen, keys):
         for index, name in enumerate(rows, 1):
             if name in values:
                 line = (f'F{index}', translate('colorset' if name == 'theme' else 'font'), BTN_DROPDOWN, values[name])
+            elif name == 'theme-colors':
+                line = (f'F{index}', translate('theme-customize'), BTN_CHOICE)
             else:
                 line = (f'F{index}', translate(dict(SCREENS)[name]), BTN_CHOICE)
             click_zones[f'F{index}'] = screen.menu_item((index, nb_elements, selected), line, align='Full', tabs=True)
@@ -1432,6 +1434,10 @@ def screens_menu(screen, keys):
                                      navigate=globals_.get('colorset'))
             if chosen != 'escape':
                 screen.apply_look(theme=chosen)
+        elif name == 'theme-colors':
+            # The colours of the theme on plates of the screens (include/cthemeeditor.py)
+            from include import cthemeeditor
+            cthemeeditor.ThemeEditor(screen, keys).run()
         elif name == 'font':
             chosen = screen.dropdown(screen.res['x'] * 6 / 16, 3 * screen.res_y_16, screen.font_choices(),
                                      special='font', navigate=globals_.get('font'))

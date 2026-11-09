@@ -5378,3 +5378,76 @@ msgstr "Verlichting naar het paneel gestuurd (Opslaan om ze te bewaren)"
 msgid "usb-pads-led-error"
 msgstr "Verlichting niet verstuurd (zie logs/raspydarts.log)"
 
+
+msgid "theme-customize"
+msgstr "Thema aanpassen"
+
+msgid "theme-plate-menus"
+msgstr "Hoofdscherm"
+
+msgid "theme-plate-settings"
+msgstr "Instellingslijsten en statusberichten"
+
+msgid "theme-plate-description"
+msgstr "Beschrijving van een spel"
+
+msgid "theme-plate-messages"
+msgstr "Berichten"
+
+msgid "theme-plate-game"
+msgstr "Spelscherm"
+
+msgid "theme-plate-players"
+msgstr "Kleuren van de spelers"
+
+msgid "theme-plate-games"
+msgstr "Kleuren die sommige spellen gebruiken"
+
+msgid "theme-plate-bob27"
+msgstr "Bob's 27"
+
+msgid "theme-plate-fighters"
+msgstr "Fighters"
+
+msgid "theme-plate-shortcuts"
+msgstr "Sneltoetsen en uitlijning van de teksten"
+
+msgid "theme-help"
+msgstr "Pijlen of draaiknop: een label · Bevestigen: kleur wijzigen · Terug: de platen (*: gekozen kleur)"
+
+msgid "theme-save-question"
+msgstr "Gekozen kleuren opslaan?"
+
+msgid "theme-fine"
+msgstr "Fijnafstelling"
+
+msgid "theme-origin"
+msgstr "Kleur van het thema"
+
+msgid "theme-none"
+msgstr "Geen"
+
+msgid "theme-red"
+msgstr "Rood"
+
+msgid "theme-green"
+msgstr "Groen"
+
+msgid "theme-blue"
+msgstr "Blauw"
+
+msgid "theme-shortcut-keys"
+msgstr "Toetsen F1, F2…"
+
+msgid "theme-shortcut-none"
+msgstr "Geen sneltoets"
+
+msgid "theme-align-left"
+msgstr "Links"
+
+msgid "theme-align-center"
+msgstr "Midden"
+
+msgid "theme-align-right"
+msgstr "Rechts"
+

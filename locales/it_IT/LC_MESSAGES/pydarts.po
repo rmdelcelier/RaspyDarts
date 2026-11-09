@@ -5391,3 +5391,76 @@ msgstr "Illuminazione inviata al pad (Salva per mantenerla)"
 msgid "usb-pads-led-error"
 msgstr "Illuminazione non inviata (vedi logs/raspydarts.log)"
 
+
+msgid "theme-customize"
+msgstr "Personalizzare il tema"
+
+msgid "theme-plate-menus"
+msgstr "Schermata principale"
+
+msgid "theme-plate-settings"
+msgstr "Elenchi di impostazioni e messaggi di stato"
+
+msgid "theme-plate-description"
+msgstr "Descrizione di un gioco"
+
+msgid "theme-plate-messages"
+msgstr "Messaggi"
+
+msgid "theme-plate-game"
+msgstr "Schermata di gioco"
+
+msgid "theme-plate-players"
+msgstr "Colori dei giocatori"
+
+msgid "theme-plate-games"
+msgstr "Colori usati da alcuni giochi"
+
+msgid "theme-plate-bob27"
+msgstr "Bob's 27"
+
+msgid "theme-plate-fighters"
+msgstr "Fighters"
+
+msgid "theme-plate-shortcuts"
+msgstr "Scorciatoie e allineamento dei testi"
+
+msgid "theme-help"
+msgstr "Frecce o manopola: un'etichetta · Conferma: cambiare il colore · Indietro: le tavole (*: colore scelto)"
+
+msgid "theme-save-question"
+msgstr "Salvare i colori scelti?"
+
+msgid "theme-fine"
+msgstr "Regolazione fine"
+
+msgid "theme-origin"
+msgstr "Colore del tema"
+
+msgid "theme-none"
+msgstr "Nessuno"
+
+msgid "theme-red"
+msgstr "Rosso"
+
+msgid "theme-green"
+msgstr "Verde"
+
+msgid "theme-blue"
+msgstr "Blu"
+
+msgid "theme-shortcut-keys"
+msgstr "Tasti F1, F2…"
+
+msgid "theme-shortcut-none"
+msgstr "Nessuna scorciatoia"
+
+msgid "theme-align-left"
+msgstr "A sinistra"
+
+msgid "theme-align-center"
+msgstr "Al centro"
+
+msgid "theme-align-right"
+msgstr "A destra"
+

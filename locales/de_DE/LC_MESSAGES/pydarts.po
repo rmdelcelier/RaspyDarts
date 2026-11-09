@@ -5324,3 +5324,76 @@ msgstr "Beleuchtung an das Pad gesendet (Speichern, um sie zu behalten)"
 msgid "usb-pads-led-error"
 msgstr "Beleuchtung nicht gesendet (siehe logs/raspydarts.log)"
 
+
+msgid "theme-customize"
+msgstr "Thema anpassen"
+
+msgid "theme-plate-menus"
+msgstr "Hauptbildschirm"
+
+msgid "theme-plate-settings"
+msgstr "Einstellungslisten und Statusmeldungen"
+
+msgid "theme-plate-description"
+msgstr "Spielbeschreibung"
+
+msgid "theme-plate-messages"
+msgstr "Meldungen"
+
+msgid "theme-plate-game"
+msgstr "Spielbildschirm"
+
+msgid "theme-plate-players"
+msgstr "Spielerfarben"
+
+msgid "theme-plate-games"
+msgstr "Von manchen Spielen verwendete Farben"
+
+msgid "theme-plate-bob27"
+msgstr "Bob's 27"
+
+msgid "theme-plate-fighters"
+msgstr "Fighters"
+
+msgid "theme-plate-shortcuts"
+msgstr "Tastenkürzel und Textausrichtung"
+
+msgid "theme-help"
+msgstr "Pfeile oder Drehknopf: ein Tag · Bestätigen: Farbe ändern · Zurück: die Tafeln (*: gewählte Farbe)"
+
+msgid "theme-save-question"
+msgstr "Gewählte Farben speichern?"
+
+msgid "theme-fine"
+msgstr "Feineinstellung"
+
+msgid "theme-origin"
+msgstr "Farbe des Themas"
+
+msgid "theme-none"
+msgstr "Keine"
+
+msgid "theme-red"
+msgstr "Rot"
+
+msgid "theme-green"
+msgstr "Grün"
+
+msgid "theme-blue"
+msgstr "Blau"
+
+msgid "theme-shortcut-keys"
+msgstr "Tasten F1, F2…"
+
+msgid "theme-shortcut-none"
+msgstr "Kein Kürzel"
+
+msgid "theme-align-left"
+msgstr "Links"
+
+msgid "theme-align-center"
+msgstr "Mitte"
+
+msgid "theme-align-right"
+msgstr "Rechts"
+

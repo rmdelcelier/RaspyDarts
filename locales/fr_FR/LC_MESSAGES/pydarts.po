@@ -5400,3 +5400,76 @@ msgstr "Éclairage envoyé au pavé (Enregistrer pour le garder)"
 msgid "usb-pads-led-error"
 msgstr "Éclairage non envoyé (voir logs/raspydarts.log)"
 
+
+msgid "theme-customize"
+msgstr "Personnaliser le thème"
+
+msgid "theme-plate-menus"
+msgstr "Écran principal"
+
+msgid "theme-plate-settings"
+msgstr "Listes de réglages et messages d'état"
+
+msgid "theme-plate-description"
+msgstr "Description d'un jeu"
+
+msgid "theme-plate-messages"
+msgstr "Messages"
+
+msgid "theme-plate-game"
+msgstr "Écran de jeu"
+
+msgid "theme-plate-players"
+msgstr "Couleurs des joueurs"
+
+msgid "theme-plate-games"
+msgstr "Couleurs utilisées par certains jeux"
+
+msgid "theme-plate-bob27"
+msgstr "Bob's 27"
+
+msgid "theme-plate-fighters"
+msgstr "Fighters"
+
+msgid "theme-plate-shortcuts"
+msgstr "Raccourcis et alignement des textes"
+
+msgid "theme-help"
+msgstr "Flèches ou molette : une balise · Valider : changer sa couleur · Retour : les planches (* : couleur choisie)"
+
+msgid "theme-save-question"
+msgstr "Enregistrer les couleurs choisies ?"
+
+msgid "theme-fine"
+msgstr "Réglage fin"
+
+msgid "theme-origin"
+msgstr "Couleur d'origine du thème"
+
+msgid "theme-none"
+msgstr "Aucune"
+
+msgid "theme-red"
+msgstr "Rouge"
+
+msgid "theme-green"
+msgstr "Vert"
+
+msgid "theme-blue"
+msgstr "Bleu"
+
+msgid "theme-shortcut-keys"
+msgstr "Touches F1, F2…"
+
+msgid "theme-shortcut-none"
+msgstr "Aucun raccourci"
+
+msgid "theme-align-left"
+msgstr "À gauche"
+
+msgid "theme-align-center"
+msgstr "Au centre"
+
+msgid "theme-align-right"
+msgstr "À droite"
+

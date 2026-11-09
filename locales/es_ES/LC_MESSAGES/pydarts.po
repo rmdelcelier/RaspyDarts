@@ -5329,3 +5329,76 @@ msgstr "Iluminación enviada al teclado (Guardar para conservarla)"
 msgid "usb-pads-led-error"
 msgstr "Iluminación no enviada (ver logs/raspydarts.log)"
 
+
+msgid "theme-customize"
+msgstr "Personalizar el tema"
+
+msgid "theme-plate-menus"
+msgstr "Pantalla principal"
+
+msgid "theme-plate-settings"
+msgstr "Listas de ajustes y mensajes de estado"
+
+msgid "theme-plate-description"
+msgstr "Descripción de un juego"
+
+msgid "theme-plate-messages"
+msgstr "Mensajes"
+
+msgid "theme-plate-game"
+msgstr "Pantalla de juego"
+
+msgid "theme-plate-players"
+msgstr "Colores de los jugadores"
+
+msgid "theme-plate-games"
+msgstr "Colores usados por algunos juegos"
+
+msgid "theme-plate-bob27"
+msgstr "Bob's 27"
+
+msgid "theme-plate-fighters"
+msgstr "Fighters"
+
+msgid "theme-plate-shortcuts"
+msgstr "Atajos y alineación de los textos"
+
+msgid "theme-help"
+msgstr "Flechas o rueda: una etiqueta · Validar: cambiar su color · Volver: las láminas (*: color elegido)"
+
+msgid "theme-save-question"
+msgstr "¿Guardar los colores elegidos?"
+
+msgid "theme-fine"
+msgstr "Ajuste fino"
+
+msgid "theme-origin"
+msgstr "Color del tema"
+
+msgid "theme-none"
+msgstr "Ninguno"
+
+msgid "theme-red"
+msgstr "Rojo"
+
+msgid "theme-green"
+msgstr "Verde"
+
+msgid "theme-blue"
+msgstr "Azul"
+
+msgid "theme-shortcut-keys"
+msgstr "Teclas F1, F2…"
+
+msgid "theme-shortcut-none"
+msgstr "Sin atajo"
+
+msgid "theme-align-left"
+msgstr "A la izquierda"
+
+msgid "theme-align-center"
+msgstr "Al centro"
+
+msgid "theme-align-right"
+msgstr "A la derecha"
+

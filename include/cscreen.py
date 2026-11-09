@@ -496,6 +496,16 @@ class Screen(pygame.Surface):
                 self.logs.warning(f"Error was {e}")
                 self.colorset = ColorSet['clear']
 
+        # The colours chosen in Modifier les écrans > Personnaliser le thème (other/Colorset_perso.cfg),
+        # over those of the theme (kept for the editor : the colour of the theme again)
+        from include import cthemeeditor    # pylint: disable=import-outside-toplevel
+        self.colorset = dict(self.colorset)
+        self.theme_colorset = dict(self.colorset)
+        perso = cthemeeditor.read_perso(cthemeeditor.perso_path(self))
+        if perso:
+            self.colorset.update(perso)
+            self.logs.info(f"Colours chosen for the theme : {', '.join(sorted(perso))}")
+
         if self.choosen_colorset != 'clear':
             background = self.file_class.get_full_filename(f'background_{self.choosen_colorset}', 'images')
         else:
