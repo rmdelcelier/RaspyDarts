@@ -2388,6 +2388,9 @@ try:
                             display.press_player(Lang.translate('release-darts-and-press-player'))
                             dispatcher.publish('release', limit=['TARGET', 'STRIP', 'OTHER'])
                         rpi.light_toys(['LIGHT_LASER'], False)
+                        # The LED of Joueur suivant while waiting (LED des boutons : N times then
+                        # lit, lit, off at once ; blinking and bursts : by the events of the wait)
+                        rpi.button_led_wait_start('LIGHT_NEXTPLAYER')
 
                         # Game context, wait for PLAYERBUTTON only...
                         while dart_stroke not in ('PLAYERBUTTON', 'BTN_NEXTPLAYER', 'BTN_VALIDATE') and net_status is None:

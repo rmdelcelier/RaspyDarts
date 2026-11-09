@@ -5285,20 +5285,8 @@ msgstr "Altijd aan"
 msgid "button-leds-state-off"
 msgstr "Altijd uit"
 
-msgid "button-leds-wait"
-msgstr "Wachten op Volgende speler"
-
-msgid "button-leds-wait-blink"
-msgstr "Knippert"
-
-msgid "button-leds-wait-on"
-msgstr "Aan, zonder knipperen"
-
-msgid "button-leds-wait-off"
-msgstr "Uit"
-
 msgid "button-leds-flashes"
-msgstr "Knipperen bij elke druk"
+msgstr "Aantal keer knipperen (N)"
 
 msgid "button-leds-on-ms"
 msgstr "Tijd aan"
@@ -5319,11 +5307,29 @@ msgid "button-leds-not-saved"
 msgstr "Instellingen niet opgeslagen (zie logs/raspydarts.log)"
 
 msgid "button-leds-sub-wait"
-msgstr "Knippert zolang het spel op deze knop wacht (einde van de beurt)"
+msgstr "Als het spel op deze knop wacht (einde van de beurt)"
 
 msgid "button-leds-sub-press"
-msgstr "Knippert een paar keer bij elke druk op deze knoppen en keert dan terug"
+msgstr "Zonder stoppen of met pauze: zolang hij aan is; N keer dan vast: bij elke druk"
 
-msgid "button-leds-sub-state"
-msgstr "Aan of uit buiten en tijdens het spel"
 
+msgid "button-leds-mode"
+msgstr "Knipperen"
+
+msgid "button-leds-mode-blink"
+msgstr "Knippert zonder stoppen"
+
+msgid "button-leds-mode-count_fixed"
+msgstr "{n} keer, dan vast aan"
+
+msgid "button-leds-mode-count_repeat"
+msgstr "{n} keer, met een pauze ertussen"
+
+msgid "button-leds-mode-on"
+msgstr "Aan, zonder knipperen"
+
+msgid "button-leds-mode-off"
+msgstr "Uit"
+
+msgid "button-leds-pause-ms"
+msgstr "Duur van de pauze"

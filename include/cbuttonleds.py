@@ -2,11 +2,19 @@
 LED of the buttons of the cabinet (Paramétrage > LED des boutons) : the LED of the buttons
 plugged on the MCP (« Led bouton ... » of Paramétrage des boutons et toys), each with :
   - its state out of games and in a game : as the game decides, always lit, always off ;
-  - its blinking : while the game waits for the button Joueur suivant (that LED), or at each
-    press of the buttons (navigation, players + / -) : how long lit, how long off, and for a
-    press how many flashes.
-The durations were written in the code before (10 ms off every 350 ms, 2 flashes of 10 ms) :
-they are the default values. Kept in button_leds.json, in the folder of the user.
+  - its blinking, the same choices for all of them :
+      blink        blinks without stopping
+      count_fixed  blinks N times then stays lit
+      count_repeat blinks N times, a pause, again
+      on           lit, no blinking
+      off          off
+    with how long lit, how long off (and the pause). When :
+      Joueur suivant (wait) : while the game waits for its button (end of the turn) ;
+      the others (press)    : blink and count_repeat as long as the game keeps it lit,
+                              count_fixed at each press of its buttons.
+The durations were written in the code before (Joueur suivant, put off while waiting : lit
+10 ms every 350 ms ; navigation, players : off 10 ms twice) : they are the default values. Kept in
+button_leds.json, in the folder of the user.
 """
 
 import json
@@ -18,26 +26,40 @@ SETTINGS_NAME = 'button_leds.json'
 
 # The LED of the buttons, in the order of the screen
 LEDS = ('LIGHT_NEXTPLAYER', 'LIGHT_NAVIGATE', 'LIGHT_VALIDATE', 'LIGHT_BACK', 'LIGHT_PLAYERS')
-# What the game does with each of them : blinking while waiting (Joueur suivant), flashes at
-# each press (navigation, players), or only lit and put off
+# When the game makes each of them blink : while waiting for its button, or at the press of its
+# buttons (and as long as it is lit)
 KIND = {'LIGHT_NEXTPLAYER': 'wait', 'LIGHT_NAVIGATE': 'press', 'LIGHT_PLAYERS': 'press',
-        'LIGHT_VALIDATE': 'state', 'LIGHT_BACK': 'state'}
+        'LIGHT_VALIDATE': 'press', 'LIGHT_BACK': 'press'}
+# The buttons whose press makes the LED blink (count_fixed)
+PRESSES = {'LIGHT_NAVIGATE': ('PIN_LEFT', 'PIN_RIGHT', 'PIN_UP', 'PIN_DOWN', 'PIN_VALIDATE'),
+           'LIGHT_PLAYERS': ('PIN_PLUS', 'PIN_MINUS'),
+           'LIGHT_VALIDATE': ('PIN_VALIDATE',),
+           'LIGHT_BACK': ('PIN_BACK', 'PIN_CANCEL')}
 # States out of games (menus) and in a game : auto (as the game decides), on, off
 STATES = ('auto', 'on', 'off')
-# While waiting for Joueur suivant : blinking, lit, off
-WAIT_MODES = ('blink', 'on', 'off')
-# Durations lit and off, set by a graduated slider (ms)
+MODES = ('blink', 'count_fixed', 'count_repeat', 'on', 'off')
+# Modes which blink without stopping (while waiting, or as long as it is lit)
+CONTINUOUS = ('blink', 'count_repeat')
+# Durations lit and off, and the pause, set by a graduated slider (ms)
 MIN_MS = 10
 MAX_MS = 1000
 STEP_MS = 10
-FLASHES = (0, 1, 2, 3, 4, 5)
+MIN_PAUSE = 100
+MAX_PAUSE = 5000
+STEP_PAUSE = 100
+FLASHES = (1, 2, 3, 4, 5, 6, 8, 10)
 
 DEFAULTS = {
-    'LIGHT_NEXTPLAYER': {'menus': 'auto', 'game': 'auto', 'wait': 'blink', 'on_ms': 340, 'off_ms': 10},
-    'LIGHT_NAVIGATE': {'menus': 'auto', 'game': 'auto', 'flashes': 2, 'on_ms': 100, 'off_ms': 10},
-    'LIGHT_PLAYERS': {'menus': 'auto', 'game': 'auto', 'flashes': 2, 'on_ms': 100, 'off_ms': 10},
-    'LIGHT_VALIDATE': {'menus': 'auto', 'game': 'auto'},
-    'LIGHT_BACK': {'menus': 'auto', 'game': 'auto'},
+    'LIGHT_NEXTPLAYER': {'menus': 'auto', 'game': 'auto', 'mode': 'blink', 'flashes': 3,
+                         'on_ms': 10, 'off_ms': 340, 'pause_ms': 1000},
+    'LIGHT_NAVIGATE': {'menus': 'auto', 'game': 'auto', 'mode': 'count_fixed', 'flashes': 2,
+                       'on_ms': 100, 'off_ms': 10, 'pause_ms': 1000},
+    'LIGHT_PLAYERS': {'menus': 'auto', 'game': 'auto', 'mode': 'count_fixed', 'flashes': 2,
+                      'on_ms': 100, 'off_ms': 10, 'pause_ms': 1000},
+    'LIGHT_VALIDATE': {'menus': 'auto', 'game': 'auto', 'mode': 'on', 'flashes': 2,
+                       'on_ms': 100, 'off_ms': 10, 'pause_ms': 1000},
+    'LIGHT_BACK': {'menus': 'auto', 'game': 'auto', 'mode': 'on', 'flashes': 2,
+                   'on_ms': 100, 'off_ms': 10, 'pause_ms': 1000},
 }
 
 
@@ -67,11 +89,19 @@ def load(logs=None):
         own = saved.get(led) if isinstance(saved, dict) else None
         if not isinstance(own, dict):
             continue
+        own = dict(own)
+        # Settings of the first version : wait (blink / on / off), flashes (0 : none)
+        if 'mode' not in own:
+            if own.get('wait') in ('blink', 'on', 'off'):
+                own['mode'] = own['wait']
+            elif isinstance(own.get('flashes'), int):
+                own['mode'] = 'count_fixed' if own['flashes'] > 0 else 'on'
         for key, default in values.items():
             value = own.get(key, default)
-            if key in ('menus', 'game') and value in STATES or key == 'wait' and value in WAIT_MODES:
+            if key in ('menus', 'game') and value in STATES or key == 'mode' and value in MODES:
                 values[key] = value
-            elif key in ('on_ms', 'off_ms', 'flashes') and isinstance(value, int) and 0 <= value <= 5000:
+            elif key in ('on_ms', 'off_ms', 'pause_ms', 'flashes') and isinstance(value, int) \
+                    and not isinstance(value, bool) and 0 < value <= MAX_PAUSE:
                 values[key] = value
     return settings
 

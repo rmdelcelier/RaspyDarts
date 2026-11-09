@@ -5298,20 +5298,8 @@ msgstr "Sempre acceso"
 msgid "button-leds-state-off"
 msgstr "Sempre spento"
 
-msgid "button-leds-wait"
-msgstr "In attesa di Giocatore successivo"
-
-msgid "button-leds-wait-blink"
-msgstr "Lampeggia"
-
-msgid "button-leds-wait-on"
-msgstr "Acceso, senza lampeggiare"
-
-msgid "button-leds-wait-off"
-msgstr "Spento"
-
 msgid "button-leds-flashes"
-msgstr "Lampeggi a ogni pressione"
+msgstr "Numero di lampeggi (N)"
 
 msgid "button-leds-on-ms"
 msgstr "Durata acceso"
@@ -5332,11 +5320,29 @@ msgid "button-leds-not-saved"
 msgstr "Impostazioni non salvate (vedi logs/raspydarts.log)"
 
 msgid "button-leds-sub-wait"
-msgstr "Lampeggia finché il gioco attende questo pulsante (fine del turno)"
+msgstr "Quando il gioco attende questo pulsante (fine del turno)"
 
 msgid "button-leds-sub-press"
-msgstr "Lampeggia alcune volte a ogni pressione di questi pulsanti, poi torna al suo stato"
+msgstr "Senza sosta o con pausa: finché è acceso; N volte poi fisso: a ogni pressione"
 
-msgid "button-leds-sub-state"
-msgstr "Acceso o spento fuori e in partita"
 
+msgid "button-leds-mode"
+msgstr "Lampeggio"
+
+msgid "button-leds-mode-blink"
+msgstr "Lampeggia senza sosta"
+
+msgid "button-leds-mode-count_fixed"
+msgstr "{n} volte poi acceso fisso"
+
+msgid "button-leds-mode-count_repeat"
+msgstr "{n} volte, con una pausa"
+
+msgid "button-leds-mode-on"
+msgstr "Acceso, senza lampeggiare"
+
+msgid "button-leds-mode-off"
+msgstr "Spento"
+
+msgid "button-leds-pause-ms"
+msgstr "Durata della pausa"

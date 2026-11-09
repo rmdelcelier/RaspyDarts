@@ -5503,20 +5503,8 @@ msgstr "Always lit"
 msgid "button-leds-state-off"
 msgstr "Always off"
 
-msgid "button-leds-wait"
-msgstr "Waiting for Next player"
-
-msgid "button-leds-wait-blink"
-msgstr "Blinks"
-
-msgid "button-leds-wait-on"
-msgstr "Lit, no blinking"
-
-msgid "button-leds-wait-off"
-msgstr "Off"
-
 msgid "button-leds-flashes"
-msgstr "Blinks at each press"
+msgstr "Number of blinks (N)"
 
 msgid "button-leds-on-ms"
 msgstr "Time lit"
@@ -5537,11 +5525,29 @@ msgid "button-leds-not-saved"
 msgstr "Settings not saved (see logs/raspydarts.log)"
 
 msgid "button-leds-sub-wait"
-msgstr "Blinks while the game waits for this button (end of the turn)"
+msgstr "When the game waits for this button (end of the turn)"
 
 msgid "button-leds-sub-press"
-msgstr "Blinks a few times at each press of these buttons, then comes back to its state"
+msgstr "Without stopping or pause: as long as it is lit; N times then lit: at each press"
 
-msgid "button-leds-sub-state"
-msgstr "Lit or off out of games and in a game"
 
+msgid "button-leds-mode"
+msgstr "Blinking"
+
+msgid "button-leds-mode-blink"
+msgstr "Blinks without stopping"
+
+msgid "button-leds-mode-count_fixed"
+msgstr "{n} times then steadily lit"
+
+msgid "button-leds-mode-count_repeat"
+msgstr "{n} times, with a pause between"
+
+msgid "button-leds-mode-on"
+msgstr "Lit, no blinking"
+
+msgid "button-leds-mode-off"
+msgstr "Off"
+
+msgid "button-leds-pause-ms"
+msgstr "Pause time"

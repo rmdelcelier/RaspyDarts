@@ -9142,21 +9142,21 @@ class Screen(pygame.Surface):
 
     def button_led_summary(self, values, led):
         '''
-        The settings of a LED in short, on its line : its blinking (time lit / time off), or its
-        state when it is the same out of games and in a game
+        The settings of a LED in short, on its line : its blinking (how many times, time lit /
+        time off)
         '''
         translate = self.lang.translate
-        if 'wait' in values:
-            return f"{translate('button-leds-wait-' + values['wait'])} · {values['on_ms']} / {values['off_ms']} ms"
-        if 'flashes' in values:
-            return f"{values['flashes']} × · {values['on_ms']} / {values['off_ms']} ms"
-        return translate('button-leds-state-' + values['menus']) if values['menus'] == values['game'] else ''
+        mode = values['mode']
+        text = translate(f'button-leds-mode-{mode}').replace('{n}', str(values['flashes']))
+        if mode in ('blink', 'count_fixed', 'count_repeat'):
+            text += f" · {values['on_ms']} / {values['off_ms']} ms"
+        return text
 
     def button_led_settings(self, led, all_settings):
         '''
         The settings of one LED of a button : its states out of games and in a game, its
-        blinking (while waiting for its button, or the flashes at a press), tried on the button
-        itself before being saved. True : saved
+        blinking (without stopping, N times then lit, N times with a pause, lit, off) and its
+        durations, tried on the button itself before being saved. True : saved
         '''
         from include import cbuttonleds    # pylint: disable=import-outside-toplevel
         translate = self.lang.translate
@@ -9165,20 +9165,20 @@ class Screen(pygame.Surface):
         choose = lambda choices, current: self.dropdown(self.res['x'] * 6 / 16, 3 * self.res_y_16, choices, navigate=current)
         selected = 1
         while True:
+            mode = values['mode']
+            mode_text = lambda name: translate(f'button-leds-mode-{name}').replace('{n}', 'N')
             rows = [('menus', 'button-leds-menus', translate(f"button-leds-state-{values['menus']}")),
-                    ('game', 'button-leds-game', translate(f"button-leds-state-{values['game']}"))]
-            if kind == 'wait':
-                rows.append(('wait', 'button-leds-wait', translate(f"button-leds-wait-{values['wait']}")))
-            if kind == 'press':
+                    ('game', 'button-leds-game', translate(f"button-leds-state-{values['game']}")),
+                    ('mode', 'button-leds-mode', mode_text(mode))]
+            # What the blinking chosen needs : how many times, the durations, the pause
+            if mode in ('count_fixed', 'count_repeat'):
                 rows.append(('flashes', 'button-leds-flashes', str(values['flashes'])))
-            # The durations : only when it blinks (while waiting : Clignote ; at a press : at
-            # least one blink)
-            blinks = (kind == 'wait' and values['wait'] == 'blink') or (kind == 'press' and values['flashes'] > 0)
-            if blinks:
+            if mode in ('blink', 'count_fixed', 'count_repeat'):
                 rows += [('on_ms', 'button-leds-on-ms', f"{values['on_ms']} ms"),
                          ('off_ms', 'button-leds-off-ms', f"{values['off_ms']} ms")]
-            if kind in ('wait', 'press'):
-                rows.append(('test', 'button-leds-test', None))
+            if mode == 'count_repeat':
+                rows.append(('pause_ms', 'button-leds-pause-ms', f"{values['pause_ms']} ms"))
+            rows.append(('test', 'button-leds-test', None))
             nb_elements = len(rows)
             selected = min(selected, nb_elements + 2)
             self.display_background()
@@ -9212,18 +9212,19 @@ class Screen(pygame.Surface):
                 continue
             if key not in ENTER_KEYS or not 1 <= selected <= nb_elements:
                 continue
-            name = rows[selected - 1][0]
+            name, label, _value = rows[selected - 1]
             if name in ('menus', 'game'):
                 chosen = choose([(state, f'button-leds-state-{state}') for state in cbuttonleds.STATES], values[name])
-            elif name == 'wait':
-                chosen = choose([(mode, f'button-leds-wait-{mode}') for mode in cbuttonleds.WAIT_MODES], values[name])
+            elif name == 'mode':
+                chosen = choose([(choice, mode_text(choice)) for choice in cbuttonleds.MODES], values[name])
             elif name == 'flashes':
                 chosen = choose([(str(number), str(number)) for number in cbuttonleds.FLASHES], str(values[name]))
                 chosen = chosen if chosen == 'escape' else int(chosen)
-            elif name in ('on_ms', 'off_ms'):
-                # Graduated, as the durations of Personnalisation du jeu (ms, by 10)
-                chosen = self.slider(f"{translate(rows[selected - 1][1])} (ms)", int(values[name]), cbuttonleds.MIN_MS, cbuttonleds.MAX_MS,
-                                     step=cbuttonleds.STEP_MS)
+            elif name in ('on_ms', 'off_ms', 'pause_ms'):
+                # Graduated, as the durations of Personnalisation du jeu (ms)
+                low, high, step = (cbuttonleds.MIN_PAUSE, cbuttonleds.MAX_PAUSE, cbuttonleds.STEP_PAUSE) \
+                    if name == 'pause_ms' else (cbuttonleds.MIN_MS, cbuttonleds.MAX_MS, cbuttonleds.STEP_MS)
+                chosen = self.slider(f"{translate(label)} (ms)", int(values[name]), low, high, step=step)
                 chosen = chosen if chosen == 'escape' else int(chosen)
             else:
                 self.button_led_try(led, kind, values)
@@ -9233,28 +9234,47 @@ class Screen(pygame.Surface):
 
     def button_led_try(self, led, kind, values):
         '''
-        The blinking of a LED tried on its button with the values on the screen (not saved) :
-        while waiting for Joueur suivant (lit, blinking 4 s), or the flashes of a press
+        The blinking of a LED tried on its button with the values on the screen (not saved),
+        about 5 s : Joueur suivant as at the end of a turn (put off, then waiting) ; another LED
+        lit, blinking as long as it is lit, or pressed 3 times (N times at each press)
         '''
         gpio = self.rpi.gpio
         before = bool(gpio.toys_list[led][1].value)
         self.message([self.lang.translate('button-leds-trying')], 0, None, 'middle', 'big')
+        mode = values['mode']
+        end = time.monotonic() + 5
         if kind == 'wait':
-            if values['wait'] == 'blink':
-                gpio.light_toys([led], True)
-                period = max(20, values['on_ms'] + values['off_ms'])
-                thread = gpio.blink_toy(led, max(1, int(4000 / period)), values['on_ms'], values['off_ms'])
-                if thread is not None:
-                    thread.join(timeout=10)
-            else:
-                gpio.light_toys([led], values['wait'] == 'on')
-                time.sleep(2)
-        else:
+            gpio.light_toys([led], False)
+            thread = self.rpi.button_led_wait_start(led, values)
+            period = self.rpi.button_led_period_of(values)
+            while time.monotonic() < end:
+                if period:
+                    thread = self.rpi.button_led_wait(led, values)
+                    time.sleep(period / 1000)
+                else:
+                    time.sleep(0.1)
+            if thread is not None:
+                thread.join(timeout=10)
+        elif mode in ('blink', 'count_repeat'):
+            gpio.light_toys([led], True)
+            while time.monotonic() < end:
+                for _ in range(1 if mode == 'blink' else int(values['flashes'])):
+                    gpio.light_toys([led], False)
+                    time.sleep(values['off_ms'] / 1000)
+                    gpio.light_toys([led], True)
+                    time.sleep(values['on_ms'] / 1000)
+                if mode == 'count_repeat':
+                    time.sleep(values['pause_ms'] / 1000)
+        elif mode == 'count_fixed':
+            gpio.light_toys([led], True)
             for _ in range(3):
-                thread = gpio.blink_toy(led, values['flashes'], values['on_ms'], values['off_ms'])
+                thread = gpio.blink_toy(led, int(values['flashes']), int(values['on_ms']), int(values['off_ms']))
                 if thread is not None:
                     thread.join(timeout=10)
-                time.sleep(0.6)
+                time.sleep(1)
+        else:
+            gpio.light_toys([led], mode == 'on')
+            time.sleep(2)
         # Back to the state it had before the try
         gpio.light_toys([led], before)
 

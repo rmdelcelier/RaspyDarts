@@ -5307,20 +5307,8 @@ msgstr "Toujours allumée"
 msgid "button-leds-state-off"
 msgstr "Toujours éteinte"
 
-msgid "button-leds-wait"
-msgstr "En attente de Joueur suivant"
-
-msgid "button-leds-wait-blink"
-msgstr "Clignote"
-
-msgid "button-leds-wait-on"
-msgstr "Allumée sans clignoter"
-
-msgid "button-leds-wait-off"
-msgstr "Éteinte"
-
 msgid "button-leds-flashes"
-msgstr "Clignotements à chaque appui"
+msgstr "Nombre de clignotements (N)"
 
 msgid "button-leds-on-ms"
 msgstr "Durée allumée"
@@ -5341,11 +5329,29 @@ msgid "button-leds-not-saved"
 msgstr "Réglages non enregistrés (voir logs/raspydarts.log)"
 
 msgid "button-leds-sub-wait"
-msgstr "Clignote en continu quand le jeu attend ce bouton (fin de la volée)"
+msgstr "Quand le jeu attend ce bouton (fin de la volée)"
 
 msgid "button-leds-sub-press"
-msgstr "Clignote quelques fois à chaque appui sur ces boutons, puis revient à son état"
+msgstr "Sans arrêt ou pause : tant qu'elle est allumée ; N fois puis fixe : à chaque appui"
 
-msgid "button-leds-sub-state"
-msgstr "Allumée ou éteinte hors partie et en partie"
 
+msgid "button-leds-mode"
+msgstr "Clignotement"
+
+msgid "button-leds-mode-blink"
+msgstr "Clignote sans arrêt"
+
+msgid "button-leds-mode-count_fixed"
+msgstr "{n} fois puis allumée fixe"
+
+msgid "button-leds-mode-count_repeat"
+msgstr "{n} fois, entrecoupé d'une pause"
+
+msgid "button-leds-mode-on"
+msgstr "Allumée sans clignoter"
+
+msgid "button-leds-mode-off"
+msgstr "Éteinte"
+
+msgid "button-leds-pause-ms"
+msgstr "Durée de la pause"

@@ -5236,20 +5236,8 @@ msgstr "Siempre encendido"
 msgid "button-leds-state-off"
 msgstr "Siempre apagado"
 
-msgid "button-leds-wait"
-msgstr "Esperando Jugador siguiente"
-
-msgid "button-leds-wait-blink"
-msgstr "Parpadea"
-
-msgid "button-leds-wait-on"
-msgstr "Encendido, sin parpadear"
-
-msgid "button-leds-wait-off"
-msgstr "Apagado"
-
 msgid "button-leds-flashes"
-msgstr "Parpadeos en cada pulsación"
+msgstr "Número de parpadeos (N)"
 
 msgid "button-leds-on-ms"
 msgstr "Tiempo encendido"
@@ -5270,11 +5258,29 @@ msgid "button-leds-not-saved"
 msgstr "Ajustes no guardados (ver logs/raspydarts.log)"
 
 msgid "button-leds-sub-wait"
-msgstr "Parpadea mientras el juego espera este botón (fin del turno)"
+msgstr "Cuando el juego espera este botón (fin del turno)"
 
 msgid "button-leds-sub-press"
-msgstr "Parpadea algunas veces en cada pulsación de estos botones y vuelve a su estado"
+msgstr "Sin parar o con pausa: mientras esté encendido; N veces y fijo: en cada pulsación"
 
-msgid "button-leds-sub-state"
-msgstr "Encendido o apagado fuera y en partida"
 
+msgid "button-leds-mode"
+msgstr "Parpadeo"
+
+msgid "button-leds-mode-blink"
+msgstr "Parpadea sin parar"
+
+msgid "button-leds-mode-count_fixed"
+msgstr "{n} veces y luego fijo"
+
+msgid "button-leds-mode-count_repeat"
+msgstr "{n} veces, con una pausa"
+
+msgid "button-leds-mode-on"
+msgstr "Encendido, sin parpadear"
+
+msgid "button-leds-mode-off"
+msgstr "Apagado"
+
+msgid "button-leds-pause-ms"
+msgstr "Duración de la pausa"

@@ -249,6 +249,10 @@ class Craspberry():
         # a game, their blinking ; in_game : set by the main loop
         self.button_leds = cbuttonleds.load(self.logs)
         self.in_game = False
+        # State asked by the game, state given (after the settings), threads of blinking
+        self.led_asked = {}
+        self.led_wanted = {}
+        self.led_threads = {}
 
         # Init MCP according to configuration
 
@@ -793,11 +797,9 @@ class Craspberry():
                     self.logs.debug(f"Input debug (ext GPIO) : {(inputs.replace('PIN_', 'BTN_') if not isinstance(inputs, list) else inputs[0].replace('PIN_', 'BTN_'))}")
                     if timeout > 0:
                         pygame.time.set_timer(USEREVENT, 0)
-                    # Flashes of the LED of the buttons pressed, as set (LED des boutons)
-                    if inputs in ('PIN_LEFT', 'PIN_RIGHT', 'PIN_UP', 'PIN_DOWN', 'PIN_VALIDATE'):
-                        self.button_led_press('LIGHT_NAVIGATE')
-                    if inputs in ('PIN_PLUS', 'PIN_MINUS'):
-                        self.button_led_press('LIGHT_PLAYERS')
+                    # The LED blinking at the press of this button, as set (LED des boutons)
+                    if isinstance(inputs, str):
+                        self.button_led_press(inputs)
                     self.reset_timers()
                     self.sleep = True
                     wake_up(video_process, sound_process)
@@ -1084,25 +1086,80 @@ class Craspberry():
         """
         return events_list.get(light, None)
 
+    def button_led_values(self, led):
+        return self.button_leds.get(led) or cbuttonleds.DEFAULTS.get(led, {})
+
     def button_led_state(self, led, state):
         '''
         The state a LED of a button is given : the one asked by the game, unless its setting
-        for the moment (out of games / in a game) keeps it lit or off
+        for the moment (out of games / in a game) keeps it lit or off, or its blinking is Éteinte
+        (a LED blinking at a press : always off ; Joueur suivant : only while waiting)
         '''
-        setting = (self.button_leds.get(led) or {}).get('game' if self.in_game else 'menus', 'auto')
+        values = self.button_led_values(led)
+        if cbuttonleds.KIND.get(led) == 'press' and values.get('mode') == 'off':
+            return False
+        setting = values.get('game' if self.in_game else 'menus', 'auto')
         return {'on': True, 'off': False}.get(setting, state)
+
+    def set_button_led(self, led, state):
+        '''
+        A LED of a button lit or put off ; lit, blinking without stopping or by bursts : its
+        thread blinks it as long as it stays lit (a LED blinking at a press)
+        '''
+        self.led_wanted[led] = state
+        values = self.button_led_values(led)
+        if state and cbuttonleds.KIND.get(led) == 'press' and values.get('mode') in cbuttonleds.CONTINUOUS:
+            thread = self.led_threads.get(led)
+            if thread is None or not thread.is_alive():
+                self.led_threads[led] = Thread(target=self.button_led_continuous, args=(led,), daemon=True)
+                self.led_threads[led].start()
+            return
+        self.gpio.light_toys([led], state)
+
+    def button_led_continuous(self, led):
+        '''
+        Thread of a LED lit blinking without stopping (off then lit) or by bursts (N times, then
+        a pause lit), until it is put off or its blinking changed
+        '''
+        def active():
+            return self.led_wanted.get(led) and self.button_led_values(led).get('mode') in cbuttonleds.CONTINUOUS
+
+        def wait(milliseconds):
+            end = time.monotonic() + milliseconds / 1000
+            while time.monotonic() < end:
+                if not active():
+                    return False
+                time.sleep(min(0.02, max(0, end - time.monotonic())))
+            return True
+
+        try:
+            while active():
+                values = self.button_led_values(led)
+                cycles = 1 if values['mode'] == 'blink' else int(values['flashes'])
+                for _ in range(cycles):
+                    self.gpio.light_toys([led], False)
+                    if not wait(values['off_ms']):
+                        break
+                    self.gpio.light_toys([led], True)
+                    if not wait(values['on_ms']):
+                        break
+                if values['mode'] == 'count_repeat' and active():
+                    wait(values['pause_ms'])
+        finally:
+            self.gpio.light_toys([led], bool(self.led_wanted.get(led)))
 
     def button_leds_context(self, in_game):
         '''
-        A game starts or ends : the LED of the buttons kept lit or off for this moment put so
+        A game starts or ends : the LED of the buttons given their state for this moment
         '''
         self.in_game = bool(in_game)
         if self.gpio is None:
             return
         for led in cbuttonleds.LEDS:
-            setting = (self.button_leds.get(led) or {}).get('game' if self.in_game else 'menus', 'auto')
-            if setting in ('on', 'off'):
-                self.gpio.light_toys([led], setting == 'on')
+            asked = self.led_asked.get(led)
+            state = self.button_led_state(led, asked if asked is not None else False)
+            if asked is not None or state is not False:
+                self.set_button_led(led, state)
 
     def button_leds_reload(self):
         '''
@@ -1113,29 +1170,78 @@ class Craspberry():
 
     def button_led_period(self, led):
         '''
-        The time between two blinks of a LED (ms) : its time lit and its time off
+        The time between two events of the wait of Joueur suivant (ms) : a blink, a burst and
+        its pause ; 0 : nothing repeated (N times then lit, lit, off)
         '''
-        values = self.button_leds.get(led) or cbuttonleds.DEFAULTS.get(led, {})
-        return max(20, int(values.get('on_ms', 340)) + int(values.get('off_ms', 10)))
+        return self.button_led_period_of(self.button_led_values(led))
 
-    def button_led_wait(self, led):
+    @staticmethod
+    def button_led_period_of(values):
         '''
-        One blink of a LED while the game waits for its button (Joueur suivant) : as set
-        (blinking, lit, off)
+        The same for settings given (the try of the screen, not saved)
         '''
-        values = self.button_leds.get(led) or {}
-        mode = values.get('wait', 'blink')
+        mode = values.get('mode')
         if mode == 'blink':
-            self.gpio.blink_toy(led, 1, int(values.get('on_ms', 340)), int(values.get('off_ms', 10)))
-        else:
-            self.gpio.light_toys([led], mode == 'on')
+            return max(20, values['on_ms'] + values['off_ms'])
+        if mode == 'count_repeat':
+            return max(20, values['flashes'] * (values['on_ms'] + values['off_ms']) + values['pause_ms'])
+        return 0
 
-    def button_led_press(self, led):
+    def button_led_pulses(self, led, values, cycles, end_lit):
         '''
-        The flashes of a LED at a press of its buttons, as set (0 : none)
+        Thread : the LED lit on_ms then off off_ms, cycles times ; end_lit : lit at the end
+        (N times then lit). Returned
         '''
-        values = self.button_leds.get(led) or {}
-        self.gpio.blink_toy(led, int(values.get('flashes', 2)), int(values.get('on_ms', 100)), int(values.get('off_ms', 10)))
+        def pulses():
+            for cycle in range(cycles):
+                self.gpio.light_toys([led], True)
+                time.sleep(values['on_ms'] / 1000)
+                if end_lit and cycle + 1 == cycles:
+                    break
+                self.gpio.light_toys([led], False)
+                time.sleep(values['off_ms'] / 1000)
+
+        thread = Thread(target=pulses, daemon=True)
+        thread.start()
+        return thread
+
+    def button_led_wait_start(self, led, values=None):
+        '''
+        The game starts waiting for the button of this LED (Joueur suivant, end of the turn) :
+        N times then lit, lit or off at once ; blinking and bursts : by the events of the wait
+        '''
+        if self.gpio is None:
+            return None
+        values = values or self.button_led_values(led)
+        mode = values.get('mode')
+        if mode == 'count_fixed':
+            return self.button_led_pulses(led, values, int(values['flashes']), True)
+        if mode in ('on', 'off'):
+            self.gpio.light_toys([led], mode == 'on')
+        return None
+
+    def button_led_wait(self, led, values=None):
+        '''
+        An event of the wait : a blink, or a burst (its pause follows until the next event)
+        '''
+        values = values or self.button_led_values(led)
+        if values.get('mode') == 'blink':
+            return self.button_led_pulses(led, values, 1, False)
+        if values.get('mode') == 'count_repeat':
+            return self.button_led_pulses(led, values, int(values['flashes']), False)
+        return None
+
+    def button_led_press(self, pin):
+        '''
+        A button pressed : the LED blinking N times at its press do it (from their state : lit,
+        they go off and come back)
+        '''
+        if self.gpio is None:
+            return
+        for led, pins in cbuttonleds.PRESSES.items():
+            values = self.button_led_values(led)
+            if pin in pins and values.get('mode') == 'count_fixed':
+                self.gpio.blink_toy(led, int(values['flashes']), int(values['on_ms']), int(values['off_ms']))
 
     def light_toys(self, buttons, state=True, delay=None, raw=False):
         """
@@ -1145,12 +1251,18 @@ class Craspberry():
         self.logs.debug(f"light_toys : {state} : {buttons}")
         self.logs.debug(f"buttons={buttons}")
         if self.gpio is not None and buttons:
-            leds = [button for button in buttons if button in cbuttonleds.KIND and not raw]
+            leds = [button for button in buttons if button in cbuttonleds.KIND]
             others = [button for button in buttons if button not in leds]
             if others:
                 self.gpio.light_toys(others, state)
             for led in leds:
-                self.gpio.light_toys([led], self.button_led_state(led, state))
+                if raw:
+                    # Its thread of blinking stops, the state asked written
+                    self.led_wanted[led] = state
+                    self.gpio.light_toys([led], state)
+                    continue
+                self.led_asked[led] = state
+                self.set_button_led(led, self.button_led_state(led, state))
 
             for button in buttons:
                 event = self.get_user_event(button)
