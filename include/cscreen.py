@@ -9132,7 +9132,8 @@ class Screen(pygame.Surface):
             if key in [f'F{index}' for index in range(1, nb_elements + 1)]:
                 selected = int(key[1:])
                 key = 'enter'
-            selected = self.navigate(selected, key, nb_elements, 1, 1)
+            # Right and left (the knob of a USB pad) : the next and the previous line
+            selected = self.navigate(selected, key, nb_elements, 1, 1, left_right=True)
             if key in ESCAPE_KEYS or (key in ENTER_KEYS and selected == nb_elements + 1):
                 return
             if key in ENTER_KEYS and 1 <= selected <= nb_elements:
