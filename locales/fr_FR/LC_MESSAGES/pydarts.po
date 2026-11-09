@@ -5378,3 +5378,25 @@ msgstr "Maintenez un bouton du pavé ou de la manette 3 secondes pour aller sur 
 msgid "usb-pads-hold-done"
 msgstr "Retour et Enregistrer : la molette passe de l'un à l'autre, son appui valide"
 
+
+msgid "usb-pads-led"
+msgstr "Éclairage"
+
+msgid "usb-pads-led-unset"
+msgstr "—"
+
+msgid "usb-pads-led-off"
+msgstr "Éteint"
+
+msgid "usb-pads-led-press"
+msgstr "À l'appui des touches"
+
+msgid "usb-pads-led-chase"
+msgstr "Chenillard multicolore"
+
+msgid "usb-pads-led-done"
+msgstr "Éclairage envoyé au pavé (Enregistrer pour le garder)"
+
+msgid "usb-pads-led-error"
+msgstr "Éclairage non envoyé (voir logs/raspydarts.log)"
+

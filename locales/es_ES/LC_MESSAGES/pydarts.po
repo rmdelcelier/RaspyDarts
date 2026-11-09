@@ -5307,3 +5307,25 @@ msgstr "Mantenga un botón del teclado o del mando 3 segundos para ir a Volver y
 msgid "usb-pads-hold-done"
 msgstr "Volver y Guardar: la rueda pasa de uno a otro, su pulsación valida"
 
+
+msgid "usb-pads-led"
+msgstr "Iluminación"
+
+msgid "usb-pads-led-unset"
+msgstr "—"
+
+msgid "usb-pads-led-off"
+msgstr "Apagado"
+
+msgid "usb-pads-led-press"
+msgstr "Al pulsar las teclas"
+
+msgid "usb-pads-led-chase"
+msgstr "Persecución multicolor"
+
+msgid "usb-pads-led-done"
+msgstr "Iluminación enviada al teclado (Guardar para conservarla)"
+
+msgid "usb-pads-led-error"
+msgstr "Iluminación no enviada (ver logs/raspydarts.log)"
+

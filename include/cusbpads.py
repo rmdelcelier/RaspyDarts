@@ -52,6 +52,10 @@ SCAN_DELAY = 2
 # Screen of the settings : an element of a pad held this long (s) goes to Retour / Enregistrer
 # (a pad with a knob only could not leave it : its presses are shown, not used)
 EXIT_HOLD = 3.0
+# Lighting of the pad (model 8890 : one mode for the whole pad, found on the cabinet, 09/11/2026) :
+# 0 off, 1 the led of a key lit while it is pressed, 2 colours going round by themselves (3 to 5 :
+# the first key pulsing yellow, beyond : nothing)
+LED_MODES = (('off', 0), ('press', 1), ('chase', 2))
 
 # Buttons a key can be : (button, text, where it is offered : menus, game)
 ACTIONS = [('', 'usb-pads-none-action', True, True),
@@ -652,6 +656,41 @@ class UsbPads:
             self.logs.error(f"USB pad {port} not programmed : {error}")
             return str(error)
         self.logs.info(f"USB pad {port} programmed : {keys} keys, {knobs} knobs")
+        return None
+
+    def set_led(self, port, mode):
+        '''
+        Lighting of the pad of this port (LED_MODES). Returns None, or the error
+        '''
+        try:
+            import usb.core    # pylint: disable=import-outside-toplevel
+            import usb.util    # pylint: disable=import-outside-toplevel
+        except ImportError:
+            return 'python3-usb'
+        value = dict(LED_MODES).get(mode)
+        if value is None:
+            return f'mode {mode}'
+        found = None
+        for vendor, product in SUPPORTED:
+            for device in usb.core.find(find_all=True, idVendor=vendor, idProduct=product):
+                if '.'.join(str(number) for number in (device.port_numbers or ())) == port:
+                    found = device
+        if found is None:
+            return 'not found'
+        interface, endpoint = 1, 0x02
+        try:
+            if found.is_kernel_driver_active(interface):
+                found.detach_kernel_driver(interface)
+            usb.util.claim_interface(found, interface)
+            try:
+                for message in ([0x03, 0xa1, 0x01], [0x03, 0xb0, 0x18, value], [0x03, 0xaa, 0xa1]):
+                    found.write(endpoint, bytes(message) + bytes(64 - len(message)), 1000)
+            finally:
+                usb.util.release_interface(found, interface)
+        except usb.core.USBError as error:
+            self.logs.error(f"USB pad {port} : lighting not set ({error})")
+            return str(error)
+        self.logs.info(f"USB pad {port} : lighting {mode}")
         return None
 
     @staticmethod

@@ -5369,3 +5369,25 @@ msgstr "Tenere premuto un pulsante del pad o del gamepad 3 secondi per andare a 
 msgid "usb-pads-hold-done"
 msgstr "Indietro e Salva: la manopola passa dall'uno all'altro, la pressione conferma"
 
+
+msgid "usb-pads-led"
+msgstr "Illuminazione"
+
+msgid "usb-pads-led-unset"
+msgstr "—"
+
+msgid "usb-pads-led-off"
+msgstr "Spento"
+
+msgid "usb-pads-led-press"
+msgstr "Alla pressione dei tasti"
+
+msgid "usb-pads-led-chase"
+msgstr "Inseguimento multicolore"
+
+msgid "usb-pads-led-done"
+msgstr "Illuminazione inviata al pad (Salva per mantenerla)"
+
+msgid "usb-pads-led-error"
+msgstr "Illuminazione non inviata (vedi logs/raspydarts.log)"
+

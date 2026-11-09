@@ -5356,3 +5356,25 @@ msgstr "Houd een knop van het paneel of de gamepad 3 seconden ingedrukt voor Ter
 msgid "usb-pads-hold-done"
 msgstr "Terug en Opslaan: de draaiknop wisselt, zijn druk bevestigt"
 
+
+msgid "usb-pads-led"
+msgstr "Verlichting"
+
+msgid "usb-pads-led-unset"
+msgstr "—"
+
+msgid "usb-pads-led-off"
+msgstr "Uit"
+
+msgid "usb-pads-led-press"
+msgstr "Bij het indrukken van de toetsen"
+
+msgid "usb-pads-led-chase"
+msgstr "Veelkleurig looplicht"
+
+msgid "usb-pads-led-done"
+msgstr "Verlichting naar het paneel gestuurd (Opslaan om ze te bewaren)"
+
+msgid "usb-pads-led-error"
+msgstr "Verlichting niet verstuurd (zie logs/raspydarts.log)"
+

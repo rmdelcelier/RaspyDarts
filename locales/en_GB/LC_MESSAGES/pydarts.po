@@ -5574,3 +5574,25 @@ msgstr "Hold a button of the pad or gamepad 3 seconds to reach Back and Save"
 msgid "usb-pads-hold-done"
 msgstr "Back and Save: the knob goes from one to the other, its press validates"
 
+
+msgid "usb-pads-led"
+msgstr "Lighting"
+
+msgid "usb-pads-led-unset"
+msgstr "—"
+
+msgid "usb-pads-led-off"
+msgstr "Off"
+
+msgid "usb-pads-led-press"
+msgstr "When a key is pressed"
+
+msgid "usb-pads-led-chase"
+msgstr "Multicolour chase"
+
+msgid "usb-pads-led-done"
+msgstr "Lighting sent to the pad (Save to keep it)"
+
+msgid "usb-pads-led-error"
+msgstr "Lighting not sent (see logs/raspydarts.log)"
+

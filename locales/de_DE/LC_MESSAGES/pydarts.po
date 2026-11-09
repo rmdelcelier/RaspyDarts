@@ -5302,3 +5302,25 @@ msgstr "Eine Taste des Pads oder Gamepads 3 Sekunden halten, um Zurück und Spei
 msgid "usb-pads-hold-done"
 msgstr "Zurück und Speichern: der Drehknopf wechselt, sein Druck bestätigt"
 
+
+msgid "usb-pads-led"
+msgstr "Beleuchtung"
+
+msgid "usb-pads-led-unset"
+msgstr "—"
+
+msgid "usb-pads-led-off"
+msgstr "Aus"
+
+msgid "usb-pads-led-press"
+msgstr "Beim Tastendruck"
+
+msgid "usb-pads-led-chase"
+msgstr "Bunte Lauflichter"
+
+msgid "usb-pads-led-done"
+msgstr "Beleuchtung an das Pad gesendet (Speichern, um sie zu behalten)"
+
+msgid "usb-pads-led-error"
+msgstr "Beleuchtung nicht gesendet (siehe logs/raspydarts.log)"
+

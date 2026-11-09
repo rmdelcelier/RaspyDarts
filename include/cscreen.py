@@ -8797,7 +8797,7 @@ class Screen(pygame.Surface):
             joystick = cusbpads.is_joystick_id(port)
             # Lines : 0 the pad (a gamepad : its name, learn its buttons), 1 menus, 2 game, 3 back
             # and save
-            lengths = [2 if joystick else 4, len(names), len(names), 2] if pad else [0, 0, 0, 1]
+            lengths = [2 if joystick else 5, len(names), len(names), 2] if pad else [0, 0, 0, 1]
             if lengths[row] == 0:
                 row = 3
             column = min(column, lengths[row] - 1)
@@ -8867,6 +8867,9 @@ class Screen(pygame.Surface):
                     return
                 if row == 0 and column == 3:
                     status = self.usb_pads_program(pads, settings, port)
+                    continue
+                if row == 0 and column == 4 and not joystick:
+                    status = self.usb_pads_led(cusbpads, pads, pad, port)
                     continue
                 if row == 0 and column == 1 and joystick:
                     status = self.usb_pads_learn(cusbpads, pads, pad, port)
@@ -8980,11 +8983,30 @@ class Screen(pygame.Surface):
         pad = settings[port]
         error = pads.program(port, pad['keys'], pad['knobs'])
         if error is None:
+            # Its lighting written again with its keys
+            if pad.get('led'):
+                pads.set_led(port, pad['led'])
             pads.save(settings)
             return ('usb-pads-programmed', self.colorset['menu-ok'])
         if 'Access denied' in error or 'Errno 13' in error:
             return ('usb-pads-program-denied', self.colorset['menu-ko'])
         return ('usb-pads-program-error', self.colorset['menu-ko'])
+
+    def usb_pads_led(self, cusbpads, pads, pad, port):
+        '''
+        Lighting of the pad chosen : sent to it at once (seen at once), kept with its settings
+        by Enregistrer. Returns the status shown
+        '''
+        values = [[mode, self.lang.translate(f'usb-pads-led-{mode}')] for mode, _value in cusbpads.LED_MODES]
+        current = pad.get('led') or 'off'
+        chosen = self.dropdown(self.res['x'] * 6 / 16, 3 * self.res_y_16, values, navigate=current)
+        if chosen == 'escape':
+            return None
+        error = pads.set_led(port, chosen)
+        if error is not None:
+            return ('usb-pads-led-error', self.colorset['menu-ko'])
+        pad['led'] = chosen
+        return ('usb-pads-led-done', self.colorset['menu-ok'])
 
     def usb_pads_draw(self, cusbpads, plugged, port, pad, names, selected, lit, status):
         '''
@@ -9032,7 +9054,8 @@ class Screen(pygame.Surface):
             texts = [(f"{translate('usb-pads-pad')} {plugged.index(port) + 1}/{len(plugged)} (USB {port})", None),
                      (translate('usb-pads-keys'), str(pad['keys'])),
                      (translate('usb-pads-knobs'), str(pad['knobs'])),
-                     (translate('usb-pads-program'), None)]
+                     (translate('usb-pads-program'), None),
+                     (translate('usb-pads-led'), translate(f"usb-pads-led-{pad.get('led') or 'unset'}"))]
         width = (14 * unit_x - (len(texts) - 1) * gap) / len(texts)
         for index, (text, value) in enumerate(texts):
             cell((unit_x + index * (width + gap), 3 * unit_y, width, unit_y), text, *colors(selected == (0, index)),
