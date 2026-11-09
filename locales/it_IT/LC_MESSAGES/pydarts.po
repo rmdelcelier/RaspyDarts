@@ -5362,3 +5362,10 @@ msgstr "Con anello, collegato prima dei quarti"
 msgid "config-tire-after"
 msgstr "Con anello, collegato dopo i quarti"
 
+
+msgid "usb-pads-hold-help"
+msgstr "Tenere premuto un pulsante del pad 3 secondi per andare a Indietro e Salva (poi la manopola e la sua pressione)"
+
+msgid "usb-pads-hold-done"
+msgstr "Indietro e Salva: la manopola passa dall'uno all'altro, la pressione conferma"
+

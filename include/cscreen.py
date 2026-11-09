@@ -7254,7 +7254,8 @@ class Screen(pygame.Surface):
         '''
         self.validation_band(self.lang.translate('quit-game-question'), 'quit-game-keys')
         key = self.rpi.listen_inputs([], ['PLAYERBUTTON', 'GAMEBUTTON', 'BACKUPBUTTON', 'MISS', 'CHEAT', 'enter', 'space',
-                                          'single-click', 'escape'], context='game', timeout=QUIT_GAME_TIME)
+                                          'single-click', 'escape'], context='game', timeout=QUIT_GAME_TIME,
+                                     pads_context='menus')
         if key in ESCAPE_KEYS + ['GAMEBUTTON', 'BTN_GAMEBUTTON', 'BACKUPBUTTON']:
             return True
         # (a bull validates in the menus : here it is a dart)
@@ -8800,6 +8801,10 @@ class Screen(pygame.Surface):
             if lengths[row] == 0:
                 row = 3
             column = min(column, lengths[row] - 1)
+            # On Retour / Enregistrer, the pads move and validate (their presses are no longer
+            # shown) : a pad with a knob only can leave the screen
+            if pads.capture != (row != 3):
+                pads.set_capture(row != 3)
             now = time.monotonic()
             lit = {name: moment for name, moment in lit.items() if now - moment < 0.25}
 
@@ -8813,6 +8818,11 @@ class Screen(pygame.Surface):
             if clicked:
                 key = clicked
             if key is False or key is None:
+                continue
+            if isinstance(key, str) and key.startswith('USBPAD_HOLD:'):
+                # An element held 3 s : Retour (then Enregistrer by the knob)
+                row, column = 3, 0
+                status = ('usb-pads-hold-done', self.colorset['menu-ok'])
                 continue
             if isinstance(key, str) and key.startswith('USBPAD:'):
                 _usbpad, pressed_port, element = key.split(':')
@@ -9029,6 +9039,10 @@ class Screen(pygame.Surface):
                  f'cell:0:{index}', value)
         if status is not None:
             self.blit_text(translate(status[0]), unit_x, 4.1 * unit_y, 14 * unit_x, 0.8 * unit_y, status[1])
+        # A pad with a knob only : how to reach Retour / Enregistrer (band of the messages)
+        band = pygame.Rect(0, int(13.7 * unit_y), self.res['x'], int(0.6 * unit_y))
+        self.new_blit_rect2(band, self.colorset['message-bg'])
+        self.blit_text(translate('usb-pads-hold-help'), band.x, band.y, band.width, band.height, self.colorset['message-text'])
 
         # Elements in columns, a second line beyond USB_PADS_COLUMNS
         labels = {'menus': translate('usb-pads-menus'), 'game': translate('usb-pads-game')}

@@ -5349,3 +5349,10 @@ msgstr "Met ring, aangesloten vóór de kwarten"
 msgid "config-tire-after"
 msgstr "Met ring, aangesloten na de kwarten"
 
+
+msgid "usb-pads-hold-help"
+msgstr "Houd een knop van het paneel 3 seconden ingedrukt voor Terug en Opslaan (daarna de draaiknop en zijn druk)"
+
+msgid "usb-pads-hold-done"
+msgstr "Terug en Opslaan: de draaiknop wisselt, zijn druk bevestigt"
+

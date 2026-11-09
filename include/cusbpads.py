@@ -49,6 +49,9 @@ SPEED_STEPS = ((12, 100), (5, 10))
 SETTINGS_NAME = 'usb_pads.json'
 # Pads plugged or unplugged : seen within this time
 SCAN_DELAY = 2
+# Screen of the settings : an element of a pad held this long (s) goes to Retour / Enregistrer
+# (a pad with a knob only could not leave it : its presses are shown, not used)
+EXIT_HOLD = 3.0
 
 # Buttons a key can be : (button, text, where it is offered : menus, game)
 ACTIONS = [('', 'usb-pads-none-action', True, True),
@@ -229,6 +232,8 @@ class UsbPads:
         # start, long press given]) ; times of the last notches turned
         self.value_input = False
         self.held = {}
+        # Screen of the settings : the element held on each pad [start, port, given]
+        self.capture_held = {}
         self.turns = []
         self.inputs = queue.Queue()
         self.devices = {}       # path -> (device, port)
@@ -319,6 +324,9 @@ class UsbPads:
             wait = SCAN_DELAY
             if self.held:
                 wait = max(0.01, min(LONG_PRESS - (time.monotonic() - held[2]) for held in list(self.held.values())))
+            if self.capture_held:
+                wait = max(0.01, min([wait] + [EXIT_HOLD - (time.monotonic() - held[0])
+                                                for held in list(self.capture_held.values()) if not held[2]]))
             repeat = self.next_repeat()
             if repeat is not None:
                 wait = max(0.01, min(wait, repeat))
@@ -412,8 +420,10 @@ class UsbPads:
                 continue
             if self.capture:
                 # Screen of the settings : the key as it is (shown lit), a pad not programmed
-                # by the game too ; the press of a knob held : its long press lit too
+                # by the game too ; the press of a knob held : its long press lit too ; any
+                # element held EXIT_HOLD : Retour / Enregistrer reached
                 self.inputs.put(f"USBPAD:{port}:{element or 'unknown'}")
+                self.capture_held[device.path] = [time.monotonic(), port, False]
                 if element is not None and element.endswith('-press'):
                     self.held[device.path] = [element, port, time.monotonic(), False]
                 continue
@@ -530,6 +540,7 @@ class UsbPads:
         """
         An element released : the short press of a knob whose long press is set
         """
+        self.capture_held.pop(path, None)
         held = self.held.get(path)
         if held is None or held[0] != element:
             return
@@ -544,9 +555,14 @@ class UsbPads:
 
     def long_presses(self):
         """
-        Presses held long enough : their long press given at once (not when released)
+        Presses held long enough : their long press given at once (not when released) ; on the
+        screen of the settings, an element held EXIT_HOLD : USBPAD_HOLD:port
         """
         now = time.monotonic()
+        for held in list(self.capture_held.values()):
+            if self.capture and not held[2] and now - held[0] >= EXIT_HOLD:
+                held[2] = True
+                self.inputs.put(f"USBPAD_HOLD:{held[1]}")
         for path, held in list(self.held.items()):
             element, port, start, given = held
             if given or now - start < LONG_PRESS:
@@ -599,6 +615,7 @@ class UsbPads:
         Screen of the settings opened or closed : keys pressed before forgotten
         """
         self.capture = capture
+        self.capture_held = {}
         while self.take() is not None:
             pass
 

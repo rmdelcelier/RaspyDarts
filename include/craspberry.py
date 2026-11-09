@@ -737,7 +737,7 @@ class Craspberry():
     def read_inputs(self, k_type=['num', 'alpha', 'fx', 'arrows'], 
                       specials=['enter', 'tab', 'backspace', 'left shift', 'escape', 'space', 'double-click', 'single-click', 'resize'],
                       wait_for=None, context='menus', timeout=0, light=None, events=None, 
-                      firstname=None, video_process=None, sound_process=None, camera=None):
+                      firstname=None, video_process=None, sound_process=None, camera=None, pads_context=None):
         """
         Read input : MXP, GPIO, keyboard, mouse, ...
         """
@@ -816,7 +816,9 @@ class Craspberry():
 
             # Read the pads plugged in USB : the button chosen for their key, in the menus or
             # in a game
-            self.usb_pads.context = 'game' if context in ('game', 'waitcomputer') else 'menus'
+            # pads_context : a question over a game (Escape) read as a menu by the pads (their
+            # buttons of the menus), the darts and the keyboard as in the game
+            self.usb_pads.context = pads_context or ('game' if context in ('game', 'waitcomputer') else 'menus')
             inputs = self.usb_pads.take()
             if inputs and miss == 0:
                 self.logs.debug(f"Input debug (USB pad) : {inputs}")
