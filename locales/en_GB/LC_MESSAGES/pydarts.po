@@ -5551,3 +5551,19 @@ msgstr "Off"
 
 msgid "button-leds-pause-ms"
 msgstr "Pause time"
+
+msgid "config-tire_choice"
+msgstr "Ring of the target"
+
+msgid "config-tire_question"
+msgstr "Has the target a lit outer ring, and where are its LEDs plugged?"
+
+msgid "config-tire-none"
+msgstr "No ring"
+
+msgid "config-tire-before"
+msgstr "With ring, plugged before the quarters"
+
+msgid "config-tire-after"
+msgstr "With ring, plugged after the quarters"
+

@@ -1191,6 +1191,16 @@ class Screen(pygame.Surface):
         self.update_screen()
         leds_dd = [['yes', 'yes'], ['no', 'no']]
         leds_ji = self.dropdown(6 * self.res_x_16, 3 * self.res_y_16, leds_dd)
+        # MM-Workshop DartCab : the leds of its target by its outer ring (pneu)
+        tire = None
+        if leds_ji == 'yes' and card == 'Mm':
+            self.display_background()
+            self.menu_header("config-tire_choice", "config-tire_question")
+            self.update_screen()
+            tire = self.dropdown(6 * self.res_x_16, 3 * self.res_y_16,
+                                 [['none', 'config-tire-none'], ['before', 'config-tire-before'], ['after', 'config-tire-after']])
+            if tire == 'escape':
+                tire = 'before'
 
         used_pins = []
         if card == 'Au':
@@ -1438,6 +1448,8 @@ class Screen(pygame.Surface):
         if leds_ji == 'yes':
             if card == 'MMWVdarts':
                 self.config.set_mmworks_leds_config()
+            elif tire is not None:
+                self.config.set_dartcab_leds_config(tire)
             else:
                 self.config.set_ji_leds_config()
 

@@ -5333,3 +5333,19 @@ msgstr "Uit"
 
 msgid "button-leds-pause-ms"
 msgstr "Duur van de pauze"
+
+msgid "config-tire_choice"
+msgstr "Ring van het bord"
+
+msgid "config-tire_question"
+msgstr "Heeft het bord een verlichte ring, en waar zijn de leds aangesloten?"
+
+msgid "config-tire-none"
+msgstr "Geen ring"
+
+msgid "config-tire-before"
+msgstr "Met ring, aangesloten vóór de kwarten"
+
+msgid "config-tire-after"
+msgstr "Met ring, aangesloten na de kwarten"
+

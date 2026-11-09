@@ -5279,3 +5279,19 @@ msgstr "Aus"
 
 msgid "button-leds-pause-ms"
 msgstr "Dauer der Pause"
+
+msgid "config-tire_choice"
+msgstr "Ring der Scheibe"
+
+msgid "config-tire_question"
+msgstr "Hat die Scheibe einen beleuchteten Ring, und wo sind seine LEDs angeschlossen?"
+
+msgid "config-tire-none"
+msgstr "Kein Ring"
+
+msgid "config-tire-before"
+msgstr "Mit Ring, vor den Vierteln angeschlossen"
+
+msgid "config-tire-after"
+msgstr "Mit Ring, nach den Vierteln angeschlossen"
+

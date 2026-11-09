@@ -5355,3 +5355,19 @@ msgstr "Éteinte"
 
 msgid "button-leds-pause-ms"
 msgstr "Durée de la pause"
+
+msgid "config-tire_choice"
+msgstr "Pneu de la cible"
+
+msgid "config-tire_question"
+msgstr "La cible a-t-elle un pneu éclairé, et où ses LED sont-elles branchées ?"
+
+msgid "config-tire-none"
+msgstr "Sans pneu"
+
+msgid "config-tire-before"
+msgstr "Avec pneu, branché avant les quarts"
+
+msgid "config-tire-after"
+msgstr "Avec pneu, branché après les quarts"
+

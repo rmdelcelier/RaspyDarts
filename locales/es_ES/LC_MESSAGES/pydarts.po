@@ -5284,3 +5284,19 @@ msgstr "Apagado"
 
 msgid "button-leds-pause-ms"
 msgstr "Duración de la pausa"
+
+msgid "config-tire_choice"
+msgstr "Anillo de la diana"
+
+msgid "config-tire_question"
+msgstr "¿Tiene la diana un anillo iluminado, y dónde están conectados sus LED?"
+
+msgid "config-tire-none"
+msgstr "Sin anillo"
+
+msgid "config-tire-before"
+msgstr "Con anillo, conectado antes de los cuartos"
+
+msgid "config-tire-after"
+msgstr "Con anillo, conectado después de los cuartos"
+

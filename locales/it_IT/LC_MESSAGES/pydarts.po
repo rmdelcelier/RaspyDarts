@@ -5346,3 +5346,19 @@ msgstr "Spento"
 
 msgid "button-leds-pause-ms"
 msgstr "Durata della pausa"
+
+msgid "config-tire_choice"
+msgstr "Anello del bersaglio"
+
+msgid "config-tire_question"
+msgstr "Il bersaglio ha un anello illuminato, e dove sono collegati i suoi LED?"
+
+msgid "config-tire-none"
+msgstr "Senza anello"
+
+msgid "config-tire-before"
+msgstr "Con anello, collegato prima dei quarti"
+
+msgid "config-tire-after"
+msgstr "Con anello, collegato dopo i quarti"
+
