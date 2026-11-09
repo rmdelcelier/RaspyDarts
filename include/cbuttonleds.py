@@ -51,7 +51,7 @@ FLASHES = (1, 2, 3, 4, 5, 6, 8, 10)
 
 DEFAULTS = {
     'LIGHT_NEXTPLAYER': {'menus': 'auto', 'game': 'auto', 'mode': 'blink', 'flashes': 3,
-                         'on_ms': 10, 'off_ms': 340, 'pause_ms': 1000},
+                         'on_ms': 350, 'off_ms': 150, 'pause_ms': 1000},
     'LIGHT_NAVIGATE': {'menus': 'auto', 'game': 'auto', 'mode': 'count_fixed', 'flashes': 2,
                        'on_ms': 100, 'off_ms': 10, 'pause_ms': 1000},
     'LIGHT_PLAYERS': {'menus': 'auto', 'game': 'auto', 'mode': 'count_fixed', 'flashes': 2,

@@ -1065,9 +1065,17 @@ try:
                     # SETUP MENU
                     # The LEDs are tested and set one by one here : no light out of games
                     idle_light(False)
+                    # Entering a menu : its animation (Paramétrage and its screens), but not in
+                    # the screens setting or testing the LED of the target and of the strip
+                    led_screens = ('setup-pinleds', 'setup-leds', 'setup-couleurs-segments', 'test-target')
+                    dispatcher.publish('menu', limit=['TARGET', 'STRIP', 'OTHER'])
                     setup = display.setup_menu()
 
                     while setup != 'escape':
+                        if setup in led_screens:
+                            dispatcher.publish('off', limit=['TARGET', 'STRIP', 'OTHER'])
+                        else:
+                            dispatcher.publish('menu', limit=['TARGET', 'STRIP', 'OTHER'])
                         if setup == 'test-buttons':
                             display.test_buttons_menu()
 
@@ -1172,6 +1180,8 @@ try:
                                 Config.write_file()
                                 camera = ccamera.Camera(Config, display, logs)
 
+                        # Back to Paramétrage : its animation again
+                        dispatcher.publish('menu', limit=['TARGET', 'STRIP', 'OTHER'])
                         setup = display.setup_menu()
                     idle_light(True)
 
