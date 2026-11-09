@@ -1678,82 +1678,48 @@ class Screen(pygame.Surface):
 
         return playerName.replace('[ExperT]', '')
 
+    # Characters typed with the arrows, the buttons or the wheel of a knob, in their order (up :
+    # the next one, down : the previous one, both go round) : letters, the same in capitals,
+    # figures, then the signs of a keyboard
+    TEXT_CHARACTERS = ('aàâbcçdeéèêëfghiîïjklmnoôpqrstuùûvwxyz'
+                       'AÀÂBCÇDEÉÈÊËFGHIÎÏJKLMNOÔPQRSTUÙÛVWXYZ'
+                       '0123456789'
+                       " -_.'/&@!?#()+*=:,;%$€\"")
+    SERVER_CHARACTERS = 'abcdefghijklmnopqrstuvwxyz0123456789.:_-'
+
+    def key_sequence(self, context):
+        """
+        The characters given in turn by the arrows for a kind of value (None : a number, the
+        figures then what follows them)
+        """
+        if context == 'leds':
+            return ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ', ']
+        if context in ('number', 'pins'):
+            return list('0123456789')
+        if context == 'server':
+            return list(self.SERVER_CHARACTERS)
+        return list(self.TEXT_CHARACTERS)
+
     def next_key(self, character, context=None):
         '''
         In case of using buttons instead of keyboard
         return the next character
         '''
-
-        if context == 'number':
-            next_key = {'9':'0'}
-        elif context == 'leds':
-            next_key = {
-                '9':', ',
-                ', ':'0'
-                }
-        elif context == 'server':
-            next_key = {
-                'z':'0',
-                '9':'.',
-                '.':':',
-                ':':'_',
-                '_':'-',
-                '-':'a'
-                }
-        else:
-            next_key = {
-                    'e': 'é',
-                    'é': 'è',
-                    'è': 'ë',
-                    'ë': 'f',
-                    'o': 'ô',
-                    'ô': 'p',
-                    'z': 'a'
-                }
-
-        # Not .get(character, chr(...)) : its default is computed first, and ord() refuses ', '
-        # (2 characters, LED numbers) : the input of the LED of the target ended the game
-        if character in next_key:
-            return next_key[character]
-        return chr(ord(character) + 1)
+        sequence = self.key_sequence(context)
+        if character in sequence:
+            return sequence[(sequence.index(character) + 1) % len(sequence)]
+        # A character typed with a keyboard, out of the sequence : from its start
+        return sequence[0]
 
     def previous_key(self, character, context=None):
         '''
         In case of using buttons instead of keyboard
         return the previous character
         '''
-
-        if context == 'number':
-            previous_key = {'0':'9'}
-        elif context == 'leds':
-            previous_key = {
-                ', ':'9',
-                '0':', '
-                }
-        elif context == 'server':
-            previous_key = {
-                 'a':'_',
-                 '_':'-',
-                 '-':':',
-                 ':':'.',
-                 '.':'9',
-                 '0':'z'
-                 }
-        else:
-            previous_key = {
-                    'a': 'z',
-                    'p': 'ô',
-                    'ô': 'o',
-                    'f': 'ë',
-                    'ë': 'è',
-                    'è': 'é',
-                    'é': 'e',
-                    }
-
-        # Not .get(character, chr(...)) : see next_key
-        if character in previous_key:
-            return previous_key[character]
-        return chr(ord(character) - 1)
+        sequence = self.key_sequence(context)
+        if character in sequence:
+            return sequence[(sequence.index(character) - 1) % len(sequence)]
+        return sequence[-1]
 
     def no_doubles(self, edit, players, selected):
         '''
@@ -10817,7 +10783,9 @@ class Screen(pygame.Surface):
             options = {}
             values = []
             if QRCODE:
-                self.qrcode.set_qrsize() # remet la taille par defaut au cas ou elle aurait changé dans un jeu
+                # 150 px on a screen 1080 high : the same part of the height on every screen
+                # (150 px fixed covered the title and the description in 800 x 600)
+                self.qrcode.set_qrsize(max(64, int(self.res_y * 150 / 1080)))
                 self.qrcode.set_color('black','white')
                 image_qrcode = self.draw_qrcode(game)
                 self.display_qrcode(image_qrcode)
@@ -11021,8 +10989,11 @@ class Screen(pygame.Surface):
         '''
         index = 0
         if big:
+            # Above the logo « Raspy2DMD » of the background (bottom right, from 13/16 of the
+            # height) : the last address ends at 12.7/16, the others are stacked above it
+            top = 11.7 - (len(self.ips) - 1)
             for ip in self.ips:
-                self.blit_text(ip[1], self.res['x'] * 12 / 16, self.res['y'] * (13 + index) / 16, \
+                self.blit_text(ip[1], self.res['x'] * 12 / 16, self.res['y'] * (top + index) / 16, \
                         self.res['x'] / 8, self.res_y_16, self.colorset['menu-text-white'], margin=False)
                 index += 1
         else:
@@ -13206,16 +13177,21 @@ class Screen(pygame.Surface):
             img = None #n'affiche pas l'image à nouveau
         return img
 
-    def display_qrcode(self, img = None, pos_x = -160 ,pos_y = 10 ):
+    def display_qrcode(self, img = None, pos_x = None, pos_y = None):
         '''
-        Affiche qrcode
+        Affiche qrcode : top right by default, at the distance of the edges of 1080p (10 px)
+        whatever the resolution
         '''
-#        print (f" image = {img}")
         if img is None:
             return
-        if pos_x < 0:
+        gap = max(2, int(self.res_y * 10 / 1080))
+        if pos_x is None:
+            pos_x = self.res_x - img.get_width() - gap
+        elif pos_x < 0:
             pos_x = self.res_x - abs(pos_x)
-        if pos_y < 0:
+        if pos_y is None:
+            pos_y = gap
+        elif pos_y < 0:
             pos_y = self.res_y - abs(pos_y)
             
         self.blit(img, (pos_x, pos_y))

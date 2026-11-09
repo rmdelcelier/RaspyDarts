@@ -953,7 +953,11 @@ class Craspberry():
             elif event.type == pygame.KEYDOWN:
                 keyname = pygame.key.name(event.key)
                 unicodekey = event.dict['unicode']
-                if len(keyname) == 1 and unicodekey != '':
+                # The character typed when there is one (capitals, signs of the keyboard,
+                # AltGr : @ # { }...), also for the keys SDL names « world 73 »... ; not a
+                # space, its name 'space' is a button
+                if (len(keyname) == 1 and unicodekey != '') \
+                        or (len(unicodekey) == 1 and unicodekey.isprintable() and not unicodekey.isspace()):
                     keycouple = self.real_key(unicodekey, context)
                 else:
                     keycouple = self.real_key(keyname, context)

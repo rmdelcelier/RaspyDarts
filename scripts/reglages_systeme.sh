@@ -82,6 +82,32 @@ if [ -f /etc/systemd/system/raspydarts-display.service ]; then
 fi
 
 # ------------------------------------------------------------
+# Wi-Fi depose sur la carte SD (wifi.txt ou wpa_supplicant.conf)
+# ------------------------------------------------------------
+# Sous Trixie, wpa_supplicant.conf a la racine de la carte n'est plus lu (NetworkManager) :
+# raspydarts-wifi (scripts/raspydarts_wifi.py) le lit au demarrage, avant NetworkManager, ainsi
+# que wifi.txt (ssid=, motdepasse=, pays=), en fait des connexions prioritaires, puis l'efface
+install -m 755 "$PYDARTS/scripts/raspydarts_wifi.py" /usr/local/sbin/raspydarts-wifi
+cat > /etc/systemd/system/raspydarts-wifi.service <<'EOF'
+[Unit]
+Description=RaspyDarts : Wi-Fi depose sur la partition de demarrage (wifi.txt, wpa_supplicant.conf)
+DefaultDependencies=no
+After=local-fs.target systemd-rfkill.service
+Before=NetworkManager.service network-pre.target
+Wants=network-pre.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /usr/local/sbin/raspydarts-wifi
+
+[Install]
+WantedBy=multi-user.target
+EOF
+systemctl daemon-reload
+systemctl enable raspydarts-wifi.service >/dev/null 2>&1 \
+    && ok 'Wi-Fi depose sur la carte SD : wifi.txt ou wpa_supplicant.conf' || warn 'Wi-Fi depose sur la carte non active'
+
+# ------------------------------------------------------------
 # Son : sans souffle
 # ------------------------------------------------------------
 # Le firmware ajoute un leger bruit (dither) au son de la sortie analogique : un souffle
