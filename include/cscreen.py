@@ -9170,17 +9170,23 @@ class Screen(pygame.Surface):
                 rows.append(('wait', 'button-leds-wait', translate(f"button-leds-wait-{values['wait']}")))
             if kind == 'press':
                 rows.append(('flashes', 'button-leds-flashes', str(values['flashes'])))
-            if kind in ('wait', 'press'):
+            # The durations : only when it blinks (while waiting : Clignote ; at a press : at
+            # least one blink)
+            blinks = (kind == 'wait' and values['wait'] == 'blink') or (kind == 'press' and values['flashes'] > 0)
+            if blinks:
                 rows += [('on_ms', 'button-leds-on-ms', f"{values['on_ms']} ms"),
-                         ('off_ms', 'button-leds-off-ms', f"{values['off_ms']} ms"),
-                         ('test', 'button-leds-test', '')]
+                         ('off_ms', 'button-leds-off-ms', f"{values['off_ms']} ms")]
+            if kind in ('wait', 'press'):
+                rows.append(('test', 'button-leds-test', None))
             nb_elements = len(rows)
+            selected = min(selected, nb_elements + 2)
             self.display_background()
             self.menu_header(translate(led), translate(f'button-leds-sub-{kind}'))
             click_zones = {}
             for index, (_name, label, value) in enumerate(rows, 1):
-                click_zones[f'F{index}'] = self.menu_item((index, nb_elements, selected), (f'F{index}', label, BTN_DROPDOWN, value),
-                                                          align='Full', tabs=True)
+                # Tester : a button (no value to change)
+                button = (f'F{index}', label, BTN_CHOICE, '') if value is None else (f'F{index}', label, BTN_DROPDOWN, value)
+                click_zones[f'F{index}'] = self.menu_item((index, nb_elements, selected), button, align='Full', tabs=True)
             click_zones['escape'] = self.display_button(selected == nb_elements + 1, 'back', special='escape')
             click_zones['save'] = self.display_button(selected == nb_elements + 2, 'save', special='return')
             self.update_screen()
@@ -9214,8 +9220,9 @@ class Screen(pygame.Surface):
                 chosen = choose([(str(number), str(number)) for number in cbuttonleds.FLASHES], str(values[name]))
                 chosen = chosen if chosen == 'escape' else int(chosen)
             elif name in ('on_ms', 'off_ms'):
-                durations = sorted(set(cbuttonleds.DURATIONS) | {values[name]})
-                chosen = choose([(str(ms), f'{ms} ms') for ms in durations], str(values[name]))
+                # Graduated, as the durations of Personnalisation du jeu (ms, by 10)
+                chosen = self.slider(f"{translate(rows[selected - 1][1])} (ms)", int(values[name]), cbuttonleds.MIN_MS, cbuttonleds.MAX_MS,
+                                     step=cbuttonleds.STEP_MS)
                 chosen = chosen if chosen == 'escape' else int(chosen)
             else:
                 self.button_led_try(led, kind, values)

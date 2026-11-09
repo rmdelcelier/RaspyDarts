@@ -5238,13 +5238,13 @@ msgid "button-leds-wait-blink"
 msgstr "Blinkt"
 
 msgid "button-leds-wait-on"
-msgstr "An"
+msgstr "An, ohne Blinken"
 
 msgid "button-leds-wait-off"
 msgstr "Aus"
 
 msgid "button-leds-flashes"
-msgstr "Blitze bei jedem Druck"
+msgstr "Blinken bei jedem Druck"
 
 msgid "button-leds-on-ms"
 msgstr "Dauer an"
@@ -5265,10 +5265,10 @@ msgid "button-leds-not-saved"
 msgstr "Einstellungen nicht gespeichert (siehe logs/raspydarts.log)"
 
 msgid "button-leds-sub-wait"
-msgstr "Blinkt, wenn das Spiel auf diese Taste wartet (Ende der Runde)"
+msgstr "Blinkt, solange das Spiel auf diese Taste wartet (Ende der Runde)"
 
 msgid "button-leds-sub-press"
-msgstr "Blitze bei jedem Druck auf diese Tasten"
+msgstr "Blinkt bei jedem Druck auf diese Tasten einige Male und kehrt dann zurück"
 
 msgid "button-leds-sub-state"
 msgstr "An oder aus außerhalb und im Spiel"

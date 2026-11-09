@@ -26,7 +26,10 @@ KIND = {'LIGHT_NEXTPLAYER': 'wait', 'LIGHT_NAVIGATE': 'press', 'LIGHT_PLAYERS': 
 STATES = ('auto', 'on', 'off')
 # While waiting for Joueur suivant : blinking, lit, off
 WAIT_MODES = ('blink', 'on', 'off')
-DURATIONS = (10, 20, 30, 50, 75, 100, 150, 200, 250, 300, 340, 400, 500, 600, 750, 1000, 1500, 2000)
+# Durations lit and off, set by a graduated slider (ms)
+MIN_MS = 10
+MAX_MS = 1000
+STEP_MS = 10
 FLASHES = (0, 1, 2, 3, 4, 5)
 
 DEFAULTS = {

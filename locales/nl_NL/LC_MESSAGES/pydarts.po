@@ -5292,13 +5292,13 @@ msgid "button-leds-wait-blink"
 msgstr "Knippert"
 
 msgid "button-leds-wait-on"
-msgstr "Aan"
+msgstr "Aan, zonder knipperen"
 
 msgid "button-leds-wait-off"
 msgstr "Uit"
 
 msgid "button-leds-flashes"
-msgstr "Flitsen bij elke druk"
+msgstr "Knipperen bij elke druk"
 
 msgid "button-leds-on-ms"
 msgstr "Tijd aan"
@@ -5319,10 +5319,10 @@ msgid "button-leds-not-saved"
 msgstr "Instellingen niet opgeslagen (zie logs/raspydarts.log)"
 
 msgid "button-leds-sub-wait"
-msgstr "Knippert als het spel op deze knop wacht (einde van de beurt)"
+msgstr "Knippert zolang het spel op deze knop wacht (einde van de beurt)"
 
 msgid "button-leds-sub-press"
-msgstr "Flitsen bij elke druk op deze knoppen"
+msgstr "Knippert een paar keer bij elke druk op deze knoppen en keert dan terug"
 
 msgid "button-leds-sub-state"
 msgstr "Aan of uit buiten en tijdens het spel"
