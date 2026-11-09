@@ -5485,3 +5485,6 @@ msgstr "Jeux"
 
 msgid "theme-cancel"
 msgstr "Annuler"
+
+msgid "theme-back"
+msgstr "Retour"

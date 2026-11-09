@@ -5414,3 +5414,6 @@ msgstr "Juegos"
 
 msgid "theme-cancel"
 msgstr "Cancelar"
+
+msgid "theme-back"
+msgstr "Volver"

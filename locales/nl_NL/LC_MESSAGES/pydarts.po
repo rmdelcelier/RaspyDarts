@@ -5463,3 +5463,6 @@ msgstr "Spellen"
 
 msgid "theme-cancel"
 msgstr "Annuleren"
+
+msgid "theme-back"
+msgstr "Terug"

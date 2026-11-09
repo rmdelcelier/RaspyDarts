@@ -5476,3 +5476,6 @@ msgstr "Giochi"
 
 msgid "theme-cancel"
 msgstr "Annulla"
+
+msgid "theme-back"
+msgstr "Indietro"

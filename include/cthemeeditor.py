@@ -267,6 +267,7 @@ class ThemeEditor:
         right = [tag for tag in tags if tag[3] == 'right']
         selected = 0
         while True:
+            self.redraw = lambda: self.draw_plate(name, drawer, tags, selected, update=False)
             zones = self.draw_plate(name, drawer, tags, selected)
             key = self.listen()
             if isinstance(key, tuple):
@@ -338,7 +339,7 @@ class ThemeEditor:
         width, height = self.size
         return pygame.Rect(int(width * 4.2 / 16), int(height * 3.4 / 16), int(width * 7.6 / 16), int(height * 9.9 / 16))
 
-    def draw_plate(self, name, drawer, tags, selected):
+    def draw_plate(self, name, drawer, tags, selected, update=True):
         '''
         The plate drawn : title, mock-up, tags with their colour and their arrow, help. Returns
         the zones of the tags {index: rect}
@@ -389,7 +390,8 @@ class ThemeEditor:
         pygame.draw.rect(screen.screen, (0, 0, 0), help_rect)
         screen.blit_text(self.translate('theme-help'), help_rect.x, help_rect.y, help_rect.width, help_rect.height,
                          (255, 255, 255))
-        screen.update_screen()
+        if update:
+            screen.update_screen()
         return zones
 
     def draw_value(self, tag, rect, font):
@@ -630,12 +632,15 @@ class ThemeEditor:
         '''
         screen = self.screen
         width, height = self.size
-        buttons = ['fine', 'origin'] + (['none'] if tag in NONE_ALLOWED else [])
+        buttons = ['fine', 'origin'] + (['none'] if tag in NONE_ALLOWED else []) + ['back']
         cells = len(PALETTE) + len(buttons)
         current = self.color(tag)
         selected = PALETTE.index(current) if current in PALETTE else 0
         columns = 6
         while True:
+            # The plate under it, drawn again (the window of Réglage fin closed left its drawing)
+            if getattr(self, 'redraw', None) is not None:
+                self.redraw()
             panel = pygame.Rect(int(width * 4 / 16), int(height * 2.2 / 16), int(width * 8 / 16), int(height * 11 / 16))
             pygame.draw.rect(screen.screen, (20, 20, 20), panel, border_radius=16)
             pygame.draw.rect(screen.screen, (200, 200, 200), panel, 2, border_radius=16)
@@ -685,6 +690,8 @@ class ThemeEditor:
                 if selected < len(PALETTE):
                     return PALETTE[selected]
                 name = buttons[selected - len(PALETTE)]
+                if name == 'back':
+                    return 'back'
                 if name == 'origin':
                     return 'origin'
                 if name == 'none':
