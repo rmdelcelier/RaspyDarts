@@ -6603,6 +6603,71 @@ class Screen(pygame.Surface):
             if key in ENTER_KEYS:
                 return shortcuts[selected - 1]
 
+    SCREEN_MODE_TOOL = '/usr/local/bin/raspydarts-display'
+    SCREEN_MODE_STATE = '/var/lib/raspydarts/display'
+
+    def screen_modes(self):
+        '''
+        Modes of the screen offered (raspydarts-display --modes) : ([(value, text)], current
+        value) ; value 'auto' or '<group> <mode>'. None : display not by the firmware (KMS), or
+        the tool missing
+        '''
+        if os.path.exists('/dev/dri/card0') or not os.path.exists(self.SCREEN_MODE_TOOL):
+            return None
+        try:
+            lines = subprocess.run(['sudo', '-n', self.SCREEN_MODE_TOOL, '--modes'], capture_output=True,
+                                   text=True, timeout=15, check=False).stdout.splitlines()
+        except (OSError, subprocess.SubprocessError):
+            return None
+        try:
+            with open(self.SCREEN_MODE_STATE, encoding='utf-8') as state:
+                manual = state.read().split()[1:2] in (['choix'], ['choix-essai'], ['choix-vu'])
+        except (OSError, IndexError):
+            manual = False
+        # One mode by resolution : the nearest to 60 Hz (announced by the screen before the
+        # common ones), and the one in use when it was chosen by hand
+        kept = {}
+        current = 'auto'
+        for line in lines:
+            fields = line.split()
+            if len(fields) < 6 or not all(field.isdigit() for field in fields[:5]):
+                continue
+            group, mode, width, height, rate = fields[:5]
+            in_use = manual and 'actuel' in fields[6:]
+            if in_use:
+                current = f'{group} {mode}'
+            rank = (not in_use, abs(int(rate) - 60), fields[5] == 'courant')
+            size = (int(width), int(height))
+            if size not in kept or rank < kept[size][0]:
+                mark = ' *' if fields[5] in ('natif', 'ecran') else ''
+                kept[size] = (rank, (f'{group} {mode}', f'{width} x {height} - {rate} Hz{mark}'))
+        values = [('auto', self.lang.translate('screen-mode-auto'))]
+        values += [kept[size][1] for size in sorted(kept, key=lambda size: (size[0] * size[1], size))]
+        return values, current
+
+    def screen_mode_apply(self):
+        '''
+        After the save of the customization : the resolution chosen given to raspydarts-display
+        (at the next start, on trial : kept at the first action on the cabinet, else the setting
+        before comes back), and the Raspberry restarted if wanted. True : it restarts
+        '''
+        wanted, self.screen_mode_wanted = getattr(self, 'screen_mode_wanted', None), None
+        if not wanted:
+            return False
+        command = [self.SCREEN_MODE_TOOL, '--choisir'] + wanted.split()
+        result = subprocess.run(['sudo', '-n'] + command, capture_output=True, text=True, timeout=30, check=False)
+        if result.returncode != 0:
+            self.logs.error(f"Screen mode {wanted} not applied : {result.stdout.strip()} {result.stderr.strip()}")
+            self.message([self.lang.translate('screen-mode-error')], 2500, self.colorset['menu-ko'], 'middle', 'big')
+            return False
+        self.logs.info(f"Screen mode {wanted} chosen : {result.stdout.strip()}")
+        if not self.wait_validation(self.lang.translate('screen-mode-restart')):
+            self.message([self.lang.translate('screen-mode-later')], 2500, None, 'middle', 'big')
+            return False
+        self.message([self.lang.translate('screen-mode-trial')], 4000, None, 'middle', 'big')
+        subprocess.run(['sudo', '-n', 'systemctl', 'reboot'], check=False)
+        return True
+
     def customization_menu(self, customization, colors_available):
         '''
         Customization menu
@@ -6729,6 +6794,15 @@ class Screen(pygame.Surface):
             else:
                 general_customization.append([option, customization[option], option_type, max_value, option_values, min_value, zero])
 
+        # Resolution of the screen (display by the firmware : raspydarts-display) : a choice of
+        # its modes, applied at the next start (see screen_mode_apply)
+        modes = self.screen_modes()
+        self.screen_mode_wanted = None
+        if modes is not None:
+            values, current = modes
+            self.screen_mode_current = current
+            general_customization.append(['screen_mode', current, 'dropdown', 0, values, 1, False])
+
         selected_customization = game_customization
         tab = -1
 
@@ -6845,6 +6919,11 @@ class Screen(pygame.Surface):
             if key in SAVE_KEYS or (key in ENTER_KEYS and selected == nb_elements + 2):
                 customization = {}
                 for option in game_customization + general_customization:
+                    if option[0] == 'screen_mode':
+                        # Not a setting of the game : applied to the system after the save
+                        if option[1] != getattr(self, 'screen_mode_current', None):
+                            self.screen_mode_wanted = option[1]
+                        continue
                     customization[option[0]] = option[1]
                 for option in avoid:
                     customization[option[0]] = option[1]

@@ -5256,3 +5256,22 @@ msgstr "Éteindre Raspy2DMD avec RaspyDarts"
 msgid "dmd_player_color"
 msgstr "Afficher les textes Raspy2DMD à la couleur du joueur"
 
+
+msgid "screen_mode"
+msgstr "Résolution de l'écran"
+
+msgid "screen-mode-auto"
+msgstr "Automatique"
+
+msgid "screen-mode-restart"
+msgstr "Redémarrer maintenant pour essayer cette résolution ?"
+
+msgid "screen-mode-later"
+msgstr "Résolution appliquée au prochain démarrage"
+
+msgid "screen-mode-trial"
+msgstr "Au redémarrage, appuyez sur un bouton : sans action, l'ancienne résolution revient"
+
+msgid "screen-mode-error"
+msgstr "Résolution non appliquée (voir logs/raspydarts.log)"
+

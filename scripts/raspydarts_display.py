@@ -21,8 +21,19 @@ lent a repondre.
   raspydarts-display --diagnostic    ce qui est vu de l'ecran et ce qui est impose
   raspydarts-display --reinitialiser retour au choix du firmware (prend effet au redemarrage)
   raspydarts-display --valider       le mode a l'essai convient (lance par le jeu)
+  raspydarts-display --modes         les modes proposes (annonces par l'ecran, puis courants)
+  raspydarts-display --choisir G M   mode choisi (groupe 1 CEA / 2 DMT, numero), a l'essai
+  raspydarts-display --choisir auto  retour au choix automatique
+
+Choix manuel (Parametrage > Resolution de l'ecran, ou ecran.txt depose a la racine de la carte
+SD : « resolution=1024x768 », « frequence=60 » facultatif, ou « resolution=auto ») : utile
+quand l'ecran est branche par un convertisseur (HDMI vers VGA), qui annonce sa propre
+resolution et non celle de l'ecran (image coupee). Il est lui aussi a l'essai : sans action sur
+la borne au demarrage qui l'utilise, le reglage precedent est remis. Garde ensuite quel que
+soit l'ecran branche, jusqu'a un autre choix.
 """
 import hashlib
+import json
 import os
 import re
 import subprocess
@@ -40,6 +51,16 @@ END = '# --- RaspyDarts : mode de l ecran (fin) ---'
 BASE = ['hdmi_force_hotplug=1']
 # Rapports d'image connus de hdmi_timings (dernier parametre)
 ASPECTS = {1: 4 / 3, 2: 14 / 9, 3: 16 / 9, 4: 5 / 4, 5: 16 / 10, 6: 15 / 9, 7: 21 / 9, 8: 64 / 27}
+# Reglage remis si le mode choisi a la main n'est pas confirme
+PREVIOUS = STATE + '.avant-choix'
+BOOT_DIRS = ('/boot/firmware', '/boot')
+CHOICE_FILES = ('ecran.txt', 'ecran.txt.txt', 'écran.txt', 'écran.txt.txt')
+CHOICE_RESULT = 'ecran-resultat.txt'
+# Modes courants des moniteurs (DMT), proposes meme si l'ecran (ou son convertisseur) ne les
+# annonce pas : 4/3, 5/4, 16/10, 16/9
+COMMON_MODES = [(2, 4, 640, 480, 60), (2, 9, 800, 600, 60), (2, 16, 1024, 768, 60), (2, 32, 1280, 960, 60),
+                (2, 35, 1280, 1024, 60), (2, 51, 1600, 1200, 60), (2, 28, 1280, 800, 60), (2, 47, 1440, 900, 60),
+                (2, 58, 1680, 1050, 60), (2, 85, 1280, 720, 60), (2, 39, 1360, 768, 60), (2, 82, 1920, 1080, 60)]
 MODE_LINE = re.compile(r'(\((?P<flags>[^)]*)\)\s*)?mode (?P<mode>\d+): (?P<w>\d+)x(?P<h>\d+) @ (?P<rate>\d+)Hz'
                        r'.*?(?P<scan>progressive|interlaced)')
 
@@ -182,21 +203,202 @@ def diagnostic():
         print(tvservice('-m', name).stdout.rstrip())
 
 
+def announced_modes():
+    """ Les modes progressifs que l'ecran (ou son convertisseur) annonce : (groupe, numero, l, h, frequence, natif) """
+    modes = []
+    for group, name in ((1, 'CEA'), (2, 'DMT')):
+        for line in tvservice('-m', name).stdout.splitlines():
+            match = MODE_LINE.search(line)
+            if match and match['scan'] == 'progressive':
+                modes.append((group, int(match['mode']), int(match['w']), int(match['h']), int(match['rate']),
+                              'native' in (match['flags'] or '')))
+    return modes
+
+
+def all_modes():
+    """
+    Les modes proposes : ceux annonces, puis les modes courants absents (meme resolution et
+    frequence) : (groupe, numero, l, h, frequence, origine) ; origine : natif, ecran, courant
+    """
+    modes, seen = [], set()
+    for group, mode, width, height, rate, native in announced_modes():
+        if (width, height, rate) not in seen:
+            seen.add((width, height, rate))
+            modes.append((group, mode, width, height, rate, 'natif' if native else 'ecran'))
+    for group, mode, width, height, rate in COMMON_MODES:
+        if (width, height, rate) not in seen:
+            seen.add((width, height, rate))
+            modes.append((group, mode, width, height, rate, 'courant'))
+    return sorted(modes, key=lambda item: (item[2] * item[3], item[4]))
+
+
+def current_mode():
+    """ (groupe, numero) du mode en cours, ou None """
+    match = re.search(r'\[(CEA|DMT) \((\d+)\)', tvservice('-s').stdout)
+    return (1 if match.group(1) == 'CEA' else 2, int(match.group(2))) if match else None
+
+
+def choose(group, mode):
+    """
+    Mode choisi a la main, a l'essai : le reglage actuel est garde de cote pour etre remis si
+    la borne n'est pas utilisee au demarrage suivant
+    """
+    fingerprint, kind = read_state()
+    if kind not in ('choix-essai', 'choix-vu') or not os.path.exists(PREVIOUS):
+        os.makedirs(os.path.dirname(PREVIOUS), exist_ok=True)
+        with open(PREVIOUS, 'w', encoding='utf-8') as previous:
+            json.dump({'lines': imposed_lines(), 'fingerprint': fingerprint, 'kind': kind}, previous)
+    write_block([f'hdmi_group={group}', f'hdmi_mode={mode}'])
+    write_state('manuel', 'choix-essai')
+    log(f"mode {'CEA' if group == 1 else 'DMT'} {mode} choisi, a l'essai au prochain demarrage")
+
+
+def choose_auto():
+    """ Retour au choix automatique (celui du firmware, puis le mode natif de l'ecran) """
+    write_block([])
+    for path in (STATE, PREVIOUS):
+        if os.path.exists(path):
+            os.remove(path)
+    log("retour au choix automatique : prend effet au prochain redemarrage")
+
+
+def restore_previous():
+    """ Le mode choisi n'a pas ete confirme : le reglage d'avant est remis """
+    try:
+        with open(PREVIOUS, encoding='utf-8') as previous:
+            saved = json.load(previous)
+    except (OSError, ValueError):
+        saved = {}
+    write_block(saved.get('lines') or [])
+    if saved.get('kind') and saved.get('fingerprint'):
+        write_state(saved['fingerprint'], saved['kind'])
+    elif os.path.exists(STATE):
+        os.remove(STATE)
+    if os.path.exists(PREVIOUS):
+        os.remove(PREVIOUS)
+
+
+def mode_for(width, height, rate=None):
+    """ Le mode propose de cette resolution (annonce de preference), a la frequence la plus proche """
+    found = [item for item in all_modes() if (item[2], item[3]) == (width, height)]
+    if not found:
+        return None
+    return min(found, key=lambda item: (abs(item[4] - (rate or 60)), item[5] == 'courant'))
+
+
+def read_choice_file():
+    """
+    ecran.txt depose sur la partition de demarrage : (chemin, partition, texte) ou None.
+    Ecrit par le Bloc-notes : UTF-8 avec ou sans BOM, UTF-16, ANSI
+    """
+    for boot in BOOT_DIRS:
+        try:
+            names = os.listdir(boot)
+        except OSError:
+            continue
+        for name in names:
+            if name.lower() in CHOICE_FILES:
+                path = os.path.join(boot, name)
+                with open(path, 'rb') as handle:
+                    data = handle.read()
+                if data[:2] in (b'\xff\xfe', b'\xfe\xff'):
+                    text = data.decode('utf-16')
+                else:
+                    try:
+                        text = data.decode('utf-8-sig')
+                    except UnicodeDecodeError:
+                        text = data.decode('cp1252', errors='replace')
+                return path, boot, text
+    return None
+
+
+def apply_choice_file():
+    """
+    ecran.txt : le choix qu'il donne est applique (a l'essai), le fichier remplace par un
+    compte rendu (ecran-resultat.txt). True : un redemarrage est necessaire
+    """
+    found = read_choice_file()
+    if found is None:
+        return False
+    path, boot, text = found
+    values = {}
+    for line in text.splitlines():
+        line = line.strip()
+        if not line or line[0] in '#;':
+            continue
+        if '=' in line or ':' in line:
+            key, value = re.split(r'\s*[=:]\s*', line, maxsplit=1)
+            values[key.strip().lower()] = value.strip().strip('"\'')
+        else:
+            values.setdefault('resolution', line)
+    wanted = values.get('resolution', values.get('mode', '')).lower().replace(' ', '')
+    rate_text = re.sub(r'\D', '', values.get('frequence', values.get('fr\u00e9quence', values.get('rate', ''))))
+    rate = int(rate_text) if rate_text else None
+    match = re.fullmatch(r'(\d+)[x\*](\d+)(?:@(\d+)(?:hz)?)?', wanted)
+    changed = False
+    if wanted in ('auto', 'automatique'):
+        choose_auto()
+        changed = True
+        report = "Resolution : choix automatique (au prochain demarrage)"
+    elif match:
+        width, height = int(match.group(1)), int(match.group(2))
+        mode = mode_for(width, height, int(match.group(3)) if match.group(3) else rate)
+        if mode is None:
+            sizes = sorted({(item[2], item[3]) for item in all_modes()})
+            report = (f"Resolution {width}x{height} inconnue : rien n'a change. Possibles : "
+                      + ', '.join(f'{w}x{h}' for w, h in sizes))
+        else:
+            choose(mode[0], mode[1])
+            changed = True
+            report = (f"Resolution {mode[2]}x{mode[3]} @ {mode[4]} Hz ({'CEA' if mode[0] == 1 else 'DMT'} {mode[1]}) "
+                      "a l'essai : gardee des la premiere action sur la borne, sinon le reglage precedent revient")
+    else:
+        report = "resolution= manquante ou illisible (ex : resolution=1024x768) : rien n'a change"
+    try:
+        os.remove(path)
+    except OSError:
+        pass
+    try:
+        with open(os.path.join(boot, CHOICE_RESULT), 'w', encoding='utf-8', newline='\r\n') as handle:
+            handle.write('RaspyDarts : ecran.txt\n\n' + report + '\n')
+    except OSError:
+        pass
+    log(report)
+    return changed
+
+
 def main(args):
     if '--diagnostic' in args:
         diagnostic()
         return
     if '--reinitialiser' in args:
-        write_block([])
-        if os.path.exists(STATE):
-            os.remove(STATE)
-        log("retour au choix du firmware : prend effet au prochain redemarrage")
+        choose_auto()
+        return
+    if '--modes' in args:
+        current = current_mode()
+        for group, mode, width, height, rate, origin in all_modes():
+            print(f"{group} {mode} {width} {height} {rate} {origin}{' actuel' if (group, mode) == current else ''}")
+        return
+    if '--choisir' in args:
+        rest = args[args.index('--choisir') + 1:]
+        if rest[:1] == ['auto']:
+            choose_auto()
+        elif len(rest) >= 2 and rest[0] in ('1', '2') and rest[1].isdigit():
+            choose(int(rest[0]), int(rest[1]))
+        else:
+            log("--choisir : auto, ou groupe (1 CEA, 2 DMT) et numero")
+            sys.exit(2)
         return
     if '--valider' in args:
         fingerprint, kind = read_state()
         if kind == 'essai-vu':
             write_state(fingerprint, 'impose')
             log("mode a l'essai garde (la borne est utilisee)")
+        if kind == 'choix-vu':
+            write_state(fingerprint, 'choix')
+            if os.path.exists(PREVIOUS):
+                os.remove(PREVIOUS)
+            log("mode choisi garde (la borne est utilisee)")
         if os.path.exists(TRIAL):
             os.remove(TRIAL)
         return
@@ -206,6 +408,27 @@ def main(args):
         return
     # Lignes de base a jour (prennent effet au prochain demarrage, sans redemarrer pour elles)
     write_block(imposed_lines())
+    # Resolution deposee sur la carte SD (ecran.txt) : appliquee, a l'essai
+    if apply_choice_file():
+        reboot("resolution deposee sur la carte (ecran.txt)")
+        return
+    # Mode choisi a la main (meme sans EDID lisible : convertisseur) : a l'essai, garde, ou le
+    # reglage precedent remis
+    known, kind = read_state()
+    if kind == 'choix-essai':
+        write_state(known, 'choix-vu')
+        with open(TRIAL, 'w', encoding='utf-8'):
+            pass
+        os.chmod(TRIAL, 0o644)
+        log("mode choisi a l'essai : garde a la premiere action sur la borne")
+        return
+    if kind == 'choix-vu':
+        restore_previous()
+        reboot("mode choisi non confirme au demarrage precedent (ecran noir ?), reglage precedent remis")
+        return
+    if kind == 'choix':
+        log(f"mode choisi a la main : {imposed_lines()}, garde")
+        return
     screen, reason = read_screen()
     if screen is None:
         log(f"{reason} : rien a faire")

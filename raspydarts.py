@@ -1214,6 +1214,8 @@ try:
                     if cust != 'escape':
                         Config.config['SectionGlobals'] = cust
                         Config.write_file()
+                        # Resolution of the screen chosen : for the system, at the next start
+                        display.screen_mode_apply()
                         config_globals = Config.read_file("SectionGlobals")
                         video_level = int(Config.get_value('SectionGlobals', 'videos'))
                         video_player.set_level(video_level)

@@ -5180,3 +5180,22 @@ msgstr "Raspy2DMD mit RaspyDarts ausschalten"
 msgid "dmd_player_color"
 msgstr "Raspy2DMD-Texte in der Farbe des Spielers anzeigen"
 
+
+msgid "screen_mode"
+msgstr "Bildschirmauflösung"
+
+msgid "screen-mode-auto"
+msgstr "Automatisch"
+
+msgid "screen-mode-restart"
+msgstr "Jetzt neu starten, um diese Auflösung zu testen?"
+
+msgid "screen-mode-later"
+msgstr "Auflösung beim nächsten Start übernommen"
+
+msgid "screen-mode-trial"
+msgstr "Nach dem Neustart eine Taste drücken: sonst kehrt die alte Auflösung zurück"
+
+msgid "screen-mode-error"
+msgstr "Auflösung nicht übernommen (siehe logs/raspydarts.log)"
+

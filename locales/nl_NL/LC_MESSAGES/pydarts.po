@@ -5234,3 +5234,22 @@ msgstr "Raspy2DMD uitschakelen met RaspyDarts"
 msgid "dmd_player_color"
 msgstr "Raspy2DMD-teksten in de kleur van de speler tonen"
 
+
+msgid "screen_mode"
+msgstr "Schermresolutie"
+
+msgid "screen-mode-auto"
+msgstr "Automatisch"
+
+msgid "screen-mode-restart"
+msgstr "Nu herstarten om deze resolutie te proberen?"
+
+msgid "screen-mode-later"
+msgstr "Resolutie toegepast bij de volgende start"
+
+msgid "screen-mode-trial"
+msgstr "Druk na de herstart op een knop: anders komt de vorige resolutie terug"
+
+msgid "screen-mode-error"
+msgstr "Resolutie niet toegepast (zie logs/raspydarts.log)"
+
