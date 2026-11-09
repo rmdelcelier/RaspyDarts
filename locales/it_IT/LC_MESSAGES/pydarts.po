@@ -5489,3 +5489,6 @@ msgstr "Valore…"
 msgid "theme-round-max"
 msgstr "Massimo (pillola)"
 
+
+msgid "theme-origin-value"
+msgstr "Valore del tema"

@@ -5476,3 +5476,6 @@ msgstr "Waarde…"
 msgid "theme-round-max"
 msgstr "Maximaal (pil)"
 
+
+msgid "theme-origin-value"
+msgstr "Waarde van het thema"

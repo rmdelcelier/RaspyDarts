@@ -5427,3 +5427,6 @@ msgstr "Valor…"
 msgid "theme-round-max"
 msgstr "Máximo (píldora)"
 
+
+msgid "theme-origin-value"
+msgstr "Valor del tema"

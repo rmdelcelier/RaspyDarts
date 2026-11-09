@@ -5694,3 +5694,6 @@ msgstr "Value…"
 msgid "theme-round-max"
 msgstr "Maximum (pill)"
 
+
+msgid "theme-origin-value"
+msgstr "Value of the theme"

@@ -661,7 +661,7 @@ class ThemeEditor:
             values = [['value', self.translate('theme-value')]]
             if tag in RADIUS_TAGS:
                 values.append(['max', self.translate('theme-round-max')])
-            values.append(['origin', self.translate('theme-origin')])
+            values.append(['origin', self.translate('theme-origin-value')])
             chosen = screen.dropdown(screen.res['x'] * 6 / 16, 3 * screen.res_y_16, values,
                                      navigate='max' if self.work.get(tag) == 'max' else 'value')
             if chosen in ('origin', 'max'):
@@ -676,7 +676,7 @@ class ThemeEditor:
         if tag in SHORTCUT_TAGS + ALIGN_TAGS:
             choices = SHORTCUT_CHOICES if tag in SHORTCUT_TAGS else ALIGN_CHOICES
             values = [[str(index), self.translate(text)] for index, (_value, text) in enumerate(choices)]
-            values.append(['origin', self.translate('theme-origin')])
+            values.append(['origin', self.translate('theme-origin-value')])
             current = next((str(index) for index, (value, _text) in enumerate(choices) if value == self.work.get(tag)), None)
             chosen = screen.dropdown(screen.res['x'] * 6 / 16, 3 * screen.res_y_16, values, navigate=current)
             if chosen == 'escape':
