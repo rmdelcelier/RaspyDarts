@@ -13,7 +13,6 @@ Game by ... poilou !
 import collections# To use OrderedDict to sort players from the last score they add
 import random   # For PNJ
 import pygame
-import threading
 
 from copy import deepcopy
 
@@ -733,17 +732,11 @@ class Game(cgame.Game):
                                 pygame.display.flip()
 
                                 # Lance les 2 coups B7 en parallele : ils commencent
-                                # au meme moment que l'apparition de l'image.
-                                threading.Thread(
-                                    target=self.rpi.strobe_buttons,
-                                    args=(['LIGHT_FLASH'],),
-                                    kwargs={
-                                        'iterations': 2,
-                                        'delay': 100,
-                                        'delay_off': 100
-                                    },
-                                    daemon=True
-                                ).start()
+                                # au meme moment que l'apparition de l'image (strobe_toys
+                                # lance ses propres fils, et ne fait rien sans carte MCP).
+                                # strobe_buttons n'existait pas : l'erreur sautait aussi
+                                # l'attente de 2 s (issue n° 11, Yves)
+                                self.rpi.strobe_toys(['LIGHT_FLASH'], iterations=2, delay_on=100, delay_off=100)
 
                                 # L'image reste affichee 2 secondes.
                                 pygame.time.wait(2000)
