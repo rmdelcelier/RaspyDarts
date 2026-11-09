@@ -5302,7 +5302,7 @@ msgstr "Con anillo, conectado después de los cuartos"
 
 
 msgid "usb-pads-hold-help"
-msgstr "Mantenga un botón del teclado 3 segundos para ir a Volver y Guardar (luego la rueda y su pulsación)"
+msgstr "Mantenga un botón del teclado o del mando 3 segundos para ir a Volver y Guardar"
 
 msgid "usb-pads-hold-done"
 msgstr "Volver y Guardar: la rueda pasa de uno a otro, su pulsación valida"

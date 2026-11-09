@@ -5373,7 +5373,7 @@ msgstr "Avec pneu, branché après les quarts"
 
 
 msgid "usb-pads-hold-help"
-msgstr "Maintenez un bouton du pavé 3 secondes pour aller sur Retour et Enregistrer (puis la molette et son appui)"
+msgstr "Maintenez un bouton du pavé ou de la manette 3 secondes pour aller sur Retour et Enregistrer"
 
 msgid "usb-pads-hold-done"
 msgstr "Retour et Enregistrer : la molette passe de l'un à l'autre, son appui valide"

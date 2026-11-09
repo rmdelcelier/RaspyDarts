@@ -5569,7 +5569,7 @@ msgstr "With ring, plugged after the quarters"
 
 
 msgid "usb-pads-hold-help"
-msgstr "Hold a button of the pad 3 seconds to reach Back and Save (then the knob and its press)"
+msgstr "Hold a button of the pad or gamepad 3 seconds to reach Back and Save"
 
 msgid "usb-pads-hold-done"
 msgstr "Back and Save: the knob goes from one to the other, its press validates"

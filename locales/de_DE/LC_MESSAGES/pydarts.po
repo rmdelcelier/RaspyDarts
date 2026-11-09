@@ -5297,7 +5297,7 @@ msgstr "Mit Ring, nach den Vierteln angeschlossen"
 
 
 msgid "usb-pads-hold-help"
-msgstr "Eine Taste des Pads 3 Sekunden halten, um Zurück und Speichern zu erreichen (dann Drehknopf und Druck)"
+msgstr "Eine Taste des Pads oder Gamepads 3 Sekunden halten, um Zurück und Speichern zu erreichen"
 
 msgid "usb-pads-hold-done"
 msgstr "Zurück und Speichern: der Drehknopf wechselt, sein Druck bestätigt"

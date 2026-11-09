@@ -5364,7 +5364,7 @@ msgstr "Con anello, collegato dopo i quarti"
 
 
 msgid "usb-pads-hold-help"
-msgstr "Tenere premuto un pulsante del pad 3 secondi per andare a Indietro e Salva (poi la manopola e la sua pressione)"
+msgstr "Tenere premuto un pulsante del pad o del gamepad 3 secondi per andare a Indietro e Salva"
 
 msgid "usb-pads-hold-done"
 msgstr "Indietro e Salva: la manopola passa dall'uno all'altro, la pressione conferma"

@@ -458,8 +458,14 @@ class UsbPads:
         from evdev import ecodes    # pylint: disable=import-outside-toplevel
         info = self.joysticks[path]
         for event in events:
-            if event.type == ecodes.EV_KEY and event.value == 1 and \
+            if event.type == ecodes.EV_KEY and event.value in (0, 1) and \
                     any(event.code in codes for codes in JOYSTICK_BUTTONS):
+                # Screen of the settings : a button held EXIT_HOLD goes to Retour / Enregistrer
+                if event.value == 0:
+                    self.capture_held.pop((path, event.code), None)
+                    continue
+                if self.capture:
+                    self.capture_held[(path, event.code)] = [time.monotonic(), port, False]
                 self.give(port, f'j{event.code}')
             elif event.type == ecodes.EV_ABS and event.code in info['axes']:
                 low, high = info['axes'][event.code]
@@ -478,6 +484,11 @@ class UsbPads:
                 if now == before:
                     continue
                 info['state'][event.code] = now
+                # A direction held EXIT_HOLD too (a zero delay card with a joystick and few buttons)
+                if now is None:
+                    self.capture_held.pop((path, f'axis{event.code}'), None)
+                elif self.capture:
+                    self.capture_held[(path, f'axis{event.code}')] = [time.monotonic(), port, False]
                 held = self.directions.setdefault(path, {})
                 if before is not None:
                     held.pop(before, None)
