@@ -48,6 +48,54 @@ RATES = ('auto', '30', '20', '10', 'still')
 LONGEST = 30
 
 
+# Someone looking at the screen of the cabinet with VNC (remote help) : the animations slowed down
+# to this rate, their places sent in a few bands (each place changed is encoded and sent by the
+# server of VNC : 80 places 20 times a second left it unusable)
+REMOTE_RATE = 6
+REMOTE_BANDS = 6
+_remote = [0.0, False]
+
+
+def remote_viewer():
+    '''
+    A VNC viewer connected to the cabinet (port 5900, read every 5 seconds)
+    '''
+    now = time.time()
+    if now - _remote[0] < 5:
+        return _remote[1]
+    found = False
+    for name in ('/proc/net/tcp', '/proc/net/tcp6'):
+        try:
+            with open(name, encoding='ascii') as table:
+                next(table)
+                for line in table:
+                    fields = line.split()
+                    # Local port 5900 (170C), state ESTABLISHED (01)
+                    if fields[1].endswith(':170C') and fields[3] == '01':
+                        found = True
+                        break
+        except (OSError, StopIteration, IndexError):
+            continue
+        if found:
+            break
+    _remote[0], _remote[1] = now, found
+    return found
+
+
+def bands(rects, height):
+    '''
+    Places changed gathered in a few horizontal bands (fewer places to send)
+    '''
+    step = max(1, height // REMOTE_BANDS)
+    gathered = {}
+    for rect in rects:
+        for band in range(rect.top // step, rect.bottom // step + 1):
+            part = rect.clip(pygame.Rect(0, band * step, 1 << 15, step))
+            if part.width and part.height:
+                gathered[band] = gathered[band].union(part) if band in gathered else part
+    return list(gathered.values())
+
+
 def cache_dir():
     return os.path.join(cpaths.user_dir(), 'cache', 'fond_anime')
 
@@ -888,7 +936,8 @@ class AnimatedBackground:
             for rect in rects:
                 self.real.blit(self.keyed, rect, rect)
             drawn = self.activity_over()
-            pygame.display.update(rects + ([drawn] if drawn is not None else []))
+            sent = bands(rects, self.real.get_height()) if remote_viewer() else rects
+            pygame.display.update(sent + ([drawn] if drawn is not None else []))
         else:
             return False
         cost = time.perf_counter() - started
@@ -899,6 +948,9 @@ class AnimatedBackground:
         # Slower than its rate (the processor busy elsewhere, a small Pi) : fewer frames shown,
         # the video keeping its speed ; the rate back when it is fast enough again
         top = self.rate if self.use_frames else self.effect_rate()
+        if remote_viewer():
+            top = min(top, REMOTE_RATE)
+            self.effective = min(self.effective, top)
         self.cost = self.cost * 0.9 + cost * 0.1
         if self.cost > 0.8 / max(1, self.effective) and self.effective > 5:
             self.effective -= 1

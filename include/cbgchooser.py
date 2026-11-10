@@ -68,9 +68,12 @@ class Preview:
         now = time.time()
         if now < self.next:
             return
-        self.next = now + 1 / RATE
+        # Someone looking with VNC : slower (see cbganim.remote_viewer)
+        self.next = now + 1 / (cbganim.REMOTE_RATE if cbganim.remote_viewer() else RATE)
         elapsed, self.last = now - self.last, now
-        self.frame(elapsed)
+        if self.frame(elapsed) is False:
+            # Nothing changed : nothing sent
+            return
         self.screen.screen.blit(self.surface, self.box)
         self.screen.update_screen(rect=self.box)
 
@@ -93,6 +96,7 @@ class EffectPreview(Preview):
     def set(self, settings):
         if settings != self.settings:
             self.settings = settings
+            self.still = False
             name, color, amount, speed = settings
             self.effect = ceffects.make(name, self.box.size, color, amount, speed,
                                         theme_color=self.screen.colorset.get('menu-selected'))
@@ -101,10 +105,14 @@ class EffectPreview(Preview):
         return translate(f'animated-effect-{self.settings[0]}')
 
     def frame(self, elapsed):
+        if self.effect is None and getattr(self, 'still', False):
+            return False
+        self.still = self.effect is None
         self.surface.blit(self.base, (0, 0))
         if self.effect is not None:
             self.effect.step(elapsed)
             self.effect.draw(self.surface)
+        return True
 
 
 class ScenePreview(Preview):
@@ -123,8 +131,12 @@ class ScenePreview(Preview):
 
     def frame(self, elapsed):
         if self.scene is None:
+            # No animated background : drawn once
+            if getattr(self, 'blank', False):
+                return False
+            self.blank = True
             self.surface.fill((0, 0, 0))
-            return
+            return True
         self.surface.blit(self.base, (0, 0))
         self.scene.step(elapsed)
         self.scene.draw(self.surface)
@@ -145,7 +157,7 @@ class StatusPreview(Preview):
         status = cmenueditor.animated_status(self.screen)
         text = (status, translate('animated-background-help'))
         if text == self.text:
-            return
+            return False
         self.text = text
         self.surface.fill((40, 40, 40))
         inner = self.surface.get_rect().inflate(-int(self.box.width * 0.08), -int(self.box.height * 0.08))
