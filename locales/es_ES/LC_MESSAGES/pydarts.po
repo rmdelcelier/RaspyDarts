@@ -5900,3 +5900,22 @@ msgstr "Transparente"
 msgid "editor-no-name"
 msgstr "Botón sin nombre"
 
+
+msgid "editor-name-type"
+msgstr "Escribir un nombre"
+
+msgid "editor-name-origin"
+msgstr "Nombre de origen"
+
+msgid "editor-name-labels"
+msgstr "Nombre de otro botón (traducido)"
+
+msgid "editor-name-search"
+msgstr "Buscar una traducción"
+
+msgid "editor-name-none"
+msgstr "Sin nombre"
+
+msgid "editor-name-nothing"
+msgstr "Ninguna traducción con esta palabra"
+

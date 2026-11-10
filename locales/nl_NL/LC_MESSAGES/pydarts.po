@@ -5949,3 +5949,22 @@ msgstr "Transparant"
 msgid "editor-no-name"
 msgstr "Knop zonder naam"
 
+
+msgid "editor-name-type"
+msgstr "Een naam typen"
+
+msgid "editor-name-origin"
+msgstr "Oorspronkelijke naam"
+
+msgid "editor-name-labels"
+msgstr "Naam van een andere knop (vertaald)"
+
+msgid "editor-name-search"
+msgstr "Een vertaling zoeken"
+
+msgid "editor-name-none"
+msgstr "Geen naam"
+
+msgid "editor-name-nothing"
+msgstr "Geen vertaling met dit woord"
+

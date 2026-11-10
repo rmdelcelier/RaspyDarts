@@ -5895,3 +5895,22 @@ msgstr "Transparent"
 msgid "editor-no-name"
 msgstr "Schaltfläche ohne Namen"
 
+
+msgid "editor-name-type"
+msgstr "Einen Namen eingeben"
+
+msgid "editor-name-origin"
+msgstr "Ursprünglicher Name"
+
+msgid "editor-name-labels"
+msgstr "Name einer anderen Schaltfläche (übersetzt)"
+
+msgid "editor-name-search"
+msgstr "Eine Übersetzung suchen"
+
+msgid "editor-name-none"
+msgstr "Kein Name"
+
+msgid "editor-name-nothing"
+msgstr "Keine Übersetzung mit diesem Wort"
+

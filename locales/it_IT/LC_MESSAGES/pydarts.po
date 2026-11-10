@@ -5962,3 +5962,22 @@ msgstr "Trasparente"
 msgid "editor-no-name"
 msgstr "Pulsante senza nome"
 
+
+msgid "editor-name-type"
+msgstr "Digitare un nome"
+
+msgid "editor-name-origin"
+msgstr "Nome d'origine"
+
+msgid "editor-name-labels"
+msgstr "Nome di un altro pulsante (tradotto)"
+
+msgid "editor-name-search"
+msgstr "Cercare una traduzione"
+
+msgid "editor-name-none"
+msgstr "Nessun nome"
+
+msgid "editor-name-nothing"
+msgstr "Nessuna traduzione con questa parola"
+

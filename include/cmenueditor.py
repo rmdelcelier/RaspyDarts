@@ -73,6 +73,14 @@ MOST_CELLS = 12
 ZONE = (255, 200, 0, 50)
 
 
+def plain(text):
+    '''
+    A text without capitals nor accents (a search)
+    '''
+    import unicodedata    # pylint: disable=import-outside-toplevel
+    return ''.join(char for char in unicodedata.normalize('NFD', str(text).lower()) if unicodedata.category(char) != 'Mn')
+
+
 class Editor:
     '''
     The editor of one menu, drawn and driven by the Screen of the game
@@ -754,15 +762,117 @@ class Editor:
 
     def rename(self, button):
         '''
-        The name of a button, typed : in the language of the borne (the others keep the
-        name they had) ; the name of always typed again : back to it
+        The name of a button : typed, its name of origin, the name of another button of the
+        menus, a translation found by a word (translated in every language), or none
         '''
         screen = self.screen
+        translate = self.translate
         before = self.button_name(button)
+        choices = [['type', translate('editor-name-type')], ['labels', translate('editor-name-labels')],
+                   ['search', translate('editor-name-search')], ['none', translate('editor-name-none')]]
+        origin = self.origin_text(button)
+        if origin and translate(origin) != before:
+            choices.insert(1, ['origin', f"{translate('editor-name-origin')} : {translate(origin)}"])
+        how = screen.dropdown(screen.res['x'] * 5 / 16, 3 * screen.res_y_16, choices, navigate='type',
+                              width=6 * screen.res_x_16)
+        if how in ('escape', None, False):
+            return
+        if how == 'none':
+            self.write_name(button, '')
+            return
+        if how == 'origin':
+            self.write_key(button, origin)
+            return
+        if how in ('labels', 'search'):
+            keys = self.menu_texts() if how == 'labels' else self.found_texts()
+            if not keys:
+                if how == 'search':
+                    screen.message([translate('editor-name-nothing')], 2000, None, 'middle', 'big')
+                return
+            key = screen.dropdown(screen.res['x'] * 4 / 16, 2 * screen.res_y_16, [[key, translate(key)] for key in keys],
+                                  width=8 * screen.res_x_16)
+            if key not in ('escape', None, False):
+                self.write_key(button, key)
+            return
         typed = screen.input_value_item('string', before, 0, 40, text='editor-name')
         if typed in ('escape', False, None) or str(typed) == before:
             return
-        typed = str(typed).strip()
+        self.write_name(button, str(typed).strip())
+
+    def origin_text(self, button):
+        '''
+        The text the game gives to this button (menus/defaults.yaml), None : none
+        '''
+        ident = self.menus.button_id(button)
+        return next((text for found, text in self.default_texts() if found == ident), None)
+
+    def default_texts(self):
+        '''
+        The buttons of the menus of the game (menus/defaults.yaml) : (their name, their text)
+        '''
+        if getattr(self, 'defaults_texts', None) is None:
+            found = []
+            try:
+                with open(cmenus.DEFAULTS_FILE, encoding='utf-8') as source:
+                    data = yaml.load(source, Loader=cmenus.LOADER) if yaml is not None else {}
+            except (OSError, ValueError) as error:
+                self.screen.logs.warning(f"Menu editor : {error}")
+                data = {}
+
+            def walk(value):
+                if isinstance(value, dict):
+                    text = value.get('text')
+                    if (value.get('id') or value.get('action')) and isinstance(text, str) and text:
+                        found.append((str(value.get('id') or value.get('action')), text))
+                    for item in value.values():
+                        walk(item)
+                elif isinstance(value, list):
+                    for item in value:
+                        walk(item)
+            walk(data)
+            self.defaults_texts = found
+        return self.defaults_texts
+
+    def menu_texts(self):
+        '''
+        The texts of the buttons of the menus of the game (translated), in the order of the alphabet
+        '''
+        keys = {text for _ident, text in self.default_texts() if self.translate(text) != text}
+        return sorted(keys, key=lambda key: self.translate(key).lower())
+
+    def found_texts(self):
+        '''
+        A word typed : the translations which have it (in the language of the borne, short ones,
+        the shortest first)
+        '''
+        word = self.screen.input_value_item('string', '', 1, 30, text='editor-name-search')
+        if word in ('escape', False, None) or not str(word).strip():
+            return []
+        wanted = plain(str(word).strip())
+        catalog = getattr(getattr(self.screen.lang, 'translator', None), '_catalog', {}) or {}
+        found = {}
+        for key, value in catalog.items():
+            if not isinstance(key, str) or not key or not isinstance(value, str):
+                continue
+            if len(value) > 40 or '{' in value or '%' in value or '\n' in value:
+                continue
+            if wanted in plain(value) or wanted in plain(key):
+                # The same text under several keys : once
+                found.setdefault(value, key)
+        return sorted(found.values(), key=lambda key: (len(catalog[key]), catalog[key].lower()))[:60]
+
+    def write_key(self, button, key):
+        '''
+        A key of translation as the name : translated in every language
+        '''
+        self.write_name(button, key, every=True)
+
+    def write_name(self, button, typed, every=False):
+        '''
+        A name written : in the language of the borne (the others keep theirs), in every language
+        (every, or none at all)
+        '''
+        screen = self.screen
         language = str(screen.config.get_value('SectionGlobals', 'locale', False) or 'en')[:2]
         text = button.get('text', self.menus.button_id(button))
         look = None
@@ -776,7 +886,9 @@ class Editor:
             names = {code: text for code in screen.LANGUAGES}
         names[language] = typed
         default = {code: value for code, value in names.items() if code != language}
-        if not typed:
+        if every:
+            names = typed
+        elif not typed:
             # No name : none in any language (only its icon, or nothing)
             names = ''
         elif all(value == names.get(language) for value in default.values()):

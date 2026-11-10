@@ -5971,3 +5971,22 @@ msgstr "Transparente"
 msgid "editor-no-name"
 msgstr "Bouton sans nom"
 
+
+msgid "editor-name-type"
+msgstr "Saisir un nom"
+
+msgid "editor-name-origin"
+msgstr "Nom d'origine"
+
+msgid "editor-name-labels"
+msgstr "Nom d'un autre bouton (traduit)"
+
+msgid "editor-name-search"
+msgstr "Chercher une traduction"
+
+msgid "editor-name-none"
+msgstr "Aucun nom"
+
+msgid "editor-name-nothing"
+msgstr "Aucune traduction avec ce mot"
+
