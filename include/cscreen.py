@@ -294,11 +294,15 @@ class Screen(pygame.Surface):
         '''
         hook = self.idle_hook
         if hook is not None:
+            started = time.perf_counter()
             try:
                 hook()
             except Exception as error:    # pylint: disable=broad-except
                 self.logs.error(f"Screen : {error}")
                 self.idle_hook = None
+            spent = time.perf_counter() - started
+            if spent > 0.5:
+                self.logs.warning(f"Screen : a turn of {getattr(hook, '__qualname__', hook)} took {spent:.1f} s")
         self.activities.tick()
         wait = getattr(self, 'net_wait', None)
         if can_redraw and wait is not None and wait.resume_wanted and not wait.woken and getattr(self, 'menu_shown', None):
@@ -2689,10 +2693,24 @@ class Screen(pygame.Surface):
             elif clicked and clicked.startswith('S'):
                 value = int(clicked[1::])
 
-    def dropdown(self, pos_x, pos_y, values, special=None, navigate=None, width=None):
+    def dropdown(self, pos_x, pos_y, values, special=None, navigate=None, width=None, preview=None):
         '''
-        Display a dropdown
+        Display a dropdown. preview(value) : draws what the value shown gives (its rectangle),
+        the screen under it restored when another is shown and when the list is left
         '''
+        under = self.screen.copy() if preview is not None else None
+        shown = [None]
+
+        def show_preview(value):
+            if shown[0] is not None:
+                self.screen.blit(under, shown[0], shown[0])
+            shown[0] = pygame.Rect(preview(value)) if value is not None else None
+
+        def leave(result):
+            if preview is not None:
+                show_preview(None)
+                self.update_screen()
+            return result
 
         selected = 1
         max_items = 9
@@ -2785,6 +2803,8 @@ class Screen(pygame.Surface):
             if add_arrows:
                 click_zones['scrolldown'] = self.dropdown_item(i_rect, True, "v", special='arrowLast')
 
+            if preview is not None:
+                show_preview(values[selected - 1][0])
             #self.update_screen(rect=(rect.x, rect.y, rect.w, rect.h))
             self.update_screen()
 
@@ -2805,11 +2825,11 @@ class Screen(pygame.Surface):
                     selected -= 1
                 else:
                     selected = int(clicked)
-                    return values[selected - 1][0]
+                    return leave(values[selected - 1][0])
             elif key_pressed in ENTER_KEYS:
-                return values[selected - 1][0]
+                return leave(values[selected - 1][0])
             elif key_pressed in ESCAPE_KEYS:
-                return 'escape'
+                return leave('escape')
 
     def dropdown_item(self, rect, selected, value, special=False, FirstLast=None, label=None):
         '''
@@ -7059,15 +7079,6 @@ class Screen(pygame.Surface):
             click_zones['escape'] = self.display_button(nb_elements + 1 == selected, 'back', special='escape')
             click_zones['save'] = self.display_button(nb_elements + 2 == selected, 'save', special='return')
 
-            # The window of activity : where it will be, an example in a yellow frame at the corner
-            # chosen (not saved yet), while its line is selected
-            sample = 1 <= selected <= nb_elements and selected_customization[selected - 1][0] == 'activity_corner'
-            if sample:
-                self.activities.sample(self.screen, selected_customization[selected - 1][1])
-            if sample or getattr(self, 'activity_sampled', False):
-                refresh = True
-            self.activity_sampled = sample
-
             if selected <= nb_elements:
                 selection = click_zones[f'F{selected}']
             elif nb_elements + 1 == selected:
@@ -7174,9 +7185,14 @@ class Screen(pygame.Surface):
                     refresh = True
                     
                 elif selected_customization[selected - 1][2] == 'dropdown':
+                    # The window of activity : an example in a yellow frame at the corner shown
+                    # in the list, moving with it, gone once chosen
+                    preview = None
+                    if selected_customization[selected - 1][0] == 'activity_corner':
+                        preview = lambda corner: self.activities.sample(self.screen, corner)
                     tmp = self.dropdown(self.res['x'] * 6 / 16, 3 * self.res_y_16,
                             selected_customization[selected - 1][4],
-                            navigate=selected_customization[selected - 1][1])
+                            navigate=selected_customization[selected - 1][1], preview=preview)
                     if tmp != 'escape':
                         selected_customization[selected - 1][1] = tmp
                     # Force refresh off screen

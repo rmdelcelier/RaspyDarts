@@ -5777,3 +5777,16 @@ msgstr "Vom Automaten gezeichnet, ohne Video: jeder in der Vorschau abgespielt"
 msgid "explorer-holds-files"
 msgstr "{folders} Ordner · {files} Dateien"
 
+
+msgid "theme-export-where"
+msgstr "Thema exportieren: wohin?"
+
+msgid "theme-export-where-hint"
+msgstr "Öffnen Sie den gewünschten Ordner (USB-Stick…), dann « Diesen Ordner wählen »"
+
+msgid "theme-export-readonly"
+msgstr "In diesen Ordner kann nicht geschrieben werden"
+
+msgid "theme-import-hint"
+msgstr "Eine .zip-Datei, oder einen Ordner öffnen und dann « Diesen Ordner wählen »"
+

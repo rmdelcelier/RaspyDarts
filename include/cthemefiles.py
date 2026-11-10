@@ -164,10 +164,14 @@ def export_theme(screen, keys):
     if current is not None and current.state == 'running':
         screen.message([translate('theme-export-running')], 2500, None, 'middle', 'big')
         return
-    places = destinations(translate)
-    chosen = screen.dropdown(screen.res['x'] * 5 / 16, 3 * screen.res_y_16, [[path, text] for path, text in places],
-                             width=screen.res['x'] * 6 / 16)
-    if chosen == 'escape':
+    # Where : a folder chosen in the explorer (a USB key, the home...) ; Back : nothing done
+    from include import cexplorer    # pylint: disable=import-outside-toplevel
+    chosen = cexplorer.explore(screen, translate('theme-export-where'), None, kinds=(), pick_folder=True,
+                               subtitle=translate('theme-export-where-hint'))
+    if not chosen or not os.path.isdir(chosen):
+        return
+    if not os.access(chosen, os.W_OK):
+        screen.message([translate('theme-export-readonly')], 3000, 'menu-ko', 'middle', 'big')
         return
     media_size = sum(folder_size(os.path.join(theme_dir, name)) for name in MEDIA)
     media = False
@@ -242,18 +246,12 @@ def import_theme(screen, keys):
     '''
     from include import cexplorer    # pylint: disable=import-outside-toplevel
     translate = screen.lang.translate
-    choice = screen.dropdown(screen.res['x'] * 5 / 16, 3 * screen.res_y_16,
-                             [['zip', translate('theme-import-zip')], ['folder', translate('theme-import-folder')],
-                              ['raspyhub', translate('theme-import-raspyhub')]], width=screen.res['x'] * 6 / 16)
-    if choice == 'escape':
-        return
-    if choice == 'raspyhub':
+    # One explorer : a zip chosen, a folder (Choisir ce dossier), or Raspyhub first ; Back : nothing
+    source = cexplorer.explore(screen, translate('theme-import'), None, [('raspyhub', translate('theme-import-raspyhub'))],
+                               kinds=('.zip',), pick_folder=True, subtitle=translate('theme-import-hint'))
+    if source == 'raspyhub':
         screen.message([translate('theme-import-raspyhub-soon')], 3500, None, 'middle', 'big')
         return
-    if choice == 'zip':
-        source = cexplorer.explore(screen, translate('theme-import-zip'), None, kinds=('.zip',))
-    else:
-        source = cexplorer.explore(screen, translate('theme-import-folder'), None, kinds=(), pick_folder=True)
     if not source or not os.path.exists(source):
         return
     work = os.path.join(themes_dir(screen), '.import')

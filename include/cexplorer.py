@@ -10,6 +10,7 @@ import os
 import shutil
 import subprocess
 import threading
+import time
 
 import pygame
 
@@ -52,7 +53,8 @@ def places(screen, translate):
             if os.path.ismount(root) and root != base:
                 found.append({'kind': 'dir', 'path': root, 'icon': 'usb',
                               'label': f"{translate('editor-import-usb')} : {os.path.basename(root)}"})
-    found.append({'kind': 'dir', 'path': os.path.expanduser('~'), 'label': translate('editor-import-home'), 'icon': 'home'})
+    home = os.path.expanduser('~')
+    found.append({'kind': 'dir', 'path': home, 'label': f"{translate('editor-import-home')} ({home})", 'icon': 'home'})
     found.append({'kind': 'dir', 'path': os.sep, 'label': translate('editor-import-root'), 'icon': 'card'})
     return found
 
@@ -93,12 +95,12 @@ def explore(screen, title, current=None, extra=(), kinds=IMAGES, pick_folder=Fal
     image of the moment, the explorer opens in its folder. Back goes up to the place where the
     browsing started (the image of the moment : the place holding it), then to the places.
     kinds : the files shown (IMAGES, VIDEOS : a video is played in the box of the preview) ;
-    pick_folder : a folder is chosen (« Choisir ce dossier » first in each folder opened) ;
+    pick_folder : a folder can be chosen (the button « Choisir ce dossier » over Back, in a folder) ;
     an extra choice (id, text, image, preview) : preview(screen, box) gives what is played in the
     box while it is selected (see VideoPreview) ; places_shown False : the extra choices only
     '''
     translate = screen.lang.translate
-    previews = {'kinds': kinds, 'subtitle': subtitle}
+    previews = {'kinds': kinds, 'subtitle': subtitle, 'pick': pick_folder}
     folder = root = None
     selected = 0
     if current and os.path.isfile(current):
@@ -135,14 +137,19 @@ def browse(screen, title, current, extra, kinds, previews, folder, root, selecte
                 entries += places(screen, translate)
         else:
             entries = listing(folder, translate, kinds)
-            if pick_folder:
-                entries.insert(1, {'kind': 'pick', 'path': folder, 'label': translate('explorer-pick-folder')})
             if current:
                 # The image of the moment selected first
                 selected = next((index for index, entry in enumerate(entries) if entry['path'] == current), selected)
                 current = None
-        selected = max(0, min(selected, len(entries) - 1))
+        # The button « Choisir ce dossier » : after the lines (in a folder)
+        picking = pick_folder and folder is not None
+        count = len(entries) + (1 if picking else 0)
+        selected = max(0, min(selected, count - 1))
+        started = time.perf_counter()
         zones = draw(screen, title, folder, entries, selected, previews, translate)
+        spent = time.perf_counter() - started
+        if spent > 0.5:
+            screen.logs.warning(f"Explorer : drawn in {spent:.1f} s ({folder or 'places'}, line {selected})")
         # Drawing an image took up to 1 s : the keys repeated meanwhile dropped
         pygame.event.clear(pygame.KEYDOWN)
         key = screen.rpi.listen_inputs(['arrows'], ['escape', 'enter', 'space', 'single-click', 'PLAYERBUTTON',
@@ -151,17 +158,21 @@ def browse(screen, title, current, extra, kinds, previews, folder, root, selecte
         # (False : no click ; 0 : the first line)
         if clicked == 'escape':
             key = 'escape'
+        elif clicked == 'pick':
+            return folder
         elif clicked is not False and clicked is not None:
             if clicked == selected:
                 key = 'enter'
             else:
                 selected = clicked
                 continue
-        entry = entries[selected] if entries else None
+        entry = entries[selected] if selected < len(entries) else None
+        if picking and selected == len(entries) and key in ENTER_KEYS + ['space']:
+            return folder
         if key in UP_KEYS:
-            selected = (selected - 1) % max(1, len(entries))
+            selected = (selected - 1) % max(1, count)
         elif key in DOWN_KEYS:
-            selected = (selected + 1) % max(1, len(entries))
+            selected = (selected + 1) % max(1, count)
         elif key in ESCAPE_KEYS + LEFT_KEYS or (key in ENTER_KEYS + ['space'] and entry and entry['kind'] == 'up'):
             if folder is None:
                 if key in ESCAPE_KEYS:
@@ -246,7 +257,8 @@ def draw(screen, title, folder, entries, selected, previews, translate):
     screen.menu_header(title, folder if folder is not None else (previews.get('subtitle') or translate('explorer-places')))
     zones = {}
     # The list
-    top = max(0, min(selected - ROWS // 2, len(entries) - ROWS))
+    picking = previews.get('pick') and folder is not None
+    top = max(0, min(min(selected, len(entries) - 1) - ROWS // 2, len(entries) - ROWS))
     line_h = int(unit_y * 0.9)
     for row, index in enumerate(range(top, min(top + ROWS, len(entries)))):
         entry = entries[index]
@@ -273,7 +285,18 @@ def draw(screen, title, folder, entries, selected, previews, translate):
     # The preview
     box = pygame.Rect(int(8.5 * unit_x), int(3.2 * unit_y), int(6.5 * unit_x), int(8.8 * unit_y))
     screen.new_blit_rect2(box, colorset['menu-buttons'], corners='All', border_radius=int(unit_y / 4))
-    entry = entries[selected] if entries else None
+    entry = entries[selected] if selected < len(entries) else None
+    if picking:
+        # « Choisir ce dossier » : over Back, in the middle of the list
+        button = pygame.Rect(int(2.5 * unit_x), int(13.05 * unit_y), int(4 * unit_x), int(0.95 * unit_y))
+        chosen = selected == len(entries)
+        screen.new_blit_rect2(button, colorset['menu-selected'] if chosen else colorset['menu-buttons'], corners='All',
+                              border_radius=int(button.height / 2))
+        screen.blit_text(translate('explorer-pick-folder'), button.x, button.y, button.width, button.height,
+                         colorset['menu-text-white'] if chosen else colorset['menu-text-black'])
+        zones['pick'] = tuple(button)
+        if chosen:
+            entry = {'kind': 'dir', 'path': folder, 'label': os.path.basename(folder.rstrip(os.sep)) or folder}
     caption = ''
     image = entry['path'] if entry and entry['kind'] == 'file' else (entry or {}).get('image')
     # A video : played in the box (see VideoPreview), its name, its size and its length

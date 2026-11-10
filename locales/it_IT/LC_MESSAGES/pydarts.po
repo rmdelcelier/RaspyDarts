@@ -5844,3 +5844,16 @@ msgstr "Disegnati dalla macchina, senza video: ognuno nell'anteprima"
 msgid "explorer-holds-files"
 msgstr "{folders} cartelle · {files} file"
 
+
+msgid "theme-export-where"
+msgstr "Esportare il tema: dove?"
+
+msgid "theme-export-where-hint"
+msgstr "Aprite la cartella voluta (una chiavetta USB…), poi « Scegliere questa cartella »"
+
+msgid "theme-export-readonly"
+msgstr "Impossibile scrivere in questa cartella"
+
+msgid "theme-import-hint"
+msgstr "Un file .zip, o una cartella aperta poi « Scegliere questa cartella »"
+

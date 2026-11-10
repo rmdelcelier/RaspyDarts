@@ -5853,3 +5853,16 @@ msgstr "Dessinés par la borne, sans vidéo : chacun joué dans l'aperçu"
 msgid "explorer-holds-files"
 msgstr "{folders} dossiers · {files} fichiers"
 
+
+msgid "theme-export-where"
+msgstr "Exporter le thème : où ?"
+
+msgid "theme-export-where-hint"
+msgstr "Ouvrez le dossier voulu (une clé USB…), puis « Choisir ce dossier »"
+
+msgid "theme-export-readonly"
+msgstr "Impossible d'écrire dans ce dossier"
+
+msgid "theme-import-hint"
+msgstr "Un fichier .zip, ou un dossier ouvert puis « Choisir ce dossier »"
+

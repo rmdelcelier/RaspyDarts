@@ -1476,23 +1476,39 @@ def draw_screens_menu(screen, panels, selected):
             rect = pygame.Rect(panel.x + int(width * 0.4 / 16), int(title.bottom + row * step + step * 0.12),
                                panel.width - int(width * 0.8 / 16), int(step * 0.76))
             chosen = index == selected
-            screen.new_blit_rect2(rect, colorset['menu-selected'] if chosen else colorset['menu-buttons'],
-                                  corners='All', border_radius=int(rect.height / 4))
-            color = colorset['menu-text-white'] if chosen else colorset['menu-text-black']
             if name in values:
-                # Its value on the right, smaller
-                label = pygame.Rect(rect.x, rect.y, int(rect.width * 0.55), rect.height)
-                value = pygame.Rect(label.right, rect.y, rect.width - label.width, rect.height)
-                screen.blit_text(texts[name], label.x, label.y, label.width, label.height, color)
-                screen.blit_text(values[name], value.x, value.y + int(rect.height * 0.15), value.width - int(width * 0.2 / 16),
-                                 int(rect.height * 0.7), color)
+                # As the lines of always : its value in its box (left), its name (right)
+                value_item(screen, rect, texts[name], values[name], chosen)
             else:
+                screen.new_blit_rect2(rect, colorset['menu-selected'] if chosen else colorset['menu-buttons'],
+                                      corners='All', border_radius=int(rect.height / 4))
+                color = colorset['menu-text-white'] if chosen else colorset['menu-text-black']
                 screen.blit_text(texts[name], rect.x, rect.y, rect.width, rect.height, color)
             zones[index] = tuple(rect)
             index += 1
     zones[index] = screen.display_button(index == selected, 'back', special='escape')
     screen.update_screen()
     return zones
+
+
+def value_item(screen, rect, label, value, chosen):
+    '''
+    A line with a value drawn as those of always (Screen.menu_item) : the value in its box of
+    the colour of the lists, the name beside it ; the colours of the selection when chosen
+    '''
+    colorset = screen.colorset
+    if chosen:
+        box = (colorset['menu-selected'], '', colorset['menu-text-black'])
+        shown = (colorset['menu-selected'], value, colorset['menu-text-white'])
+        text = (colorset['menu-selected'], label, colorset['menu-text-black'])
+        border_color, border_size = colorset['menu-border'], int(colorset['border-size'])
+        padding = int(colorset['padding'])
+    else:
+        box = (colorset['menu-alternate'], '', colorset['menu-text-black'])
+        shown = (colorset['menu-shortcut'], value, colorset['menu-text-black'])
+        text = (screen.menu_color(colorset['menu-buttons']), label, colorset['menu-text-black'])
+        border_color, border_size, padding = None, 0, 0
+    screen.svt_item(box, shown, text, rect, padding, border_size, border_color, ratio=0.3)
 
 
 def screens_choice(screen, keys, name):

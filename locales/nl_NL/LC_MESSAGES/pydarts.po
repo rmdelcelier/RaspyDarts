@@ -5831,3 +5831,16 @@ msgstr "Getekend door de kast, zonder video: elk afgespeeld in het voorbeeld"
 msgid "explorer-holds-files"
 msgstr "{folders} mappen · {files} bestanden"
 
+
+msgid "theme-export-where"
+msgstr "Thema exporteren: waar?"
+
+msgid "theme-export-where-hint"
+msgstr "Open de gewenste map (een USB-stick…), dan « Deze map kiezen »"
+
+msgid "theme-export-readonly"
+msgstr "Kan niet in deze map schrijven"
+
+msgid "theme-import-hint"
+msgstr "Een .zip-bestand, of een geopende map en dan « Deze map kiezen »"
+

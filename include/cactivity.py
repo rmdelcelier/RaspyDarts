@@ -148,10 +148,8 @@ class Activities:
         margin = int(res_y / 60)
         corner = corner if corner in CORNERS else self.corner()
         pos_x = res_x - width - margin if corner.endswith('right') else margin
-        # Under the band of the title (its informations : version, address), over the buttons
-        # at the bottom (Back, Quit...)
-        pos_y = int(res_y / 30 + res_y / 15) + margin if corner.startswith('top') \
-            else res_y - height - int(res_y * 0.105)
+        # At the top : over the band of the title ; at the bottom : over the buttons (Back, Quit...)
+        pos_y = margin if corner.startswith('top') else res_y - height - int(res_y * 0.105)
         coins = getattr(getattr(self.owner, 'rpi', None), 'coins', None)
         try:
             if coins is not None and coins.left() is not None \

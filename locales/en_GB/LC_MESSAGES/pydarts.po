@@ -6049,3 +6049,16 @@ msgstr "Drawn by the cabinet, no video: each played in the preview"
 msgid "explorer-holds-files"
 msgstr "{folders} folders · {files} files"
 
+
+msgid "theme-export-where"
+msgstr "Export the theme: where?"
+
+msgid "theme-export-where-hint"
+msgstr "Open the folder wanted (a USB key…), then « Choose this folder »"
+
+msgid "theme-export-readonly"
+msgstr "This folder cannot be written"
+
+msgid "theme-import-hint"
+msgstr "A .zip file, or a folder opened then « Choose this folder »"
+

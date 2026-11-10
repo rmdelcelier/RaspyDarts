@@ -5782,3 +5782,16 @@ msgstr "Dibujados por la máquina, sin vídeo: cada uno en la vista previa"
 msgid "explorer-holds-files"
 msgstr "{folders} carpetas · {files} archivos"
 
+
+msgid "theme-export-where"
+msgstr "Exportar el tema: ¿dónde?"
+
+msgid "theme-export-where-hint"
+msgstr "Abra la carpeta deseada (una llave USB…), luego « Elegir esta carpeta »"
+
+msgid "theme-export-readonly"
+msgstr "No se puede escribir en esta carpeta"
+
+msgid "theme-import-hint"
+msgstr "Un archivo .zip, o una carpeta abierta y luego « Elegir esta carpeta »"
+
