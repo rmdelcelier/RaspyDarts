@@ -5935,3 +5935,17 @@ msgstr "Vuurwerk"
 msgid "animated-scene-soft-lights"
 msgstr "Zachte lichtjes"
 
+
+msgid "editor-color-normal"
+msgstr "Kleur (normaal)"
+
+msgid "editor-color-selected"
+msgstr "Kleur (geselecteerd)"
+
+msgid "editor-color-transparent"
+msgstr "Transparant"
+
+
+msgid "editor-no-name"
+msgstr "Knop zonder naam"
+

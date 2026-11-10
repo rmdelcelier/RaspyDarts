@@ -64,6 +64,8 @@ VERSION_ID = '__version__'
 TITLE_ID = '__title__'
 # The states of a button which can have an image of their own (normal : its background)
 STATES = ('normal', 'selected', 'disabled')
+# States whose colour can be chosen
+COLOR_STATES = ('normal', 'selected')
 # Buttons arranged in a zone : the spaces between them (parts of the screen), the zone drawn
 GAPS = (0, 0.005, 0.01, 0.02, 0.03, 0.05)
 FIRST_GAP = 2
@@ -235,10 +237,11 @@ class Editor:
             squares.append(square)
         return squares
 
-    def draw(self):
+    def draw(self, update=True):
         '''
         The whole screen of the editor : the menu, its buttons at their place (the one chosen
-        last, over the others, framed, with its handles), the bar of the keys
+        last, over the others, framed, with its handles), the bar of the keys. update : sent to
+        the screen (not when something is drawn over it)
         '''
         screen = self.screen
         started = time.perf_counter()
@@ -266,6 +269,9 @@ class Editor:
             shown = screen.favorite_button(button) if self.name == 'main' else button
             style = screen.button_style(self.menu, shown)
             state = 'selected' if index == self.selected else ('disabled' if shown.get('unavailable') else 'normal')
+            if index == self.selected and getattr(self, 'forced_state', None):
+                # Its colour being chosen : drawn in this state
+                state = self.forced_state
             text = '' if shown.get('text', True) is None or ('text' not in shown and shown.get('logo')) else \
                 screen.lang.translate(screen.button_text(shown))
             painter.draw_button(screen.screen, item['rect'], style, text, screen.button_icon(shown), state, self.units,
@@ -287,7 +293,8 @@ class Editor:
                 self.draw_handles(rect)
         self.draw_guides()
         self.help_bar()
-        screen.update_screen()
+        if update:
+            screen.update_screen()
         screen.logs.debug(f"Menu editor : drawn in {(time.perf_counter() - started) * 1000:.0f} ms")
 
     def draw_handles(self, rect):
@@ -659,11 +666,14 @@ class Editor:
                           {'id': 'icon', 'action': 'icon', 'text': 'editor-icon', 'value': self.icon_text(button)}]
                 items += [{'id': state, 'action': state, 'text': f'editor-image-{state}',
                            'value': self.state_image_text(button, state)} for state in STATES]
+                items += [{'id': f'color-{state}', 'action': f'color-{state}', 'text': f'editor-color-{state}',
+                           'value': self.color_text(button, state)} for state in COLOR_STATES]
             items.append({'id': 'delete', 'action': 'delete', 'text': 'editor-delete'})
             for number, entry in enumerate(items, 1):
                 entry['shortcut'] = f'F{number}'
             back = {'id': 'back', 'action': 'back', 'text': 'back', 'footer': 'left', 'shortcut': 'escape'}
-            choice = self.screen.run_menu('editor_button', items + [back], items + [back], title=name,
+            choice = self.screen.run_menu('editor_button', items + [back], items + [back],
+                                          title=name or self.translate('editor-no-name'),
                                           initial=choice, columns=2 if full else None).get('id')
             if choice == 'shortcut':
                 self.shortcut(item)
@@ -683,6 +693,9 @@ class Editor:
                 continue
             if choice in STATES:
                 self.choose_state_image(button, choice)
+                continue
+            if str(choice).startswith('color-'):
+                self.choose_color(button, str(choice)[len('color-'):])
                 continue
             if choice in ('move', 'resize'):
                 self.mode = choice
@@ -746,7 +759,7 @@ class Editor:
         '''
         screen = self.screen
         before = self.button_name(button)
-        typed = screen.input_value_item('string', before, 1, 40, text='editor-name')
+        typed = screen.input_value_item('string', before, 0, 40, text='editor-name')
         if typed in ('escape', False, None) or str(typed) == before:
             return
         typed = str(typed).strip()
@@ -763,7 +776,10 @@ class Editor:
             names = {code: text for code in screen.LANGUAGES}
         names[language] = typed
         default = {code: value for code, value in names.items() if code != language}
-        if typed and all(value == names.get(language) for value in default.values()):
+        if not typed:
+            # No name : none in any language (only its icon, or nothing)
+            names = ''
+        elif all(value == names.get(language) for value in default.values()):
             # Every language has this name : written once
             names = typed
         if look is not None:
@@ -875,6 +891,14 @@ class Editor:
         else:
             block['image'] = chosen
             block.setdefault('fit', 'stretch')
+        self.set_block(button, state, block)
+        self.changed = True
+
+    @staticmethod
+    def set_block(button, state, block):
+        '''
+        The background of a state of a button written (none : the one of its style)
+        '''
         holder = button if state == 'normal' else dict(button.get(state) or {})
         if block:
             holder['background'] = block
@@ -885,7 +909,78 @@ class Editor:
                 button[state] = holder
             else:
                 button.pop(state, None)
-        self.changed = True
+
+    def color_text(self, button, state):
+        '''
+        The colour of a state of a button : its own (#RRGGBB), Transparente, or the one of its style
+        '''
+        color = self.state_block(button, state).get('color')
+        if color is None:
+            return self.translate('editor-image-style')
+        if str(color).strip().lower() == 'transparent':
+            return self.translate('editor-color-transparent')
+        rgb = self.screen.menu_painter().color(color, None)
+        return '#{:02X}{:02X}{:02X}'.format(*rgb[:3]) if rgb else str(color)
+
+    def choose_color(self, button, state):
+        '''
+        The colour of a state of a button (normal, selected) : in the palette of Personnaliser le
+        thème (gone through with the wheel of a knob too), Transparente (its image or its text
+        alone), Celle du style ; the button drawn with the colour gone to, the palette beside it
+        '''
+        from include import cthemeeditor    # pylint: disable=import-outside-toplevel
+        screen = self.screen
+        original = copy.deepcopy(button)
+        block = dict(self.state_block(button, state))
+        color = block.get('color')
+        if color is None:
+            current = 'style'
+        elif str(color).strip().lower() == 'transparent':
+            current = 'transparent'
+        else:
+            current = screen.menu_painter().color(color, None)
+
+        def apply(value):
+            changed = dict(block)
+            if value == 'style':
+                changed.pop('color', None)
+            elif value == 'transparent':
+                changed['color'] = 'transparent'
+            else:
+                changed['color'] = '#{:02X}{:02X}{:02X}'.format(*value[:3])
+            self.set_block(button, state, changed)
+
+        def restore():
+            button.clear()
+            button.update(copy.deepcopy(original))
+
+        def hover(value):
+            if value in ('fine', 'back'):
+                restore()
+            else:
+                apply(value)
+
+        def label(name):
+            return self.translate({'fine': 'theme-fine', 'back': 'theme-back', 'style': 'editor-image-style'}.get(
+                name, f'editor-color-{name}'))
+        # The palette on the side where the button is not ; the button drawn in this state
+        width, height = screen.screen.get_size()
+        rect = self.items[self.selected - 1]['rect']
+        left = width * 7.5 / 16 if rect.centerx < width / 2 else width * 0.5 / 16
+        panel = pygame.Rect(int(left), int(height * 2.2 / 16), int(width * 8 / 16), int(height * 11 / 16))
+        self.forced_state = state
+        try:
+            chosen = cthemeeditor.pick_color(screen, self.keys, self.translate(f'editor-color-{state}'), current,
+                                             ('fine', 'transparent', 'style'), label, panel=panel, hover=hover,
+                                             redraw=lambda: self.draw(update=False))
+        finally:
+            self.forced_state = None
+        restore()
+        if chosen == 'back':
+            return
+        apply(chosen)
+        if button != original:
+            self.changed = True
 
     @staticmethod
     def shape_text(button):

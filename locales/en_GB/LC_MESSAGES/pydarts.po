@@ -6153,3 +6153,17 @@ msgstr "Fireworks"
 msgid "animated-scene-soft-lights"
 msgstr "Soft lights"
 
+
+msgid "editor-color-normal"
+msgstr "Colour (normal)"
+
+msgid "editor-color-selected"
+msgstr "Colour (selected)"
+
+msgid "editor-color-transparent"
+msgstr "Transparent"
+
+
+msgid "editor-no-name"
+msgstr "Button without a name"
+

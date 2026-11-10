@@ -5886,3 +5886,17 @@ msgstr "Fuegos artificiales"
 msgid "animated-scene-soft-lights"
 msgstr "Luces suaves"
 
+
+msgid "editor-color-normal"
+msgstr "Color (normal)"
+
+msgid "editor-color-selected"
+msgstr "Color (seleccionado)"
+
+msgid "editor-color-transparent"
+msgstr "Transparente"
+
+
+msgid "editor-no-name"
+msgstr "Botón sin nombre"
+

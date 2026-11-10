@@ -5948,3 +5948,17 @@ msgstr "Fuochi d'artificio"
 msgid "animated-scene-soft-lights"
 msgstr "Luci soffuse"
 
+
+msgid "editor-color-normal"
+msgstr "Colore (normale)"
+
+msgid "editor-color-selected"
+msgstr "Colore (selezionato)"
+
+msgid "editor-color-transparent"
+msgstr "Trasparente"
+
+
+msgid "editor-no-name"
+msgstr "Pulsante senza nome"
+

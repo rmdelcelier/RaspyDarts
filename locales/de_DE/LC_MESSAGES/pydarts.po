@@ -5881,3 +5881,17 @@ msgstr "Feuerwerk"
 msgid "animated-scene-soft-lights"
 msgstr "Sanfte Lichter"
 
+
+msgid "editor-color-normal"
+msgstr "Farbe (normal)"
+
+msgid "editor-color-selected"
+msgstr "Farbe (ausgewählt)"
+
+msgid "editor-color-transparent"
+msgstr "Transparent"
+
+
+msgid "editor-no-name"
+msgstr "Schaltfläche ohne Namen"
+

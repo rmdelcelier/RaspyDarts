@@ -56,6 +56,10 @@ class Locale:
     # Return requested string
     #
     def translate(self, string, game=None):
+        if not string:
+            # Nothing to translate (gettext gives the header of the file for an empty text :
+            # a button without a name)
+            return string
         if _(string) != string:
             return _(string)
         elif game is not None and _(string.replace(f'{game}', 'AllGame')) != string.replace(f'{game}', 'AllGame'):

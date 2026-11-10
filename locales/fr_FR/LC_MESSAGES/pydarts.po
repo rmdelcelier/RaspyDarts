@@ -5957,3 +5957,17 @@ msgstr "Feu d'artifice"
 msgid "animated-scene-soft-lights"
 msgstr "Lumières douces"
 
+
+msgid "editor-color-normal"
+msgstr "Couleur (normal)"
+
+msgid "editor-color-selected"
+msgstr "Couleur (sélectionné)"
+
+msgid "editor-color-transparent"
+msgstr "Transparente"
+
+
+msgid "editor-no-name"
+msgstr "Bouton sans nom"
+
