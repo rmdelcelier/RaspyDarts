@@ -5638,7 +5638,7 @@ msgid "animated-effect-fireflies"
 msgstr "Vuurvliegjes"
 
 msgid "animated-effect-color-auto"
-msgstr "Eigen"
+msgstr "Oorspronkelijke kleuren"
 
 msgid "animated-effect-color-theme"
 msgstr "Kleur van het thema"
@@ -5909,4 +5909,29 @@ msgstr "Een video (MP4, WebM…) of een geanimeerde GIF, één keer op de achter
 
 msgid "animated-background-scene-color"
 msgstr "Kleur van de achtergrond"
+
+
+msgid "animated-effect-confetti"
+msgstr "Confetti"
+
+msgid "animated-effect-rain"
+msgstr "Regen"
+
+msgid "animated-effect-leaves"
+msgstr "Herfstbladeren"
+
+msgid "animated-effect-twinkles"
+msgstr "Fonkelingen"
+
+msgid "animated-effect-darts"
+msgstr "Darts"
+
+msgid "animated-scene-dartboard"
+msgstr "Verlicht dartbord"
+
+msgid "animated-scene-fireworks"
+msgstr "Vuurwerk"
+
+msgid "animated-scene-soft-lights"
+msgstr "Zachte lichtjes"
 

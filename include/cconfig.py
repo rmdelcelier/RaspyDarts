@@ -107,7 +107,8 @@ DefaultConfig['SectionGlobals'] = {
     # Animated background drawn (include/ceffects.py SCENES) : none, night-sky, starfield,
     # logo-spin, logo-bounce, shapes
     'animated_scene': 'none',
-    # Its colour (include/ceffects.py COLORS ; auto : its own colours)
+    # Its colour (include/ceffects.py color_of : auto : its own colours, theme, or r,g,b chosen
+    # in the palette)
     'animated_scene_color': 'auto',
     # Corner of the activity indicator (include/cactivity.py) : top-right, top-left,
     # bottom-right, bottom-left

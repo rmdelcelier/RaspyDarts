@@ -5660,7 +5660,7 @@ msgid "animated-effect-fireflies"
 msgstr "Lucioles"
 
 msgid "animated-effect-color-auto"
-msgstr "Les siennes"
+msgstr "Couleurs d'origine"
 
 msgid "animated-effect-color-theme"
 msgstr "Couleur du thème"
@@ -5931,4 +5931,29 @@ msgstr "Une vidéo (MP4, WebM…) ou un GIF animé, préparé une seule fois en 
 
 msgid "animated-background-scene-color"
 msgstr "Couleur du fond"
+
+
+msgid "animated-effect-confetti"
+msgstr "Confettis"
+
+msgid "animated-effect-rain"
+msgstr "Pluie"
+
+msgid "animated-effect-leaves"
+msgstr "Feuilles d'automne"
+
+msgid "animated-effect-twinkles"
+msgstr "Scintillements"
+
+msgid "animated-effect-darts"
+msgstr "Fléchettes"
+
+msgid "animated-scene-dartboard"
+msgstr "Cible lumineuse"
+
+msgid "animated-scene-fireworks"
+msgstr "Feu d'artifice"
+
+msgid "animated-scene-soft-lights"
+msgstr "Lumières douces"
 

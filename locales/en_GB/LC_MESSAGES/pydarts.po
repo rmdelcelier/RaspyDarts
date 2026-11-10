@@ -5856,7 +5856,7 @@ msgid "animated-effect-fireflies"
 msgstr "Fireflies"
 
 msgid "animated-effect-color-auto"
-msgstr "Its own"
+msgstr "Original colours"
 
 msgid "animated-effect-color-theme"
 msgstr "Theme colour"
@@ -6127,4 +6127,29 @@ msgstr "A video (MP4, WebM…) or an animated GIF, prepared once in the backgrou
 
 msgid "animated-background-scene-color"
 msgstr "Colour of the background"
+
+
+msgid "animated-effect-confetti"
+msgstr "Confetti"
+
+msgid "animated-effect-rain"
+msgstr "Rain"
+
+msgid "animated-effect-leaves"
+msgstr "Autumn leaves"
+
+msgid "animated-effect-twinkles"
+msgstr "Twinkles"
+
+msgid "animated-effect-darts"
+msgstr "Darts"
+
+msgid "animated-scene-dartboard"
+msgstr "Lit dartboard"
+
+msgid "animated-scene-fireworks"
+msgstr "Fireworks"
+
+msgid "animated-scene-soft-lights"
+msgstr "Soft lights"
 

@@ -150,6 +150,200 @@ def write_perso(path, values):
     os.replace(temporary, path)
 
 
+def pick_color(screen, keys, title, current, buttons, label, panel=None, hover=None, redraw=None):
+    '''
+    The palette (Personnaliser le thème, Fond animé) : the colours in rows of 6, then the buttons
+    ('fine' : Réglage fin ; the others returned as they are) and Retour. Gone through with the
+    arrows or the wheel of a knob (in the order of reading). panel : where (the middle else) ;
+    hover(value) : the colour or the button gone to (a preview follows it) ; redraw() : the screen
+    under it. Returns a colour, the name of a button, or 'back'
+    '''
+    width, height = screen.screen.get_size()
+    buttons = list(buttons) + ['back']
+    cells = len(PALETTE) + len(buttons)
+    current = tuple(current[:3]) if isinstance(current, (tuple, list)) else current
+    if current in PALETTE:
+        selected = PALETTE.index(current)
+    elif current in buttons:
+        selected = len(PALETTE) + buttons.index(current)
+    else:
+        selected = 0
+    columns = 6
+    panel = pygame.Rect(panel) if panel is not None else \
+        pygame.Rect(int(width * 4 / 16), int(height * 2.2 / 16), int(width * 8 / 16), int(height * 11 / 16))
+    shown = None
+    while True:
+        value = PALETTE[selected] if selected < len(PALETTE) else buttons[selected - len(PALETTE)]
+        if hover is not None and value != shown:
+            shown = value
+            hover(value)
+        # The screen under it, drawn again (the window of Réglage fin closed left its drawing)
+        if redraw is not None:
+            redraw()
+        pygame.draw.rect(screen.screen, (20, 20, 20), panel, border_radius=16)
+        pygame.draw.rect(screen.screen, (200, 200, 200), panel, 2, border_radius=16)
+        title_rect = pygame.Rect(panel.x, panel.y + 8, panel.width, int(height * 0.8 / 16))
+        screen.blit_text(f"{title}", title_rect.x, title_rect.y, title_rect.width, title_rect.height, (255, 255, 255))
+        gap = int(panel.width / 40)
+        size = int((panel.width - gap * (columns + 1)) / columns)
+        row_h = int(size * 0.55)
+        zones = {}
+        for index, color in enumerate(PALETTE):
+            cell = pygame.Rect(panel.x + gap + (index % columns) * (size + gap),
+                               title_rect.bottom + 10 + (index // columns) * (row_h + gap), size, row_h)
+            pygame.draw.rect(screen.screen, color, cell, border_radius=6)
+            pygame.draw.rect(screen.screen, CHOSEN if index == selected else (90, 90, 90), cell,
+                             4 if index == selected else 1, border_radius=6)
+            zones[index] = cell
+        row_y = title_rect.bottom + 10 + (len(PALETTE) // columns) * (row_h + gap) + gap
+        # Two rows of buttons when they do not hold in one
+        per_row = len(buttons) if len(buttons) <= 4 else (len(buttons) + 1) // 2
+        button_w = int((panel.width - gap * (per_row + 1)) / per_row)
+        button_h = int(height * 0.8 / 16)
+        for number, name in enumerate(buttons):
+            index = len(PALETTE) + number
+            rect = pygame.Rect(panel.x + gap + (number % per_row) * (button_w + gap),
+                               row_y + (number // per_row) * (button_h + gap), button_w, button_h)
+            pygame.draw.rect(screen.screen, (90, 80, 30) if index == selected else (70, 70, 70), rect, border_radius=10)
+            if index == selected:
+                pygame.draw.rect(screen.screen, CHOSEN, rect, 3, border_radius=10)
+            screen.blit_text(label(name), rect.x, rect.y, rect.width, rect.height, (255, 255, 255))
+            zones[index] = rect
+        screen.update_screen(rect_array=[panel]) if redraw is None else screen.update_screen()
+        key = screen.rpi.listen_inputs(['arrows', 'fx'], ['escape', 'enter', 'space', 'single-click',
+                                                           'PLAYERBUTTON', 'BACKUPBUTTON', 'GAMEBUTTON'])
+        if isinstance(key, tuple):
+            hit = next((index for index, rect in zones.items() if rect.collidepoint(key)), None)
+            if hit is None:
+                continue
+            selected, key = hit, 'enter'
+        if key in keys['escape']:
+            return 'back'
+        if key in ('right', 'BTN_RIGHT', 'S6'):
+            selected = (selected + 1) % cells
+        elif key in ('left', 'BTN_LEFT', 'S11'):
+            selected = (selected - 1) % cells
+        elif key in ('down', 'BTN_DOWN', 'S3'):
+            selected = min(selected + columns, cells - 1) if selected < len(PALETTE) else 0
+        elif key in ('up', 'BTN_UP', 'S20'):
+            selected = selected - columns if columns <= selected < len(PALETTE) else \
+                (len(PALETTE) - columns if selected >= len(PALETTE) else cells - 1)
+        elif key in keys['enter'] + ['space']:
+            if selected < len(PALETTE):
+                return PALETTE[selected]
+            name = buttons[selected - len(PALETTE)]
+            if name != 'fine':
+                return name
+            before = current if isinstance(current, tuple) else (128, 128, 128)
+            fine = fine_color(screen, f"{title} · {label('fine')}", before, panel, hover)
+            if fine is not None:
+                return fine
+            shown = None
+
+
+def fine_color(screen, title, before, panel=None, hover=None):
+    '''
+    Réglage fin : a window with the sliders red, green, blue (dragged or clicked with the
+    mouse ; up / down : a slider, left / right : its value by 5), the colour they give next
+    to the one before, OK and Annuler (Entrée, Échap). hover(colour) : each colour given (a
+    preview follows it). Returns the colour, None : cancelled
+    '''
+    width, height = screen.screen.get_size()
+    translate = screen.lang.translate
+    before = tuple(before[:3])
+    color = list(before)
+    names = ('theme-red', 'theme-green', 'theme-blue')
+    tints = ((220, 40, 40), (40, 200, 60), (50, 90, 230))
+    active = 0
+    dragging = None
+    clock = pygame.time.Clock()
+    panel = pygame.Rect(panel) if panel is not None else \
+        pygame.Rect(int(width * 3.5 / 16), int(height * 3.2 / 16), int(width * 9 / 16), int(height * 9 / 16))
+    bars = [pygame.Rect(panel.x + int(panel.width * 0.2), panel.y + int(panel.height * (0.22 + 0.17 * index)),
+                        int(panel.width * 0.5), int(panel.height * 0.06)) for index in range(3)]
+    preview = pygame.Rect(panel.x + int(panel.width * 0.76), panel.y + int(panel.height * 0.2),
+                          int(panel.width * 0.2), int(panel.height * 0.5))
+    ok = pygame.Rect(panel.right - int(panel.width * 0.42), panel.bottom - int(panel.height * 0.16),
+                     int(panel.width * 0.18), int(panel.height * 0.11))
+    cancel = pygame.Rect(panel.right - int(panel.width * 0.22), ok.y, ok.width, ok.height)
+    font = screen.font(screen.defaultfontpath, max(12, int(min(panel.height, panel.width * 0.6) * 0.06)))
+    shown = [None]
+
+    def value_at(index, pos_x):
+        bar = bars[index]
+        return max(0, min(255, round((pos_x - bar.x) / bar.width * 255)))
+
+    def draw():
+        if hover is not None and tuple(color) != shown[0]:
+            shown[0] = tuple(color)
+            hover(shown[0])
+        pygame.draw.rect(screen.screen, (20, 20, 20), panel, border_radius=16)
+        pygame.draw.rect(screen.screen, (200, 200, 200), panel, 2, border_radius=16)
+        screen.screen.blit(font.render(title, True, (255, 255, 255)), (panel.x + 20, panel.y + 14))
+        for index, bar in enumerate(bars):
+            label = font.render(translate(names[index]), True, tints[index])
+            screen.screen.blit(label, (panel.x + 20, bar.centery - label.get_height() // 2))
+            # The bar shaded from 0 to 255 for this component, the others as they are
+            for step in range(0, bar.width, 4):
+                shade = list(color)
+                shade[index] = int(step / bar.width * 255)
+                pygame.draw.rect(screen.screen, shade, (bar.x + step, bar.y, 4, bar.height))
+            pygame.draw.rect(screen.screen, CHOSEN if index == active else (120, 120, 120), bar, 3 if index == active else 1)
+            knob_x = bar.x + int(color[index] / 255 * bar.width)
+            pygame.draw.circle(screen.screen, (255, 255, 255), (knob_x, bar.centery), bar.height)
+            pygame.draw.circle(screen.screen, (0, 0, 0), (knob_x, bar.centery), bar.height, 2)
+            number = font.render(str(color[index]), True, (255, 255, 255))
+            screen.screen.blit(number, (bar.right + bar.height + 14, bar.centery - number.get_height() // 2))
+        # The colour before (top) and the one given (bottom)
+        half = preview.height // 2
+        pygame.draw.rect(screen.screen, before, (preview.x, preview.y, preview.width, half))
+        pygame.draw.rect(screen.screen, tuple(color), (preview.x, preview.y + half, preview.width, preview.height - half))
+        pygame.draw.rect(screen.screen, (255, 255, 255), preview, 2)
+        code = font.render(f"({color[0]}, {color[1]}, {color[2]})", True, (255, 255, 255))
+        screen.screen.blit(code, (preview.centerx - code.get_width() // 2, preview.bottom + 8))
+        for rect, text in ((ok, 'OK'), (cancel, translate('theme-cancel'))):
+            pygame.draw.rect(screen.screen, (70, 70, 70), rect, border_radius=10)
+            rendered = font.render(text, True, (255, 255, 255))
+            screen.screen.blit(rendered, rendered.get_rect(center=rect.center))
+        screen.update_screen(rect_array=[panel])
+
+    pygame.event.clear()
+    while True:
+        draw()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return None
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                if ok.collidepoint(event.pos):
+                    return tuple(color)
+                if cancel.collidepoint(event.pos):
+                    return None
+                for index, bar in enumerate(bars):
+                    if bar.inflate(0, bar.height * 2).collidepoint(event.pos):
+                        active, dragging = index, index
+                        color[index] = value_at(index, event.pos[0])
+            elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+                dragging = None
+            elif event.type == pygame.MOUSEMOTION and dragging is not None:
+                color[dragging] = value_at(dragging, event.pos[0])
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    return None
+                if event.key in (pygame.K_RETURN, pygame.K_KP_ENTER):
+                    return tuple(color)
+                if event.key == pygame.K_UP:
+                    active = (active - 1) % 3
+                elif event.key == pygame.K_DOWN:
+                    active = (active + 1) % 3
+                elif event.key in (pygame.K_LEFT, pygame.K_RIGHT):
+                    step = 1 if event.mod & pygame.KMOD_SHIFT else 5
+                    color[active] = max(0, min(255, color[active] + (step if event.key == pygame.K_RIGHT else -step)))
+        # What is shown under it going on (the preview of Fond animé)
+        if screen.idle_hook is not None:
+            screen.idle_turn()
+        clock.tick(30)
+
+
 class ThemeEditor:
     '''
     The editor of the colours of the theme, drawn and driven by the Screen of the game
@@ -701,169 +895,11 @@ class ThemeEditor:
         The palette of a tag : a colour, Réglage fin (red, green, blue), Couleur d'origine du
         thème, Aucune (if it can be None). Returns the colour, None (Aucune), 'origin', or 'back'
         '''
-        screen = self.screen
-        width, height = self.size
-        buttons = ['fine', 'origin'] + (['none'] if tag in NONE_ALLOWED else []) + ['back']
-        cells = len(PALETTE) + len(buttons)
-        current = self.color(tag)
-        selected = PALETTE.index(current) if current in PALETTE else 0
-        columns = 6
-        while True:
-            # The plate under it, drawn again (the window of Réglage fin closed left its drawing)
-            if getattr(self, 'redraw', None) is not None:
-                self.redraw()
-            panel = pygame.Rect(int(width * 4 / 16), int(height * 2.2 / 16), int(width * 8 / 16), int(height * 11 / 16))
-            pygame.draw.rect(screen.screen, (20, 20, 20), panel, border_radius=16)
-            pygame.draw.rect(screen.screen, (200, 200, 200), panel, 2, border_radius=16)
-            title = pygame.Rect(panel.x, panel.y + 8, panel.width, int(height * 0.8 / 16))
-            screen.blit_text(f"{tag}", title.x, title.y, title.width, title.height, (255, 255, 255))
-            gap = int(panel.width / 40)
-            size = int((panel.width - gap * (columns + 1)) / columns)
-            row_h = int(size * 0.55)
-            zones = {}
-            for index, color in enumerate(PALETTE):
-                cell = pygame.Rect(panel.x + gap + (index % columns) * (size + gap),
-                                   title.bottom + 10 + (index // columns) * (row_h + gap), size, row_h)
-                pygame.draw.rect(screen.screen, color, cell, border_radius=6)
-                pygame.draw.rect(screen.screen, CHOSEN if index == selected else (90, 90, 90), cell,
-                                 4 if index == selected else 1, border_radius=6)
-                zones[index] = cell
-            row_y = title.bottom + 10 + (len(PALETTE) // columns) * (row_h + gap) + gap
-            button_w = int((panel.width - gap * (len(buttons) + 1)) / len(buttons))
-            for number, name in enumerate(buttons):
-                index = len(PALETTE) + number
-                rect = pygame.Rect(panel.x + gap + number * (button_w + gap), row_y, button_w, int(height * 0.8 / 16))
-                pygame.draw.rect(screen.screen, (90, 80, 30) if index == selected else (70, 70, 70), rect, border_radius=10)
-                if index == selected:
-                    pygame.draw.rect(screen.screen, CHOSEN, rect, 3, border_radius=10)
-                screen.blit_text(self.translate(f'theme-{name}'), rect.x, rect.y, rect.width, rect.height, (255, 255, 255))
-                zones[index] = rect
-            screen.update_screen()
-            key = screen.rpi.listen_inputs(['arrows', 'fx'], ['escape', 'enter', 'space', 'single-click',
-                                                               'PLAYERBUTTON', 'BACKUPBUTTON', 'GAMEBUTTON'])
-            if isinstance(key, tuple):
-                hit = next((index for index, rect in zones.items() if rect.collidepoint(key)), None)
-                if hit is None:
-                    continue
-                selected, key = hit, 'enter'
-            if key in self.keys['escape']:
-                return 'back'
-            if key in ('right', 'BTN_RIGHT', 'S6'):
-                selected = (selected + 1) % cells
-            elif key in ('left', 'BTN_LEFT', 'S11'):
-                selected = (selected - 1) % cells
-            elif key in ('down', 'BTN_DOWN', 'S3'):
-                selected = min(selected + columns, cells - 1) if selected < len(PALETTE) else 0
-            elif key in ('up', 'BTN_UP', 'S20'):
-                selected = selected - columns if selected >= columns and selected < len(PALETTE) else \
-                    (len(PALETTE) - columns if selected >= len(PALETTE) else cells - 1)
-            elif key in self.keys['enter'] + ['space']:
-                if selected < len(PALETTE):
-                    return PALETTE[selected]
-                name = buttons[selected - len(PALETTE)]
-                if name == 'back':
-                    return 'back'
-                if name == 'origin':
-                    return 'origin'
-                if name == 'none':
-                    return None
-                fine = self.fine(tag)
-                if fine is not None:
-                    return fine
-
-    def fine(self, tag):
-        '''
-        Réglage fin : a window with the sliders red, green, blue (dragged or clicked with the
-        mouse ; up / down : a slider, left / right : its value by 5), the colour they give next
-        to the one before, OK and Annuler (Entrée, Échap). Returns the colour, None : cancelled
-        '''
-        screen = self.screen
-        width, height = self.size
-        before = tuple(self.color(tag) or (128, 128, 128))
-        color = list(before)
-        names = ('theme-red', 'theme-green', 'theme-blue')
-        tints = ((220, 40, 40), (40, 200, 60), (50, 90, 230))
-        active = 0
-        dragging = None
-        clock = pygame.time.Clock()
-        panel = pygame.Rect(int(width * 3.5 / 16), int(height * 3.2 / 16), int(width * 9 / 16), int(height * 9 / 16))
-        bars = [pygame.Rect(panel.x + int(panel.width * 0.2), panel.y + int(panel.height * (0.22 + 0.17 * index)),
-                            int(panel.width * 0.5), int(panel.height * 0.06)) for index in range(3)]
-        preview = pygame.Rect(panel.x + int(panel.width * 0.76), panel.y + int(panel.height * 0.2),
-                              int(panel.width * 0.2), int(panel.height * 0.5))
-        ok = pygame.Rect(panel.right - int(panel.width * 0.42), panel.bottom - int(panel.height * 0.16),
-                         int(panel.width * 0.18), int(panel.height * 0.11))
-        cancel = pygame.Rect(panel.right - int(panel.width * 0.22), ok.y, ok.width, ok.height)
-        font = screen.font(screen.defaultfontpath, max(12, int(panel.height * 0.06)))
-
-        def value_at(index, pos_x):
-            bar = bars[index]
-            return max(0, min(255, round((pos_x - bar.x) / bar.width * 255)))
-
-        def draw():
-            pygame.draw.rect(screen.screen, (20, 20, 20), panel, border_radius=16)
-            pygame.draw.rect(screen.screen, (200, 200, 200), panel, 2, border_radius=16)
-            title = font.render(f"{tag} · {self.translate('theme-fine')}", True, (255, 255, 255))
-            screen.screen.blit(title, (panel.x + 20, panel.y + 14))
-            for index, bar in enumerate(bars):
-                label = font.render(self.translate(names[index]), True, tints[index])
-                screen.screen.blit(label, (panel.x + 20, bar.centery - label.get_height() // 2))
-                # The bar shaded from 0 to 255 for this component, the others as they are
-                for step in range(0, bar.width, 4):
-                    shade = list(color)
-                    shade[index] = int(step / bar.width * 255)
-                    pygame.draw.rect(screen.screen, shade, (bar.x + step, bar.y, 4, bar.height))
-                pygame.draw.rect(screen.screen, CHOSEN if index == active else (120, 120, 120), bar, 3 if index == active else 1)
-                knob_x = bar.x + int(color[index] / 255 * bar.width)
-                pygame.draw.circle(screen.screen, (255, 255, 255), (knob_x, bar.centery), bar.height)
-                pygame.draw.circle(screen.screen, (0, 0, 0), (knob_x, bar.centery), bar.height, 2)
-                number = font.render(str(color[index]), True, (255, 255, 255))
-                screen.screen.blit(number, (bar.right + bar.height + 14, bar.centery - number.get_height() // 2))
-            # The colour before (top) and the one given (bottom)
-            half = preview.height // 2
-            pygame.draw.rect(screen.screen, before, (preview.x, preview.y, preview.width, half))
-            pygame.draw.rect(screen.screen, tuple(color), (preview.x, preview.y + half, preview.width, preview.height - half))
-            pygame.draw.rect(screen.screen, (255, 255, 255), preview, 2)
-            code = font.render(f"({color[0]}, {color[1]}, {color[2]})", True, (255, 255, 255))
-            screen.screen.blit(code, (preview.centerx - code.get_width() // 2, preview.bottom + 8))
-            for rect, text in ((ok, 'OK'), (cancel, self.translate('theme-cancel'))):
-                pygame.draw.rect(screen.screen, (70, 70, 70), rect, border_radius=10)
-                rendered = font.render(text, True, (255, 255, 255))
-                screen.screen.blit(rendered, rendered.get_rect(center=rect.center))
-            screen.update_screen(rect_array=[panel])
-
-        pygame.event.clear()
-        while True:
-            draw()
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    return None
-                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                    if ok.collidepoint(event.pos):
-                        return tuple(color)
-                    if cancel.collidepoint(event.pos):
-                        return None
-                    for index, bar in enumerate(bars):
-                        if bar.inflate(0, bar.height * 2).collidepoint(event.pos):
-                            active, dragging = index, index
-                            color[index] = value_at(index, event.pos[0])
-                elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
-                    dragging = None
-                elif event.type == pygame.MOUSEMOTION and dragging is not None:
-                    color[dragging] = value_at(dragging, event.pos[0])
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        return None
-                    if event.key in (pygame.K_RETURN, pygame.K_KP_ENTER):
-                        return tuple(color)
-                    if event.key == pygame.K_UP:
-                        active = (active - 1) % 3
-                    elif event.key == pygame.K_DOWN:
-                        active = (active + 1) % 3
-                    elif event.key in (pygame.K_LEFT, pygame.K_RIGHT):
-                        step = 1 if event.mod & pygame.KMOD_SHIFT else 5
-                        color[active] = max(0, min(255, color[active] + (step if event.key == pygame.K_RIGHT else -step)))
-            clock.tick(30)
+        buttons = ['fine', 'origin'] + (['none'] if tag in NONE_ALLOWED else [])
+        chosen = pick_color(self.screen, self.keys, tag, self.color(tag), buttons,
+                            lambda name: self.translate(f'theme-{name}'),
+                            redraw=lambda: self.redraw() if getattr(self, 'redraw', None) is not None else None)
+        return None if chosen == 'none' else chosen
 
     # ------------------------------------------------------------------ saving
     def save(self):

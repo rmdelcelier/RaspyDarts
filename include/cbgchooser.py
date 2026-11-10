@@ -205,6 +205,9 @@ def save(screen, **values):
 
 
 TYPES = ('none', 'effect', 'scene', 'scene-effect', 'video')
+# The lines of a colour : chosen in the palette of Personnaliser le thème (cthemeeditor.pick_color)
+COLOR_ROWS = ('effect-color', 'scene-color')
+COLOR_BUTTONS = ('fine', 'auto', 'theme')
 SCENE_CHOICES = tuple(name for name in ceffects.SCENES if name != 'none')
 # The lines shown for each type
 TYPE_ROWS = {'none': ('type',),
@@ -332,6 +335,10 @@ def choose(screen, keys):
                     screen.message([translate('animated-background-saved')], 1500, None, 'middle', 'big')
                     return
                 name = rows[selected]
+                if name in COLOR_ROWS:
+                    work[name] = choose_color(screen, keys, work, name, show)
+                    state['key'] = None
+                    continue
                 if name == 'video':
                     chosen = cexplorer.explore(screen, translate('animated-background-choose-video'), work['video'] or None,
                                                kinds=cexplorer.VIDEOS)
@@ -363,6 +370,31 @@ def choose(screen, keys):
         screen.idle_hook = None
 
 
+def choose_color(screen, keys, work, name, show):
+    '''
+    The colour of a line chosen in the palette (its own colours, that of the theme, Réglage fin),
+    the colour gone to seen at once in the preview ; on the left, the preview kept in sight.
+    The setting given back (the same : Retour)
+    '''
+    from include import cthemeeditor    # pylint: disable=import-outside-toplevel
+    translate = screen.lang.translate
+    unit_x, unit_y = screen.res['x'] / 16, screen.res['y'] / 16
+    value = work[name]
+    current = value if value in COLOR_BUTTONS else ceffects.color_of(value)
+    trial = dict(work)
+
+    def hover(chosen):
+        trial[name] = ceffects.color_text(chosen)
+        show(trial)
+
+    def label(button):
+        return translate({'fine': 'theme-fine', 'back': 'theme-back'}.get(button, f'animated-effect-color-{button}'))
+    panel = pygame.Rect(int(0.5 * unit_x), int(2.6 * unit_y), int(7.9 * unit_x), int(9.8 * unit_y))
+    chosen = cthemeeditor.pick_color(screen, keys, translate(f'animated-background-{name}'), current, COLOR_BUTTONS, label,
+                                     panel=panel, hover=hover)
+    return value if chosen == 'back' else ceffects.color_text(chosen)
+
+
 def row_choices(screen, name):
     '''
     The choices of a line and how each is said
@@ -386,6 +418,9 @@ def row_choices(screen, name):
 
 def value_text(screen, work, name):
     translate = screen.lang.translate
+    if name in COLOR_ROWS and work[name] not in COLOR_BUTTONS:
+        # A colour : seen in its box (swatch)
+        return ''
     if name == 'video':
         return os.path.basename(work['video']) if work['video'] else translate('animated-background-video-none')
     choices, label = row_choices(screen, name)
@@ -409,6 +444,13 @@ def draw_screen(screen, work, rows, selected, box):
         rect = pygame.Rect(int(unit_x), int(2.8 * unit_y + index * 1.35 * unit_y), int(7 * unit_x), int(1.1 * unit_y))
         cmenueditor.value_item(screen, rect, translate(f'animated-background-{name}'), value_text(screen, work, name),
                                index == selected)
+        if name in COLOR_ROWS and work[name] not in COLOR_BUTTONS:
+            color = ceffects.color_of(work[name])
+            if color is not None:
+                swatch = pygame.Rect(rect.x, rect.y, int(rect.width * 0.3), rect.height).inflate(-int(unit_x / 3),
+                                                                                                -int(rect.height / 2.5))
+                pygame.draw.rect(screen.screen, color, swatch, border_radius=int(unit_y / 8))
+                pygame.draw.rect(screen.screen, (255, 255, 255), swatch, 2, border_radius=int(unit_y / 8))
         zones[index] = tuple(rect)
         bottom = rect.bottom
     if work['type'] == 'video':

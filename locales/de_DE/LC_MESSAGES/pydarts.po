@@ -5584,7 +5584,7 @@ msgid "animated-effect-fireflies"
 msgstr "Glühwürmchen"
 
 msgid "animated-effect-color-auto"
-msgstr "Eigene"
+msgstr "Ursprüngliche Farben"
 
 msgid "animated-effect-color-theme"
 msgstr "Farbe des Themas"
@@ -5855,4 +5855,29 @@ msgstr "Ein Video (MP4, WebM…) oder ein animiertes GIF, einmal im Hintergrund 
 
 msgid "animated-background-scene-color"
 msgstr "Farbe des Hintergrunds"
+
+
+msgid "animated-effect-confetti"
+msgstr "Konfetti"
+
+msgid "animated-effect-rain"
+msgstr "Regen"
+
+msgid "animated-effect-leaves"
+msgstr "Herbstblätter"
+
+msgid "animated-effect-twinkles"
+msgstr "Funkeln"
+
+msgid "animated-effect-darts"
+msgstr "Darts"
+
+msgid "animated-scene-dartboard"
+msgstr "Leuchtende Dartscheibe"
+
+msgid "animated-scene-fireworks"
+msgstr "Feuerwerk"
+
+msgid "animated-scene-soft-lights"
+msgstr "Sanfte Lichter"
 
