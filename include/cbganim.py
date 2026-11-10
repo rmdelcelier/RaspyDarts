@@ -393,6 +393,10 @@ class AnimatedBackground:
         # drawn over when there is no video (the one of the menu, made at its first drawing)
         self.effect_settings = ('none', 'auto', 'normal', 'normal')
         self.effect = None
+        # An animated background drawn (include/ceffects.py SCENES : starry sky, logo...) : its own
+        # background, the effect over it ; a video chosen comes first
+        self.scene_name = 'none'
+        self.scene = None
         self.base = None
         self.bases = {}
         self.base_key = None
@@ -430,6 +434,13 @@ class AnimatedBackground:
             # Made again at the size of the screen (see make_layer)
             self.effect_settings = effect
             self.effect = None
+            self.redraw = True
+        scene = str(self.owner.config.get_value('SectionGlobals', 'animated_scene', False) or 'none').strip()
+        scene = scene if scene in ceffects.SCENES else 'none'
+        if scene != self.scene_name:
+            self.scene_name = scene
+            self.scene = None
+            self.bases.clear()
             self.redraw = True
         if path and not os.path.exists(path):
             self.logs.warning(f"Animated background : {path} not found")
@@ -563,6 +574,10 @@ class AnimatedBackground:
         if self.depth > 1:
             return
         self.scope_ok = self.wanted(name)
+        try:
+            self.menu_own = self.owner.menus().menu(name).get('background') is not None
+        except Exception:    # pylint: disable=broad-except
+            self.menu_own = False
         # The background under the effect : the one of this menu, made at its first drawing and
         # kept (the menus keep theirs : drawn again from their copy, the background not asked)
         self.base_key = (name, tuple(self.owner.screen.get_size()), getattr(self.owner.file_class, 'theme_dir', None),
@@ -570,8 +585,17 @@ class AnimatedBackground:
         self.base = self.bases.get(self.base_key)
         self.set_mode(self.wanted_mode())
 
+    def scene_shown(self):
+        '''
+        The animated background drawn on this menu (not on one with a background of its own)
+        '''
+        return self.scene is not None and not getattr(self, 'menu_own', False)
+
     def with_effect(self):
-        return self.effect_settings[0] != 'none'
+        '''
+        Something drawn without a video : the effect, an animated background
+        '''
+        return self.effect_settings[0] != 'none' or self.scene_name != 'none'
 
     def wanted_mode(self):
         '''
@@ -629,7 +653,7 @@ class AnimatedBackground:
             return
         elapsed = time.time() - counted[0]
         if elapsed >= 5 and counted[1]:
-            what = 'video' if self.use_frames else f"effect {self.effect_settings[0]}"
+            what = 'video' if self.use_frames else f"{self.scene_name} + {self.effect_settings[0]}"
             self.logs.info(f"Animated background : {counted[1] / elapsed:.1f} i/s for {elapsed:.0f} s, {what} "
                            f"({counted[2] / counted[1] * 1000:.0f} ms a frame, rate {self.effective})")
         self.counted = None
@@ -644,7 +668,12 @@ class AnimatedBackground:
         # Blitted whole (the video) : compressed (2 ms instead of 12) ; in small pieces (an effect
         # alone : 80 places a frame), not : each piece of a compressed surface reads it from its top
         self.keyed.set_colorkey(self.key, pygame.RLEACCEL if self.use_frames else 0)
-        if self.with_effect() and (self.effect is None or (self.effect.width, self.effect.height) != size):
+        if self.scene_name != 'none' and (self.scene is None or (self.scene.width, self.scene.height) != size):
+            self.scene = ceffects.make_scene(self.scene_name, size, os.path.join(cpaths.ROOT_DIR, 'images', 'boot_logo.png'),
+                                             theme_color=self.owner.colorset.get('menu-selected'))
+        elif self.scene_name == 'none':
+            self.scene = None
+        if self.effect_settings[0] != 'none' and (self.effect is None or (self.effect.width, self.effect.height) != size):
             name, color, amount, speed = self.effect_settings
             self.effect = ceffects.make(name, size, color, amount, speed,
                                         theme_color=self.owner.colorset.get('menu-selected'))
@@ -700,6 +729,9 @@ class AnimatedBackground:
         while len(self.bases) >= 6:
             self.bases.pop(next(iter(self.bases)))
         self.bases[self.base_key] = surface
+        if self.scene_shown():
+            surface.blit(self.scene.background(), (0, 0))
+            return surface
         if self.source and getattr(self, 'scope_ok', False) and self.still and self.still_surface() is not None:
             surface.blit(self.still_surface(), (0, 0))
             return surface
@@ -744,6 +776,8 @@ class AnimatedBackground:
                 self.real.blit(under, (0, 0))
             else:
                 self.real.blit(under, rect, rect)
+        if self.scene_shown() and not self.use_frames:
+            self.scene.draw(self.real, rect)
         if self.effect is not None:
             self.effect.draw(self.real, rect)
         if rect is None:
@@ -811,12 +845,15 @@ class AnimatedBackground:
             wanted = self.wanted_mode()
             changed = wanted != self.mode or (wanted == 'layer' and (
                 self.use_frames != (getattr(self, 'scope_ok', False) and bool(self.frames))
-                or (self.with_effect() and self.effect is None) or (not self.with_effect() and self.effect is not None)))
+                or (self.effect_settings[0] != 'none') != (self.effect is not None)
+                or (self.scene_name != 'none') != (self.scene is not None)))
             if not changed:
                 self.redraw = False
             elif can_redraw:
-                if not self.with_effect():
+                if self.effect_settings[0] == 'none':
                     self.effect = None
+                if self.scene_name == 'none':
+                    self.scene = None
                 self.base = None
                 self.bases.clear()
                 self.set_mode(None)
@@ -838,12 +875,16 @@ class AnimatedBackground:
             self.compose()
             self.activity_over()
             pygame.display.update()
-        elif self.effect is not None and self.under() is not None:
-            # Over the background of the menu : the places of the particles only
-            rects = self.effect.step(elapsed)
+        elif (self.effect is not None or self.scene_shown()) and self.under() is not None:
+            # Over the background of the menu (or of the scene) : the places changed only
+            rects = (self.scene.step(elapsed) if self.scene_shown() else []) + \
+                (self.effect.step(elapsed) if self.effect is not None else [])
             for rect in rects:
                 self.real.blit(self.base, rect, rect)
-            self.effect.draw(self.real)
+            if self.scene_shown():
+                self.scene.draw(self.real)
+            if self.effect is not None:
+                self.effect.draw(self.real)
             for rect in rects:
                 self.real.blit(self.keyed, rect, rect)
             drawn = self.activity_over()

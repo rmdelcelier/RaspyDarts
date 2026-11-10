@@ -115,7 +115,29 @@ class Activities:
         corner = str(self.owner.config.get_value('SectionGlobals', 'activity_corner', False) or 'top-right')
         return corner if corner in CORNERS else 'top-right'
 
-    def place(self, count):
+    def sample(self, surface, corner):
+        '''
+        Where the window will be (Personnalisation, its line selected) : an example in a yellow
+        frame, at this corner. Its rectangle
+        '''
+        rect, line = self.place(1, corner)
+        size = max(10, int(line * 0.34))
+        font = self.owner.font(self.owner.defaultfontpath, size)
+        radius = int(line / 5)
+        item = pygame.Rect(rect.x, rect.y, rect.width, line - 4)
+        pygame.draw.rect(surface, (25, 25, 25), item, border_radius=radius)
+        pygame.draw.rect(surface, (255, 220, 0), item, max(3, int(line * 0.06)), border_radius=radius)
+        rendered = font.render(self.owner.lang.translate('activity-sample'), True, (255, 255, 255))
+        if rendered.get_width() > item.width - 2 * radius:
+            rendered = pygame.transform.smoothscale(rendered, (item.width - 2 * radius, rendered.get_height()))
+        surface.blit(rendered, (item.x + radius, item.y + int(line * 0.08)))
+        bar = pygame.Rect(item.x + radius, item.bottom - int(line * 0.32), item.width - 2 * radius, int(line * 0.16))
+        pygame.draw.rect(surface, (70, 70, 70), bar, border_radius=bar.height // 2)
+        pygame.draw.rect(surface, (255, 220, 0), (bar.x, bar.y, int(bar.width * 0.45), bar.height),
+                         border_radius=bar.height // 2)
+        return item
+
+    def place(self, count, corner=None):
         '''
         The rectangle of the indicator for this number of tasks, in its corner, away from the
         credits of the coin acceptor when they are in the same one
@@ -124,7 +146,7 @@ class Activities:
         width, line = int(res_x * 0.24), int(res_y * 0.08)
         height = line * count
         margin = int(res_y / 60)
-        corner = self.corner()
+        corner = corner if corner in CORNERS else self.corner()
         pos_x = res_x - width - margin if corner.endswith('right') else margin
         # Under the band of the title (its informations : version, address), over the buttons
         # at the bottom (Back, Quit...)

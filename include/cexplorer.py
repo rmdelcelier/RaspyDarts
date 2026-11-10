@@ -29,7 +29,8 @@ PREVIEWS = 24
 ICONS = {'dir': '\U0001F4C1', 'open': '\U0001F4C2', 'file': '\U0001F5BC', 'extra': '\U0001F3A8',
          'theme': '\U0001F3A8', 'mine': '\U0001F5BC', 'game': '\U0001F3AF', 'usb': '\U0001F4BE',
          'home': '\U0001F3E0', 'card': '\U0001F4BD', 'arrow': '\u2B06', 'none': '\U0001F6AB',
-         'video': '\U0001F3AC'}
+         'video': '\U0001F3AC', 'pick': '\u2705', 'effect': '\u2728', 'scenes': '\U0001F30C',
+         'rate': '\u23F1', 'scene': '\U0001F320'}
 
 
 def places(screen, translate):
@@ -85,16 +86,19 @@ def loops(entry, folder):
     return here == target or here.startswith(target.rstrip(os.sep) + os.sep)
 
 
-def explore(screen, title, current=None, extra=(), kinds=IMAGES):
+def explore(screen, title, current=None, extra=(), kinds=IMAGES, pick_folder=False, places_shown=True, subtitle=None):
     '''
     An image chosen : its full path ; or the id of one of the extra choices given first
     ((id, text[, image shown]) : the one of the theme, none...) ; None : given up. current : the
     image of the moment, the explorer opens in its folder. Back goes up to the place where the
     browsing started (the image of the moment : the place holding it), then to the places.
-    kinds : the files shown (IMAGES, VIDEOS : a video is played in the box of the preview)
+    kinds : the files shown (IMAGES, VIDEOS : a video is played in the box of the preview) ;
+    pick_folder : a folder is chosen (« Choisir ce dossier » first in each folder opened) ;
+    an extra choice (id, text, image, preview) : preview(screen, box) gives what is played in the
+    box while it is selected (see VideoPreview) ; places_shown False : the extra choices only
     '''
     translate = screen.lang.translate
-    previews = {'kinds': kinds}
+    previews = {'kinds': kinds, 'subtitle': subtitle}
     folder = root = None
     selected = 0
     if current and os.path.isfile(current):
@@ -104,7 +108,7 @@ def explore(screen, title, current=None, extra=(), kinds=IMAGES):
                    if folder == place['path'] or folder.startswith(place['path'].rstrip(os.sep) + os.sep)]
         root = max(holding, key=len) if holding else os.sep
     try:
-        return browse(screen, title, current, extra, kinds, previews, folder, root, selected)
+        return browse(screen, title, current, extra, kinds, previews, folder, root, selected, pick_folder, places_shown)
     finally:
         player = previews.get('player')
         if player is not None:
@@ -112,7 +116,7 @@ def explore(screen, title, current=None, extra=(), kinds=IMAGES):
         screen.idle_hook = None
 
 
-def browse(screen, title, current, extra, kinds, previews, folder, root, selected):
+def browse(screen, title, current, extra, kinds, previews, folder, root, selected, pick_folder=False, places_shown=True):
     '''
     The browsing of explore (its video played until it returns)
     '''
@@ -124,10 +128,15 @@ def browse(screen, title, current, extra, kinds, previews, folder, root, selecte
             # (no image : its own icon)
             entries = [{'kind': 'extra', 'path': choice[0], 'label': choice[1],
                         'image': choice[2] if len(choice) > 2 else None,
-                        'icon': 'none' if choice[0] == 'none' else None} for choice in extra]
-            entries += places(screen, translate)
+                        'preview': choice[3] if len(choice) > 3 else None,
+                        'icon': choice[0] if choice[0] in ICONS else ('scene' if len(choice) > 3 and choice[3] else None)}
+                       for choice in extra]
+            if places_shown:
+                entries += places(screen, translate)
         else:
             entries = listing(folder, translate, kinds)
+            if pick_folder:
+                entries.insert(1, {'kind': 'pick', 'path': folder, 'label': translate('explorer-pick-folder')})
             if current:
                 # The image of the moment selected first
                 selected = next((index for index, entry in enumerate(entries) if entry['path'] == current), selected)
@@ -175,7 +184,7 @@ def browse(screen, title, current, extra, kinds, previews, folder, root, selecte
                     # A place : Back comes back to the places from it
                     root = entry['path']
                 folder, selected = entry['path'], 0
-            elif entry['kind'] == 'file':
+            elif entry['kind'] in ('file', 'pick'):
                 return entry['path']
             elif entry['kind'] == 'extra':
                 return entry['path']
@@ -214,9 +223,9 @@ def folder_text(path, translate, counts, kinds=IMAGES):
             entries = [entry for entry in os.scandir(path) if not entry.name.startswith('.')]
             folders = sum(1 for entry in entries if entry.is_dir())
             files = sum(1 for entry in entries if entry.is_file() and entry.name.lower().endswith(kinds))
-            text = translate('explorer-holds-videos' if kinds == VIDEOS else 'explorer-holds')
+            text = translate({VIDEOS: 'explorer-holds-videos', IMAGES: 'explorer-holds'}.get(kinds, 'explorer-holds-files'))
             counts[path] = text.replace('{folders}', str(folders)).replace('{images}', str(files)) \
-                .replace('{videos}', str(files))
+                .replace('{videos}', str(files)).replace('{files}', str(files))
         except OSError:
             counts[path] = ''
     return counts[path]
@@ -234,7 +243,7 @@ def draw(screen, title, folder, entries, selected, previews, translate):
     icons = previews.setdefault('icons', {})
     counts = previews.setdefault('counts', {})
     screen.display_background()
-    screen.menu_header(title, folder if folder is not None else translate('explorer-places'))
+    screen.menu_header(title, folder if folder is not None else (previews.get('subtitle') or translate('explorer-places')))
     zones = {}
     # The list
     top = max(0, min(selected - ROWS // 2, len(entries) - ROWS))
@@ -270,18 +279,24 @@ def draw(screen, title, folder, entries, selected, previews, translate):
     # A video : played in the box (see VideoPreview), its name, its size and its length
     player = previews.get('player')
     video = image if image and image.lower().endswith(VIDEOS) else None
-    if player is not None and (video is None or player.path != video):
+    maker, played = None, None
+    if video:
+        maker, played = (lambda screen_, inner: VideoPreview(screen_, video, inner)), video
+    elif entry is not None and entry.get('preview') is not None:
+        maker, played = entry['preview'], ('extra', entry['path'])
+    if player is not None and (maker is None or player.path != played):
         player.stop()
         previews['player'] = player = None
         screen.idle_hook = None
-    if video:
+    if maker is not None:
         if player is None:
-            player = VideoPreview(screen, video, box.inflate(-int(unit_x / 2), -int(unit_y / 2)))
+            player = maker(screen, box.inflate(-int(unit_x / 2), -int(unit_y / 2)))
+            player.path = played
             previews['player'] = player
             screen.idle_hook = player.tick
-        caption = player.caption(translate)
+        caption = player.caption(translate) or (entry['label'] if entry else '')
         image = None
-        player.drawn = False
+        video = video or played
     if image:
         picture = preview(image, box.inflate(-int(unit_x / 2), -int(unit_y / 2)).size, previews)
         if picture is None:
@@ -297,7 +312,7 @@ def draw(screen, title, folder, entries, selected, previews, translate):
         if picture is not None:
             screen.screen.blit(picture, picture.get_rect(center=box.center))
         caption = entry['label']
-        target = entry['path'] if entry['kind'] == 'dir' else (os.path.dirname(folder.rstrip(os.sep)) or os.sep
+        target = entry['path'] if entry['kind'] in ('dir', 'pick') else (os.path.dirname(folder.rstrip(os.sep)) or os.sep
                                                                if entry['kind'] == 'up' and folder else None)
         if target:
             caption = f"{caption} · {folder_text(target, translate, counts, previews.get('kinds', IMAGES))}"
@@ -407,7 +422,7 @@ def preview(path, size, previews):
     key = (path, tuple(size))
     if key not in previews:
         while len(previews) > PREVIEWS:
-            previews.pop(next(key for key in previews if key not in ('icons', 'counts', 'kinds', 'player')))
+            previews.pop(next(key for key in previews if key not in ('icons', 'counts', 'kinds', 'player', 'subtitle')))
         try:
             picture = pygame.image.load(path)
             width, height = picture.get_size()

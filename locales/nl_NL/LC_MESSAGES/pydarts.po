@@ -5529,7 +5529,7 @@ msgid "animated-background-help"
 msgstr "De geanimeerde achtergrond vervangt de achtergrond van het thema op de schermen vóór de spellen (de video: niet op schermen met een eigen achtergrond; het getekende effect: op alle, over hun achtergrond). De video wordt één keer op de achtergrond voorbereid, gepauzeerd tijdens de spellen."
 
 msgid "animated-background-choose"
-msgstr "Video van de geanimeerde achtergrond"
+msgstr "Geanimeerde achtergrond: video of geanimeerde GIF, effect, getekende achtergrond"
 
 msgid "animated-background-copying"
 msgstr "Video wordt gekopieerd…"
@@ -5549,7 +5549,7 @@ msgstr "Auto (stilstaand)"
 
 
 msgid "activity_corner"
-msgstr "Activiteitsindicator"
+msgstr "Activiteitsvenster"
 
 msgid "activity-corner-top-right"
 msgstr "Rechtsboven"
@@ -5687,7 +5687,7 @@ msgid "netwait-background"
 msgstr "Op de achtergrond wachten"
 
 msgid "netwait-hint"
-msgstr "U kunt dit scherm verlaten: de activiteitsindicator neemt het over"
+msgstr "U kunt dit scherm verlaten: het activiteitsvenster neemt het over"
 
 msgid "activity-netwait-master"
 msgstr "Spel {name}: {players} speler(s)"
@@ -5715,4 +5715,119 @@ msgstr "Er wacht een netwerkspel. Opgeven?"
 
 msgid "netwait-abandon-explain"
 msgstr "Nee: het netwerkspel blijft op zijn spelers wachten"
+
+
+msgid "activity-sample"
+msgstr "Voorbeeld: voorbereiding 45 %"
+
+
+msgid "edit-screens-panel-buttons"
+msgstr "Knoppen en sneltoetsen"
+
+msgid "edit-screens-panel-theme"
+msgstr "Thema"
+
+msgid "theme-export"
+msgstr "Thema exporteren"
+
+msgid "theme-import"
+msgstr "Thema importeren"
+
+msgid "theme-export-home"
+msgstr "Op de kast (Persoonlijke map > Exports)"
+
+msgid "theme-export-none"
+msgstr "Dit thema heeft geen map om te exporteren"
+
+msgid "theme-export-running"
+msgstr "Er loopt al een export"
+
+msgid "theme-export-media"
+msgstr "Video's en geluiden van het thema meenemen ({size} MB)?"
+
+msgid "theme-export-media-explain"
+msgstr "Nee: een veel lichter bestand (kleuren, menu's, afbeeldingen en lettertype)"
+
+msgid "theme-export-started"
+msgstr "Thema wordt op de achtergrond geëxporteerd, naar:"
+
+msgid "activity-theme-export"
+msgstr "Thema {theme} exporteren"
+
+msgid "activity-theme-export-done"
+msgstr "Thema geëxporteerd: {file}"
+
+msgid "activity-theme-export-failed"
+msgstr "Exporteren van het thema mislukt (zie het logboek)"
+
+msgid "theme-import-zip"
+msgstr "Gezipte map importeren (.zip)"
+
+msgid "theme-import-folder"
+msgstr "Map importeren"
+
+msgid "theme-import-raspyhub"
+msgstr "Downloaden van Raspyhub"
+
+msgid "theme-import-raspyhub-soon"
+msgstr "Binnenkort: de thema's van Raspyhub zijn nog niet beschikbaar"
+
+msgid "theme-import-reading"
+msgstr "Thema wordt gelezen…"
+
+msgid "theme-import-not-theme"
+msgstr "Geen thema: geen bestand Colorset.cfg"
+
+msgid "theme-import-exists"
+msgstr "Thema {theme} bestaat al. Vervangen?"
+
+msgid "theme-import-exists-explain"
+msgstr "Ja: het oude wordt bewaard · Nee: het nieuwe krijgt een andere naam"
+
+msgid "theme-import-copying"
+msgstr "Thema wordt gekopieerd…"
+
+msgid "theme-import-failed"
+msgstr "Importeren mislukt (zie het logboek)"
+
+msgid "theme-import-use"
+msgstr "Thema {theme} geïmporteerd. Nu gebruiken?"
+
+msgid "explorer-pick-folder"
+msgstr "Deze map kiezen"
+
+msgid "animated-background-none-all"
+msgstr "Geen geanimeerde achtergrond"
+
+msgid "animated-background-scenes"
+msgstr "Geanimeerde achtergronden"
+
+msgid "animated-scene-none"
+msgstr "Geen"
+
+msgid "animated-scene-night-sky"
+msgstr "Sterrenhemel"
+
+msgid "animated-scene-starfield"
+msgstr "Reis door de sterren"
+
+msgid "animated-scene-logo-spin"
+msgstr "Draaiend logo"
+
+msgid "animated-scene-logo-bounce"
+msgstr "Stuiterend logo"
+
+msgid "animated-scene-shapes"
+msgstr "Geometrische vormen"
+
+msgid "animated-effect-hint"
+msgstr "Links / rechts: waarde wijzigen · Bevestigen: de lijst · Opslaan om te bewaren"
+
+
+msgid "animated-background-scenes-hint"
+msgstr "Getekend door de kast, zonder video: elk afgespeeld in het voorbeeld"
+
+
+msgid "explorer-holds-files"
+msgstr "{folders} mappen · {files} bestanden"
 

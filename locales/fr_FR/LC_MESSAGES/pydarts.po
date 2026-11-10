@@ -5551,7 +5551,7 @@ msgid "animated-background-help"
 msgstr "Le fond animé remplace le fond du thème sur les écrans avant les parties (la vidéo : pas sur ceux qui ont leur propre fond ; l'effet dessiné : sur tous, par-dessus leur fond). La vidéo est préparée une seule fois, en tâche de fond, en pause pendant les parties."
 
 msgid "animated-background-choose"
-msgstr "Vidéo du fond animé"
+msgstr "Fond animé : vidéo ou GIF animé, effet, fond dessiné"
 
 msgid "animated-background-copying"
 msgstr "Copie de la vidéo…"
@@ -5571,7 +5571,7 @@ msgstr "Auto (fixe)"
 
 
 msgid "activity_corner"
-msgstr "Indicateur d'activité"
+msgstr "Fenêtre d'activité"
 
 msgid "activity-corner-top-right"
 msgstr "En haut à droite"
@@ -5709,7 +5709,7 @@ msgid "netwait-background"
 msgstr "Attendre en tâche de fond"
 
 msgid "netwait-hint"
-msgstr "Vous pouvez quitter cet écran : l'indicateur d'activité prend le relais"
+msgstr "Vous pouvez quitter cet écran : la fenêtre d'activité prend le relais"
 
 msgid "activity-netwait-master"
 msgstr "Partie {name} : {players} joueur(s)"
@@ -5737,4 +5737,119 @@ msgstr "Une partie réseau est en attente. L'abandonner ?"
 
 msgid "netwait-abandon-explain"
 msgstr "Non : la partie réseau continue d'attendre ses joueurs"
+
+
+msgid "activity-sample"
+msgstr "Exemple : préparation 45 %"
+
+
+msgid "edit-screens-panel-buttons"
+msgstr "Boutons et raccourcis"
+
+msgid "edit-screens-panel-theme"
+msgstr "Thème"
+
+msgid "theme-export"
+msgstr "Exporter le thème"
+
+msgid "theme-import"
+msgstr "Importer un thème"
+
+msgid "theme-export-home"
+msgstr "Sur la borne (Dossier personnel > Exports)"
+
+msgid "theme-export-none"
+msgstr "Ce thème n'a pas de dossier à exporter"
+
+msgid "theme-export-running"
+msgstr "Un export est déjà en cours"
+
+msgid "theme-export-media"
+msgstr "Inclure les vidéos et les sons du thème ({size} Mo) ?"
+
+msgid "theme-export-media-explain"
+msgstr "Non : un fichier bien plus léger (couleurs, menus, images et police)"
+
+msgid "theme-export-started"
+msgstr "Export du thème en tâche de fond, vers :"
+
+msgid "activity-theme-export"
+msgstr "Export du thème {theme}"
+
+msgid "activity-theme-export-done"
+msgstr "Thème exporté : {file}"
+
+msgid "activity-theme-export-failed"
+msgstr "Export du thème impossible (voir le journal)"
+
+msgid "theme-import-zip"
+msgstr "Importer un dossier zippé (.zip)"
+
+msgid "theme-import-folder"
+msgstr "Importer un dossier"
+
+msgid "theme-import-raspyhub"
+msgstr "Télécharger depuis Raspyhub"
+
+msgid "theme-import-raspyhub-soon"
+msgstr "Bientôt : les thèmes de Raspyhub ne sont pas encore disponibles"
+
+msgid "theme-import-reading"
+msgstr "Lecture du thème…"
+
+msgid "theme-import-not-theme"
+msgstr "Ce n'est pas un thème : aucun fichier Colorset.cfg"
+
+msgid "theme-import-exists"
+msgstr "Le thème {theme} existe déjà. Le remplacer ?"
+
+msgid "theme-import-exists-explain"
+msgstr "Oui : l'ancien est gardé à côté · Non : le nouveau prend un autre nom"
+
+msgid "theme-import-copying"
+msgstr "Copie du thème…"
+
+msgid "theme-import-failed"
+msgstr "Import impossible (voir le journal)"
+
+msgid "theme-import-use"
+msgstr "Thème {theme} importé. L'utiliser maintenant ?"
+
+msgid "explorer-pick-folder"
+msgstr "Choisir ce dossier"
+
+msgid "animated-background-none-all"
+msgstr "Aucun fond animé"
+
+msgid "animated-background-scenes"
+msgstr "Fonds animés"
+
+msgid "animated-scene-none"
+msgstr "Aucun"
+
+msgid "animated-scene-night-sky"
+msgstr "Ciel étoilé"
+
+msgid "animated-scene-starfield"
+msgstr "Voyage dans les étoiles"
+
+msgid "animated-scene-logo-spin"
+msgstr "Logo qui tourne"
+
+msgid "animated-scene-logo-bounce"
+msgstr "Logo qui rebondit"
+
+msgid "animated-scene-shapes"
+msgstr "Formes géométriques"
+
+msgid "animated-effect-hint"
+msgstr "Gauche / droite : changer la valeur · Valider : la liste · Enregistrer pour garder"
+
+
+msgid "animated-background-scenes-hint"
+msgstr "Dessinés par la borne, sans vidéo : chacun joué dans l'aperçu"
+
+
+msgid "explorer-holds-files"
+msgstr "{folders} dossiers · {files} fichiers"
 

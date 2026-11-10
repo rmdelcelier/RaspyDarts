@@ -5475,7 +5475,7 @@ msgid "animated-background-help"
 msgstr "Der animierte Hintergrund ersetzt den Hintergrund des Themas auf den Bildschirmen vor den Spielen (das Video: nicht auf denen mit eigenem Hintergrund; der gezeichnete Effekt: auf allen, über ihrem Hintergrund). Das Video wird einmal im Hintergrund vorbereitet, während der Spiele pausiert."
 
 msgid "animated-background-choose"
-msgstr "Video des animierten Hintergrunds"
+msgstr "Animierter Hintergrund: Video oder animiertes GIF, Effekt, gezeichneter Hintergrund"
 
 msgid "animated-background-copying"
 msgstr "Video wird kopiert…"
@@ -5495,7 +5495,7 @@ msgstr "Auto (Standbild)"
 
 
 msgid "activity_corner"
-msgstr "Aktivitätsanzeige"
+msgstr "Aktivitätsfenster"
 
 msgid "activity-corner-top-right"
 msgstr "Oben rechts"
@@ -5633,7 +5633,7 @@ msgid "netwait-background"
 msgstr "Im Hintergrund warten"
 
 msgid "netwait-hint"
-msgstr "Sie können diesen Bildschirm verlassen: die Aktivitätsanzeige übernimmt"
+msgstr "Sie können diesen Bildschirm verlassen: das Aktivitätsfenster übernimmt"
 
 msgid "activity-netwait-master"
 msgstr "Spiel {name}: {players} Spieler"
@@ -5661,4 +5661,119 @@ msgstr "Ein Netzwerkspiel wartet. Abbrechen?"
 
 msgid "netwait-abandon-explain"
 msgstr "Nein: das Netzwerkspiel wartet weiter auf seine Spieler"
+
+
+msgid "activity-sample"
+msgstr "Beispiel: Vorbereitung 45 %"
+
+
+msgid "edit-screens-panel-buttons"
+msgstr "Tasten und Kürzel"
+
+msgid "edit-screens-panel-theme"
+msgstr "Thema"
+
+msgid "theme-export"
+msgstr "Thema exportieren"
+
+msgid "theme-import"
+msgstr "Thema importieren"
+
+msgid "theme-export-home"
+msgstr "Auf dem Automaten (Persönlicher Ordner > Exports)"
+
+msgid "theme-export-none"
+msgstr "Dieses Thema hat keinen Ordner zum Exportieren"
+
+msgid "theme-export-running"
+msgstr "Ein Export läuft bereits"
+
+msgid "theme-export-media"
+msgstr "Videos und Töne des Themas einschließen ({size} MB)?"
+
+msgid "theme-export-media-explain"
+msgstr "Nein: eine viel kleinere Datei (Farben, Menüs, Bilder und Schrift)"
+
+msgid "theme-export-started"
+msgstr "Thema wird im Hintergrund exportiert, nach:"
+
+msgid "activity-theme-export"
+msgstr "Export des Themas {theme}"
+
+msgid "activity-theme-export-done"
+msgstr "Thema exportiert: {file}"
+
+msgid "activity-theme-export-failed"
+msgstr "Export des Themas fehlgeschlagen (siehe Protokoll)"
+
+msgid "theme-import-zip"
+msgstr "Gezippten Ordner importieren (.zip)"
+
+msgid "theme-import-folder"
+msgstr "Ordner importieren"
+
+msgid "theme-import-raspyhub"
+msgstr "Von Raspyhub herunterladen"
+
+msgid "theme-import-raspyhub-soon"
+msgstr "Bald: die Themen von Raspyhub sind noch nicht verfügbar"
+
+msgid "theme-import-reading"
+msgstr "Thema wird gelesen…"
+
+msgid "theme-import-not-theme"
+msgstr "Kein Thema: keine Datei Colorset.cfg"
+
+msgid "theme-import-exists"
+msgstr "Das Thema {theme} existiert bereits. Ersetzen?"
+
+msgid "theme-import-exists-explain"
+msgstr "Ja: das alte wird aufbewahrt · Nein: das neue bekommt einen anderen Namen"
+
+msgid "theme-import-copying"
+msgstr "Thema wird kopiert…"
+
+msgid "theme-import-failed"
+msgstr "Import fehlgeschlagen (siehe Protokoll)"
+
+msgid "theme-import-use"
+msgstr "Thema {theme} importiert. Jetzt verwenden?"
+
+msgid "explorer-pick-folder"
+msgstr "Diesen Ordner wählen"
+
+msgid "animated-background-none-all"
+msgstr "Kein animierter Hintergrund"
+
+msgid "animated-background-scenes"
+msgstr "Animierte Hintergründe"
+
+msgid "animated-scene-none"
+msgstr "Keiner"
+
+msgid "animated-scene-night-sky"
+msgstr "Sternenhimmel"
+
+msgid "animated-scene-starfield"
+msgstr "Reise durch die Sterne"
+
+msgid "animated-scene-logo-spin"
+msgstr "Drehendes Logo"
+
+msgid "animated-scene-logo-bounce"
+msgstr "Springendes Logo"
+
+msgid "animated-scene-shapes"
+msgstr "Geometrische Formen"
+
+msgid "animated-effect-hint"
+msgstr "Links / rechts: Wert ändern · Bestätigen: die Liste · Speichern zum Behalten"
+
+
+msgid "animated-background-scenes-hint"
+msgstr "Vom Automaten gezeichnet, ohne Video: jeder in der Vorschau abgespielt"
+
+
+msgid "explorer-holds-files"
+msgstr "{folders} Ordner · {files} Dateien"
 

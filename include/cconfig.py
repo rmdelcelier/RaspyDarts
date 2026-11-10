@@ -104,6 +104,9 @@ DefaultConfig['SectionGlobals'] = {
     'animated_effect_color': 'auto',
     'animated_effect_amount': 'normal',
     'animated_effect_speed': 'normal',
+    # Animated background drawn (include/ceffects.py SCENES) : none, night-sky, starfield,
+    # logo-spin, logo-bounce, shapes
+    'animated_scene': 'none',
     # Corner of the activity indicator (include/cactivity.py) : top-right, top-left,
     # bottom-right, bottom-left
     'activity_corner': 'top-right',
@@ -1431,6 +1434,8 @@ class Config:
         self.conf += f"animated_effect_color:{Global.get('animated_effect_color', 'auto')}\n"
         self.conf += f"animated_effect_amount:{Global.get('animated_effect_amount', 'normal')}\n"
         self.conf += f"animated_effect_speed:{Global.get('animated_effect_speed', 'normal')}\n"
+        self.conf += "### Animated background drawn : none, night-sky, starfield, logo-spin, logo-bounce, shapes\n"
+        self.conf += f"animated_scene:{Global.get('animated_scene', 'none')}\n"
         self.conf += "### Corner of the activity indicator : top-right, top-left, bottom-right, bottom-left\n"
         self.conf += f"activity_corner:{Global.get('activity_corner', 'top-right')}\n"
         self.conf += "### An update downloaded : ask (restart now or at the next start), historic (installed at once)\n"

@@ -6865,7 +6865,7 @@ class Screen(pygame.Surface):
                     'music_source', 'music_volume',
                     # Animated background : in Modifier les écrans > Fond animé
                     'animated_background', 'animated_background_rate', 'animated_effect', 'animated_effect_color',
-                    'animated_effect_amount', 'animated_effect_speed'):
+                    'animated_effect_amount', 'animated_effect_speed', 'animated_scene'):
                 avoid.append([option, customization[option], '', 0, []])
                 continue
 
@@ -7058,6 +7058,15 @@ class Screen(pygame.Surface):
             # go back and next
             click_zones['escape'] = self.display_button(nb_elements + 1 == selected, 'back', special='escape')
             click_zones['save'] = self.display_button(nb_elements + 2 == selected, 'save', special='return')
+
+            # The window of activity : where it will be, an example in a yellow frame at the corner
+            # chosen (not saved yet), while its line is selected
+            sample = 1 <= selected <= nb_elements and selected_customization[selected - 1][0] == 'activity_corner'
+            if sample:
+                self.activities.sample(self.screen, selected_customization[selected - 1][1])
+            if sample or getattr(self, 'activity_sampled', False):
+                refresh = True
+            self.activity_sampled = sample
 
             if selected <= nb_elements:
                 selection = click_zones[f'F{selected}']

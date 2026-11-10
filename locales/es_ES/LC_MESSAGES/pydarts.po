@@ -5480,7 +5480,7 @@ msgid "animated-background-help"
 msgstr "El fondo animado sustituye al fondo del tema en las pantallas antes de las partidas (el vídeo: no en las que tienen fondo propio; el efecto dibujado: en todas, sobre su fondo). El vídeo se prepara una sola vez, en segundo plano, en pausa durante las partidas."
 
 msgid "animated-background-choose"
-msgstr "Vídeo del fondo animado"
+msgstr "Fondo animado: vídeo o GIF animado, efecto, fondo dibujado"
 
 msgid "animated-background-copying"
 msgstr "Copiando el vídeo…"
@@ -5500,7 +5500,7 @@ msgstr "Auto (fija)"
 
 
 msgid "activity_corner"
-msgstr "Indicador de actividad"
+msgstr "Ventana de actividad"
 
 msgid "activity-corner-top-right"
 msgstr "Arriba a la derecha"
@@ -5638,7 +5638,7 @@ msgid "netwait-background"
 msgstr "Esperar en segundo plano"
 
 msgid "netwait-hint"
-msgstr "Puede salir de esta pantalla: el indicador de actividad toma el relevo"
+msgstr "Puede salir de esta pantalla: la ventana de actividad toma el relevo"
 
 msgid "activity-netwait-master"
 msgstr "Partida {name}: {players} jugador(es)"
@@ -5666,4 +5666,119 @@ msgstr "Una partida en red está en espera. ¿Abandonarla?"
 
 msgid "netwait-abandon-explain"
 msgstr "No: la partida en red sigue esperando a sus jugadores"
+
+
+msgid "activity-sample"
+msgstr "Ejemplo: preparación 45 %"
+
+
+msgid "edit-screens-panel-buttons"
+msgstr "Botones y atajos"
+
+msgid "edit-screens-panel-theme"
+msgstr "Tema"
+
+msgid "theme-export"
+msgstr "Exportar el tema"
+
+msgid "theme-import"
+msgstr "Importar un tema"
+
+msgid "theme-export-home"
+msgstr "En la máquina (Carpeta personal > Exports)"
+
+msgid "theme-export-none"
+msgstr "Este tema no tiene carpeta que exportar"
+
+msgid "theme-export-running"
+msgstr "Ya hay una exportación en curso"
+
+msgid "theme-export-media"
+msgstr "¿Incluir los vídeos y sonidos del tema ({size} MB)?"
+
+msgid "theme-export-media-explain"
+msgstr "No: un archivo mucho más ligero (colores, menús, imágenes y fuente)"
+
+msgid "theme-export-started"
+msgstr "Exportando el tema en segundo plano, a:"
+
+msgid "activity-theme-export"
+msgstr "Exportando el tema {theme}"
+
+msgid "activity-theme-export-done"
+msgstr "Tema exportado: {file}"
+
+msgid "activity-theme-export-failed"
+msgstr "Exportación del tema imposible (ver el registro)"
+
+msgid "theme-import-zip"
+msgstr "Importar una carpeta comprimida (.zip)"
+
+msgid "theme-import-folder"
+msgstr "Importar una carpeta"
+
+msgid "theme-import-raspyhub"
+msgstr "Descargar desde Raspyhub"
+
+msgid "theme-import-raspyhub-soon"
+msgstr "Pronto: los temas de Raspyhub aún no están disponibles"
+
+msgid "theme-import-reading"
+msgstr "Leyendo el tema…"
+
+msgid "theme-import-not-theme"
+msgstr "No es un tema: ningún archivo Colorset.cfg"
+
+msgid "theme-import-exists"
+msgstr "El tema {theme} ya existe. ¿Sustituirlo?"
+
+msgid "theme-import-exists-explain"
+msgstr "Sí: el antiguo se guarda aparte · No: el nuevo recibe otro nombre"
+
+msgid "theme-import-copying"
+msgstr "Copiando el tema…"
+
+msgid "theme-import-failed"
+msgstr "Importación imposible (ver el registro)"
+
+msgid "theme-import-use"
+msgstr "Tema {theme} importado. ¿Usarlo ahora?"
+
+msgid "explorer-pick-folder"
+msgstr "Elegir esta carpeta"
+
+msgid "animated-background-none-all"
+msgstr "Sin fondo animado"
+
+msgid "animated-background-scenes"
+msgstr "Fondos animados"
+
+msgid "animated-scene-none"
+msgstr "Ninguno"
+
+msgid "animated-scene-night-sky"
+msgstr "Cielo estrellado"
+
+msgid "animated-scene-starfield"
+msgstr "Viaje entre las estrellas"
+
+msgid "animated-scene-logo-spin"
+msgstr "Logo que gira"
+
+msgid "animated-scene-logo-bounce"
+msgstr "Logo que rebota"
+
+msgid "animated-scene-shapes"
+msgstr "Formas geométricas"
+
+msgid "animated-effect-hint"
+msgstr "Izquierda / derecha: cambiar el valor · Validar: la lista · Guardar para conservar"
+
+
+msgid "animated-background-scenes-hint"
+msgstr "Dibujados por la máquina, sin vídeo: cada uno en la vista previa"
+
+
+msgid "explorer-holds-files"
+msgstr "{folders} carpetas · {files} archivos"
 

@@ -5542,7 +5542,7 @@ msgid "animated-background-help"
 msgstr "Lo sfondo animato sostituisce lo sfondo del tema nelle schermate prima delle partite (il video: non in quelle con uno sfondo proprio; l'effetto disegnato: in tutte, sopra il loro sfondo). Il video viene preparato una sola volta, in background, in pausa durante le partite."
 
 msgid "animated-background-choose"
-msgstr "Video dello sfondo animato"
+msgstr "Sfondo animato: video o GIF animata, effetto, sfondo disegnato"
 
 msgid "animated-background-copying"
 msgstr "Copia del video…"
@@ -5562,7 +5562,7 @@ msgstr "Auto (fissa)"
 
 
 msgid "activity_corner"
-msgstr "Indicatore di attività"
+msgstr "Finestra di attività"
 
 msgid "activity-corner-top-right"
 msgstr "In alto a destra"
@@ -5700,7 +5700,7 @@ msgid "netwait-background"
 msgstr "Attendere in background"
 
 msgid "netwait-hint"
-msgstr "Puoi lasciare questa schermata: l'indicatore di attività prende il testimone"
+msgstr "Puoi lasciare questa schermata: la finestra di attività prende il testimone"
 
 msgid "activity-netwait-master"
 msgstr "Partita {name}: {players} giocatore/i"
@@ -5728,4 +5728,119 @@ msgstr "Una partita in rete è in attesa. Abbandonarla?"
 
 msgid "netwait-abandon-explain"
 msgstr "No: la partita in rete continua ad attendere i giocatori"
+
+
+msgid "activity-sample"
+msgstr "Esempio: preparazione 45 %"
+
+
+msgid "edit-screens-panel-buttons"
+msgstr "Pulsanti e scorciatoie"
+
+msgid "edit-screens-panel-theme"
+msgstr "Tema"
+
+msgid "theme-export"
+msgstr "Esportare il tema"
+
+msgid "theme-import"
+msgstr "Importare un tema"
+
+msgid "theme-export-home"
+msgstr "Sulla macchina (Cartella personale > Exports)"
+
+msgid "theme-export-none"
+msgstr "Questo tema non ha una cartella da esportare"
+
+msgid "theme-export-running"
+msgstr "Un'esportazione è già in corso"
+
+msgid "theme-export-media"
+msgstr "Includere i video e i suoni del tema ({size} MB)?"
+
+msgid "theme-export-media-explain"
+msgstr "No: un file molto più leggero (colori, menu, immagini e font)"
+
+msgid "theme-export-started"
+msgstr "Esportazione del tema in background, verso:"
+
+msgid "activity-theme-export"
+msgstr "Esportazione del tema {theme}"
+
+msgid "activity-theme-export-done"
+msgstr "Tema esportato: {file}"
+
+msgid "activity-theme-export-failed"
+msgstr "Esportazione del tema non riuscita (vedi il log)"
+
+msgid "theme-import-zip"
+msgstr "Importare una cartella compressa (.zip)"
+
+msgid "theme-import-folder"
+msgstr "Importare una cartella"
+
+msgid "theme-import-raspyhub"
+msgstr "Scaricare da Raspyhub"
+
+msgid "theme-import-raspyhub-soon"
+msgstr "Presto: i temi di Raspyhub non sono ancora disponibili"
+
+msgid "theme-import-reading"
+msgstr "Lettura del tema…"
+
+msgid "theme-import-not-theme"
+msgstr "Non è un tema: nessun file Colorset.cfg"
+
+msgid "theme-import-exists"
+msgstr "Il tema {theme} esiste già. Sostituirlo?"
+
+msgid "theme-import-exists-explain"
+msgstr "Sì: il vecchio viene conservato · No: il nuovo prende un altro nome"
+
+msgid "theme-import-copying"
+msgstr "Copia del tema…"
+
+msgid "theme-import-failed"
+msgstr "Importazione non riuscita (vedi il log)"
+
+msgid "theme-import-use"
+msgstr "Tema {theme} importato. Usarlo ora?"
+
+msgid "explorer-pick-folder"
+msgstr "Scegliere questa cartella"
+
+msgid "animated-background-none-all"
+msgstr "Nessuno sfondo animato"
+
+msgid "animated-background-scenes"
+msgstr "Sfondi animati"
+
+msgid "animated-scene-none"
+msgstr "Nessuno"
+
+msgid "animated-scene-night-sky"
+msgstr "Cielo stellato"
+
+msgid "animated-scene-starfield"
+msgstr "Viaggio tra le stelle"
+
+msgid "animated-scene-logo-spin"
+msgstr "Logo che gira"
+
+msgid "animated-scene-logo-bounce"
+msgstr "Logo che rimbalza"
+
+msgid "animated-scene-shapes"
+msgstr "Forme geometriche"
+
+msgid "animated-effect-hint"
+msgstr "Sinistra / destra: cambiare il valore · Convalidare: l'elenco · Salvare per tenerlo"
+
+
+msgid "animated-background-scenes-hint"
+msgstr "Disegnati dalla macchina, senza video: ognuno nell'anteprima"
+
+
+msgid "explorer-holds-files"
+msgstr "{folders} cartelle · {files} file"
 

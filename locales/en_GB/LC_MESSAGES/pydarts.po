@@ -5747,7 +5747,7 @@ msgid "animated-background-help"
 msgstr "The animated background replaces the background of the theme on the screens before the games (the video: not on those with a background of their own; the drawn effect: on all of them, over their background). The video is prepared once, in the background, paused during the games."
 
 msgid "animated-background-choose"
-msgstr "Video of the animated background"
+msgstr "Animated background: video or animated GIF, effect, drawn background"
 
 msgid "animated-background-copying"
 msgstr "Copying the video…"
@@ -5767,7 +5767,7 @@ msgstr "Auto (still)"
 
 
 msgid "activity_corner"
-msgstr "Activity indicator"
+msgstr "Activity window"
 
 msgid "activity-corner-top-right"
 msgstr "Top right"
@@ -5905,7 +5905,7 @@ msgid "netwait-background"
 msgstr "Wait in the background"
 
 msgid "netwait-hint"
-msgstr "You can leave this screen: the activity indicator takes over"
+msgstr "You can leave this screen: the activity window takes over"
 
 msgid "activity-netwait-master"
 msgstr "Game {name}: {players} player(s)"
@@ -5933,4 +5933,119 @@ msgstr "A network game is waiting. Give it up?"
 
 msgid "netwait-abandon-explain"
 msgstr "No: the network game goes on waiting for its players"
+
+
+msgid "activity-sample"
+msgstr "Example: preparing 45 %"
+
+
+msgid "edit-screens-panel-buttons"
+msgstr "Buttons and shortcuts"
+
+msgid "edit-screens-panel-theme"
+msgstr "Theme"
+
+msgid "theme-export"
+msgstr "Export the theme"
+
+msgid "theme-import"
+msgstr "Import a theme"
+
+msgid "theme-export-home"
+msgstr "On the cabinet (Home folder > Exports)"
+
+msgid "theme-export-none"
+msgstr "This theme has no folder to export"
+
+msgid "theme-export-running"
+msgstr "An export is already running"
+
+msgid "theme-export-media"
+msgstr "Include the videos and sounds of the theme ({size} MB)?"
+
+msgid "theme-export-media-explain"
+msgstr "No: a much lighter file (colours, menus, images and font)"
+
+msgid "theme-export-started"
+msgstr "Exporting the theme in the background, to:"
+
+msgid "activity-theme-export"
+msgstr "Exporting theme {theme}"
+
+msgid "activity-theme-export-done"
+msgstr "Theme exported: {file}"
+
+msgid "activity-theme-export-failed"
+msgstr "Theme export failed (see the log)"
+
+msgid "theme-import-zip"
+msgstr "Import a zipped folder (.zip)"
+
+msgid "theme-import-folder"
+msgstr "Import a folder"
+
+msgid "theme-import-raspyhub"
+msgstr "Download from Raspyhub"
+
+msgid "theme-import-raspyhub-soon"
+msgstr "Soon: the themes of Raspyhub are not available yet"
+
+msgid "theme-import-reading"
+msgstr "Reading the theme…"
+
+msgid "theme-import-not-theme"
+msgstr "Not a theme: no Colorset.cfg file"
+
+msgid "theme-import-exists"
+msgstr "Theme {theme} already exists. Replace it?"
+
+msgid "theme-import-exists-explain"
+msgstr "Yes: the old one is kept aside · No: the new one gets another name"
+
+msgid "theme-import-copying"
+msgstr "Copying the theme…"
+
+msgid "theme-import-failed"
+msgstr "Import failed (see the log)"
+
+msgid "theme-import-use"
+msgstr "Theme {theme} imported. Use it now?"
+
+msgid "explorer-pick-folder"
+msgstr "Choose this folder"
+
+msgid "animated-background-none-all"
+msgstr "No animated background"
+
+msgid "animated-background-scenes"
+msgstr "Animated backgrounds"
+
+msgid "animated-scene-none"
+msgstr "None"
+
+msgid "animated-scene-night-sky"
+msgstr "Starry sky"
+
+msgid "animated-scene-starfield"
+msgstr "Travel among the stars"
+
+msgid "animated-scene-logo-spin"
+msgstr "Spinning logo"
+
+msgid "animated-scene-logo-bounce"
+msgstr "Bouncing logo"
+
+msgid "animated-scene-shapes"
+msgstr "Geometric shapes"
+
+msgid "animated-effect-hint"
+msgstr "Left / right: change the value · Validate: the list · Save to keep it"
+
+
+msgid "animated-background-scenes-hint"
+msgstr "Drawn by the cabinet, no video: each played in the preview"
+
+
+msgid "explorer-holds-files"
+msgstr "{folders} folders · {files} files"
 
