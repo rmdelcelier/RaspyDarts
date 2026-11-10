@@ -5790,3 +5790,16 @@ msgstr "In diesen Ordner kann nicht geschrieben werden"
 msgid "theme-import-hint"
 msgstr "Eine .zip-Datei, oder einen Ordner öffnen und dann « Diesen Ordner wählen »"
 
+
+msgid "explorer-theme-videos"
+msgstr "Videos des Themas"
+
+msgid "explorer-my-videos"
+msgstr "Meine animierten Hintergründe"
+
+msgid "explorer-empty-files"
+msgstr "Nichts zu wählen in diesem Ordner"
+
+msgid "explorer-empty-pick"
+msgstr "Kein Unterordner: « Diesen Ordner wählen », um ihn zu nehmen"
+

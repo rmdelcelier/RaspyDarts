@@ -6062,3 +6062,16 @@ msgstr "This folder cannot be written"
 msgid "theme-import-hint"
 msgstr "A .zip file, or a folder opened then « Choose this folder »"
 
+
+msgid "explorer-theme-videos"
+msgstr "Videos of the theme"
+
+msgid "explorer-my-videos"
+msgstr "My animated backgrounds"
+
+msgid "explorer-empty-files"
+msgstr "Nothing to choose in this folder"
+
+msgid "explorer-empty-pick"
+msgstr "No folder inside: « Choose this folder » to take it"
+

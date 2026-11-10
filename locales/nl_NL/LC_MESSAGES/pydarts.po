@@ -5844,3 +5844,16 @@ msgstr "Kan niet in deze map schrijven"
 msgid "theme-import-hint"
 msgstr "Een .zip-bestand, of een geopende map en dan « Deze map kiezen »"
 
+
+msgid "explorer-theme-videos"
+msgstr "Video's van het thema"
+
+msgid "explorer-my-videos"
+msgstr "Mijn geanimeerde achtergronden"
+
+msgid "explorer-empty-files"
+msgstr "Niets te kiezen in deze map"
+
+msgid "explorer-empty-pick"
+msgstr "Geen submap: « Deze map kiezen » om hem te nemen"
+

@@ -83,12 +83,15 @@ class Preview:
 
 class EffectPreview(Preview):
     '''
-    A drawn effect over the background of the menus
+    A drawn effect over the background of the menus, or over the animated background chosen
+    (what it gives on the screen)
     '''
 
-    def __init__(self, screen, box, settings):
+    def __init__(self, screen, box, settings, scene='none'):
         super().__init__(screen, box)
-        self.base = menu_background(screen, self.box.size)
+        self.scene_name = scene
+        self.scene = ceffects.make_scene(scene, self.box.size, LOGO, theme_color=screen.colorset.get('menu-selected'))
+        self.base = self.scene.background() if self.scene is not None else menu_background(screen, self.box.size)
         self.settings = None
         self.effect = None
         self.set(settings)
@@ -98,17 +101,24 @@ class EffectPreview(Preview):
             self.settings = settings
             self.still = False
             name, color, amount, speed = settings
+            # As big as on the screen (the box is smaller : the particles would be barely seen)
             self.effect = ceffects.make(name, self.box.size, color, amount, speed,
-                                        theme_color=self.screen.colorset.get('menu-selected'))
+                                        theme_color=self.screen.colorset.get('menu-selected'), scale=0.8)
 
     def caption(self, translate):
-        return translate(f'animated-effect-{self.settings[0]}')
+        text = translate(f'animated-effect-{self.settings[0]}')
+        if self.scene is not None:
+            text = f"{translate('animated-scene-' + self.scene_name)} + {text}"
+        return text
 
     def frame(self, elapsed):
-        if self.effect is None and getattr(self, 'still', False):
+        if self.effect is None and self.scene is None and getattr(self, 'still', False):
             return False
         self.still = self.effect is None
         self.surface.blit(self.base, (0, 0))
+        if self.scene is not None:
+            self.scene.step(elapsed)
+            self.scene.draw(self.surface)
         if self.effect is not None:
             self.effect.step(elapsed)
             self.effect.draw(self.surface)
@@ -205,34 +215,36 @@ def choose(screen, keys):
         scene = str(globals_.get('animated_scene') or 'none')
         settings = settings_of(screen)
         rate = str(globals_.get('animated_background_rate') or 'auto')
+        # What it gives : the animated background drawn with the effect over it
+        shown_scene = scene if not video else 'none'
         extras = [
             ('none', translate('animated-background-none-all'), None,
              lambda screen_, box: ScenePreview(screen_, box, 'none')),
             ('effect', f"{translate('animated-background-effect')} : {translate('animated-effect-' + settings[0])}", None,
-             lambda screen_, box: EffectPreview(screen_, box, settings)),
+             lambda screen_, box: EffectPreview(screen_, box, settings, shown_scene)),
             ('scenes', f"{translate('animated-background-scenes')} : {translate('animated-scene-' + scene)}", None,
-             lambda screen_, box: ScenePreview(screen_, box, scene if scene != 'none' else 'night-sky')),
+             lambda screen_, box: EffectPreview(screen_, box, settings, scene if scene != 'none' else 'night-sky')),
             ('rate', f"{translate('animated-background-rate')} : {cmenueditor.rate_text(screen, rate, short=True)}", None,
              lambda screen_, box: StatusPreview(screen_, box)),
         ]
+        # Opened on the background of the moment
+        initial = 'scenes' if scene != 'none' and not video else ('effect' if settings[0] != 'none' and not video else None)
         chosen = cexplorer.explore(screen, translate('animated-background-choose'), video or None, extras,
-                                   kinds=cexplorer.VIDEOS)
+                                   kinds=cexplorer.VIDEOS, initial=initial)
         if chosen is None:
             return
         if chosen == 'none':
             save(screen, animated_background='', animated_scene='none', animated_effect='none')
-            return
-        if chosen == 'effect':
+        elif chosen == 'effect':
             effect_screen(screen, keys)
         elif chosen == 'scenes':
             picked = cexplorer.explore(screen, translate('animated-background-scenes'), None,
                                        [(name, translate(f'animated-scene-{name}'), None,
-                                         (lambda name_: lambda screen_, box: ScenePreview(screen_, box, name_))(name))
+                                         (lambda name_: lambda screen_, box: EffectPreview(screen_, box, settings, name_))(name))
                                         for name in ceffects.SCENES if name != 'none'], places_shown=False,
-                                       subtitle=translate('animated-background-scenes-hint'))
+                                       subtitle=translate('animated-background-scenes-hint'), initial=scene)
             if picked:
                 save(screen, animated_scene=picked, animated_background='')
-                return
         elif chosen == 'rate':
             choices = ['auto'] + (['30', '20', '10'] if screen.bganim.machine['memory'] else []) + ['still']
             picked = screen.dropdown(screen.res['x'] * 6 / 16, 3 * screen.res_y_16,
@@ -246,7 +258,6 @@ def choose(screen, keys):
                 screen.message([translate('editor-import-failed')], 2500, 'menu-ko', 'middle', 'big')
                 continue
             save(screen, animated_background=kept, animated_scene='none')
-            return
 
 
 def effect_screen(screen, keys):
@@ -263,7 +274,9 @@ def effect_screen(screen, keys):
     selected = 0
     unit_x, unit_y = screen.res['x'] / 16, screen.res['y'] / 16
     box = pygame.Rect(int(8.6 * unit_x), int(2.6 * unit_y), int(6.6 * unit_x), int(8.6 * unit_y))
-    preview = EffectPreview(screen, box.inflate(-int(unit_x / 3), -int(unit_y / 3)), tuple(work))
+    globals_ = screen.config.config['SectionGlobals']
+    scene = 'none' if globals_.get('animated_background') else str(globals_.get('animated_scene') or 'none')
+    preview = EffectPreview(screen, box.inflate(-int(unit_x / 3), -int(unit_y / 3)), tuple(work), scene)
     screen.idle_hook = preview.tick
     try:
         while True:
@@ -276,6 +289,11 @@ def effect_screen(screen, keys):
                 selected, key = clicked, 'enter'
             if key in keys['escape']:
                 return
+            # The wheel of a knob : from a line to the next (its press : the list of the line)
+            if key == 'BTN_RIGHT':
+                key = 'down'
+            elif key == 'BTN_LEFT':
+                key = 'up'
             if key in DOWN_KEYS:
                 selected = (selected + 1) % (rows + 2)
             elif key in UP_KEYS:

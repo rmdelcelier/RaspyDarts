@@ -5866,3 +5866,16 @@ msgstr "Impossible d'écrire dans ce dossier"
 msgid "theme-import-hint"
 msgstr "Un fichier .zip, ou un dossier ouvert puis « Choisir ce dossier »"
 
+
+msgid "explorer-theme-videos"
+msgstr "Vidéos du thème"
+
+msgid "explorer-my-videos"
+msgstr "Mes fonds animés"
+
+msgid "explorer-empty-files"
+msgstr "Rien à choisir dans ce dossier"
+
+msgid "explorer-empty-pick"
+msgstr "Aucun sous-dossier : « Choisir ce dossier » pour le prendre"
+

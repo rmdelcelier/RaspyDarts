@@ -5857,3 +5857,16 @@ msgstr "Impossibile scrivere in questa cartella"
 msgid "theme-import-hint"
 msgstr "Un file .zip, o una cartella aperta poi « Scegliere questa cartella »"
 
+
+msgid "explorer-theme-videos"
+msgstr "Video del tema"
+
+msgid "explorer-my-videos"
+msgstr "I miei sfondi animati"
+
+msgid "explorer-empty-files"
+msgstr "Niente da scegliere in questa cartella"
+
+msgid "explorer-empty-pick"
+msgstr "Nessuna sottocartella: « Scegliere questa cartella » per prenderla"
+

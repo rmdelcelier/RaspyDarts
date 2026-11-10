@@ -22,7 +22,7 @@ AMOUNTS = {'few': 40, 'normal': 80, 'many': 150}
 SPEEDS = {'slow': 0.5, 'normal': 1.0, 'fast': 1.8}
 
 
-def make(name, size, color='auto', amount='normal', speed='normal', theme_color=None):
+def make(name, size, color='auto', amount='normal', speed='normal', theme_color=None, scale=None):
     '''
     The effect of this name for a screen of this size, None : none
     '''
@@ -33,7 +33,8 @@ def make(name, size, color='auto', amount='normal', speed='normal', theme_color=
     chosen = COLORS.get(str(color), None)
     if chosen == 'theme':
         chosen = tuple(theme_color[:3]) if theme_color else None
-    return kind(size, chosen, AMOUNTS.get(str(amount), 80), SPEEDS.get(str(speed), 1.0))
+    effect = kind(size, chosen, AMOUNTS.get(str(amount), 80), SPEEDS.get(str(speed), 1.0), scale)
+    return effect
 
 
 class Effect:
@@ -42,11 +43,12 @@ class Effect:
     '''
     PALETTE = ((255, 255, 255),)
 
-    def __init__(self, size, color, amount, speed):
+    def __init__(self, size, color, amount, speed, scale=None):
         self.width, self.height = size
         self.color = color
         self.speed = speed
-        self.scale = self.height / 1080
+        # Size of the particles : that of the screen, or given (a small preview)
+        self.scale = max(self.height / 1080, scale or 0)
         self.particles = [self.new(first=True) for _ in range(amount)]
 
     def tint(self):
@@ -162,7 +164,7 @@ class Fireflies(Effect):
     def new(self, first=False):
         angle = random.uniform(0, math.tau)
         return [random.uniform(0, self.width), random.uniform(0, self.height), math.cos(angle) * 0.03,
-                math.sin(angle) * 0.03, random.uniform(2, 4.5) * self.scale + 1, self.tint(), random.uniform(0, 6)]
+                math.sin(angle) * 0.03, random.uniform(3, 6) * self.scale + 1.5, self.tint(), random.uniform(0, 6)]
 
     def move(self, particle, elapsed):
         # Turning a little now and then ; back inside at the edges
@@ -179,7 +181,7 @@ class Fireflies(Effect):
         return False
 
     def shade(self, particle):
-        light = 0.25 + 0.75 * (0.5 + 0.5 * math.sin(particle[6] * 2.2))
+        light = 0.45 + 0.55 * (0.5 + 0.5 * math.sin(particle[6] * 2.2))
         return tuple(int(value * light) for value in particle[5])
 
 

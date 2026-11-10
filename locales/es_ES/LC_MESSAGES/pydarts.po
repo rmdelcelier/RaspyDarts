@@ -5795,3 +5795,16 @@ msgstr "No se puede escribir en esta carpeta"
 msgid "theme-import-hint"
 msgstr "Un archivo .zip, o una carpeta abierta y luego « Elegir esta carpeta »"
 
+
+msgid "explorer-theme-videos"
+msgstr "Vídeos del tema"
+
+msgid "explorer-my-videos"
+msgstr "Mis fondos animados"
+
+msgid "explorer-empty-files"
+msgstr "Nada que elegir en esta carpeta"
+
+msgid "explorer-empty-pick"
+msgstr "Ninguna subcarpeta: « Elegir esta carpeta » para tomarla"
+

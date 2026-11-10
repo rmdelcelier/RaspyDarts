@@ -34,16 +34,24 @@ ICONS = {'dir': '\U0001F4C1', 'open': '\U0001F4C2', 'file': '\U0001F5BC', 'extra
          'rate': '\u23F1', 'scene': '\U0001F320'}
 
 
-def places(screen, translate):
+def places(screen, translate, kinds=IMAGES):
     '''
-    The first list : the folders of images of the theme, of ~/.raspydarts and of the game, the
-    USB keys, the home, the whole card
+    The first list : the folders of images of the theme, of ~/.raspydarts and of the game (the
+    videos of the theme for the videos ; none for a path or a zip), the USB keys, the home, the
+    whole card
     '''
     found = []
     theme_dir = getattr(screen.file_class, 'theme_dir', None)
-    for path, label, icon in ((os.path.join(theme_dir, 'images') if theme_dir else None, 'explorer-theme-images', 'theme'),
-                              (os.path.join(cpaths.user_dir(), 'images'), 'explorer-my-images', 'mine'),
-                              (os.path.join(cpaths.ROOT_DIR, 'images'), 'explorer-game-images', 'game')):
+    if kinds == IMAGES:
+        folders = ((os.path.join(theme_dir, 'images') if theme_dir else None, 'explorer-theme-images', 'theme'),
+                   (os.path.join(cpaths.user_dir(), 'images'), 'explorer-my-images', 'mine'),
+                   (os.path.join(cpaths.ROOT_DIR, 'images'), 'explorer-game-images', 'game'))
+    elif kinds == VIDEOS:
+        folders = ((os.path.join(theme_dir, 'videos') if theme_dir else None, 'explorer-theme-videos', 'theme'),
+                   (os.path.join(cpaths.user_dir(), 'images', 'fond_anime'), 'explorer-my-videos', 'mine'))
+    else:
+        folders = ()
+    for path, label, icon in folders:
         if path and os.path.isdir(path):
             found.append({'kind': 'dir', 'path': path, 'label': translate(label), 'icon': icon})
     for base in MOUNTS:
@@ -88,7 +96,8 @@ def loops(entry, folder):
     return here == target or here.startswith(target.rstrip(os.sep) + os.sep)
 
 
-def explore(screen, title, current=None, extra=(), kinds=IMAGES, pick_folder=False, places_shown=True, subtitle=None):
+def explore(screen, title, current=None, extra=(), kinds=IMAGES, pick_folder=False, places_shown=True, subtitle=None,
+            initial=None):
     '''
     An image chosen : its full path ; or the id of one of the extra choices given first
     ((id, text[, image shown]) : the one of the theme, none...) ; None : given up. current : the
@@ -102,11 +111,12 @@ def explore(screen, title, current=None, extra=(), kinds=IMAGES, pick_folder=Fal
     translate = screen.lang.translate
     previews = {'kinds': kinds, 'subtitle': subtitle, 'pick': pick_folder}
     folder = root = None
-    selected = 0
+    # An extra choice selected first (initial : its id)
+    selected = next((index for index, choice in enumerate(extra) if choice[0] == initial), 0)
     if current and os.path.isfile(current):
         folder = os.path.dirname(current)
         # Its place : the deepest one holding it
-        holding = [place['path'] for place in places(screen, translate)
+        holding = [place['path'] for place in places(screen, translate, kinds)
                    if folder == place['path'] or folder.startswith(place['path'].rstrip(os.sep) + os.sep)]
         root = max(holding, key=len) if holding else os.sep
     try:
@@ -134,7 +144,7 @@ def browse(screen, title, current, extra, kinds, previews, folder, root, selecte
                         'icon': choice[0] if choice[0] in ICONS else ('scene' if len(choice) > 3 and choice[3] else None)}
                        for choice in extra]
             if places_shown:
-                entries += places(screen, translate)
+                entries += places(screen, translate, kinds)
         else:
             entries = listing(folder, translate, kinds)
             if current:
@@ -166,6 +176,11 @@ def browse(screen, title, current, extra, kinds, previews, folder, root, selecte
             else:
                 selected = clicked
                 continue
+        # The wheel of a knob : the lines (its press opens, held : back)
+        if key == 'BTN_RIGHT':
+            key = 'down'
+        elif key == 'BTN_LEFT':
+            key = 'up'
         entry = entries[selected] if selected < len(entries) else None
         if picking and selected == len(entries) and key in ENTER_KEYS + ['space']:
             return folder
@@ -183,7 +198,7 @@ def browse(screen, title, current, extra, kinds, previews, folder, root, selecte
             current_folder = folder
             if folder == root or folder == os.sep:
                 folder = root = None
-                selected = next((index for index, item in enumerate(places(screen, translate))
+                selected = next((index for index, item in enumerate(places(screen, translate, kinds))
                                  if item['path'] == current_folder), 0) + len(extra)
             else:
                 folder = os.path.dirname(folder.rstrip(os.sep)) or os.sep
@@ -259,6 +274,7 @@ def draw(screen, title, folder, entries, selected, previews, translate):
     # The list
     picking = previews.get('pick') and folder is not None
     top = max(0, min(min(selected, len(entries) - 1) - ROWS // 2, len(entries) - ROWS))
+    unit_x, unit_y = res_x / 16, res_y / 16
     line_h = int(unit_y * 0.9)
     for row, index in enumerate(range(top, min(top + ROWS, len(entries)))):
         entry = entries[index]
@@ -280,7 +296,10 @@ def draw(screen, title, folder, entries, selected, previews, translate):
                              colorset['menu-text-white'] if chosen else colorset['menu-text-black'], align='Left')
         zones[index] = tuple(rect)
     if not entries or all(entry['kind'] == 'up' for entry in entries):
-        screen.blit_text(translate('explorer-empty'), int(unit_x), int(4.5 * unit_y), int(7 * unit_x), int(unit_y),
+        # Nothing to choose here : said for what is looked for
+        kinds = previews.get('kinds', IMAGES)
+        empty = 'explorer-empty' if kinds == IMAGES else ('explorer-empty-pick' if picking else 'explorer-empty-files')
+        screen.blit_text(translate(empty), int(unit_x), int(4.5 * unit_y), int(7 * unit_x), int(unit_y),
                          colorset['menu-text-white'])
     # The preview
     box = pygame.Rect(int(8.5 * unit_x), int(3.2 * unit_y), int(6.5 * unit_x), int(8.8 * unit_y))

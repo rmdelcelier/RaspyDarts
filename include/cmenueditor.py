@@ -1419,7 +1419,13 @@ def screens_menu(screen, keys):
         first, second = len(panels[0]), len(panels[1])
         if key in keys['escape']:
             return
-        if key in DOWN_KEYS:
+        # The wheel of a knob (BTN_LEFT / BTN_RIGHT) : the lines in reading order, as in the
+        # other screens ; the arrows of a keyboard : from a panel to the other
+        if key == 'BTN_RIGHT':
+            selected = (selected + 1) % len(entries)
+        elif key == 'BTN_LEFT':
+            selected = (selected - 1) % len(entries)
+        elif key in DOWN_KEYS:
             selected = (selected + 1) % len(entries)
         elif key in UP_KEYS:
             selected = (selected - 1) % len(entries)
