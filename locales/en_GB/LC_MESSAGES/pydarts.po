@@ -5697,3 +5697,71 @@ msgstr "Maximum (pill)"
 
 msgid "theme-origin-value"
 msgstr "Value of the theme"
+
+msgid "animated-background"
+msgstr "Animated background"
+
+msgid "animated-background-video"
+msgstr "Video"
+
+msgid "animated-background-rate"
+msgstr "Frame rate"
+
+msgid "animated-background-none"
+msgstr "None"
+
+msgid "animated-background-still"
+msgstr "Still picture"
+
+msgid "animated-background-auto"
+msgstr "Automatic ({rate} frames/s on this Pi)"
+
+msgid "animated-background-auto-still"
+msgstr "Automatic (still picture on this Pi)"
+
+msgid "animated-background-fps"
+msgstr "{rate} frames/s"
+
+msgid "animated-background-preparing"
+msgstr "Preparing the video: {percent} % (meanwhile: a still picture)"
+
+msgid "animated-background-ready"
+msgstr "Ready: {frames} frames, {seconds} s looping"
+
+msgid "animated-background-cut"
+msgstr "(the first {seconds} seconds of the video)"
+
+msgid "animated-background-state-none"
+msgstr "No animated background: the background of the theme"
+
+msgid "animated-background-state-still"
+msgstr "A still picture of the video"
+
+msgid "animated-background-state-failed"
+msgstr "Unreadable video (see logs/raspydarts.log): a still picture instead"
+
+msgid "animated-background-state-preparing"
+msgstr "Preparing the video…"
+
+msgid "animated-background-help"
+msgstr "The animated background replaces the background of the theme on the screens before the games (not on those with a background of their own). The video is prepared once, in the background: the game stays usable, the preparation stops during the games."
+
+msgid "animated-background-choose"
+msgstr "Video of the animated background"
+
+msgid "animated-background-copying"
+msgstr "Copying the video…"
+
+msgid "explorer-holds-videos"
+msgstr "{folders} folders · {videos} videos"
+
+msgid "explorer-video-loading"
+msgstr "loading the preview…"
+
+
+msgid "animated-background-auto-short"
+msgstr "Auto ({rate}/s)"
+
+msgid "animated-background-auto-still-short"
+msgstr "Auto (still)"
+

@@ -5479,3 +5479,71 @@ msgstr "Maximaal (pil)"
 
 msgid "theme-origin-value"
 msgstr "Waarde van het thema"
+
+msgid "animated-background"
+msgstr "Geanimeerde achtergrond"
+
+msgid "animated-background-video"
+msgstr "Video"
+
+msgid "animated-background-rate"
+msgstr "Beeldsnelheid"
+
+msgid "animated-background-none"
+msgstr "Geen"
+
+msgid "animated-background-still"
+msgstr "Stilstaand beeld"
+
+msgid "animated-background-auto"
+msgstr "Automatisch ({rate} beelden/s op deze Pi)"
+
+msgid "animated-background-auto-still"
+msgstr "Automatisch (stilstaand beeld op deze Pi)"
+
+msgid "animated-background-fps"
+msgstr "{rate} beelden/s"
+
+msgid "animated-background-preparing"
+msgstr "Video wordt voorbereid: {percent} % (intussen: een stilstaand beeld)"
+
+msgid "animated-background-ready"
+msgstr "Klaar: {frames} beelden, {seconds} s in een lus"
+
+msgid "animated-background-cut"
+msgstr "(de eerste {seconds} seconden van de video)"
+
+msgid "animated-background-state-none"
+msgstr "Geen geanimeerde achtergrond: de achtergrond van het thema"
+
+msgid "animated-background-state-still"
+msgstr "Een stilstaand beeld uit de video"
+
+msgid "animated-background-state-failed"
+msgstr "Onleesbare video (zie logs/raspydarts.log): in plaats daarvan een stilstaand beeld"
+
+msgid "animated-background-state-preparing"
+msgstr "Video wordt voorbereid…"
+
+msgid "animated-background-help"
+msgstr "De geanimeerde achtergrond vervangt de achtergrond van het thema op de schermen vóór de spellen (niet op schermen met een eigen achtergrond). De video wordt één keer op de achtergrond voorbereid: het spel blijft bruikbaar, de voorbereiding stopt tijdens de spellen."
+
+msgid "animated-background-choose"
+msgstr "Video van de geanimeerde achtergrond"
+
+msgid "animated-background-copying"
+msgstr "Video wordt gekopieerd…"
+
+msgid "explorer-holds-videos"
+msgstr "{folders} mappen · {videos} video's"
+
+msgid "explorer-video-loading"
+msgstr "voorbeeld wordt geladen…"
+
+
+msgid "animated-background-auto-short"
+msgstr "Auto ({rate}/s)"
+
+msgid "animated-background-auto-still-short"
+msgstr "Auto (stilstaand)"
+

@@ -5492,3 +5492,71 @@ msgstr "Massimo (pillola)"
 
 msgid "theme-origin-value"
 msgstr "Valore del tema"
+
+msgid "animated-background"
+msgstr "Sfondo animato"
+
+msgid "animated-background-video"
+msgstr "Video"
+
+msgid "animated-background-rate"
+msgstr "Fotogrammi"
+
+msgid "animated-background-none"
+msgstr "Nessuno"
+
+msgid "animated-background-still"
+msgstr "Immagine fissa"
+
+msgid "animated-background-auto"
+msgstr "Automatico ({rate} immagini/s su questo Pi)"
+
+msgid "animated-background-auto-still"
+msgstr "Automatico (immagine fissa su questo Pi)"
+
+msgid "animated-background-fps"
+msgstr "{rate} immagini/s"
+
+msgid "animated-background-preparing"
+msgstr "Preparazione del video: {percent} % (nel frattempo: un'immagine fissa)"
+
+msgid "animated-background-ready"
+msgstr "Pronto: {frames} immagini, {seconds} s in loop"
+
+msgid "animated-background-cut"
+msgstr "(i primi {seconds} secondi del video)"
+
+msgid "animated-background-state-none"
+msgstr "Nessuno sfondo animato: lo sfondo del tema"
+
+msgid "animated-background-state-still"
+msgstr "Un'immagine fissa del video"
+
+msgid "animated-background-state-failed"
+msgstr "Video illeggibile (vedi logs/raspydarts.log): un'immagine fissa al suo posto"
+
+msgid "animated-background-state-preparing"
+msgstr "Preparazione del video…"
+
+msgid "animated-background-help"
+msgstr "Lo sfondo animato sostituisce lo sfondo del tema nelle schermate prima delle partite (non in quelle con uno sfondo proprio). Il video viene preparato una sola volta, in background: il gioco resta utilizzabile, la preparazione si ferma durante le partite."
+
+msgid "animated-background-choose"
+msgstr "Video dello sfondo animato"
+
+msgid "animated-background-copying"
+msgstr "Copia del video…"
+
+msgid "explorer-holds-videos"
+msgstr "{folders} cartelle · {videos} video"
+
+msgid "explorer-video-loading"
+msgstr "caricamento dell'anteprima…"
+
+
+msgid "animated-background-auto-short"
+msgstr "Auto ({rate}/s)"
+
+msgid "animated-background-auto-still-short"
+msgstr "Auto (fissa)"
+

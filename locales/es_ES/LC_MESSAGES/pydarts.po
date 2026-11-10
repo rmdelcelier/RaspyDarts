@@ -5430,3 +5430,71 @@ msgstr "Máximo (píldora)"
 
 msgid "theme-origin-value"
 msgstr "Valor del tema"
+
+msgid "animated-background"
+msgstr "Fondo animado"
+
+msgid "animated-background-video"
+msgstr "Vídeo"
+
+msgid "animated-background-rate"
+msgstr "Fotogramas"
+
+msgid "animated-background-none"
+msgstr "Ninguno"
+
+msgid "animated-background-still"
+msgstr "Imagen fija"
+
+msgid "animated-background-auto"
+msgstr "Automático ({rate} imágenes/s en este Pi)"
+
+msgid "animated-background-auto-still"
+msgstr "Automático (imagen fija en este Pi)"
+
+msgid "animated-background-fps"
+msgstr "{rate} imágenes/s"
+
+msgid "animated-background-preparing"
+msgstr "Preparando el vídeo: {percent} % (mientras tanto: una imagen fija)"
+
+msgid "animated-background-ready"
+msgstr "Listo: {frames} imágenes, {seconds} s en bucle"
+
+msgid "animated-background-cut"
+msgstr "(los primeros {seconds} segundos del vídeo)"
+
+msgid "animated-background-state-none"
+msgstr "Sin fondo animado: el fondo del tema"
+
+msgid "animated-background-state-still"
+msgstr "Una imagen fija del vídeo"
+
+msgid "animated-background-state-failed"
+msgstr "Vídeo ilegible (ver logs/raspydarts.log): una imagen fija en su lugar"
+
+msgid "animated-background-state-preparing"
+msgstr "Preparando el vídeo…"
+
+msgid "animated-background-help"
+msgstr "El fondo animado sustituye al fondo del tema en las pantallas antes de las partidas (no en las que tienen fondo propio). El vídeo se prepara una sola vez, en segundo plano: el juego sigue utilizable, la preparación se detiene durante las partidas."
+
+msgid "animated-background-choose"
+msgstr "Vídeo del fondo animado"
+
+msgid "animated-background-copying"
+msgstr "Copiando el vídeo…"
+
+msgid "explorer-holds-videos"
+msgstr "{folders} carpetas · {videos} vídeos"
+
+msgid "explorer-video-loading"
+msgstr "cargando la vista previa…"
+
+
+msgid "animated-background-auto-short"
+msgstr "Auto ({rate}/s)"
+
+msgid "animated-background-auto-still-short"
+msgstr "Auto (fija)"
+

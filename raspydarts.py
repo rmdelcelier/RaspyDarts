@@ -1709,6 +1709,8 @@ try:
         # The webcam is recorded during the game only
         if not match_done:
             camera.game_start()
+            # The frames of the animated background prepared in the background : paused
+            display.bganim.game(True)
             File.remember(True)
             # The sound of the first next player : chosen and decoded during the first turn, with
             # the ones of the end of the game (a second at least to decode, before the winner)
@@ -2724,6 +2726,7 @@ try:
                   
         camera.close_qr_popup()                    
         camera.game_end()
+        display.bganim.game(False)
         File.remember(False)
         
         display.file_class.reset_theme(Config.get_value('SectionGlobals', 'colorset'))

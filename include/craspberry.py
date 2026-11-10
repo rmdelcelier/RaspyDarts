@@ -264,6 +264,9 @@ class Craspberry():
         self.on_intro_end = None
         # Buttons of the music player : done by it (Screen.music_button)
         self.on_music = None
+        # Animated background of the menus (include/cbganim.py) : its turn at each turn of the
+        # reading ; True : the screen shown must be drawn again ('resize')
+        self.on_idle = None
         self.send_insult = None
         self.t_event = t_event
         self.sleep = False
@@ -813,6 +816,9 @@ class Craspberry():
             if self.coins.changed and self.on_coins is not None:
                 self.coins.changed = False
                 self.on_coins()
+
+            if self.on_idle is not None and self.on_idle('resize' in specials) and 'resize' in specials:
+                return 'resize'
 
             # Read the pads plugged in USB : the button chosen for their key, in the menus or
             # in a game

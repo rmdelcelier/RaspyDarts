@@ -1,12 +1,15 @@
 """
 Explorer of the files of the borne (Modifier les écrans : background of a menu, images of a
-button) : the folders and the images on the left, the image chosen shown on the right ; any
-folder of the card, the USB keys, the images of the theme and of the game
+button, video of the animated background) : the folders and the files on the left, the file
+chosen shown on the right (a video : played in its box) ; any folder of the card, the USB keys,
+the images of the theme and of the game
 """
 
 import filecmp
 import os
 import shutil
+import subprocess
+import threading
 
 import pygame
 
@@ -14,6 +17,8 @@ from include import cemoji
 from include import cpaths
 
 IMAGES = ('.png', '.jpg', '.jpeg')
+# The videos (animated background) : read by ffmpeg
+VIDEOS = ('.mp4', '.gif', '.webm', '.mkv', '.mov', '.m4v', '.avi')
 # The USB keys : mounted in these folders
 MOUNTS = ('/media', '/mnt')
 # Lines of the list shown at once
@@ -23,7 +28,8 @@ PREVIEWS = 24
 # Icons of the lines (colour emojis) ; up : a folder with an arrow, drawn
 ICONS = {'dir': '\U0001F4C1', 'open': '\U0001F4C2', 'file': '\U0001F5BC', 'extra': '\U0001F3A8',
          'theme': '\U0001F3A8', 'mine': '\U0001F5BC', 'game': '\U0001F3AF', 'usb': '\U0001F4BE',
-         'home': '\U0001F3E0', 'card': '\U0001F4BD', 'arrow': '\u2B06', 'none': '\U0001F6AB'}
+         'home': '\U0001F3E0', 'card': '\U0001F4BD', 'arrow': '\u2B06', 'none': '\U0001F6AB',
+         'video': '\U0001F3AC'}
 
 
 def places(screen, translate):
@@ -50,9 +56,9 @@ def places(screen, translate):
     return found
 
 
-def listing(folder, translate):
+def listing(folder, translate, kinds=IMAGES):
     '''
-    A folder : the folder above, its folders, its images
+    A folder : the folder above, its folders, its files of these kinds (images, videos)
     '''
     try:
         entries = sorted((entry for entry in os.scandir(folder) if not entry.name.startswith('.')),
@@ -63,7 +69,7 @@ def listing(folder, translate):
     found += [{'kind': 'dir', 'path': entry.path, 'label': entry.name}
               for entry in entries if entry.is_dir() and not loops(entry, folder)]
     found += [{'kind': 'file', 'path': entry.path, 'label': entry.name}
-              for entry in entries if entry.is_file() and entry.name.lower().endswith(IMAGES)]
+              for entry in entries if entry.is_file() and entry.name.lower().endswith(kinds)]
     return found
 
 
@@ -79,17 +85,16 @@ def loops(entry, folder):
     return here == target or here.startswith(target.rstrip(os.sep) + os.sep)
 
 
-def explore(screen, title, current=None, extra=()):
+def explore(screen, title, current=None, extra=(), kinds=IMAGES):
     '''
     An image chosen : its full path ; or the id of one of the extra choices given first
     ((id, text[, image shown]) : the one of the theme, none...) ; None : given up. current : the
     image of the moment, the explorer opens in its folder. Back goes up to the place where the
-    browsing started (the image of the moment : the place holding it), then to the places
+    browsing started (the image of the moment : the place holding it), then to the places.
+    kinds : the files shown (IMAGES, VIDEOS : a video is played in the box of the preview)
     '''
-    # pylint: disable=import-outside-toplevel
-    from include.cscreen import DOWN_KEYS, ENTER_KEYS, ESCAPE_KEYS, LEFT_KEYS, RIGHT_KEYS, UP_KEYS
     translate = screen.lang.translate
-    previews = {}
+    previews = {'kinds': kinds}
     folder = root = None
     selected = 0
     if current and os.path.isfile(current):
@@ -98,6 +103,22 @@ def explore(screen, title, current=None, extra=()):
         holding = [place['path'] for place in places(screen, translate)
                    if folder == place['path'] or folder.startswith(place['path'].rstrip(os.sep) + os.sep)]
         root = max(holding, key=len) if holding else os.sep
+    try:
+        return browse(screen, title, current, extra, kinds, previews, folder, root, selected)
+    finally:
+        player = previews.get('player')
+        if player is not None:
+            player.stop()
+        screen.idle_hook = None
+
+
+def browse(screen, title, current, extra, kinds, previews, folder, root, selected):
+    '''
+    The browsing of explore (its video played until it returns)
+    '''
+    # pylint: disable=import-outside-toplevel,too-many-arguments
+    from include.cscreen import DOWN_KEYS, ENTER_KEYS, ESCAPE_KEYS, LEFT_KEYS, RIGHT_KEYS, UP_KEYS
+    translate = screen.lang.translate
     while True:
         if folder is None:
             # (no image : its own icon)
@@ -106,7 +127,7 @@ def explore(screen, title, current=None, extra=()):
                         'icon': 'none' if choice[0] == 'none' else None} for choice in extra]
             entries += places(screen, translate)
         else:
-            entries = listing(folder, translate)
+            entries = listing(folder, translate, kinds)
             if current:
                 # The image of the moment selected first
                 selected = next((index for index, entry in enumerate(entries) if entry['path'] == current), selected)
@@ -146,7 +167,7 @@ def explore(screen, title, current=None, extra=()):
                                  if item['path'] == current_folder), 0) + len(extra)
             else:
                 folder = os.path.dirname(folder.rstrip(os.sep)) or os.sep
-                selected = next((index for index, item in enumerate(listing(folder, translate))
+                selected = next((index for index, item in enumerate(listing(folder, translate, kinds))
                                  if item['path'] == current_folder), 0)
         elif entry and (key in ENTER_KEYS + ['space'] or (key in RIGHT_KEYS and entry['kind'] == 'dir')):
             if entry['kind'] == 'dir':
@@ -184,16 +205,18 @@ def icon(kind, size, icons):
     return icons[key]
 
 
-def folder_text(path, translate, counts):
+def folder_text(path, translate, counts, kinds=IMAGES):
     '''
-    What a folder holds : its folders and its images
+    What a folder holds : its folders and its images (its videos)
     '''
     if path not in counts:
         try:
             entries = [entry for entry in os.scandir(path) if not entry.name.startswith('.')]
             folders = sum(1 for entry in entries if entry.is_dir())
-            images = sum(1 for entry in entries if entry.is_file() and entry.name.lower().endswith(IMAGES))
-            counts[path] = translate('explorer-holds').replace('{folders}', str(folders)).replace('{images}', str(images))
+            files = sum(1 for entry in entries if entry.is_file() and entry.name.lower().endswith(kinds))
+            text = translate('explorer-holds-videos' if kinds == VIDEOS else 'explorer-holds')
+            counts[path] = text.replace('{folders}', str(folders)).replace('{images}', str(files)) \
+                .replace('{videos}', str(files))
         except OSError:
             counts[path] = ''
     return counts[path]
@@ -223,6 +246,8 @@ def draw(screen, title, folder, entries, selected, previews, translate):
         screen.new_blit_rect2(rect, colorset['menu-selected'] if chosen else colorset['menu-buttons'],
                               corners='All', border_radius=int(line_h / 4))
         kind = entry.get('icon') or ('open' if chosen and entry['kind'] == 'dir' else entry['kind'])
+        if kind == 'file' and entry['path'].lower().endswith(VIDEOS):
+            kind = 'video'
         picture = icon(kind, int(line_h * 0.72), icons)
         text_x = rect.x + int(unit_x / 4)
         if picture is not None:
@@ -242,6 +267,21 @@ def draw(screen, title, folder, entries, selected, previews, translate):
     entry = entries[selected] if entries else None
     caption = ''
     image = entry['path'] if entry and entry['kind'] == 'file' else (entry or {}).get('image')
+    # A video : played in the box (see VideoPreview), its name, its size and its length
+    player = previews.get('player')
+    video = image if image and image.lower().endswith(VIDEOS) else None
+    if player is not None and (video is None or player.path != video):
+        player.stop()
+        previews['player'] = player = None
+        screen.idle_hook = None
+    if video:
+        if player is None:
+            player = VideoPreview(screen, video, box.inflate(-int(unit_x / 2), -int(unit_y / 2)))
+            previews['player'] = player
+            screen.idle_hook = player.tick
+        caption = player.caption(translate)
+        image = None
+        player.drawn = False
     if image:
         picture = preview(image, box.inflate(-int(unit_x / 2), -int(unit_y / 2)).size, previews)
         if picture is None:
@@ -250,7 +290,7 @@ def draw(screen, title, folder, entries, selected, previews, translate):
             surface, size = picture
             screen.screen.blit(surface, surface.get_rect(center=box.center))
             caption = f"{os.path.basename(image)} · {size[0]} × {size[1]}" if entry['kind'] == 'file' else entry['label']
-    elif entry:
+    elif entry and not video:
         # A folder, a place, the folder above : a big icon, what it holds
         kind = entry.get('icon') or ('open' if entry['kind'] == 'dir' else entry['kind'])
         picture = icon(kind, int(box.h / 3), icons)
@@ -260,11 +300,104 @@ def draw(screen, title, folder, entries, selected, previews, translate):
         target = entry['path'] if entry['kind'] == 'dir' else (os.path.dirname(folder.rstrip(os.sep)) or os.sep
                                                                if entry['kind'] == 'up' and folder else None)
         if target:
-            caption = f"{caption} · {folder_text(target, translate, counts)}"
+            caption = f"{caption} · {folder_text(target, translate, counts, previews.get('kinds', IMAGES))}"
     screen.blit_text(caption, box.x, box.bottom + int(unit_y / 4), box.w, int(0.7 * unit_y), colorset['menu-text-white'])
     zones['escape'] = screen.display_button(False, 'back', special='escape')
     screen.update_screen()
     return zones
+
+
+class VideoPreview:
+    '''
+    A video played in the box of the preview while it is selected : ffmpeg at the size of the
+    box (its proportions kept), at its own pace, looping, at the lowest priority ; its last
+    frame drawn at each turn of the reading of the inputs (tick). Nothing prepared : on a Pi 3,
+    10 to 15 frames a second
+    '''
+    RATE = 15
+
+    def __init__(self, screen, path, box):
+        self.screen = screen
+        self.path = path
+        self.box = pygame.Rect(box)
+        self.size = None
+        self.length = None
+        self.latest = None
+        self.shown = None
+        self.drawn = False
+        self.process = None
+        self.stopped = False
+        self.probe()
+        threading.Thread(target=self.run, daemon=True).start()
+
+    def probe(self):
+        try:
+            out = subprocess.run(['ffprobe', '-v', 'error', '-select_streams', 'v:0', '-show_entries',
+                                  'stream=width,height:format=duration', '-of', 'default=nw=1', self.path],
+                                 capture_output=True, text=True, timeout=15, check=False).stdout
+            values = dict(line.split('=', 1) for line in out.splitlines() if '=' in line)
+            self.size = (int(values['width']), int(values['height']))
+            self.length = float(values.get('duration') or 0) or None
+        except (OSError, ValueError, KeyError, subprocess.SubprocessError):
+            self.size = None
+
+    def caption(self, translate):
+        parts = [os.path.basename(self.path)]
+        if self.size:
+            parts.append(f"{self.size[0]} × {self.size[1]}")
+        if self.length:
+            parts.append(f"{self.length:.0f} s")
+        return ' · '.join(parts) if self.size else f"{parts[0]} · {translate('explorer-video-loading')}"
+
+    def run(self):
+        if self.stopped or not self.size:
+            return
+        ratio = min(self.box.w / self.size[0], self.box.h / self.size[1])
+        width, height = max(2, int(self.size[0] * ratio) // 2 * 2), max(2, int(self.size[1] * ratio) // 2 * 2)
+        frame = width * height * 4
+
+        def lowest():
+            os.nice(15)
+        try:
+            self.process = subprocess.Popen(['ffmpeg', '-nostdin', '-v', 'error', '-threads', '1', '-re', '-stream_loop', '-1',  # pylint: disable=consider-using-with
+                                             '-i', self.path, '-an', '-vf', f"fps={self.RATE},scale={width}:{height}",
+                                             '-pix_fmt', 'rgb0', '-f', 'rawvideo', '-'],
+                                            stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, stdin=subprocess.DEVNULL,
+                                            preexec_fn=lowest)
+        except OSError:
+            return
+        if self.stopped:
+            self.stop()
+            return
+        while not self.stopped:
+            data = self.process.stdout.read(frame)
+            if len(data) < frame:
+                return
+            self.latest = (data, (width, height))
+
+    def tick(self):
+        '''
+        The last frame read drawn in its box (once the box is drawn)
+        '''
+        latest = self.latest
+        if latest is None or latest is self.shown or self.stopped:
+            return
+        self.shown = latest
+        data, size = latest
+        picture = pygame.image.frombuffer(data, size, 'RGBX')
+        rect = picture.get_rect(center=self.box.center)
+        self.screen.screen.blit(picture, rect)
+        self.screen.update_screen(rect=rect)
+
+    def stop(self):
+        self.stopped = True
+        process = self.process
+        if process is not None and process.poll() is None:
+            process.kill()
+            try:
+                process.wait(timeout=2)
+            except subprocess.SubprocessError:
+                pass
 
 
 def preview(path, size, previews):
@@ -274,7 +407,7 @@ def preview(path, size, previews):
     key = (path, tuple(size))
     if key not in previews:
         while len(previews) > PREVIEWS:
-            previews.pop(next(key for key in previews if key not in ('icons', 'counts')))
+            previews.pop(next(key for key in previews if key not in ('icons', 'counts', 'kinds', 'player')))
         try:
             picture = pygame.image.load(path)
             width, height = picture.get_size()

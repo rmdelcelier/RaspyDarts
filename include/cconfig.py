@@ -93,7 +93,11 @@ DefaultConfig['SectionGlobals'] = {
     # Lecteur MP3 (include/cmusic.py) : source of the tracks (empty : the USB keys, /a/folder,
     # //server/share, server:/path) and volume (percent)
     'music_source': '',
-    'music_volume': 35
+    'music_volume': 35,
+    # Animated background of the menus (include/cbganim.py) : the video (empty : none) and its
+    # rate : auto (the one of this Pi), 30, 20, 10, still (a still picture of the video)
+    'animated_background': '',
+    'animated_background_rate': 'auto'
     }
 #
 DefaultConfig['SectionAdvanced'] = {
@@ -1407,6 +1411,9 @@ class Config:
         self.conf += "### Lecteur MP3 : source of the tracks (empty : USB keys, /a/folder, //server/share, server:/path) and volume\n"
         self.conf += f"music_source:{Global.get('music_source', '')}\n"
         self.conf += f"music_volume:{Global.get('music_volume', 35)}\n"
+        self.conf += "### Animated background of the menus : the video (empty : none), its rate (auto, 30, 20, 10, still)\n"
+        self.conf += f"animated_background:{Global.get('animated_background', '')}\n"
+        self.conf += f"animated_background_rate:{Global.get('animated_background_rate', 'auto')}\n"
 
         Advanced = self.config["SectionAdvanced"]
 

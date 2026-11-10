@@ -5501,3 +5501,71 @@ msgstr "Maximum (pilule)"
 
 msgid "theme-origin-value"
 msgstr "Valeur d'origine du thème"
+
+msgid "animated-background"
+msgstr "Fond animé"
+
+msgid "animated-background-video"
+msgstr "Vidéo"
+
+msgid "animated-background-rate"
+msgstr "Cadence"
+
+msgid "animated-background-none"
+msgstr "Aucun"
+
+msgid "animated-background-still"
+msgstr "Image fixe"
+
+msgid "animated-background-auto"
+msgstr "Automatique ({rate} images/s sur ce Pi)"
+
+msgid "animated-background-auto-still"
+msgstr "Automatique (image fixe sur ce Pi)"
+
+msgid "animated-background-fps"
+msgstr "{rate} images/s"
+
+msgid "animated-background-preparing"
+msgstr "Préparation de la vidéo : {percent} % (en attendant : une image fixe)"
+
+msgid "animated-background-ready"
+msgstr "Prêt : {frames} images, {seconds} s en boucle"
+
+msgid "animated-background-cut"
+msgstr "(les {seconds} premières secondes de la vidéo)"
+
+msgid "animated-background-state-none"
+msgstr "Pas de fond animé : le fond du thème"
+
+msgid "animated-background-state-still"
+msgstr "Image fixe tirée de la vidéo"
+
+msgid "animated-background-state-failed"
+msgstr "Vidéo illisible (voir logs/raspydarts.log) : une image fixe à la place"
+
+msgid "animated-background-state-preparing"
+msgstr "Préparation de la vidéo…"
+
+msgid "animated-background-help"
+msgstr "Le fond animé remplace le fond du thème sur les écrans avant les parties (pas sur ceux qui ont leur propre fond). La vidéo est préparée une seule fois, en tâche de fond : le jeu reste utilisable, la préparation s'arrête pendant les parties."
+
+msgid "animated-background-choose"
+msgstr "Vidéo du fond animé"
+
+msgid "animated-background-copying"
+msgstr "Copie de la vidéo…"
+
+msgid "explorer-holds-videos"
+msgstr "{folders} dossiers · {videos} vidéos"
+
+msgid "explorer-video-loading"
+msgstr "lecture de l'aperçu…"
+
+
+msgid "animated-background-auto-short"
+msgstr "Auto ({rate}/s)"
+
+msgid "animated-background-auto-still-short"
+msgstr "Auto (fixe)"
+

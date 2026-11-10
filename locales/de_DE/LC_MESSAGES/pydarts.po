@@ -5425,3 +5425,71 @@ msgstr "Maximum (Pille)"
 
 msgid "theme-origin-value"
 msgstr "Wert des Themas"
+
+msgid "animated-background"
+msgstr "Animierter Hintergrund"
+
+msgid "animated-background-video"
+msgstr "Video"
+
+msgid "animated-background-rate"
+msgstr "Bildrate"
+
+msgid "animated-background-none"
+msgstr "Keiner"
+
+msgid "animated-background-still"
+msgstr "Standbild"
+
+msgid "animated-background-auto"
+msgstr "Automatisch ({rate} Bilder/s auf diesem Pi)"
+
+msgid "animated-background-auto-still"
+msgstr "Automatisch (Standbild auf diesem Pi)"
+
+msgid "animated-background-fps"
+msgstr "{rate} Bilder/s"
+
+msgid "animated-background-preparing"
+msgstr "Video wird vorbereitet: {percent} % (bis dahin: ein Standbild)"
+
+msgid "animated-background-ready"
+msgstr "Bereit: {frames} Bilder, {seconds} s in Schleife"
+
+msgid "animated-background-cut"
+msgstr "(die ersten {seconds} Sekunden des Videos)"
+
+msgid "animated-background-state-none"
+msgstr "Kein animierter Hintergrund: der Hintergrund des Themas"
+
+msgid "animated-background-state-still"
+msgstr "Ein Standbild aus dem Video"
+
+msgid "animated-background-state-failed"
+msgstr "Video nicht lesbar (siehe logs/raspydarts.log): stattdessen ein Standbild"
+
+msgid "animated-background-state-preparing"
+msgstr "Video wird vorbereitet…"
+
+msgid "animated-background-help"
+msgstr "Der animierte Hintergrund ersetzt den Hintergrund des Themas auf den Bildschirmen vor den Spielen (nicht auf denen mit eigenem Hintergrund). Das Video wird einmal im Hintergrund vorbereitet: das Spiel bleibt nutzbar, die Vorbereitung pausiert während der Spiele."
+
+msgid "animated-background-choose"
+msgstr "Video des animierten Hintergrunds"
+
+msgid "animated-background-copying"
+msgstr "Video wird kopiert…"
+
+msgid "explorer-holds-videos"
+msgstr "{folders} Ordner · {videos} Videos"
+
+msgid "explorer-video-loading"
+msgstr "Vorschau wird geladen…"
+
+
+msgid "animated-background-auto-short"
+msgstr "Auto ({rate}/s)"
+
+msgid "animated-background-auto-still-short"
+msgstr "Auto (Standbild)"
+

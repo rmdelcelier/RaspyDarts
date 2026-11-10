@@ -46,6 +46,7 @@ from include import cmenus
 from include import cfonts
 from include import cmenustyle
 from include import cfavorites
+from include import cbganim
 
 try:
     from include import cqrcode
@@ -232,6 +233,13 @@ class Screen(pygame.Surface):
         # one of its buttons
         self.music = None
         rpi.on_music = self.music_button
+        # Animated background of the menus (include/cbganim.py) : a frame at each turn of the
+        # reading of the inputs
+        self.bganim = cbganim.AnimatedBackground(self)
+        # Something else done at these turns while a screen is shown (the video played in the
+        # preview of the explorer...) : idle_hook
+        self.idle_hook = None
+        rpi.on_idle = self.idle_turn
         self.video_player = video_player
         self.image_player = image_player
         self.game_options = []
@@ -269,6 +277,21 @@ class Screen(pygame.Surface):
         # QR codes generated (see draw_qrcode)
         self.qrcodes = {}
         self.camera = ccamera.Camera(self.config, self.display, logs, show_in_parametrage=True)
+        self.bganim.apply_settings()
+
+    def idle_turn(self, can_redraw=False):
+        '''
+        At each turn of the reading of the inputs : the screen shown going on (idle_hook), the
+        animated background. True : the screen must be drawn again (see cbganim.tick)
+        '''
+        hook = self.idle_hook
+        if hook is not None:
+            try:
+                hook()
+            except Exception as error:    # pylint: disable=broad-except
+                self.logs.error(f"Screen : {error}")
+                self.idle_hook = None
+        return self.bganim.tick(can_redraw)
 
     def set_end_of_game_winner(self, value):
         self.end_of_game_winner = value
@@ -464,6 +487,8 @@ class Screen(pygame.Surface):
         #if Toggle:
         #    pygame.mouse.set_cursor(*cursor)    # Duoas 16-04-2007
         self.display = pygame.display
+        if getattr(self, 'bganim', None) is not None:
+            self.bganim.display_changed()
 
     def init_colorset(self):
         '''
@@ -841,8 +866,10 @@ class Screen(pygame.Surface):
 
         if self.hidden:
             # Same mode without the hidden flag : pygame shows the window, but what is
-            # already drawn on it is lost
-            drawn = self.screen.copy()
+            # already drawn on it is lost (with the animated background : the screen with it)
+            animated = getattr(self, 'bganim', None)
+            layer = animated is not None and animated.mode == 'layer'
+            drawn = (animated.real if layer else self.screen).copy()
             if self.fullscreen:
                 self.screen = pygame.display.set_mode((0, 0), self.flags)
             else:
@@ -855,6 +882,8 @@ class Screen(pygame.Surface):
                 self.screen.blit(drawn, (0, 0))
                 self.display.flip()
                 pygame.time.wait(100)
+            if animated is not None:
+                animated.display_changed()
 
         if self.audio_deferred:
             # Modules left aside at startup, audio output included. After the window is
@@ -7672,6 +7701,13 @@ class Screen(pygame.Surface):
 
     def run_menu(self, name, items, everything, hook=None, initial=None, title=None, subtitle=None, columns=None):
         '''
+        A menu of the files (see menu_of_files), over the animated background (include/cbganim.py)
+        '''
+        with self.bganim.scope(name):
+            return self.menu_of_files(name, items, everything, hook, initial, title, subtitle, columns)
+
+    def menu_of_files(self, name, items, everything, hook=None, initial=None, title=None, subtitle=None, columns=None):
+        '''
         A menu of the files, drawn as a list of classic buttons (menu_item) and the buttons
         at its bottom (display_button) : returns the button chosen. items : buttons shown ;
         everything : all those which have a shortcut (hidden ones too) ; initial : id of the
@@ -8001,6 +8037,9 @@ class Screen(pygame.Surface):
         font = (style.get('text') or {}).get('font')
         return skin, (painter.font_path(font) if font else None)
 
+    # Screens with a look of the files shown over the animated background (not the wizard)
+    ANIMATED_LOOKS = ('games', 'options', 'players')
+
     def run_with_look(self, name, method, *args, **kwargs):
         '''
         A screen drawn with the look of the menu of this name (see with_look) : its colours
@@ -8019,6 +8058,10 @@ class Screen(pygame.Surface):
             self.scale_text.cache_clear()
         self.current_look = name
         try:
+            # The screens before a game (games, options, players) : over the animated background
+            if name in self.ANIMATED_LOOKS:
+                with self.bganim.scope(name):
+                    return method(self, *args, **kwargs)
             return method(self, *args, **kwargs)
         finally:
             self.current_look = previous
@@ -11992,6 +12035,11 @@ class Screen(pygame.Surface):
         '''
         Display background, under a veil of this color if given (game screens)
         '''
+        animated = getattr(self, 'bganim', None)
+        if animated is not None and animated.mode and image is None and veil is None and not display_version \
+                and self.game_background is None and animated.background(rect):
+            self.pristine_background = None
+            return
         if self.current_look is not None and image is None and rect is None and veil is None \
                 and self.game_background is None:
             # Screen whose look comes from the files : their background, if they give one
@@ -12896,6 +12944,15 @@ class Screen(pygame.Surface):
             self.logs.debug(f"Input to screen : {(time.perf_counter() - started) * 1000:.0f} ms")
         # The credits of the coin acceptor over every screen
         badge = self.coins_badge()
+        animated = getattr(self, 'bganim', None)
+        if animated is not None and animated.mode == 'layer' and self.screen is animated.layer:
+            if rect_array is not None:
+                animated.present(list(rect_array) + ([badge] if badge is not None else []))
+            elif rect is not None:
+                animated.present([rect] + ([badge] if badge is not None else []))
+            else:
+                animated.present()
+            return
         if rect_array is not None:
             #self.display.update(rect_array)
             for rect in rect_array:
@@ -12941,7 +12998,7 @@ class Screen(pygame.Surface):
         '''
         badge = self.coins_badge()
         if badge is not None:
-            self.display.update(badge)
+            self.update_screen(rect=badge)
 
     def speech(self, text, speed=None):
         '''

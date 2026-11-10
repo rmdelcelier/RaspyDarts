@@ -1393,7 +1393,7 @@ def screens_menu(screen, keys):
     # pylint: disable=import-outside-toplevel
     from include.cscreen import BTN_CHOICE, BTN_DROPDOWN
     translate = screen.lang.translate
-    rows = [name for name, _text in SCREENS] + ['theme', 'theme-colors', 'font']
+    rows = [name for name, _text in SCREENS] + ['theme', 'theme-colors', 'animated-background', 'font']
     nb_elements = len(rows)
     selected = 1
     while True:
@@ -1408,6 +1408,10 @@ def screens_menu(screen, keys):
                 line = (f'F{index}', translate('colorset' if name == 'theme' else 'font'), BTN_DROPDOWN, values[name])
             elif name == 'theme-colors':
                 line = (f'F{index}', translate('theme-customize'), BTN_CHOICE)
+            elif name == 'animated-background':
+                video = str(globals_.get('animated_background') or '')
+                line = (f'F{index}', translate('animated-background'), BTN_DROPDOWN,
+                        os.path.basename(video) if video else translate('animated-background-none'))
             else:
                 line = (f'F{index}', translate(dict(SCREENS)[name]), BTN_CHOICE)
             click_zones[f'F{index}'] = screen.menu_item((index, nb_elements, selected), line, align='Full', tabs=True)
@@ -1438,6 +1442,8 @@ def screens_menu(screen, keys):
             # The colours of the theme on plates of the screens (include/cthemeeditor.py)
             from include import cthemeeditor
             cthemeeditor.ThemeEditor(screen, keys).run()
+        elif name == 'animated-background':
+            animated_background_menu(screen, keys)
         elif name == 'font':
             chosen = screen.dropdown(screen.res['x'] * 6 / 16, 3 * screen.res_y_16, screen.font_choices(),
                                      special='font', navigate=globals_.get('font'))
@@ -1445,3 +1451,137 @@ def screens_menu(screen, keys):
                 screen.apply_look(font=chosen)
         else:
             Editor(screen, name, keys).run()
+
+
+def rate_text(screen, rate, short=False):
+    '''
+    A rate of the animated background as said in its screen (short : in the box of its line)
+    '''
+    translate = screen.lang.translate
+    if rate == 'still':
+        return translate('animated-background-still')
+    suffix = '-short' if short else ''
+    if rate == 'auto':
+        machine = screen.bganim.machine
+        if machine['rate']:
+            return translate(f'animated-background-auto{suffix}').replace('{rate}', str(machine['rate']))
+        return translate(f'animated-background-auto-still{suffix}')
+    return translate('animated-background-fps').replace('{rate}', str(rate))
+
+
+def paragraph(screen, text, rect, color):
+    '''
+    A text in lines (cut between words) in a rectangle, as big as its lines fit
+    '''
+    words = str(text).split()
+    for size in range(int(min(rect.height / 2.2, screen.res['y'] / 30)), 9, -2):
+        font = screen.font(screen.defaultfontpath, size)
+        lines, line = [], ''
+        for word in words:
+            attempt = f"{line} {word}".strip()
+            if font.size(attempt)[0] <= rect.width or not line:
+                line = attempt
+            else:
+                lines.append(line)
+                line = word
+        if line:
+            lines.append(line)
+        step = font.get_linesize()
+        if step * len(lines) <= rect.height and all(font.size(item)[0] <= rect.width for item in lines):
+            break
+    top = rect.y + (rect.height - step * len(lines)) // 2
+    for index, item in enumerate(lines):
+        rendered = font.render(item, True, color)
+        screen.screen.blit(rendered, (rect.centerx - rendered.get_width() // 2, top + index * step))
+
+
+def animated_background_menu(screen, keys):
+    '''
+    Modifier les écrans > Fond animé (include/cbganim.py) : the video (chosen in the explorer,
+    played in its preview ; none : the background of the theme) and its rate ; how its
+    preparation goes, seen again every second
+    '''
+    # pylint: disable=import-outside-toplevel
+    from include import cbganim
+    from include import cexplorer
+    from include.cscreen import BTN_DROPDOWN
+    translate = screen.lang.translate
+    animated = screen.bganim
+    rows = ['video', 'rate']
+    nb_elements = len(rows)
+    selected = 1
+    while True:
+        globals_ = screen.config.config['SectionGlobals']
+        video = str(globals_.get('animated_background') or '')
+        rate = str(globals_.get('animated_background_rate') or 'auto')
+        click_zones = {}
+        screen.display_background()
+        screen.menu_header(translate('animated-background'))
+        values = {'video': os.path.basename(video) if video else translate('animated-background-none'),
+                  'rate': rate_text(screen, rate, short=True)}
+        for index, name in enumerate(rows, 1):
+            line = (f'F{index}', translate(f'animated-background-{name}'), BTN_DROPDOWN, values[name])
+            click_zones[f'F{index}'] = screen.menu_item((index, nb_elements, selected), line, align='Full', tabs=True)
+        # How it goes, and what it does
+        state, done, total = animated.status()
+        if state == 'preparing':
+            status = translate('animated-background-preparing').replace(
+                '{percent}', str(int(done * 100 / total) if total else 0))
+        elif state == 'ready':
+            seconds = done / total if total else 0
+            status = translate('animated-background-ready').replace('{frames}', str(done)).replace(
+                '{seconds}', f"{seconds:.0f}")
+            if animated.length and animated.length > seconds + 1:
+                status += ' ' + translate('animated-background-cut').replace('{seconds}', f"{seconds:.0f}")
+        else:
+            status = translate(f'animated-background-state-{state}')
+        unit_x, unit_y = screen.res['x'] / 16, screen.res['y'] / 16
+        screen.blit_text(status, int(unit_x), int(7.2 * unit_y), int(14 * unit_x), int(unit_y),
+                         screen.colorset['menu-text-white'])
+        paragraph(screen, translate('animated-background-help'),
+                  pygame.Rect(int(2 * unit_x), int(8.6 * unit_y), int(12 * unit_x), int(3.4 * unit_y)),
+                  screen.colorset['menu-text-white'])
+        click_zones['escape'] = screen.display_button(nb_elements + 1 == selected, 'back', special='escape')
+        screen.update_screen()
+
+        # Every second : how the preparation goes
+        key = screen.rpi.listen_inputs(['arrows', 'fx'], ['escape', 'enter', 'space', 'single-click',
+                                                          'PLAYERBUTTON', 'BACKUPBUTTON', 'GAMEBUTTON'], timeout=1000)
+        if key is False:
+            continue
+        clicked = screen.is_clicked(click_zones, key)
+        if clicked:
+            key = clicked
+        if isinstance(key, str) and key.startswith('F') and key[1:].isdigit() and 1 <= int(key[1:]) <= nb_elements:
+            selected = int(key[1:])
+            key = 'enter'
+        else:
+            selected = screen.navigate(selected, key, nb_elements, 1, 1, left_right=True)
+        if key in keys['escape'] or (key in keys['enter'] and selected == nb_elements + 1):
+            return
+        if key not in keys['enter'] + ['space'] or not 1 <= selected <= nb_elements:
+            continue
+        name = rows[selected - 1]
+        if name == 'video':
+            chosen = cexplorer.explore(screen, translate('animated-background-choose'), video or None,
+                                       [('none', translate('animated-background-none'))], kinds=cexplorer.VIDEOS)
+            if chosen is None:
+                continue
+            if chosen == 'none':
+                chosen = ''
+            else:
+                screen.message([translate('animated-background-copying')], 0, None, 'middle', 'big')
+                chosen = cbganim.keep_source(chosen, screen.logs)
+                if chosen is None:
+                    screen.message([translate('editor-import-failed')], 2500, 'menu-ko', 'middle', 'big')
+                    continue
+            globals_['animated_background'] = chosen
+        else:
+            choices = ['auto'] + (['30', '20', '10'] if animated.machine['memory'] else []) + ['still']
+            chosen = screen.dropdown(screen.res['x'] * 6 / 16, 3 * screen.res_y_16,
+                                     [[choice, rate_text(screen, choice)] for choice in choices], navigate=rate)
+            if chosen == 'escape':
+                continue
+            globals_['animated_background_rate'] = chosen
+        screen.config.write_file()
+        animated.apply_settings()
