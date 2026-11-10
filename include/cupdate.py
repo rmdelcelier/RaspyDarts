@@ -210,6 +210,72 @@ def download_update(logs, update, progress=None):
     logs.debug(f"{update['file']} correctly downloaded ({file_size} bytes)")
     return True
 
+# An update downloaded in the background (Mise à jour prête : Demander), installed at the next
+# start, before the game loads anything : what get_last described, kept here
+PENDING_FILE = f'{BACKUP_PATH}/update_pending.json'
+
+
+def save_pending(update):
+    with open(PENDING_FILE, 'w', encoding='utf-8') as pending:
+        json.dump(update, pending)
+
+
+def clear_pending():
+    try:
+        os.remove(PENDING_FILE)
+    except OSError:
+        pass
+
+
+def load_pending(logs, actual_version):
+    """
+    The update downloaded waiting for the next start : None if none, if its file is gone or
+    if this version is already there (installed another way)
+    """
+    try:
+        with open(PENDING_FILE, encoding='utf-8') as pending:
+            update = json.load(pending)
+    except (OSError, ValueError):
+        return None
+    current = parse_version(actual_version) or (0, 0, 0)
+    wanted = parse_version(str(update.get('version') or ''))
+    if wanted is None or wanted <= current or not os.path.isfile(f"{BACKUP_PATH}/{update.get('file')}"):
+        logs.info(f"Update waiting dropped : {update}")
+        clear_pending()
+        return None
+    return update
+
+
+class BackgroundDownload:
+    """
+    An update downloaded in the background (the game stays usable) : its progress followed by
+    the activity indicator ; once checked, waiting for the next start (save_pending).
+    state : running, done, failed
+    """
+
+    def __init__(self, logs, update):
+        self.logs = logs
+        self.update = update
+        self.done = 0
+        self.total = 0
+        self.state = 'running'
+        Thread(target=self.run, daemon=True).start()
+
+    def progress(self, done, total):
+        self.done, self.total = done, total
+
+    def run(self):
+        try:
+            if download_update(self.logs, self.update, self.progress):
+                save_pending(self.update)
+                self.state = 'done'
+                self.logs.info(f"Update {self.update['version']} downloaded : installed at the next start")
+                return
+        except Exception as exc: # pylint: disable=broad-except
+            self.logs.error(f"Update not downloaded ({exc})")
+        self.state = 'failed'
+
+
 def install_archive(file_name, full, rollback=None, progress=None):
     """
     Copy files of an archive in the game folder. Identical files are left untouched

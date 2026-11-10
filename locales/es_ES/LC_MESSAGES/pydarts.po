@@ -5498,3 +5498,65 @@ msgstr "Auto ({rate}/s)"
 msgid "animated-background-auto-still-short"
 msgstr "Auto (fija)"
 
+
+msgid "activity_corner"
+msgstr "Indicador de actividad"
+
+msgid "activity-corner-top-right"
+msgstr "Arriba a la derecha"
+
+msgid "activity-corner-top-left"
+msgstr "Arriba a la izquierda"
+
+msgid "activity-corner-bottom-right"
+msgstr "Abajo a la derecha"
+
+msgid "activity-corner-bottom-left"
+msgstr "Abajo a la izquierda"
+
+msgid "activity-bganim"
+msgstr "Fondo animado: preparación"
+
+msgid "activity-paused"
+msgstr "(en pausa durante la partida)"
+
+msgid "activity-bganim-done"
+msgstr "Fondo animado listo"
+
+msgid "activity-bganim-failed"
+msgstr "Fondo animado: vídeo ilegible"
+
+msgid "activity-raspy2dmd"
+msgstr "Instalando Raspy2DMD"
+
+
+msgid "update_ready"
+msgstr "Actualización lista"
+
+msgid "update-ready-ask"
+msgstr "Preguntar"
+
+msgid "update-ready-historic"
+msgstr "Como antes"
+
+msgid "update-ready-question"
+msgstr "La actualización {version} está lista. ¿Reiniciar ahora para instalarla?"
+
+msgid "update-ready-later"
+msgstr "No: se instalará en el próximo arranque"
+
+msgid "update-restart-question"
+msgstr "¿Reiniciar ahora?"
+
+msgid "update-background"
+msgstr "Descarga en segundo plano: puede seguir usando la máquina"
+
+msgid "activity-update"
+msgstr "Actualización {version}: descarga"
+
+msgid "activity-update-done"
+msgstr "Actualización {version} lista"
+
+msgid "activity-update-failed"
+msgstr "Fallo de la descarga de la actualización"
+

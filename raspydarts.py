@@ -378,14 +378,33 @@ def update_progress(key, unit=''):
     return progress
 
 
-if Config.get_value('SectionGlobals', 'check_for_updates', False):
+# An update downloaded in the background (Mise à jour prête : Demander) : installed now,
+# before the game loads anything, then the game started again
+pending_update = cupdate.load_pending(logs, version)
+if pending_update is not None:
+    display.message(['updating'], 0, None, 'middle')
+    new_version = cupdate.apply_update(logs, pending_update, update_progress('updating'))
+    cupdate.clear_pending()
+    if new_version is None:
+        display.message(['update-failed'], 1500, None, 'middle')
+        logs.error("Update waiting : failed")
+    else:
+        display.message([f'Version {new_version} installée', 'restarting'], 1000, 'middle', bg_color='menu-ok')
+        version = new_version
+        game_type = 'restart'
+        logs.info("Update waiting : done")
+elif Config.get_value('SectionGlobals', 'check_for_updates', False):
     try:
         display.message(['update-check'], 0, None, 'middle')
         update = cupdate.get_last(logs, version)
 
         if update is not None:
             response = display.wait_validation("update-available")
-            if response:
+            if response and display.update_mode() == 'ask':
+                # Downloaded in the background (the activity indicator) : the menu at once, the
+                # question « restart now ? » once it is there
+                display.start_update_download(update)
+            elif response:
                 display.message(['update-download'], 0, None, 'middle')
                 new_version = None
                 if cupdate.download_update(logs, update, update_progress('update-download', 'Mo')):

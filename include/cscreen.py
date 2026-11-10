@@ -47,6 +47,7 @@ from include import cfonts
 from include import cmenustyle
 from include import cfavorites
 from include import cbganim
+from include import cactivity
 
 try:
     from include import cqrcode
@@ -236,6 +237,8 @@ class Screen(pygame.Surface):
         # Animated background of the menus (include/cbganim.py) : a frame at each turn of the
         # reading of the inputs
         self.bganim = cbganim.AnimatedBackground(self)
+        # What goes on in the background, in a corner of the menus (include/cactivity.py)
+        self.activities = cactivity.Activities(self)
         # Something else done at these turns while a screen is shown (the video played in the
         # preview of the explorer...) : idle_hook
         self.idle_hook = None
@@ -278,6 +281,9 @@ class Screen(pygame.Surface):
         self.qrcodes = {}
         self.camera = ccamera.Camera(self.config, self.display, logs, show_in_parametrage=True)
         self.bganim.apply_settings()
+        # Raspy2DMD being installed (the game started again meanwhile) : in the indicator
+        if self.raspy2dmd_installing():
+            self.activities.add('raspy2dmd', self.raspy2dmd_activity)
 
     def idle_turn(self, can_redraw=False):
         '''
@@ -291,7 +297,69 @@ class Screen(pygame.Surface):
             except Exception as error:    # pylint: disable=broad-except
                 self.logs.error(f"Screen : {error}")
                 self.idle_hook = None
+        self.activities.tick()
+        if can_redraw and getattr(self, 'menu_shown', None) == 'main' and self.update_question_due() \
+                and not getattr(self, 'update_woken', False):
+            self.update_woken = True
+            return True
         return self.bganim.tick(can_redraw)
+
+    # ------------------------------------------------------------------ update in the background
+    def update_mode(self):
+        '''
+        Mise à jour prête : ask (downloaded in the background, then restart now or at the next
+        start) or historic (downloaded, installed and the game started again at once)
+        '''
+        mode = str(self.config.get_value('SectionGlobals', 'update_ready', False) or 'ask')
+        return mode if mode in ('ask', 'historic') else 'ask'
+
+    def start_update_download(self, update):
+        '''
+        An update downloaded in the background, followed by the activity indicator
+        '''
+        current = getattr(self, 'update_download', None)
+        if current is not None and current.state == 'running':
+            return
+        from include import cupdate    # pylint: disable=import-outside-toplevel
+        self.update_download = cupdate.BackgroundDownload(self.logs, update)
+        self.update_asked = False
+        self.update_woken = False
+        self.activities.add('update', self.update_activity)
+
+    def update_activity(self):
+        download = getattr(self, 'update_download', None)
+        if download is None:
+            return None
+        translate = self.lang.translate
+        version = download.update.get('version', '')
+        if download.state == 'running':
+            fraction = download.done / download.total if download.total else None
+            text = translate('activity-update').replace('{version}', version)
+            if fraction is not None:
+                text += f" {int(fraction * 100)} %"
+            return {'text': text, 'fraction': fraction}
+        key = 'activity-update-done' if download.state == 'done' else 'activity-update-failed'
+        return {'text': translate(key).replace('{version}', version), 'final': True}
+
+    def update_question_due(self):
+        '''
+        The update downloaded in the background, not asked yet : the question is due
+        '''
+        download = getattr(self, 'update_download', None)
+        return download is not None and download.state == 'done' and not getattr(self, 'update_asked', False)
+
+    def update_ready_question(self, version=None):
+        '''
+        Restart now to install the update downloaded ? Yes / No (No : installed at the next
+        start). True : restart now
+        '''
+        self.update_asked = True
+        download = getattr(self, 'update_download', None)
+        if version is None:
+            version = download.update.get('version', '') if download is not None else ''
+        translate = self.lang.translate
+        return self.ask_yes_no(translate('update-ready-question').replace('{version}', version),
+                               translate('update-ready-later'))
 
     def set_end_of_game_winner(self, value):
         self.end_of_game_winner = value
@@ -6053,6 +6121,17 @@ class Screen(pygame.Surface):
 
             version = update[0].get_version(self.logs)
             try:
+                if self.update_mode() == 'ask':
+                    # Already downloaded : restart now or at the next start
+                    waiting = update[0].load_pending(self.logs, version)
+                    if waiting is not None:
+                        if self.update_ready_question(waiting.get('version', '')):
+                            return 'restart'
+                        continue
+                    download = getattr(self, 'update_download', None)
+                    if download is not None and download.state == 'running':
+                        self.update_screen(self.message([self.lang.translate('update-background')], 2500, None, 'middle'))
+                        continue
                 self.update_screen(self.message(['update-check'], 0, None, 'middle'))
                 last = update[0].get_last(self.logs, version)
 
@@ -6060,7 +6139,10 @@ class Screen(pygame.Surface):
                     self.update_screen(self.message(['no-update-available'], 1500, None, 'middle'))
                 else:
                     response = self.wait_validation("update-available")
-                    if response:
+                    if response and self.update_mode() == 'ask':
+                        self.start_update_download(last)
+                        self.update_screen(self.message([self.lang.translate('update-background')], 2500, None, 'middle'))
+                    elif response:
                         self.update_screen(self.message(['update-download'], 0, None, 'middle'))
                         new_version = None
                         if update[0].download_update(self.logs, last):
@@ -6070,11 +6152,11 @@ class Screen(pygame.Surface):
                         if new_version is None:
                             self.update_screen(self.message(['update-failed'], 1500, None, 'middle'))
                         else:
-                            self.update_screen(self.message([f'Version {new_version} installée', 'restarting'], \
+                            self.update_screen(self.message([f'Version {new_version} installée'], \
                                     1000,  'middle', bg_color='menu-ok'))
                             version = new_version
 
-                            response = self.wait_validation("Voulez-vous redémarrer?")
+                            response = self.wait_validation("update-restart-question")
                             if response:
                                 return 'restart'
             except Exception as exception:
@@ -6741,7 +6823,9 @@ class Screen(pygame.Surface):
                     'exhibition_mode', 'exhibition_items', 'illumination_mode', 'illumination_color',
                     'idle_light_color', 'colorset', 'font',
                     # Lecteur MP3 : set in its own screen (include/cmusic.py)
-                    'music_source', 'music_volume'):
+                    'music_source', 'music_volume',
+                    # Animated background : in Modifier les écrans > Fond animé
+                    'animated_background', 'animated_background_rate'):
                 avoid.append([option, customization[option], '', 0, []])
                 continue
 
@@ -6812,6 +6896,13 @@ class Screen(pygame.Surface):
             elif option == 'preferedcategory':
                 option_type = 'dropdown'
                 option_values = [('classic', 'classic'), ('fun', 'fun'), ('sport', 'sport')]
+            elif option == 'update_ready':
+                option_type = 'dropdown'
+                option_values = [('ask', 'update-ready-ask'), ('historic', 'update-ready-historic')]
+            elif option == 'activity_corner':
+                # The corner of the activity indicator (include/cactivity.py)
+                option_type = 'dropdown'
+                option_values = [(corner, f'activity-corner-{corner}') for corner in cactivity.CORNERS]
             elif option == 'sound_output':
                 # HDMI, jack of the Raspberry, USB sound card (include/caudio.py)
                 option_type = 'dropdown'
@@ -7703,8 +7794,12 @@ class Screen(pygame.Surface):
         '''
         A menu of the files (see menu_of_files), over the animated background (include/cbganim.py)
         '''
-        with self.bganim.scope(name):
-            return self.menu_of_files(name, items, everything, hook, initial, title, subtitle, columns)
+        shown, self.menu_shown = getattr(self, 'menu_shown', None), name
+        try:
+            with self.bganim.scope(name):
+                return self.menu_of_files(name, items, everything, hook, initial, title, subtitle, columns)
+        finally:
+            self.menu_shown = shown
 
     def menu_of_files(self, name, items, everything, hook=None, initial=None, title=None, subtitle=None, columns=None):
         '''
@@ -7787,7 +7882,10 @@ class Screen(pygame.Surface):
             drawn[index] = look(index)
 
         while True:
-            if hook is not None and hook():
+            hooked = hook() if hook is not None else None
+            if isinstance(hooked, dict):
+                return hooked
+            if hooked:
                 full = True
             # Text of the selected button on the DMD
             dmd = shown[selected - 1].get('dmd') if 1 <= selected <= nb_shown else None
@@ -8178,7 +8276,10 @@ class Screen(pygame.Surface):
             return patch
 
         while True:
-            if hook is not None and hook():
+            hooked = hook() if hook is not None else None
+            if isinstance(hooked, dict):
+                return hooked
+            if hooked:
                 full = True
             dmd = shown[selected - 1].get('dmd') if 1 <= selected <= nb_shown else None
             if dmd and dmd != dmd_sent:
@@ -8792,8 +8893,15 @@ class Screen(pygame.Surface):
                 shown = True
             return shown
 
+        def hook():
+            if self.update_question_due():
+                if self.update_ready_question():
+                    return {'id': 'restart', 'action': 'restart'}
+                return True
+            return banned()
+
         button = self.run_menu('main', self.main_menu_items(), [self.favorite_button(button) for button in menus.buttons('main')],
-                               hook=banned)
+                               hook=hook)
         # A button going straight to a game or to the games of a category : a local game,
         # whose players are chosen first
         self.menu_target = menus.target(button.get('action'))
@@ -9960,6 +10068,7 @@ class Screen(pygame.Surface):
                                                             'GAMEBUTTON', 'single-click'], timeout=2000)
             if key in ESCAPE_KEYS or key in ENTER_KEYS or key in ('escape', 'single-click'):
                 self.message([translate('raspy2dmd-install-continues')], 3000, None, 'middle', 'big')
+                self.activities.add('raspy2dmd', self.raspy2dmd_activity)
                 return False
         if any('Installation terminee avec succes' in line for line in self.raspy2dmd_install_log()[-30:])                 and self.raspy2dmd_installed():
             self.logs.info("Raspy2DMD : installed from the game")
@@ -9970,6 +10079,41 @@ class Screen(pygame.Surface):
         self.logs.error(f"Raspy2DMD : installation failed (see {self.RASPY2DMD_INSTALL_LOG})")
         self.message([translate('raspy2dmd-install-error')], 5000, self.colorset['menu-ko'], 'middle', 'big')
         return False
+
+    def raspy2dmd_activity(self):
+        '''
+        Its installation in the activity indicator (include/cactivity.py) : its step, then its
+        end (Raspy2DMD started at once when installed). Read every few seconds
+        '''
+        now = time.time()
+        cached = getattr(self, 'raspy2dmd_state', None)
+        if cached is not None and now - cached[0] < 3:
+            return cached[1]
+        translate = self.lang.translate
+        if self.raspy2dmd_installing():
+            lines = self.raspy2dmd_install_log()
+            step = next((line for line in reversed(lines) if line.startswith('[ETAPE')), '')
+            numbers = re.match(r'\[ETAPE (\d+)/(\d+)\]', step)
+            fraction = (int(numbers.group(1)) - 1) / int(numbers.group(2)) if numbers else None
+            text = translate('activity-raspy2dmd')
+            if numbers:
+                text += f" : {numbers.group(1)}/{numbers.group(2)}"
+            state = {'text': text, 'fraction': fraction}
+        elif cached is not None and cached[1] is not None and cached[1].get('final'):
+            state = cached[1]
+        else:
+            installed = any('Installation terminee avec succes' in line for line in self.raspy2dmd_install_log()[-30:]) \
+                and self.raspy2dmd_installed()
+            if installed:
+                self.logs.info("Raspy2DMD : installed from the game (in the background)")
+                if not self.raspy2dmd_running():
+                    self.raspy2dmd_start()
+            else:
+                self.logs.error(f"Raspy2DMD : installation failed (see {self.RASPY2DMD_INSTALL_LOG})")
+            state = {'text': translate('raspy2dmd-install-done' if installed else 'raspy2dmd-install-error'),
+                     'final': True}
+        self.raspy2dmd_state = (now, state)
+        return state
 
     def raspy2dmd_uninstall(self):
         '''
@@ -12953,18 +13097,25 @@ class Screen(pygame.Surface):
             else:
                 animated.present()
             return
+        # The activity indicator over what is sent, the screen keeping no trace of it
+        activity = self.activities.over(self.screen)
         if rect_array is not None:
             #self.display.update(rect_array)
             for rect in rect_array:
                 self.display.update(rect)
             if badge is not None:
                 self.display.update(badge)
+            if activity is not None:
+                self.display.update(activity)
         elif rect is not None:
             self.display.update(rect)
             if badge is not None:
                 self.display.update(badge)
+            if activity is not None:
+                self.display.update(activity)
         else:
             self.display.flip()
+        self.activities.restore(self.screen)
 
     def coins_badge(self):
         '''

@@ -5765,3 +5765,65 @@ msgstr "Auto ({rate}/s)"
 msgid "animated-background-auto-still-short"
 msgstr "Auto (still)"
 
+
+msgid "activity_corner"
+msgstr "Activity indicator"
+
+msgid "activity-corner-top-right"
+msgstr "Top right"
+
+msgid "activity-corner-top-left"
+msgstr "Top left"
+
+msgid "activity-corner-bottom-right"
+msgstr "Bottom right"
+
+msgid "activity-corner-bottom-left"
+msgstr "Bottom left"
+
+msgid "activity-bganim"
+msgstr "Animated background: preparing"
+
+msgid "activity-paused"
+msgstr "(paused during the game)"
+
+msgid "activity-bganim-done"
+msgstr "Animated background ready"
+
+msgid "activity-bganim-failed"
+msgstr "Animated background: unreadable video"
+
+msgid "activity-raspy2dmd"
+msgstr "Installing Raspy2DMD"
+
+
+msgid "update_ready"
+msgstr "Update ready"
+
+msgid "update-ready-ask"
+msgstr "Ask"
+
+msgid "update-ready-historic"
+msgstr "Historic"
+
+msgid "update-ready-question"
+msgstr "Update {version} is ready. Restart now to install it?"
+
+msgid "update-ready-later"
+msgstr "No: it will be installed at the next start of the cabinet"
+
+msgid "update-restart-question"
+msgstr "Restart now?"
+
+msgid "update-background"
+msgstr "Downloading in the background: you can go on using the cabinet"
+
+msgid "activity-update"
+msgstr "Update {version}: downloading"
+
+msgid "activity-update-done"
+msgstr "Update {version} ready"
+
+msgid "activity-update-failed"
+msgstr "Download of the update failed"
+

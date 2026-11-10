@@ -225,6 +225,8 @@ class Preparation:
         self.seconds = min(longest, found) if found else longest
         self.total = max(1, int(self.seconds * rate))
         self.done = 0
+        # palette (its length unknown), then frames
+        self.phase = 'palette'
         self.state = 'running'
         self.process = None
         self.paused = False
@@ -258,6 +260,7 @@ class Preparation:
             if process is None or process.wait() != 0 or not os.path.exists(palette):
                 raise RuntimeError(f"palette : {process.stderr.read().decode(errors='replace')[-300:] if process else 'cancelled'}")
             # The frames, counted as they come (-progress)
+            self.phase = 'frames'
             process = self.start(['ffmpeg', '-nostdin', '-v', 'error', '-y', '-progress', 'pipe:2', '-stats_period', '1',
                                   '-t', str(self.seconds), '-i', self.path, '-i', palette, '-an', '-filter_complex',
                                   f"[0:v]fps={self.rate},{crop}[v];[v][1:v]paletteuse=dither=bayer:bayer_scale=3",
@@ -430,6 +433,10 @@ class AnimatedBackground:
             if self.preparation is None or self.preparation.state in ('failed', 'cancelled'):
                 self.preparation = Preparation(self.logs, path, rate, self.machine['memory'] or 45)
                 self.preparation.pause(self.in_game)
+                # Followed in the activity indicator (include/cactivity.py)
+                activities = getattr(self.owner, 'activities', None)
+                if activities is not None:
+                    activities.add('bganim', self.activity)
             while self.preparation is not None and self.preparation.state in ('running', 'paused'):
                 time.sleep(1)
             if (path, rate) != (self.source, self.rate) or not os.path.exists(frames_file):
@@ -478,6 +485,26 @@ class AnimatedBackground:
         if self.frames:
             return 'ready', len(self.frames), self.rate
         return ('still' if self.rate <= 0 else 'preparing'), 0, 0
+
+    def activity(self):
+        '''
+        The preparation in the activity indicator : its percentage, then its end
+        '''
+        preparation = self.preparation
+        translate = self.owner.lang.translate
+        if preparation is None or preparation.state == 'cancelled':
+            return None
+        if preparation.state in ('running', 'paused'):
+            done, total = preparation.progress()
+            fraction = done / total if total and preparation.phase == 'frames' else None
+            text = translate('activity-bganim')
+            if fraction is not None:
+                text += f" {int(fraction * 100)} %"
+            if preparation.state == 'paused':
+                text += ' ' + translate('activity-paused')
+            return {'text': text, 'fraction': fraction}
+        return {'text': translate('activity-bganim-done' if preparation.state == 'done' else 'activity-bganim-failed'),
+                'final': True}
 
     def game(self, playing):
         '''
@@ -619,6 +646,7 @@ class AnimatedBackground:
             self.keyed.blit(self.layer, (0, 0))
             self.real.blit(self.scaled, (0, 0))
             self.real.blit(self.keyed, (0, 0))
+            self.activity_over()
             pygame.display.update()
             return
         rects = [pygame.Rect(rect) for rect in rects if rect is not None]
@@ -627,7 +655,16 @@ class AnimatedBackground:
         for rect in rects:
             self.real.blit(self.scaled, rect, rect)
             self.real.blit(self.keyed, rect, rect)
-        pygame.display.update(rects)
+        drawn = self.activity_over()
+        pygame.display.update(rects + ([drawn] if drawn is not None else []))
+
+    def activity_over(self):
+        '''
+        The activity indicator over the frame sent (the next frame is made again from the
+        video and the layer : nothing to restore)
+        '''
+        activities = getattr(self.owner, 'activities', None)
+        return activities.draw(self.real) if activities is not None else None
 
     def draw_frame(self, force=False):
         '''
@@ -668,6 +705,7 @@ class AnimatedBackground:
             return False
         self.real.blit(self.scaled, (0, 0))
         self.real.blit(self.keyed, (0, 0))
+        self.activity_over()
         pygame.display.update()
         cost = time.perf_counter() - started
         counted = getattr(self, 'counted', None)

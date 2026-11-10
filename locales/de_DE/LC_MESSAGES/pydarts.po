@@ -5493,3 +5493,65 @@ msgstr "Auto ({rate}/s)"
 msgid "animated-background-auto-still-short"
 msgstr "Auto (Standbild)"
 
+
+msgid "activity_corner"
+msgstr "Aktivitätsanzeige"
+
+msgid "activity-corner-top-right"
+msgstr "Oben rechts"
+
+msgid "activity-corner-top-left"
+msgstr "Oben links"
+
+msgid "activity-corner-bottom-right"
+msgstr "Unten rechts"
+
+msgid "activity-corner-bottom-left"
+msgstr "Unten links"
+
+msgid "activity-bganim"
+msgstr "Animierter Hintergrund: Vorbereitung"
+
+msgid "activity-paused"
+msgstr "(pausiert während des Spiels)"
+
+msgid "activity-bganim-done"
+msgstr "Animierter Hintergrund bereit"
+
+msgid "activity-bganim-failed"
+msgstr "Animierter Hintergrund: Video nicht lesbar"
+
+msgid "activity-raspy2dmd"
+msgstr "Raspy2DMD wird installiert"
+
+
+msgid "update_ready"
+msgstr "Update bereit"
+
+msgid "update-ready-ask"
+msgstr "Fragen"
+
+msgid "update-ready-historic"
+msgstr "Wie bisher"
+
+msgid "update-ready-question"
+msgstr "Das Update {version} ist bereit. Jetzt neu starten, um es zu installieren?"
+
+msgid "update-ready-later"
+msgstr "Nein: es wird beim nächsten Start installiert"
+
+msgid "update-restart-question"
+msgstr "Jetzt neu starten?"
+
+msgid "update-background"
+msgstr "Download im Hintergrund: Sie können den Automaten weiter benutzen"
+
+msgid "activity-update"
+msgstr "Update {version}: Download"
+
+msgid "activity-update-done"
+msgstr "Update {version} bereit"
+
+msgid "activity-update-failed"
+msgstr "Download des Updates fehlgeschlagen"
+

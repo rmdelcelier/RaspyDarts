@@ -5560,3 +5560,65 @@ msgstr "Auto ({rate}/s)"
 msgid "animated-background-auto-still-short"
 msgstr "Auto (fissa)"
 
+
+msgid "activity_corner"
+msgstr "Indicatore di attività"
+
+msgid "activity-corner-top-right"
+msgstr "In alto a destra"
+
+msgid "activity-corner-top-left"
+msgstr "In alto a sinistra"
+
+msgid "activity-corner-bottom-right"
+msgstr "In basso a destra"
+
+msgid "activity-corner-bottom-left"
+msgstr "In basso a sinistra"
+
+msgid "activity-bganim"
+msgstr "Sfondo animato: preparazione"
+
+msgid "activity-paused"
+msgstr "(in pausa durante la partita)"
+
+msgid "activity-bganim-done"
+msgstr "Sfondo animato pronto"
+
+msgid "activity-bganim-failed"
+msgstr "Sfondo animato: video illeggibile"
+
+msgid "activity-raspy2dmd"
+msgstr "Installazione di Raspy2DMD"
+
+
+msgid "update_ready"
+msgstr "Aggiornamento pronto"
+
+msgid "update-ready-ask"
+msgstr "Chiedere"
+
+msgid "update-ready-historic"
+msgstr "Come prima"
+
+msgid "update-ready-question"
+msgstr "L'aggiornamento {version} è pronto. Riavviare ora per installarlo?"
+
+msgid "update-ready-later"
+msgstr "No: verrà installato al prossimo avvio"
+
+msgid "update-restart-question"
+msgstr "Riavviare ora?"
+
+msgid "update-background"
+msgstr "Download in background: puoi continuare a usare la macchina"
+
+msgid "activity-update"
+msgstr "Aggiornamento {version}: download"
+
+msgid "activity-update-done"
+msgstr "Aggiornamento {version} pronto"
+
+msgid "activity-update-failed"
+msgstr "Download dell'aggiornamento non riuscito"
+

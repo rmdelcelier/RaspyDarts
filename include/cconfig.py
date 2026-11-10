@@ -97,7 +97,13 @@ DefaultConfig['SectionGlobals'] = {
     # Animated background of the menus (include/cbganim.py) : the video (empty : none) and its
     # rate : auto (the one of this Pi), 30, 20, 10, still (a still picture of the video)
     'animated_background': '',
-    'animated_background_rate': 'auto'
+    'animated_background_rate': 'auto',
+    # Corner of the activity indicator (include/cactivity.py) : top-right, top-left,
+    # bottom-right, bottom-left
+    'activity_corner': 'top-right',
+    # An update downloaded : ask (restart now or at the next start ; downloaded in the
+    # background), historic (downloaded, installed and the game started again at once)
+    'update_ready': 'ask'
     }
 #
 DefaultConfig['SectionAdvanced'] = {
@@ -1414,6 +1420,10 @@ class Config:
         self.conf += "### Animated background of the menus : the video (empty : none), its rate (auto, 30, 20, 10, still)\n"
         self.conf += f"animated_background:{Global.get('animated_background', '')}\n"
         self.conf += f"animated_background_rate:{Global.get('animated_background_rate', 'auto')}\n"
+        self.conf += "### Corner of the activity indicator : top-right, top-left, bottom-right, bottom-left\n"
+        self.conf += f"activity_corner:{Global.get('activity_corner', 'top-right')}\n"
+        self.conf += "### An update downloaded : ask (restart now or at the next start), historic (installed at once)\n"
+        self.conf += f"update_ready:{Global.get('update_ready', 'ask')}\n"
 
         Advanced = self.config["SectionAdvanced"]
 

@@ -5569,3 +5569,65 @@ msgstr "Auto ({rate}/s)"
 msgid "animated-background-auto-still-short"
 msgstr "Auto (fixe)"
 
+
+msgid "activity_corner"
+msgstr "Indicateur d'activité"
+
+msgid "activity-corner-top-right"
+msgstr "En haut à droite"
+
+msgid "activity-corner-top-left"
+msgstr "En haut à gauche"
+
+msgid "activity-corner-bottom-right"
+msgstr "En bas à droite"
+
+msgid "activity-corner-bottom-left"
+msgstr "En bas à gauche"
+
+msgid "activity-bganim"
+msgstr "Fond animé : préparation"
+
+msgid "activity-paused"
+msgstr "(en pause pendant la partie)"
+
+msgid "activity-bganim-done"
+msgstr "Fond animé prêt"
+
+msgid "activity-bganim-failed"
+msgstr "Fond animé : vidéo illisible"
+
+msgid "activity-raspy2dmd"
+msgstr "Installation de Raspy2DMD"
+
+
+msgid "update_ready"
+msgstr "Mise à jour prête"
+
+msgid "update-ready-ask"
+msgstr "Demander"
+
+msgid "update-ready-historic"
+msgstr "Historique"
+
+msgid "update-ready-question"
+msgstr "La mise à jour {version} est prête. Redémarrer maintenant pour l'installer ?"
+
+msgid "update-ready-later"
+msgstr "Non : elle s'installera au prochain démarrage de la borne"
+
+msgid "update-restart-question"
+msgstr "Redémarrer maintenant ?"
+
+msgid "update-background"
+msgstr "Téléchargement en tâche de fond : vous pouvez continuer à utiliser la borne"
+
+msgid "activity-update"
+msgstr "Mise à jour {version} : téléchargement"
+
+msgid "activity-update-done"
+msgstr "Mise à jour {version} prête"
+
+msgid "activity-update-failed"
+msgstr "Échec du téléchargement de la mise à jour"
+

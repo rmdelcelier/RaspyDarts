@@ -5547,3 +5547,65 @@ msgstr "Auto ({rate}/s)"
 msgid "animated-background-auto-still-short"
 msgstr "Auto (stilstaand)"
 
+
+msgid "activity_corner"
+msgstr "Activiteitsindicator"
+
+msgid "activity-corner-top-right"
+msgstr "Rechtsboven"
+
+msgid "activity-corner-top-left"
+msgstr "Linksboven"
+
+msgid "activity-corner-bottom-right"
+msgstr "Rechtsonder"
+
+msgid "activity-corner-bottom-left"
+msgstr "Linksonder"
+
+msgid "activity-bganim"
+msgstr "Geanimeerde achtergrond: voorbereiding"
+
+msgid "activity-paused"
+msgstr "(gepauzeerd tijdens het spel)"
+
+msgid "activity-bganim-done"
+msgstr "Geanimeerde achtergrond klaar"
+
+msgid "activity-bganim-failed"
+msgstr "Geanimeerde achtergrond: onleesbare video"
+
+msgid "activity-raspy2dmd"
+msgstr "Raspy2DMD wordt geïnstalleerd"
+
+
+msgid "update_ready"
+msgstr "Update klaar"
+
+msgid "update-ready-ask"
+msgstr "Vragen"
+
+msgid "update-ready-historic"
+msgstr "Zoals vroeger"
+
+msgid "update-ready-question"
+msgstr "Update {version} is klaar. Nu herstarten om het te installeren?"
+
+msgid "update-ready-later"
+msgstr "Nee: het wordt bij de volgende start geïnstalleerd"
+
+msgid "update-restart-question"
+msgstr "Nu herstarten?"
+
+msgid "update-background"
+msgstr "Download op de achtergrond: u kunt de kast blijven gebruiken"
+
+msgid "activity-update"
+msgstr "Update {version}: downloaden"
+
+msgid "activity-update-done"
+msgstr "Update {version} klaar"
+
+msgid "activity-update-failed"
+msgstr "Downloaden van de update mislukt"
+
