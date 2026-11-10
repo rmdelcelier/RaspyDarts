@@ -5465,7 +5465,7 @@ msgid "animated-background-cut"
 msgstr "(los primeros {seconds} segundos del vídeo)"
 
 msgid "animated-background-state-none"
-msgstr "Sin fondo animado: el fondo del tema"
+msgstr "Sin vídeo: el fondo del tema"
 
 msgid "animated-background-state-still"
 msgstr "Una imagen fija del vídeo"
@@ -5477,7 +5477,7 @@ msgid "animated-background-state-preparing"
 msgstr "Preparando el vídeo…"
 
 msgid "animated-background-help"
-msgstr "El fondo animado sustituye al fondo del tema en las pantallas antes de las partidas (no en las que tienen fondo propio). El vídeo se prepara una sola vez, en segundo plano: el juego sigue utilizable, la preparación se detiene durante las partidas."
+msgstr "El fondo animado sustituye al fondo del tema en las pantallas antes de las partidas (el vídeo: no en las que tienen fondo propio; el efecto dibujado: en todas, sobre su fondo). El vídeo se prepara una sola vez, en segundo plano, en pausa durante las partidas."
 
 msgid "animated-background-choose"
 msgstr "Vídeo del fondo animado"
@@ -5559,4 +5559,77 @@ msgstr "Actualización {version} lista"
 
 msgid "activity-update-failed"
 msgstr "Fallo de la descarga de la actualización"
+
+
+msgid "animated-background-effect"
+msgstr "Efecto dibujado"
+
+msgid "animated-background-effect-color"
+msgstr "Color del efecto"
+
+msgid "animated-background-effect-amount"
+msgstr "Cantidad"
+
+msgid "animated-background-effect-speed"
+msgstr "Velocidad"
+
+msgid "animated-effect-none"
+msgstr "Ninguno"
+
+msgid "animated-effect-sparks"
+msgstr "Chispas"
+
+msgid "animated-effect-snow"
+msgstr "Nieve"
+
+msgid "animated-effect-bubbles"
+msgstr "Burbujas"
+
+msgid "animated-effect-fireflies"
+msgstr "Luciérnagas"
+
+msgid "animated-effect-color-auto"
+msgstr "Las suyas"
+
+msgid "animated-effect-color-theme"
+msgstr "Color del tema"
+
+msgid "animated-effect-color-white"
+msgstr "Blanco"
+
+msgid "animated-effect-color-red"
+msgstr "Rojo"
+
+msgid "animated-effect-color-orange"
+msgstr "Naranja"
+
+msgid "animated-effect-color-yellow"
+msgstr "Amarillo"
+
+msgid "animated-effect-color-green"
+msgstr "Verde"
+
+msgid "animated-effect-color-blue"
+msgstr "Azul"
+
+msgid "animated-effect-color-purple"
+msgstr "Violeta"
+
+msgid "animated-effect-amount-few"
+msgstr "Poco"
+
+msgid "animated-effect-amount-normal"
+msgstr "Normal"
+
+msgid "animated-effect-amount-many"
+msgstr "Mucho"
+
+msgid "animated-effect-speed-slow"
+msgstr "Lenta"
+
+msgid "animated-effect-speed-normal"
+msgstr "Normal"
+
+msgid "animated-effect-speed-fast"
+msgstr "Rápida"
 

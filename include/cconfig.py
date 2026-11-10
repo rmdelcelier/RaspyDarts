@@ -98,6 +98,12 @@ DefaultConfig['SectionGlobals'] = {
     # rate : auto (the one of this Pi), 30, 20, 10, still (a still picture of the video)
     'animated_background': '',
     'animated_background_rate': 'auto',
+    # Drawn effect of the animated background (include/ceffects.py) : none, sparks, snow,
+    # bubbles, fireflies ; its colour, amount (few, normal, many), speed (slow, normal, fast)
+    'animated_effect': 'none',
+    'animated_effect_color': 'auto',
+    'animated_effect_amount': 'normal',
+    'animated_effect_speed': 'normal',
     # Corner of the activity indicator (include/cactivity.py) : top-right, top-left,
     # bottom-right, bottom-left
     'activity_corner': 'top-right',
@@ -1420,6 +1426,11 @@ class Config:
         self.conf += "### Animated background of the menus : the video (empty : none), its rate (auto, 30, 20, 10, still)\n"
         self.conf += f"animated_background:{Global.get('animated_background', '')}\n"
         self.conf += f"animated_background_rate:{Global.get('animated_background_rate', 'auto')}\n"
+        self.conf += "### Drawn effect of the animated background : none, sparks, snow, bubbles, fireflies ; colour, amount, speed\n"
+        self.conf += f"animated_effect:{Global.get('animated_effect', 'none')}\n"
+        self.conf += f"animated_effect_color:{Global.get('animated_effect_color', 'auto')}\n"
+        self.conf += f"animated_effect_amount:{Global.get('animated_effect_amount', 'normal')}\n"
+        self.conf += f"animated_effect_speed:{Global.get('animated_effect_speed', 'normal')}\n"
         self.conf += "### Corner of the activity indicator : top-right, top-left, bottom-right, bottom-left\n"
         self.conf += f"activity_corner:{Global.get('activity_corner', 'top-right')}\n"
         self.conf += "### An update downloaded : ask (restart now or at the next start), historic (installed at once)\n"

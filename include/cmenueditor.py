@@ -1410,8 +1410,10 @@ def screens_menu(screen, keys):
                 line = (f'F{index}', translate('theme-customize'), BTN_CHOICE)
             elif name == 'animated-background':
                 video = str(globals_.get('animated_background') or '')
-                line = (f'F{index}', translate('animated-background'), BTN_DROPDOWN,
-                        os.path.basename(video) if video else translate('animated-background-none'))
+                effect = str(globals_.get('animated_effect') or 'none')
+                value = os.path.basename(video) if video else (translate(f'animated-effect-{effect}') if effect != 'none'
+                                                               else translate('animated-background-none'))
+                line = (f'F{index}', translate('animated-background'), BTN_DROPDOWN, value)
             else:
                 line = (f'F{index}', translate(dict(SCREENS)[name]), BTN_CHOICE)
             click_zones[f'F{index}'] = screen.menu_item((index, nb_elements, selected), line, align='Full', tabs=True)
@@ -1507,8 +1509,15 @@ def animated_background_menu(screen, keys):
     from include.cscreen import BTN_DROPDOWN
     translate = screen.lang.translate
     animated = screen.bganim
-    rows = ['video', 'rate']
+    rows = ['video', 'rate', 'effect', 'effect-color', 'effect-amount', 'effect-speed']
     nb_elements = len(rows)
+    # The settings of the effect : (key of raspydarts.cfg, choices, prefix of their texts)
+    from include import ceffects
+    effect_rows = {'effect': ('animated_effect', ceffects.EFFECTS, 'animated-effect-'),
+                   'effect-color': ('animated_effect_color', tuple(ceffects.COLORS), 'animated-effect-color-'),
+                   'effect-amount': ('animated_effect_amount', tuple(ceffects.AMOUNTS), 'animated-effect-amount-'),
+                   'effect-speed': ('animated_effect_speed', tuple(ceffects.SPEEDS), 'animated-effect-speed-')}
+    defaults = {'effect': 'none', 'effect-color': 'auto', 'effect-amount': 'normal', 'effect-speed': 'normal'}
     selected = 1
     while True:
         globals_ = screen.config.config['SectionGlobals']
@@ -1519,6 +1528,8 @@ def animated_background_menu(screen, keys):
         screen.menu_header(translate('animated-background'))
         values = {'video': os.path.basename(video) if video else translate('animated-background-none'),
                   'rate': rate_text(screen, rate, short=True)}
+        for name, (key, _choices, prefix) in effect_rows.items():
+            values[name] = translate(prefix + str(globals_.get(key) or defaults[name]))
         for index, name in enumerate(rows, 1):
             line = (f'F{index}', translate(f'animated-background-{name}'), BTN_DROPDOWN, values[name])
             click_zones[f'F{index}'] = screen.menu_item((index, nb_elements, selected), line, align='Full', tabs=True)
@@ -1535,11 +1546,13 @@ def animated_background_menu(screen, keys):
                 status += ' ' + translate('animated-background-cut').replace('{seconds}', f"{seconds:.0f}")
         else:
             status = translate(f'animated-background-state-{state}')
+        # Under the last line, over the button Back
         unit_x, unit_y = screen.res['x'] / 16, screen.res['y'] / 16
-        screen.blit_text(status, int(unit_x), int(7.2 * unit_y), int(14 * unit_x), int(unit_y),
-                         screen.colorset['menu-text-white'])
+        top = max(pygame.Rect(rect).bottom for rect in click_zones.values()) + int(unit_y * 0.3)
+        bottom = int(screen.res['y'] * 0.9)
+        screen.blit_text(status, int(unit_x), top, int(14 * unit_x), int(0.8 * unit_y), screen.colorset['menu-text-white'])
         paragraph(screen, translate('animated-background-help'),
-                  pygame.Rect(int(2 * unit_x), int(8.6 * unit_y), int(12 * unit_x), int(3.4 * unit_y)),
+                  pygame.Rect(int(2 * unit_x), top + int(unit_y), int(12 * unit_x), max(int(unit_y), bottom - top - int(unit_y))),
                   screen.colorset['menu-text-white'])
         click_zones['escape'] = screen.display_button(nb_elements + 1 == selected, 'back', special='escape')
         screen.update_screen()
@@ -1576,6 +1589,14 @@ def animated_background_menu(screen, keys):
                     screen.message([translate('editor-import-failed')], 2500, 'menu-ko', 'middle', 'big')
                     continue
             globals_['animated_background'] = chosen
+        elif name in effect_rows:
+            key, choices, prefix = effect_rows[name]
+            chosen = screen.dropdown(screen.res['x'] * 6 / 16, 3 * screen.res_y_16,
+                                     [[choice, translate(prefix + choice)] for choice in choices],
+                                     navigate=str(globals_.get(key) or defaults[name]))
+            if chosen == 'escape':
+                continue
+            globals_[key] = chosen
         else:
             choices = ['auto'] + (['30', '20', '10'] if animated.machine['memory'] else []) + ['still']
             chosen = screen.dropdown(screen.res['x'] * 6 / 16, 3 * screen.res_y_16,

@@ -5527,7 +5527,7 @@ msgid "animated-background-cut"
 msgstr "(i primi {seconds} secondi del video)"
 
 msgid "animated-background-state-none"
-msgstr "Nessuno sfondo animato: lo sfondo del tema"
+msgstr "Nessun video: lo sfondo del tema"
 
 msgid "animated-background-state-still"
 msgstr "Un'immagine fissa del video"
@@ -5539,7 +5539,7 @@ msgid "animated-background-state-preparing"
 msgstr "Preparazione del video…"
 
 msgid "animated-background-help"
-msgstr "Lo sfondo animato sostituisce lo sfondo del tema nelle schermate prima delle partite (non in quelle con uno sfondo proprio). Il video viene preparato una sola volta, in background: il gioco resta utilizzabile, la preparazione si ferma durante le partite."
+msgstr "Lo sfondo animato sostituisce lo sfondo del tema nelle schermate prima delle partite (il video: non in quelle con uno sfondo proprio; l'effetto disegnato: in tutte, sopra il loro sfondo). Il video viene preparato una sola volta, in background, in pausa durante le partite."
 
 msgid "animated-background-choose"
 msgstr "Video dello sfondo animato"
@@ -5621,4 +5621,77 @@ msgstr "Aggiornamento {version} pronto"
 
 msgid "activity-update-failed"
 msgstr "Download dell'aggiornamento non riuscito"
+
+
+msgid "animated-background-effect"
+msgstr "Effetto disegnato"
+
+msgid "animated-background-effect-color"
+msgstr "Colore dell'effetto"
+
+msgid "animated-background-effect-amount"
+msgstr "Quantità"
+
+msgid "animated-background-effect-speed"
+msgstr "Velocità"
+
+msgid "animated-effect-none"
+msgstr "Nessuno"
+
+msgid "animated-effect-sparks"
+msgstr "Scintille"
+
+msgid "animated-effect-snow"
+msgstr "Neve"
+
+msgid "animated-effect-bubbles"
+msgstr "Bolle"
+
+msgid "animated-effect-fireflies"
+msgstr "Lucciole"
+
+msgid "animated-effect-color-auto"
+msgstr "Le sue"
+
+msgid "animated-effect-color-theme"
+msgstr "Colore del tema"
+
+msgid "animated-effect-color-white"
+msgstr "Bianco"
+
+msgid "animated-effect-color-red"
+msgstr "Rosso"
+
+msgid "animated-effect-color-orange"
+msgstr "Arancione"
+
+msgid "animated-effect-color-yellow"
+msgstr "Giallo"
+
+msgid "animated-effect-color-green"
+msgstr "Verde"
+
+msgid "animated-effect-color-blue"
+msgstr "Blu"
+
+msgid "animated-effect-color-purple"
+msgstr "Viola"
+
+msgid "animated-effect-amount-few"
+msgstr "Poco"
+
+msgid "animated-effect-amount-normal"
+msgstr "Normale"
+
+msgid "animated-effect-amount-many"
+msgstr "Molto"
+
+msgid "animated-effect-speed-slow"
+msgstr "Lenta"
+
+msgid "animated-effect-speed-normal"
+msgstr "Normale"
+
+msgid "animated-effect-speed-fast"
+msgstr "Veloce"
 

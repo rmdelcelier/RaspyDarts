@@ -5514,7 +5514,7 @@ msgid "animated-background-cut"
 msgstr "(de eerste {seconds} seconden van de video)"
 
 msgid "animated-background-state-none"
-msgstr "Geen geanimeerde achtergrond: de achtergrond van het thema"
+msgstr "Geen video: de achtergrond van het thema"
 
 msgid "animated-background-state-still"
 msgstr "Een stilstaand beeld uit de video"
@@ -5526,7 +5526,7 @@ msgid "animated-background-state-preparing"
 msgstr "Video wordt voorbereid…"
 
 msgid "animated-background-help"
-msgstr "De geanimeerde achtergrond vervangt de achtergrond van het thema op de schermen vóór de spellen (niet op schermen met een eigen achtergrond). De video wordt één keer op de achtergrond voorbereid: het spel blijft bruikbaar, de voorbereiding stopt tijdens de spellen."
+msgstr "De geanimeerde achtergrond vervangt de achtergrond van het thema op de schermen vóór de spellen (de video: niet op schermen met een eigen achtergrond; het getekende effect: op alle, over hun achtergrond). De video wordt één keer op de achtergrond voorbereid, gepauzeerd tijdens de spellen."
 
 msgid "animated-background-choose"
 msgstr "Video van de geanimeerde achtergrond"
@@ -5608,4 +5608,77 @@ msgstr "Update {version} klaar"
 
 msgid "activity-update-failed"
 msgstr "Downloaden van de update mislukt"
+
+
+msgid "animated-background-effect"
+msgstr "Getekend effect"
+
+msgid "animated-background-effect-color"
+msgstr "Kleur van het effect"
+
+msgid "animated-background-effect-amount"
+msgstr "Hoeveelheid"
+
+msgid "animated-background-effect-speed"
+msgstr "Snelheid"
+
+msgid "animated-effect-none"
+msgstr "Geen"
+
+msgid "animated-effect-sparks"
+msgstr "Vonken"
+
+msgid "animated-effect-snow"
+msgstr "Sneeuw"
+
+msgid "animated-effect-bubbles"
+msgstr "Bellen"
+
+msgid "animated-effect-fireflies"
+msgstr "Vuurvliegjes"
+
+msgid "animated-effect-color-auto"
+msgstr "Eigen"
+
+msgid "animated-effect-color-theme"
+msgstr "Kleur van het thema"
+
+msgid "animated-effect-color-white"
+msgstr "Wit"
+
+msgid "animated-effect-color-red"
+msgstr "Rood"
+
+msgid "animated-effect-color-orange"
+msgstr "Oranje"
+
+msgid "animated-effect-color-yellow"
+msgstr "Geel"
+
+msgid "animated-effect-color-green"
+msgstr "Groen"
+
+msgid "animated-effect-color-blue"
+msgstr "Blauw"
+
+msgid "animated-effect-color-purple"
+msgstr "Paars"
+
+msgid "animated-effect-amount-few"
+msgstr "Weinig"
+
+msgid "animated-effect-amount-normal"
+msgstr "Normaal"
+
+msgid "animated-effect-amount-many"
+msgstr "Veel"
+
+msgid "animated-effect-speed-slow"
+msgstr "Langzaam"
+
+msgid "animated-effect-speed-normal"
+msgstr "Normaal"
+
+msgid "animated-effect-speed-fast"
+msgstr "Snel"
 

@@ -5732,7 +5732,7 @@ msgid "animated-background-cut"
 msgstr "(the first {seconds} seconds of the video)"
 
 msgid "animated-background-state-none"
-msgstr "No animated background: the background of the theme"
+msgstr "No video: the background of the theme"
 
 msgid "animated-background-state-still"
 msgstr "A still picture of the video"
@@ -5744,7 +5744,7 @@ msgid "animated-background-state-preparing"
 msgstr "Preparing the video…"
 
 msgid "animated-background-help"
-msgstr "The animated background replaces the background of the theme on the screens before the games (not on those with a background of their own). The video is prepared once, in the background: the game stays usable, the preparation stops during the games."
+msgstr "The animated background replaces the background of the theme on the screens before the games (the video: not on those with a background of their own; the drawn effect: on all of them, over their background). The video is prepared once, in the background, paused during the games."
 
 msgid "animated-background-choose"
 msgstr "Video of the animated background"
@@ -5826,4 +5826,77 @@ msgstr "Update {version} ready"
 
 msgid "activity-update-failed"
 msgstr "Download of the update failed"
+
+
+msgid "animated-background-effect"
+msgstr "Drawn effect"
+
+msgid "animated-background-effect-color"
+msgstr "Colour of the effect"
+
+msgid "animated-background-effect-amount"
+msgstr "Amount"
+
+msgid "animated-background-effect-speed"
+msgstr "Speed"
+
+msgid "animated-effect-none"
+msgstr "None"
+
+msgid "animated-effect-sparks"
+msgstr "Sparks"
+
+msgid "animated-effect-snow"
+msgstr "Snow"
+
+msgid "animated-effect-bubbles"
+msgstr "Bubbles"
+
+msgid "animated-effect-fireflies"
+msgstr "Fireflies"
+
+msgid "animated-effect-color-auto"
+msgstr "Its own"
+
+msgid "animated-effect-color-theme"
+msgstr "Theme colour"
+
+msgid "animated-effect-color-white"
+msgstr "White"
+
+msgid "animated-effect-color-red"
+msgstr "Red"
+
+msgid "animated-effect-color-orange"
+msgstr "Orange"
+
+msgid "animated-effect-color-yellow"
+msgstr "Yellow"
+
+msgid "animated-effect-color-green"
+msgstr "Green"
+
+msgid "animated-effect-color-blue"
+msgstr "Blue"
+
+msgid "animated-effect-color-purple"
+msgstr "Purple"
+
+msgid "animated-effect-amount-few"
+msgstr "Few"
+
+msgid "animated-effect-amount-normal"
+msgstr "Normal"
+
+msgid "animated-effect-amount-many"
+msgstr "Many"
+
+msgid "animated-effect-speed-slow"
+msgstr "Slow"
+
+msgid "animated-effect-speed-normal"
+msgstr "Normal"
+
+msgid "animated-effect-speed-fast"
+msgstr "Fast"
 

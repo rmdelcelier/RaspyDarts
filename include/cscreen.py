@@ -6825,7 +6825,8 @@ class Screen(pygame.Surface):
                     # Lecteur MP3 : set in its own screen (include/cmusic.py)
                     'music_source', 'music_volume',
                     # Animated background : in Modifier les écrans > Fond animé
-                    'animated_background', 'animated_background_rate'):
+                    'animated_background', 'animated_background_rate', 'animated_effect', 'animated_effect_color',
+                    'animated_effect_amount', 'animated_effect_speed'):
                 avoid.append([option, customization[option], '', 0, []])
                 continue
 

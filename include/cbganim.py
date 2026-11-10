@@ -20,7 +20,9 @@ temporary file checked then renamed ; paused during the games) are kept in
 background is a still picture of the video.
 
 Settings (raspydarts.cfg, SectionGlobals) : animated_background (the video, empty : none),
-animated_background_rate (auto, 30, 20, 10, still).
+animated_background_rate (auto, 30, 20, 10, still), animated_effect (a drawn effect, see
+include/ceffects.py : over the video, or alone over the background of the menu, its own image
+included) and its colour, amount and speed.
 """
 
 import hashlib
@@ -34,6 +36,7 @@ import time
 
 import pygame
 
+from include import ceffects
 from include import cpaths
 
 # Size of the frames kept (made bigger on the screen) ; 256 colours : a byte a pixel and the
@@ -386,6 +389,15 @@ class AnimatedBackground:
         self.effective = 0
         self.redraw = False
         self.in_game = False
+        # The drawn effect (include/ceffects.py) : its settings, the effect, the background it is
+        # drawn over when there is no video (the one of the menu, made at its first drawing)
+        self.effect_settings = ('none', 'auto', 'normal', 'normal')
+        self.effect = None
+        self.base = None
+        self.bases = {}
+        self.base_key = None
+        self.use_frames = False
+        self.last_step = time.time()
         self.logs.info(f"Animated background : {self.machine['name']}, rate {self.machine['rate']} i/s, "
                        f"{self.machine['memory']} MB")
 
@@ -396,6 +408,16 @@ class AnimatedBackground:
         rate = str(config.get_value('SectionGlobals', 'animated_background_rate', False) or 'auto').strip()
         return path, rate
 
+    def effect_wanted(self):
+        config = self.owner.config
+        values = []
+        for key, default in (('animated_effect', 'none'), ('animated_effect_color', 'auto'),
+                             ('animated_effect_amount', 'normal'), ('animated_effect_speed', 'normal')):
+            values.append(str(config.get_value('SectionGlobals', key, False) or default).strip())
+        if values[0] not in ceffects.EFFECTS:
+            values[0] = 'none'
+        return tuple(values)
+
     def apply_settings(self):
         '''
         The video and the rate of the settings : its still picture at once, its frames read
@@ -403,6 +425,12 @@ class AnimatedBackground:
         '''
         path, setting = self.settings()
         rate = wanted_rate(setting, self.machine)
+        effect = self.effect_wanted()
+        if effect != self.effect_settings:
+            # Made again at the size of the screen (see make_layer)
+            self.effect_settings = effect
+            self.effect = None
+            self.redraw = True
         if path and not os.path.exists(path):
             self.logs.warning(f"Animated background : {path} not found")
             path = ''
@@ -517,8 +545,8 @@ class AnimatedBackground:
     # ------------------------------------------------------------------ the screens of the menus
     def wanted(self, name):
         '''
-        This menu shows the animated background : one is chosen, the menu has no background of
-        its own in the files of menus
+        This menu shows the video : one is chosen, the menu has no background of its own in the
+        files of menus (the drawn effect is shown over its own background)
         '''
         if not self.source:
             return False
@@ -535,12 +563,27 @@ class AnimatedBackground:
         if self.depth > 1:
             return
         self.scope_ok = self.wanted(name)
+        # The background under the effect : the one of this menu, made at its first drawing and
+        # kept (the menus keep theirs : drawn again from their copy, the background not asked)
+        self.base_key = (name, tuple(self.owner.screen.get_size()), getattr(self.owner.file_class, 'theme_dir', None),
+                         self.owner.background, bool(self.source and self.scope_ok and self.still))
+        self.base = self.bases.get(self.base_key)
         self.set_mode(self.wanted_mode())
 
+    def with_effect(self):
+        return self.effect_settings[0] != 'none'
+
     def wanted_mode(self):
-        if not self.source or not getattr(self, 'scope_ok', False):
-            return None
-        return 'layer' if self.frames else ('still' if self.still else None)
+        '''
+        layer : the video, or the drawn effect over the background of the menu ; still : the
+        still picture of the video ; None : the background of the menu as always
+        '''
+        video = getattr(self, 'scope_ok', False) and bool(self.frames)
+        if video or self.with_effect():
+            return 'layer'
+        if self.source and getattr(self, 'scope_ok', False) and self.still:
+            return 'still'
+        return None
 
     def leave(self):
         self.depth -= 1
@@ -550,16 +593,18 @@ class AnimatedBackground:
 
     def set_mode(self, mode):
         owner = self.owner
-        if mode != self.mode:
+        if mode != self.mode or (mode == 'layer' and self.use_frames != (getattr(self, 'scope_ok', False) and bool(self.frames))):
             # Backgrounds and buttons kept by the menus : drawn on another background
             owner.menu_backgrounds.clear()
             owner.menu_composites.clear()
         if mode == 'layer':
             if self.mode != 'layer':
                 self.real = owner.screen
+            self.use_frames = getattr(self, 'scope_ok', False) and bool(self.frames)
             self.make_layer()
             owner.screen = self.layer
             self.redraw = False
+            self.effective = self.rate if self.use_frames else self.effect_rate()
         elif self.mode == 'layer':
             owner.screen = self.real
             self.report()
@@ -568,6 +613,12 @@ class AnimatedBackground:
         self.mode = mode
         if mode != 'layer':
             self.redraw = False
+
+    def effect_rate(self):
+        '''
+        Frames a second of an effect alone (only its places drawn : light, even on a small Pi)
+        '''
+        return 30 if self.machine['rate'] >= 15 else 20
 
     def report(self):
         '''
@@ -578,8 +629,9 @@ class AnimatedBackground:
             return
         elapsed = time.time() - counted[0]
         if elapsed >= 5 and counted[1]:
-            self.logs.info(f"Animated background : {counted[1] / elapsed:.1f} i/s for {elapsed:.0f} s "
-                           f"({counted[2] / counted[1] * 1000:.0f} ms a frame, rate {self.effective}/{self.rate})")
+            what = 'video' if self.use_frames else f"effect {self.effect_settings[0]}"
+            self.logs.info(f"Animated background : {counted[1] / elapsed:.1f} i/s for {elapsed:.0f} s, {what} "
+                           f"({counted[2] / counted[1] * 1000:.0f} ms a frame, rate {self.effective})")
         self.counted = None
 
     def make_layer(self):
@@ -589,10 +641,17 @@ class AnimatedBackground:
             self.keyed = pygame.Surface(size, 0, self.real)
         self.layer.fill(self.key)
         self.keyed.fill(self.key)
-        self.keyed.set_colorkey(self.key, pygame.RLEACCEL)
-        if self.palette is not None and (self.scaled is None or self.scaled.get_size() != size):
-            self.scaled = pygame.Surface(size, 0, 8)
-        if self.scaled is not None and self.palette is not None:
+        # Blitted whole (the video) : compressed (2 ms instead of 12) ; in small pieces (an effect
+        # alone : 80 places a frame), not : each piece of a compressed surface reads it from its top
+        self.keyed.set_colorkey(self.key, pygame.RLEACCEL if self.use_frames else 0)
+        if self.with_effect() and (self.effect is None or (self.effect.width, self.effect.height) != size):
+            name, color, amount, speed = self.effect_settings
+            self.effect = ceffects.make(name, size, color, amount, speed,
+                                        theme_color=self.owner.colorset.get('menu-selected'))
+        self.last_step = time.time()
+        if self.use_frames:
+            if self.scaled is None or self.scaled.get_size() != size:
+                self.scaled = pygame.Surface(size, 0, 8)
             self.scaled.set_palette(self.palette)
             self.draw_frame(force=True)
 
@@ -602,6 +661,8 @@ class AnimatedBackground:
         '''
         if self.mode == 'layer':
             self.real = self.owner.screen
+            self.base = None
+            self.bases.clear()
             self.make_layer()
             self.owner.screen = self.layer
         self.still_picture = None
@@ -609,9 +670,12 @@ class AnimatedBackground:
     def background(self, rect=None):
         '''
         The background of a menu shown with the animated one (Screen.display_background) : the
-        key colour on the layer, else the still picture. False : not this background
+        key colour on the layer (its background under the effect kept first), else the still
+        picture. False : not this background
         '''
         if self.mode == 'layer':
+            if not self.use_frames and self.base is None:
+                self.base = self.make_base()
             self.owner.screen.fill(self.key, rect)
             return True
         if self.mode == 'still':
@@ -624,6 +688,28 @@ class AnimatedBackground:
                 self.owner.screen.blit(picture, rect, rect)
             return True
         return False
+
+    def make_base(self):
+        '''
+        The background the effect is drawn over : the still picture of the video (a Pi too
+        small for it), else the background of the menu as always (its own image, the theme).
+        Kept for this menu
+        '''
+        owner = self.owner
+        surface = pygame.Surface(self.real.get_size(), 0, self.real)
+        while len(self.bases) >= 6:
+            self.bases.pop(next(iter(self.bases)))
+        self.bases[self.base_key] = surface
+        if self.source and getattr(self, 'scope_ok', False) and self.still and self.still_surface() is not None:
+            surface.blit(self.still_surface(), (0, 0))
+            return surface
+        screen, mode = owner.screen, self.mode
+        owner.screen, self.mode = surface, None
+        try:
+            owner.display_background()
+        finally:
+            owner.screen, self.mode = screen, mode
+        return surface
 
     def still_surface(self):
         size = self.owner.screen.get_size()
@@ -638,14 +724,40 @@ class AnimatedBackground:
         return self.still_picture
 
     # ------------------------------------------------------------------ showing
+    def under(self):
+        '''
+        What is under the menu : the frame of the video, else the background of the menu
+        '''
+        if self.use_frames:
+            return self.scaled
+        if self.base is None and self.mode == 'layer':
+            self.base = self.make_base()
+        return self.base
+
+    def compose(self, rect=None):
+        '''
+        The screen made again from what is under the menu, the effect and the menu (a part)
+        '''
+        under = self.under()
+        if under is not None:
+            if rect is None:
+                self.real.blit(under, (0, 0))
+            else:
+                self.real.blit(under, rect, rect)
+        if self.effect is not None:
+            self.effect.draw(self.real, rect)
+        if rect is None:
+            self.real.blit(self.keyed, (0, 0))
+        else:
+            self.real.blit(self.keyed, rect, rect)
+
     def present(self, rects=None):
         '''
         What the menu drew (rects, None : everything) sent to the screen over the video
         '''
         if rects is None:
             self.keyed.blit(self.layer, (0, 0))
-            self.real.blit(self.scaled, (0, 0))
-            self.real.blit(self.keyed, (0, 0))
+            self.compose()
             self.activity_over()
             pygame.display.update()
             return
@@ -653,18 +765,25 @@ class AnimatedBackground:
         for rect in rects:
             self.keyed.blit(self.layer, rect, rect)
         for rect in rects:
-            self.real.blit(self.scaled, rect, rect)
-            self.real.blit(self.keyed, rect, rect)
+            self.compose(rect)
         drawn = self.activity_over()
         pygame.display.update(rects + ([drawn] if drawn is not None else []))
 
     def activity_over(self):
         '''
-        The activity indicator over the frame sent (the next frame is made again from the
-        video and the layer : nothing to restore)
+        The activity indicator over the frame sent (made again from the video, the effect and
+        the layer : nothing to restore) ; gone : its place made again. The place to send
         '''
         activities = getattr(self.owner, 'activities', None)
-        return activities.draw(self.real) if activities is not None else None
+        if activities is None:
+            return None
+        drawn = activities.draw(self.real)
+        if drawn is not None:
+            return drawn
+        gone = activities.erase_rect()
+        if gone is not None:
+            self.compose(gone)
+        return gone
 
     def draw_frame(self, force=False):
         '''
@@ -690,23 +809,47 @@ class AnimatedBackground:
             return False
         if self.redraw:
             wanted = self.wanted_mode()
-            if wanted == self.mode:
+            changed = wanted != self.mode or (wanted == 'layer' and (
+                self.use_frames != (getattr(self, 'scope_ok', False) and bool(self.frames))
+                or (self.with_effect() and self.effect is None) or (not self.with_effect() and self.effect is not None)))
+            if not changed:
                 self.redraw = False
             elif can_redraw:
+                if not self.with_effect():
+                    self.effect = None
+                self.base = None
+                self.bases.clear()
+                self.set_mode(None)
                 self.set_mode(wanted)
                 return True
-        if self.mode != 'layer' or not self.frames:
+        if self.mode != 'layer':
             return False
         now = time.time()
         if now < self.next_frame:
             return False
         started = time.perf_counter()
-        if not self.draw_frame():
+        elapsed, self.last_step = now - self.last_step, now
+        if self.use_frames:
+            new_frame = self.draw_frame()
+            if not new_frame and self.effect is None:
+                return False
+            if self.effect is not None:
+                self.effect.step(elapsed)
+            self.compose()
+            self.activity_over()
+            pygame.display.update()
+        elif self.effect is not None and self.under() is not None:
+            # Over the background of the menu : the places of the particles only
+            rects = self.effect.step(elapsed)
+            for rect in rects:
+                self.real.blit(self.base, rect, rect)
+            self.effect.draw(self.real)
+            for rect in rects:
+                self.real.blit(self.keyed, rect, rect)
+            drawn = self.activity_over()
+            pygame.display.update(rects + ([drawn] if drawn is not None else []))
+        else:
             return False
-        self.real.blit(self.scaled, (0, 0))
-        self.real.blit(self.keyed, (0, 0))
-        self.activity_over()
-        pygame.display.update()
         cost = time.perf_counter() - started
         counted = getattr(self, 'counted', None)
         if counted is not None:
@@ -714,10 +857,11 @@ class AnimatedBackground:
             counted[2] += cost
         # Slower than its rate (the processor busy elsewhere, a small Pi) : fewer frames shown,
         # the video keeping its speed ; the rate back when it is fast enough again
+        top = self.rate if self.use_frames else self.effect_rate()
         self.cost = self.cost * 0.9 + cost * 0.1
         if self.cost > 0.8 / max(1, self.effective) and self.effective > 5:
             self.effective -= 1
-        elif self.cost < 0.5 / max(1, self.effective) and self.effective < self.rate:
+        elif self.cost < 0.5 / max(1, self.effective) and self.effective < top:
             self.effective += 1
         self.next_frame = now + 1 / max(1, self.effective)
         return False
