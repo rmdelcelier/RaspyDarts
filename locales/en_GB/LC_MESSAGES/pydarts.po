@@ -6075,3 +6075,52 @@ msgstr "Nothing to choose in this folder"
 msgid "explorer-empty-pick"
 msgstr "No folder inside: « Choose this folder » to take it"
 
+
+msgid "animated-background-type"
+msgstr "Kind of background"
+
+msgid "animated-type-none"
+msgstr "None"
+
+msgid "animated-type-effect"
+msgstr "Drawn effect"
+
+msgid "animated-type-scene"
+msgstr "Drawn animated background"
+
+msgid "animated-type-scene-effect"
+msgstr "Animated background + effect"
+
+msgid "animated-type-video"
+msgstr "Video or animated GIF"
+
+msgid "animated-background-scene"
+msgstr "Animated background"
+
+msgid "animated-background-video-none"
+msgstr "To choose…"
+
+msgid "animated-background-choose-video"
+msgstr "Video or animated GIF of the background"
+
+msgid "animated-background-hint"
+msgstr "Validate: change the line (the preview follows) · Save to keep it"
+
+msgid "animated-background-saved"
+msgstr "Animated background saved"
+
+msgid "animated-type-help-none"
+msgstr "The background of the theme, without animation"
+
+msgid "animated-type-help-effect"
+msgstr "Particles over the background of each menu (its image, or that of the theme)"
+
+msgid "animated-type-help-scene"
+msgstr "A background drawn by the cabinet (logo, stars, shapes), no video"
+
+msgid "animated-type-help-scene-effect"
+msgstr "The background drawn by the cabinet, with the particles over it"
+
+msgid "animated-type-help-video"
+msgstr "A video (MP4, WebM…) or an animated GIF, prepared once in the background"
+

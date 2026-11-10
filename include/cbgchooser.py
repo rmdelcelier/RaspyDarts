@@ -1,9 +1,9 @@
 """
-Modifier les écrans > Fond animé : an explorer (include/cexplorer.py) opened at once, its first
-lines : no animated background, the drawn effect (its settings and what it gives, live), the
-animated backgrounds drawn (logo, stars, shapes : each played in the preview), the rate and how
-the preparation goes ; then the folders, the videos and animated GIF played in the preview.
-Nothing is changed before a choice is validated.
+Modifier les écrans > Fond animé : the type of animated background first (none, drawn effect,
+animated background drawn, both, video or animated GIF), then only its settings, what it gives
+played on the right (live, while a list is gone through too) ; Sauvegarder keeps it, Retour
+leaves it as it was. The video is chosen in the explorer (include/cexplorer.py), played in its
+preview.
 """
 
 import os
@@ -203,85 +203,112 @@ def save(screen, **values):
     screen.bganim.apply_settings()
 
 
+TYPES = ('none', 'effect', 'scene', 'scene-effect', 'video')
+SCENE_CHOICES = tuple(name for name in ceffects.SCENES if name != 'none')
+# The lines shown for each type
+TYPE_ROWS = {'none': ('type',),
+             'effect': ('type', 'effect', 'effect-color', 'effect-amount', 'effect-speed'),
+             'scene': ('type', 'scene'),
+             'scene-effect': ('type', 'scene', 'effect', 'effect-color', 'effect-amount', 'effect-speed'),
+             'video': ('type', 'video', 'rate')}
+
+
+def load(screen):
+    '''
+    The settings of the moment, as the screen shows them : the type, and each value
+    '''
+    globals_ = screen.config.config['SectionGlobals']
+    work = {'video': str(globals_.get('animated_background') or ''),
+            'scene': str(globals_.get('animated_scene') or 'none'),
+            'rate': str(globals_.get('animated_background_rate') or 'auto')}
+    for name, key, _choices, _prefix, default in EFFECT_KEYS:
+        work[name] = str(globals_.get(key) or default)
+    if work['video']:
+        work['type'] = 'video'
+    elif work['scene'] != 'none':
+        work['type'] = 'scene-effect' if work['effect'] != 'none' else 'scene'
+    else:
+        work['type'] = 'effect' if work['effect'] != 'none' else 'none'
+    if work['scene'] == 'none':
+        work['scene'] = SCENE_CHOICES[0]
+    if work['effect'] == 'none':
+        work['effect'] = 'sparks'
+    return work
+
+
+def save_work(screen, work):
+    '''
+    The settings written as the type says (what it does not use : none)
+    '''
+    kind = work['type']
+    values = {'animated_background': work['video'] if kind == 'video' else '',
+              'animated_scene': work['scene'] if kind in ('scene', 'scene-effect') else 'none',
+              'animated_effect': work['effect'] if kind in ('effect', 'scene-effect') else 'none',
+              'animated_background_rate': work['rate']}
+    for name, key, _choices, _prefix, _default in EFFECT_KEYS[1:]:
+        values[key] = work[name]
+    save(screen, **values)
+
+
+def preview_of(screen, box, work):
+    '''
+    What the screen will show for these settings, played in the box
+    '''
+    kind = work['type']
+    effect = tuple(work[name] for name, *_rest in EFFECT_KEYS)
+    if kind == 'video':
+        if work['video'] and os.path.isfile(work['video']):
+            return cexplorer.VideoPreview(screen, work['video'], box)
+        return ScenePreview(screen, box, 'none')
+    if kind == 'none':
+        return EffectPreview(screen, box, ('none',) + effect[1:], 'none')
+    if kind == 'effect':
+        return EffectPreview(screen, box, effect, 'none')
+    if kind == 'scene':
+        return EffectPreview(screen, box, ('none',) + effect[1:], work['scene'])
+    return EffectPreview(screen, box, effect, work['scene'])
+
+
+def preview_key(work):
+    return tuple(work[name] for name in ('type', 'video', 'scene', 'effect', 'effect-color', 'effect-amount', 'effect-speed'))
+
+
 def choose(screen, keys):
     '''
-    The explorer of the animated background, until Back or a background chosen
-    '''
-    from include import cmenueditor    # pylint: disable=import-outside-toplevel
-    translate = screen.lang.translate
-    while True:
-        globals_ = screen.config.config['SectionGlobals']
-        video = str(globals_.get('animated_background') or '')
-        scene = str(globals_.get('animated_scene') or 'none')
-        settings = settings_of(screen)
-        rate = str(globals_.get('animated_background_rate') or 'auto')
-        # What it gives : the animated background drawn with the effect over it
-        shown_scene = scene if not video else 'none'
-        extras = [
-            ('none', translate('animated-background-none-all'), None,
-             lambda screen_, box: ScenePreview(screen_, box, 'none')),
-            ('effect', f"{translate('animated-background-effect')} : {translate('animated-effect-' + settings[0])}", None,
-             lambda screen_, box: EffectPreview(screen_, box, settings, shown_scene)),
-            ('scenes', f"{translate('animated-background-scenes')} : {translate('animated-scene-' + scene)}", None,
-             lambda screen_, box: EffectPreview(screen_, box, settings, scene if scene != 'none' else 'night-sky')),
-            ('rate', f"{translate('animated-background-rate')} : {cmenueditor.rate_text(screen, rate, short=True)}", None,
-             lambda screen_, box: StatusPreview(screen_, box)),
-        ]
-        # Opened on the background of the moment
-        initial = 'scenes' if scene != 'none' and not video else ('effect' if settings[0] != 'none' and not video else None)
-        chosen = cexplorer.explore(screen, translate('animated-background-choose'), video or None, extras,
-                                   kinds=cexplorer.VIDEOS, initial=initial)
-        if chosen is None:
-            return
-        if chosen == 'none':
-            save(screen, animated_background='', animated_scene='none', animated_effect='none')
-        elif chosen == 'effect':
-            effect_screen(screen, keys)
-        elif chosen == 'scenes':
-            picked = cexplorer.explore(screen, translate('animated-background-scenes'), None,
-                                       [(name, translate(f'animated-scene-{name}'), None,
-                                         (lambda name_: lambda screen_, box: EffectPreview(screen_, box, settings, name_))(name))
-                                        for name in ceffects.SCENES if name != 'none'], places_shown=False,
-                                       subtitle=translate('animated-background-scenes-hint'), initial=scene)
-            if picked:
-                save(screen, animated_scene=picked, animated_background='')
-        elif chosen == 'rate':
-            choices = ['auto'] + (['30', '20', '10'] if screen.bganim.machine['memory'] else []) + ['still']
-            picked = screen.dropdown(screen.res['x'] * 6 / 16, 3 * screen.res_y_16,
-                                     [[choice, cmenueditor.rate_text(screen, choice)] for choice in choices], navigate=rate)
-            if picked != 'escape':
-                save(screen, animated_background_rate=picked)
-        else:
-            screen.message([translate('animated-background-copying')], 0, None, 'middle', 'big')
-            kept = cbganim.keep_source(chosen, screen.logs)
-            if kept is None:
-                screen.message([translate('editor-import-failed')], 2500, 'menu-ko', 'middle', 'big')
-                continue
-            save(screen, animated_background=kept, animated_scene='none')
-
-
-def effect_screen(screen, keys):
-    '''
-    The drawn effect : its kind (none included), colour, amount, speed on the left, what it gives
-    on the right, live ; left / right (the knob, the buttons) change the value of the line,
-    Valider opens its list ; Enregistrer keeps it, Retour leaves it as it was
+    Modifier les écrans > Fond animé : the type first (none, drawn effect, animated background
+    drawn, both, video or animated GIF), then only its settings ; each line with a choice opens
+    its list (what it gives seen in the preview while going through it) ; Sauvegarder keeps it,
+    Retour leaves it as it was. The wheel of a knob goes from a line to the next
     '''
     # pylint: disable=import-outside-toplevel
+    from include import cmenueditor
     from include.cscreen import DOWN_KEYS, LEFT_KEYS, RIGHT_KEYS, UP_KEYS
     translate = screen.lang.translate
-    work = list(settings_of(screen))
-    rows = len(EFFECT_KEYS)
-    selected = 0
+    work = load(screen)
     unit_x, unit_y = screen.res['x'] / 16, screen.res['y'] / 16
     box = pygame.Rect(int(8.6 * unit_x), int(2.6 * unit_y), int(6.6 * unit_x), int(8.6 * unit_y))
-    globals_ = screen.config.config['SectionGlobals']
-    scene = 'none' if globals_.get('animated_background') else str(globals_.get('animated_scene') or 'none')
-    preview = EffectPreview(screen, box.inflate(-int(unit_x / 3), -int(unit_y / 3)), tuple(work), scene)
-    screen.idle_hook = preview.tick
+    inner = box.inflate(-int(unit_x / 3), -int(unit_y / 3))
+    state = {'preview': None, 'key': None}
+
+    def show(values):
+        # The preview of these settings (made again when they change)
+        key = preview_key(values)
+        if key == state['key']:
+            return
+        if state['preview'] is not None:
+            state['preview'].stop()
+        state['preview'] = preview_of(screen, inner, values)
+        state['key'] = key
+        screen.idle_hook = state['preview'].tick
+
+    selected = 0
     try:
         while True:
-            zones = draw_effect_screen(screen, work, selected, box)
-            preview.set(tuple(work))
+            rows = TYPE_ROWS[work['type']]
+            count = len(rows) + 2
+            selected = min(selected, count - 1)
+            show(work)
+            zones = draw_screen(screen, work, rows, selected, box)
             key = screen.rpi.listen_inputs(['arrows', 'fx'], ['escape', 'enter', 'space', 'single-click', 'PLAYERBUTTON',
                                                               'BACKUPBUTTON', 'GAMEBUTTON'])
             clicked = screen.is_clicked(zones, key)
@@ -289,62 +316,103 @@ def effect_screen(screen, keys):
                 selected, key = clicked, 'enter'
             if key in keys['escape']:
                 return
-            # The wheel of a knob : from a line to the next (its press : the list of the line)
-            if key == 'BTN_RIGHT':
-                key = 'down'
-            elif key == 'BTN_LEFT':
-                key = 'up'
-            if key in DOWN_KEYS:
-                selected = (selected + 1) % (rows + 2)
-            elif key in UP_KEYS:
-                selected = (selected - 1) % (rows + 2)
-            elif (key in LEFT_KEYS or key in RIGHT_KEYS) and selected < rows:
-                _name, _key, choices, _prefix, _default = EFFECT_KEYS[selected]
-                position = choices.index(work[selected]) if work[selected] in choices else 0
-                work[selected] = choices[(position + (1 if key in RIGHT_KEYS else -1)) % len(choices)]
-            elif (key in LEFT_KEYS or key in RIGHT_KEYS) and selected >= rows:
-                selected = rows + 1 if selected == rows else rows
+            if key in DOWN_KEYS + RIGHT_KEYS:
+                selected = (selected + 1) % count
+            elif key in UP_KEYS + LEFT_KEYS:
+                selected = (selected - 1) % count
             elif key in keys['enter'] + ['space']:
-                if selected == rows:
+                if selected == len(rows):
                     return
-                if selected == rows + 1:
-                    save(screen, **{key_: work[index] for index, (_n, key_, _c, _p, _d) in enumerate(EFFECT_KEYS)})
+                if selected == len(rows) + 1:
+                    save_work(screen, work)
+                    screen.message([translate('animated-background-saved')], 1500, None, 'middle', 'big')
                     return
-                _name, _key, choices, prefix, _default = EFFECT_KEYS[selected]
-                picked = screen.dropdown(unit_x, 3 * screen.res_y_16, [[choice, translate(prefix + choice)] for choice in choices],
-                                         navigate=work[selected])
+                name = rows[selected]
+                if name == 'video':
+                    chosen = cexplorer.explore(screen, translate('animated-background-choose-video'), work['video'] or None,
+                                               kinds=cexplorer.VIDEOS)
+                    if chosen and os.path.isfile(chosen):
+                        screen.message([translate('animated-background-copying')], 0, None, 'middle', 'big')
+                        kept = cbganim.keep_source(chosen, screen.logs)
+                        if kept is None:
+                            screen.message([translate('editor-import-failed')], 2500, 'menu-ko', 'middle', 'big')
+                        else:
+                            work['video'] = kept
+                    state['key'] = None
+                    continue
+                choices, label = row_choices(screen, name)
+                trial = dict(work)
+
+                def preview(value, name=name, trial=trial):
+                    # The choice shown in the list : seen at once in the preview
+                    trial[name] = value
+                    show(trial)
+                    return box
+                picked = screen.dropdown(unit_x, 3 * unit_y, [[choice, label(choice)] for choice in choices],
+                                         navigate=work[name], width=7 * unit_x, preview=preview)
                 if picked != 'escape':
-                    work[selected] = picked
+                    work[name] = picked
+                state['key'] = None
     finally:
+        if state['preview'] is not None:
+            state['preview'].stop()
         screen.idle_hook = None
 
 
-def draw_effect_screen(screen, work, selected, box):
+def row_choices(screen, name):
+    '''
+    The choices of a line and how each is said
+    '''
+    from include import cmenueditor    # pylint: disable=import-outside-toplevel
+    translate = screen.lang.translate
+    if name == 'type':
+        return TYPES, lambda value: translate(f'animated-type-{value}')
+    if name == 'scene':
+        return SCENE_CHOICES, lambda value: translate(f'animated-scene-{value}')
+    if name == 'rate':
+        choices = ('auto',) + (('30', '20', '10') if screen.bganim.machine['memory'] else ()) + ('still',)
+        return choices, lambda value: cmenueditor.rate_text(screen, value)
+    _name, _key, choices, prefix, _default = next(row for row in EFFECT_KEYS if row[0] == name)
+    if name == 'effect':
+        choices = tuple(choice for choice in choices if choice != 'none')
+    return choices, lambda value, prefix=prefix: translate(prefix + value)
+
+
+def value_text(screen, work, name):
+    translate = screen.lang.translate
+    if name == 'video':
+        return os.path.basename(work['video']) if work['video'] else translate('animated-background-video-none')
+    choices, label = row_choices(screen, name)
+    return label(work[name])
+
+
+def draw_screen(screen, work, rows, selected, box):
+    '''
+    The lines of the type chosen (value in its box, name beside it), the preview, the state of the
+    video, Retour and Sauvegarder. The zones to click (the index of each line)
+    '''
+    from include import cmenueditor    # pylint: disable=import-outside-toplevel
     translate = screen.lang.translate
     colorset = screen.colorset
     unit_x, unit_y = screen.res['x'] / 16, screen.res['y'] / 16
     screen.display_background()
-    screen.menu_header(translate('animated-background-effect'))
+    screen.menu_header(translate('animated-background'), translate('animated-background-hint'))
     zones = {}
-    for index, (name, _key, _choices, prefix, _default) in enumerate(EFFECT_KEYS):
-        rect = pygame.Rect(int(unit_x), int(2.8 * unit_y + index * 1.5 * unit_y), int(7 * unit_x), int(1.2 * unit_y))
-        chosen = index == selected
-        screen.new_blit_rect2(rect, colorset['menu-selected'] if chosen else colorset['menu-buttons'], corners='All',
-                              border_radius=int(rect.height / 4))
-        color = colorset['menu-text-white'] if chosen else colorset['menu-text-black']
-        label = pygame.Rect(rect.x, rect.y, int(rect.width * 0.5), rect.height)
-        screen.blit_text(translate(f'animated-background-{name}'), label.x, label.y, label.width, label.height, color)
-        value = pygame.Rect(label.right, rect.y, rect.width - label.width, rect.height)
-        arrows = '< ' if chosen else ''
-        screen.blit_text(f"{arrows}{translate(prefix + work[index])}{' >' if chosen else ''}", value.x, value.y,
-                         value.width - int(unit_x / 4), value.height, color)
+    bottom = 0
+    for index, name in enumerate(rows):
+        rect = pygame.Rect(int(unit_x), int(2.8 * unit_y + index * 1.35 * unit_y), int(7 * unit_x), int(1.1 * unit_y))
+        cmenueditor.value_item(screen, rect, translate(f'animated-background-{name}'), value_text(screen, work, name),
+                               index == selected)
         zones[index] = tuple(rect)
-    hint = pygame.Rect(int(unit_x), int(2.8 * unit_y + len(EFFECT_KEYS) * 1.5 * unit_y), int(7 * unit_x), int(1.6 * unit_y))
-    from include import cmenueditor    # pylint: disable=import-outside-toplevel
-    cmenueditor.paragraph(screen, translate('animated-effect-hint'), hint, colorset['menu-text-white'])
+        bottom = rect.bottom
+    if work['type'] == 'video':
+        # How the preparation of the video goes
+        status = pygame.Rect(int(unit_x), bottom + int(unit_y * 0.4), int(7 * unit_x), int(1.6 * unit_y))
+        cmenueditor.paragraph(screen, cmenueditor.animated_status(screen), status, colorset['menu-text-white'])
+    help_rect = pygame.Rect(int(unit_x), int(11.4 * unit_y), int(14 * unit_x), int(1.2 * unit_y))
+    cmenueditor.paragraph(screen, translate(f'animated-type-help-{work["type"]}'), help_rect, colorset['menu-text-white'])
     screen.new_blit_rect2(box, colorset['menu-buttons'], corners='All', border_radius=int(unit_y / 4))
-    rows = len(EFFECT_KEYS)
-    zones[rows] = screen.display_button(selected == rows, 'back', special='escape')
-    zones[rows + 1] = screen.display_button(selected == rows + 1, 'save', special='return')
+    zones[len(rows)] = screen.display_button(selected == len(rows), 'back', special='escape')
+    zones[len(rows) + 1] = screen.display_button(selected == len(rows) + 1, 'save', special='return')
     screen.update_screen()
     return zones

@@ -5857,3 +5857,52 @@ msgstr "Niets te kiezen in deze map"
 msgid "explorer-empty-pick"
 msgstr "Geen submap: « Deze map kiezen » om hem te nemen"
 
+
+msgid "animated-background-type"
+msgstr "Soort achtergrond"
+
+msgid "animated-type-none"
+msgstr "Geen"
+
+msgid "animated-type-effect"
+msgstr "Getekend effect"
+
+msgid "animated-type-scene"
+msgstr "Getekende geanimeerde achtergrond"
+
+msgid "animated-type-scene-effect"
+msgstr "Geanimeerde achtergrond + effect"
+
+msgid "animated-type-video"
+msgstr "Video of geanimeerde GIF"
+
+msgid "animated-background-scene"
+msgstr "Geanimeerde achtergrond"
+
+msgid "animated-background-video-none"
+msgstr "Te kiezen…"
+
+msgid "animated-background-choose-video"
+msgstr "Video of geanimeerde GIF van de achtergrond"
+
+msgid "animated-background-hint"
+msgstr "Bevestigen: de regel wijzigen (het voorbeeld volgt) · Opslaan om te bewaren"
+
+msgid "animated-background-saved"
+msgstr "Geanimeerde achtergrond opgeslagen"
+
+msgid "animated-type-help-none"
+msgstr "De achtergrond van het thema, zonder animatie"
+
+msgid "animated-type-help-effect"
+msgstr "Deeltjes over de achtergrond van elk menu (zijn afbeelding, of die van het thema)"
+
+msgid "animated-type-help-scene"
+msgstr "Een achtergrond getekend door de kast (logo, sterren, vormen), zonder video"
+
+msgid "animated-type-help-scene-effect"
+msgstr "De achtergrond getekend door de kast, met de deeltjes erover"
+
+msgid "animated-type-help-video"
+msgstr "Een video (MP4, WebM…) of een geanimeerde GIF, één keer op de achtergrond voorbereid"
+

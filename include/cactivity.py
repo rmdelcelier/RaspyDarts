@@ -83,10 +83,10 @@ class Activities:
 
     def visible(self):
         '''
-        Shown on the screens of the menus (those of the animated background) only
+        Shown on every screen out of the games (the menus, Modifier les écrans, the settings...)
         '''
         animated = getattr(self.owner, 'bganim', None)
-        return bool(self.items) and animated is not None and animated.depth > 0
+        return bool(self.items) and animated is not None and not animated.in_game
 
     def selectable(self):
         '''

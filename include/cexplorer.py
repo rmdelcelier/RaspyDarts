@@ -151,10 +151,13 @@ def browse(screen, title, current, extra, kinds, previews, folder, root, selecte
                 # The image of the moment selected first
                 selected = next((index for index, entry in enumerate(entries) if entry['path'] == current), selected)
                 current = None
-        # The button « Choisir ce dossier » : after the lines (in a folder)
+        # The button « Choisir ce dossier » : after the lines (in a folder) ; then Retour (reached
+        # with the wheel of a knob too)
         picking = pick_folder and folder is not None
-        count = len(entries) + (1 if picking else 0)
+        back_index = len(entries) + (1 if picking else 0)
+        count = back_index + 1
         selected = max(0, min(selected, count - 1))
+        previews['back'] = selected == back_index
         started = time.perf_counter()
         zones = draw(screen, title, folder, entries, selected, previews, translate)
         spent = time.perf_counter() - started
@@ -182,6 +185,8 @@ def browse(screen, title, current, extra, kinds, previews, folder, root, selecte
         elif key == 'BTN_LEFT':
             key = 'up'
         entry = entries[selected] if selected < len(entries) else None
+        if selected == back_index and key in ENTER_KEYS + ['space']:
+            key = 'escape'
         if picking and selected == len(entries) and key in ENTER_KEYS + ['space']:
             return folder
         if key in UP_KEYS:
@@ -359,7 +364,7 @@ def draw(screen, title, folder, entries, selected, previews, translate):
         if target:
             caption = f"{caption} · {folder_text(target, translate, counts, previews.get('kinds', IMAGES))}"
     screen.blit_text(caption, box.x, box.bottom + int(unit_y / 4), box.w, int(0.7 * unit_y), colorset['menu-text-white'])
-    zones['escape'] = screen.display_button(False, 'back', special='escape')
+    zones['escape'] = screen.display_button(bool(previews.get('back')), 'back', special='escape')
     screen.update_screen()
     return zones
 

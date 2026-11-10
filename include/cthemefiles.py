@@ -201,7 +201,8 @@ def export_theme(screen, keys):
         return {'text': translate('activity-theme-export-failed'), 'final': True}
 
     screen.activities.add('theme-export', state)
-    screen.message([translate('theme-export-started'), export.target], 3000, None, 'middle', 'big')
+    # One line (two drawn over each other) : the name of the file, its folder in the window of activity
+    screen.message([f"{translate('theme-export-started')} {os.path.basename(export.target)}"], 2500, None, 'middle')
 
 
 # ---------------------------------------------------------------------- import

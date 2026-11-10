@@ -5803,3 +5803,52 @@ msgstr "Nichts zu wählen in diesem Ordner"
 msgid "explorer-empty-pick"
 msgstr "Kein Unterordner: « Diesen Ordner wählen », um ihn zu nehmen"
 
+
+msgid "animated-background-type"
+msgstr "Art des Hintergrunds"
+
+msgid "animated-type-none"
+msgstr "Keiner"
+
+msgid "animated-type-effect"
+msgstr "Gezeichneter Effekt"
+
+msgid "animated-type-scene"
+msgstr "Gezeichneter animierter Hintergrund"
+
+msgid "animated-type-scene-effect"
+msgstr "Animierter Hintergrund + Effekt"
+
+msgid "animated-type-video"
+msgstr "Video oder animiertes GIF"
+
+msgid "animated-background-scene"
+msgstr "Animierter Hintergrund"
+
+msgid "animated-background-video-none"
+msgstr "Zu wählen…"
+
+msgid "animated-background-choose-video"
+msgstr "Video oder animiertes GIF des Hintergrunds"
+
+msgid "animated-background-hint"
+msgstr "Bestätigen: die Zeile ändern (die Vorschau folgt) · Speichern zum Behalten"
+
+msgid "animated-background-saved"
+msgstr "Animierter Hintergrund gespeichert"
+
+msgid "animated-type-help-none"
+msgstr "Der Hintergrund des Themas, ohne Animation"
+
+msgid "animated-type-help-effect"
+msgstr "Partikel über dem Hintergrund jedes Menüs (sein Bild oder das des Themas)"
+
+msgid "animated-type-help-scene"
+msgstr "Ein vom Automaten gezeichneter Hintergrund (Logo, Sterne, Formen), ohne Video"
+
+msgid "animated-type-help-scene-effect"
+msgstr "Der vom Automaten gezeichnete Hintergrund, mit den Partikeln darüber"
+
+msgid "animated-type-help-video"
+msgstr "Ein Video (MP4, WebM…) oder ein animiertes GIF, einmal im Hintergrund vorbereitet"
+

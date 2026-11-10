@@ -5808,3 +5808,52 @@ msgstr "Nada que elegir en esta carpeta"
 msgid "explorer-empty-pick"
 msgstr "Ninguna subcarpeta: « Elegir esta carpeta » para tomarla"
 
+
+msgid "animated-background-type"
+msgstr "Tipo de fondo"
+
+msgid "animated-type-none"
+msgstr "Ninguno"
+
+msgid "animated-type-effect"
+msgstr "Efecto dibujado"
+
+msgid "animated-type-scene"
+msgstr "Fondo animado dibujado"
+
+msgid "animated-type-scene-effect"
+msgstr "Fondo animado + efecto"
+
+msgid "animated-type-video"
+msgstr "Vídeo o GIF animado"
+
+msgid "animated-background-scene"
+msgstr "Fondo animado"
+
+msgid "animated-background-video-none"
+msgstr "Por elegir…"
+
+msgid "animated-background-choose-video"
+msgstr "Vídeo o GIF animado del fondo"
+
+msgid "animated-background-hint"
+msgstr "Validar: cambiar la línea (la vista previa sigue) · Guardar para conservar"
+
+msgid "animated-background-saved"
+msgstr "Fondo animado guardado"
+
+msgid "animated-type-help-none"
+msgstr "El fondo del tema, sin animación"
+
+msgid "animated-type-help-effect"
+msgstr "Partículas sobre el fondo de cada menú (su imagen, o la del tema)"
+
+msgid "animated-type-help-scene"
+msgstr "Un fondo dibujado por la máquina (logo, estrellas, formas), sin vídeo"
+
+msgid "animated-type-help-scene-effect"
+msgstr "El fondo dibujado por la máquina, con las partículas encima"
+
+msgid "animated-type-help-video"
+msgstr "Un vídeo (MP4, WebM…) o un GIF animado, preparado una sola vez en segundo plano"
+
