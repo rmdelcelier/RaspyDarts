@@ -485,8 +485,10 @@ class AnimatedBackground:
             self.redraw = True
         scene = str(self.owner.config.get_value('SectionGlobals', 'animated_scene', False) or 'none').strip()
         scene = scene if scene in ceffects.SCENES else 'none'
-        if scene != self.scene_name:
+        color = str(self.owner.config.get_value('SectionGlobals', 'animated_scene_color', False) or 'auto').strip()
+        if (scene, color) != (self.scene_name, getattr(self, 'scene_color', 'auto')):
             self.scene_name = scene
+            self.scene_color = color
             self.scene = None
             self.bases.clear()
             self.redraw = True
@@ -718,7 +720,8 @@ class AnimatedBackground:
         self.keyed.set_colorkey(self.key, pygame.RLEACCEL if self.use_frames else 0)
         if self.scene_name != 'none' and (self.scene is None or (self.scene.width, self.scene.height) != size):
             self.scene = ceffects.make_scene(self.scene_name, size, os.path.join(cpaths.ROOT_DIR, 'images', 'boot_logo.png'),
-                                             theme_color=self.owner.colorset.get('menu-selected'))
+                                             theme_color=self.owner.colorset.get('menu-selected'),
+                                             color=getattr(self, 'scene_color', 'auto'))
         elif self.scene_name == 'none':
             self.scene = None
         if self.effect_settings[0] != 'none' and (self.effect is None or (self.effect.width, self.effect.height) != size):

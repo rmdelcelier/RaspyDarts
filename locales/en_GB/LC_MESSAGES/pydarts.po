@@ -5702,7 +5702,7 @@ msgid "animated-background"
 msgstr "Animated background"
 
 msgid "animated-background-video"
-msgstr "Video"
+msgstr "Media"
 
 msgid "animated-background-rate"
 msgstr "Frame rate"
@@ -6064,7 +6064,7 @@ msgstr "A .zip file, or a folder opened then « Choose this folder »"
 
 
 msgid "explorer-theme-videos"
-msgstr "Videos of the theme"
+msgstr "Theme"
 
 msgid "explorer-my-videos"
 msgstr "My animated backgrounds"
@@ -6113,7 +6113,7 @@ msgid "animated-type-help-none"
 msgstr "The background of the theme, without animation"
 
 msgid "animated-type-help-effect"
-msgstr "Particles over the background of each menu (its image, or that of the theme)"
+msgstr "Particles over the background of each menu (its image or that of the theme)"
 
 msgid "animated-type-help-scene"
 msgstr "A background drawn by the cabinet (logo, stars, shapes), no video"
@@ -6123,4 +6123,8 @@ msgstr "The background drawn by the cabinet, with the particles over it"
 
 msgid "animated-type-help-video"
 msgstr "A video (MP4, WebM…) or an animated GIF, prepared once in the background"
+
+
+msgid "animated-background-scene-color"
+msgstr "Colour of the background"
 

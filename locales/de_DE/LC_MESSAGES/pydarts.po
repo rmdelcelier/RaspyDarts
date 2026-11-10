@@ -5430,7 +5430,7 @@ msgid "animated-background"
 msgstr "Animierter Hintergrund"
 
 msgid "animated-background-video"
-msgstr "Video"
+msgstr "Medium"
 
 msgid "animated-background-rate"
 msgstr "Bildrate"
@@ -5792,7 +5792,7 @@ msgstr "Eine .zip-Datei, oder einen Ordner öffnen und dann « Diesen Ordner wä
 
 
 msgid "explorer-theme-videos"
-msgstr "Videos des Themas"
+msgstr "Thema"
 
 msgid "explorer-my-videos"
 msgstr "Meine animierten Hintergründe"
@@ -5851,4 +5851,8 @@ msgstr "Der vom Automaten gezeichnete Hintergrund, mit den Partikeln darüber"
 
 msgid "animated-type-help-video"
 msgstr "Ein Video (MP4, WebM…) oder ein animiertes GIF, einmal im Hintergrund vorbereitet"
+
+
+msgid "animated-background-scene-color"
+msgstr "Farbe des Hintergrunds"
 

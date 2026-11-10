@@ -193,16 +193,21 @@ SCENES = ('none', 'night-sky', 'starfield', 'logo-spin', 'logo-bounce', 'shapes'
 SCENE_COLOR = (8, 10, 26)
 
 
-def make_scene(name, size, logo=None, theme_color=None):
+def make_scene(name, size, logo=None, theme_color=None, color='auto'):
     '''
-    The animated background of this name for a screen of this size, None : none
+    The animated background of this name for a screen of this size, None : none. color : one of
+    COLORS (auto : its own colours) : the stars, the shapes, the shade behind the logo
     '''
     kinds = {'night-sky': NightSky, 'starfield': Starfield, 'logo-spin': LogoSpin, 'logo-bounce': LogoBounce,
              'shapes': Shapes}
     kind = kinds.get(str(name))
     if kind is None:
         return None
-    return kind(size, logo, tuple(theme_color[:3]) if theme_color else (255, 200, 0))
+    accent = tuple(theme_color[:3]) if theme_color else (255, 200, 0)
+    chosen = COLORS.get(str(color), None)
+    if chosen == 'theme':
+        chosen = accent
+    return kind(size, logo, accent, chosen)
 
 
 class Scene:
@@ -210,17 +215,27 @@ class Scene:
     An animated background : background() its still part, step() / draw() as the effects
     '''
 
-    def __init__(self, size, logo, accent):
+    def __init__(self, size, logo, accent, color=None):
         self.width, self.height = size
         self.scale = self.height / 1080
         self.accent = accent
+        self.color = color
         self.logo_file = logo
         self.time = 0.0
+        # The plain colour behind : a dark shade of the colour chosen
+        self.back = tuple(int(value * 0.18) for value in color) if color else SCENE_COLOR
 
     def background(self):
         surface = pygame.Surface((self.width, self.height))
-        surface.fill(SCENE_COLOR)
+        surface.fill(self.back)
         return surface
+
+    def tinted(self, light):
+        '''
+        A light (0 to 1) in the colour chosen, else white
+        '''
+        base = self.color or (255, 255, 255)
+        return tuple(int(value * light) for value in base)
 
     def step(self, elapsed):
         self.time += min(elapsed, 0.2)
@@ -241,7 +256,7 @@ class Scene:
         height = int(picture.get_height() * width / picture.get_width())
         picture = pygame.transform.smoothscale(picture, (width, height))
         flat = pygame.Surface((width, height))
-        flat.fill(SCENE_COLOR)
+        flat.fill(self.back)
         flat.blit(picture, (0, 0))
         return flat.convert()
 
@@ -251,8 +266,8 @@ class NightSky(Scene):
     Stars twinkling, now and then a shooting star
     '''
 
-    def __init__(self, size, logo, accent):
-        super().__init__(size, logo, accent)
+    def __init__(self, size, logo, accent, color=None):
+        super().__init__(size, logo, accent, color)
         self.stars = [[random.uniform(0, self.width), random.uniform(0, self.height),
                        random.uniform(0.8, 2.6) * self.scale + 0.6, random.uniform(0, 6), random.uniform(0.6, 2.0)]
                       for _ in range(140)]
@@ -262,9 +277,11 @@ class NightSky(Scene):
     def background(self):
         surface = pygame.Surface((self.width, self.height))
         # Darker at the top
+        top = (4, 6, 20) if self.color is None else tuple(int(value * 0.04) for value in self.color)
+        low = (18, 18, 50) if self.color is None else tuple(int(value * 0.2) for value in self.color)
         for row in range(0, self.height, 4):
             light = row / self.height
-            surface.fill((int(4 + 14 * light), int(6 + 12 * light), int(20 + 30 * light)), (0, row, self.width, 4))
+            surface.fill(tuple(int(a + (b - a) * light) for a, b in zip(top, low)), (0, row, self.width, 4))
         return surface
 
     def step(self, elapsed):
@@ -301,11 +318,15 @@ class NightSky(Scene):
     def draw(self, surface, clip=None):
         for x, y, radius, phase, speed in self.stars:
             light = 0.35 + 0.65 * (0.5 + 0.5 * math.sin(self.time * speed + phase))
-            value = int(255 * light)
-            pygame.draw.circle(surface, (value, value, min(255, value + 20)), (int(x), int(y)), max(1, int(radius)))
+            if self.color is None:
+                value = int(255 * light)
+                shade = (value, value, min(255, value + 20))
+            else:
+                shade = self.tinted(light)
+            pygame.draw.circle(surface, shade, (int(x), int(y)), max(1, int(radius)))
         if self.meteor is not None:
             head, tail = self.meteor_ends()
-            pygame.draw.line(surface, (255, 255, 230), tail, head, max(2, int(3 * self.scale)))
+            pygame.draw.line(surface, self.color or (255, 255, 230), tail, head, max(2, int(3 * self.scale)))
 
 
 class Starfield(Scene):
@@ -313,8 +334,8 @@ class Starfield(Scene):
     Travel among the stars : they come from the middle, faster and bigger as they come near
     '''
 
-    def __init__(self, size, logo, accent):
-        super().__init__(size, logo, accent)
+    def __init__(self, size, logo, accent, color=None):
+        super().__init__(size, logo, accent, color)
         self.stars = [self.new(first=True) for _ in range(160)]
 
     @staticmethod
@@ -350,8 +371,7 @@ class Starfield(Scene):
     def draw(self, surface, clip=None):
         for star in self.stars:
             sx, sy, radius = self.screen_of(star)
-            light = int(255 * max(0.0, min(1.0, (1.1 - star[2]))))
-            pygame.draw.circle(surface, (light, light, light), (int(sx), int(sy)), radius)
+            pygame.draw.circle(surface, self.tinted(max(0.0, min(1.0, (1.1 - star[2])))), (int(sx), int(sy)), radius)
 
 
 class LogoSpin(Scene):
@@ -359,8 +379,8 @@ class LogoSpin(Scene):
     The logo of the game turning on itself (as a coin), in the middle
     '''
 
-    def __init__(self, size, logo, accent):
-        super().__init__(size, logo, accent)
+    def __init__(self, size, logo, accent, color=None):
+        super().__init__(size, logo, accent, color)
         self.picture = self.logo(int(self.width * 0.42))
         self.box = self.picture.get_rect(center=(self.width // 2, self.height // 2))
 
@@ -371,7 +391,7 @@ class LogoSpin(Scene):
     def draw(self, surface, clip=None):
         if clip is not None and not clip.colliderect(self.box):
             return
-        surface.fill(SCENE_COLOR, self.box)
+        surface.fill(self.back, self.box)
         turn = math.cos(self.time * 1.2)
         width = max(2, int(abs(turn) * self.box.width))
         picture = pygame.transform.scale(self.picture, (width, self.box.height))
@@ -385,8 +405,8 @@ class LogoBounce(Scene):
     The logo of the game moving and bouncing on the edges of the screen
     '''
 
-    def __init__(self, size, logo, accent):
-        super().__init__(size, logo, accent)
+    def __init__(self, size, logo, accent, color=None):
+        super().__init__(size, logo, accent, color)
         self.picture = self.logo(int(self.width * 0.26))
         self.rect = self.picture.get_rect(topleft=(int(self.width * 0.2), int(self.height * 0.3)))
         self.position = [float(self.rect.x), float(self.rect.y)]
@@ -414,9 +434,9 @@ class Shapes(Scene):
     Outlines of triangles, squares and hexagons drifting and turning slowly
     '''
 
-    def __init__(self, size, logo, accent):
-        super().__init__(size, logo, accent)
-        palette = (accent, (90, 160, 255), (255, 255, 255), (255, 120, 60))
+    def __init__(self, size, logo, accent, color=None):
+        super().__init__(size, logo, accent, color)
+        palette = (color,) if color else (accent, (90, 160, 255), (255, 255, 255), (255, 120, 60))
         self.shapes = [[random.uniform(0, self.width), random.uniform(0, self.height), random.uniform(-0.04, 0.04),
                         random.uniform(-0.04, 0.04), random.uniform(25, 90) * self.scale, random.choice((3, 4, 6)),
                         random.uniform(0, 6), random.uniform(-0.6, 0.6), random.choice(palette)] for _ in range(18)]

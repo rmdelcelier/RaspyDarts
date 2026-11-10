@@ -5506,7 +5506,7 @@ msgid "animated-background"
 msgstr "Fond animé"
 
 msgid "animated-background-video"
-msgstr "Vidéo"
+msgstr "Média"
 
 msgid "animated-background-rate"
 msgstr "Cadence"
@@ -5868,7 +5868,7 @@ msgstr "Un fichier .zip, ou un dossier ouvert puis « Choisir ce dossier »"
 
 
 msgid "explorer-theme-videos"
-msgstr "Vidéos du thème"
+msgstr "Thème"
 
 msgid "explorer-my-videos"
 msgstr "Mes fonds animés"
@@ -5917,7 +5917,7 @@ msgid "animated-type-help-none"
 msgstr "Le fond du thème, sans animation"
 
 msgid "animated-type-help-effect"
-msgstr "Des particules par-dessus le fond de chaque menu (son image, ou celle du thème)"
+msgstr "Des particules par-dessus le fond de chaque menu (son image ou celle du thème)"
 
 msgid "animated-type-help-scene"
 msgstr "Un fond dessiné par la borne (logo, étoiles, formes), sans vidéo"
@@ -5927,4 +5927,8 @@ msgstr "Le fond dessiné par la borne, avec les particules par-dessus"
 
 msgid "animated-type-help-video"
 msgstr "Une vidéo (MP4, WebM…) ou un GIF animé, préparé une seule fois en tâche de fond"
+
+
+msgid "animated-background-scene-color"
+msgstr "Couleur du fond"
 

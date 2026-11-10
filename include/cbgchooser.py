@@ -87,10 +87,11 @@ class EffectPreview(Preview):
     (what it gives on the screen)
     '''
 
-    def __init__(self, screen, box, settings, scene='none'):
+    def __init__(self, screen, box, settings, scene='none', scene_color='auto'):
         super().__init__(screen, box)
         self.scene_name = scene
-        self.scene = ceffects.make_scene(scene, self.box.size, LOGO, theme_color=screen.colorset.get('menu-selected'))
+        self.scene = ceffects.make_scene(scene, self.box.size, LOGO, theme_color=screen.colorset.get('menu-selected'),
+                                         color=scene_color)
         self.base = self.scene.background() if self.scene is not None else menu_background(screen, self.box.size)
         self.settings = None
         self.effect = None
@@ -208,8 +209,8 @@ SCENE_CHOICES = tuple(name for name in ceffects.SCENES if name != 'none')
 # The lines shown for each type
 TYPE_ROWS = {'none': ('type',),
              'effect': ('type', 'effect', 'effect-color', 'effect-amount', 'effect-speed'),
-             'scene': ('type', 'scene'),
-             'scene-effect': ('type', 'scene', 'effect', 'effect-color', 'effect-amount', 'effect-speed'),
+             'scene': ('type', 'scene', 'scene-color'),
+             'scene-effect': ('type', 'scene', 'scene-color', 'effect', 'effect-color', 'effect-amount', 'effect-speed'),
              'video': ('type', 'video', 'rate')}
 
 
@@ -220,6 +221,7 @@ def load(screen):
     globals_ = screen.config.config['SectionGlobals']
     work = {'video': str(globals_.get('animated_background') or ''),
             'scene': str(globals_.get('animated_scene') or 'none'),
+            'scene-color': str(globals_.get('animated_scene_color') or 'auto'),
             'rate': str(globals_.get('animated_background_rate') or 'auto')}
     for name, key, _choices, _prefix, default in EFFECT_KEYS:
         work[name] = str(globals_.get(key) or default)
@@ -244,7 +246,8 @@ def save_work(screen, work):
     values = {'animated_background': work['video'] if kind == 'video' else '',
               'animated_scene': work['scene'] if kind in ('scene', 'scene-effect') else 'none',
               'animated_effect': work['effect'] if kind in ('effect', 'scene-effect') else 'none',
-              'animated_background_rate': work['rate']}
+              'animated_background_rate': work['rate'],
+              'animated_scene_color': work['scene-color']}
     for name, key, _choices, _prefix, _default in EFFECT_KEYS[1:]:
         values[key] = work[name]
     save(screen, **values)
@@ -265,12 +268,13 @@ def preview_of(screen, box, work):
     if kind == 'effect':
         return EffectPreview(screen, box, effect, 'none')
     if kind == 'scene':
-        return EffectPreview(screen, box, ('none',) + effect[1:], work['scene'])
-    return EffectPreview(screen, box, effect, work['scene'])
+        return EffectPreview(screen, box, ('none',) + effect[1:], work['scene'], work['scene-color'])
+    return EffectPreview(screen, box, effect, work['scene'], work['scene-color'])
 
 
 def preview_key(work):
-    return tuple(work[name] for name in ('type', 'video', 'scene', 'effect', 'effect-color', 'effect-amount', 'effect-speed'))
+    return tuple(work[name] for name in ('type', 'video', 'scene', 'scene-color', 'effect', 'effect-color', 'effect-amount',
+                                         'effect-speed'))
 
 
 def choose(screen, keys):
@@ -369,6 +373,8 @@ def row_choices(screen, name):
         return TYPES, lambda value: translate(f'animated-type-{value}')
     if name == 'scene':
         return SCENE_CHOICES, lambda value: translate(f'animated-scene-{value}')
+    if name == 'scene-color':
+        return tuple(ceffects.COLORS), lambda value: translate(f'animated-effect-color-{value}')
     if name == 'rate':
         choices = ('auto',) + (('30', '20', '10') if screen.bganim.machine['memory'] else ()) + ('still',)
         return choices, lambda value: cmenueditor.rate_text(screen, value)

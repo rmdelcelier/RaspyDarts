@@ -5435,7 +5435,7 @@ msgid "animated-background"
 msgstr "Fondo animado"
 
 msgid "animated-background-video"
-msgstr "Vídeo"
+msgstr "Medio"
 
 msgid "animated-background-rate"
 msgstr "Fotogramas"
@@ -5797,7 +5797,7 @@ msgstr "Un archivo .zip, o una carpeta abierta y luego « Elegir esta carpeta »
 
 
 msgid "explorer-theme-videos"
-msgstr "Vídeos del tema"
+msgstr "Tema"
 
 msgid "explorer-my-videos"
 msgstr "Mis fondos animados"
@@ -5846,7 +5846,7 @@ msgid "animated-type-help-none"
 msgstr "El fondo del tema, sin animación"
 
 msgid "animated-type-help-effect"
-msgstr "Partículas sobre el fondo de cada menú (su imagen, o la del tema)"
+msgstr "Partículas sobre el fondo de cada menú (su imagen o la del tema)"
 
 msgid "animated-type-help-scene"
 msgstr "Un fondo dibujado por la máquina (logo, estrellas, formas), sin vídeo"
@@ -5856,4 +5856,8 @@ msgstr "El fondo dibujado por la máquina, con las partículas encima"
 
 msgid "animated-type-help-video"
 msgstr "Un vídeo (MP4, WebM…) o un GIF animado, preparado una sola vez en segundo plano"
+
+
+msgid "animated-background-scene-color"
+msgstr "Color del fondo"
 

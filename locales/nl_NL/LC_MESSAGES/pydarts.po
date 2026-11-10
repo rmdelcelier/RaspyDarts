@@ -5484,7 +5484,7 @@ msgid "animated-background"
 msgstr "Geanimeerde achtergrond"
 
 msgid "animated-background-video"
-msgstr "Video"
+msgstr "Media"
 
 msgid "animated-background-rate"
 msgstr "Beeldsnelheid"
@@ -5846,7 +5846,7 @@ msgstr "Een .zip-bestand, of een geopende map en dan « Deze map kiezen »"
 
 
 msgid "explorer-theme-videos"
-msgstr "Video's van het thema"
+msgstr "Thema"
 
 msgid "explorer-my-videos"
 msgstr "Mijn geanimeerde achtergronden"
@@ -5895,7 +5895,7 @@ msgid "animated-type-help-none"
 msgstr "De achtergrond van het thema, zonder animatie"
 
 msgid "animated-type-help-effect"
-msgstr "Deeltjes over de achtergrond van elk menu (zijn afbeelding, of die van het thema)"
+msgstr "Deeltjes over de achtergrond van elk menu (zijn afbeelding of die van het thema)"
 
 msgid "animated-type-help-scene"
 msgstr "Een achtergrond getekend door de kast (logo, sterren, vormen), zonder video"
@@ -5905,4 +5905,8 @@ msgstr "De achtergrond getekend door de kast, met de deeltjes erover"
 
 msgid "animated-type-help-video"
 msgstr "Een video (MP4, WebM…) of een geanimeerde GIF, één keer op de achtergrond voorbereid"
+
+
+msgid "animated-background-scene-color"
+msgstr "Kleur van de achtergrond"
 
