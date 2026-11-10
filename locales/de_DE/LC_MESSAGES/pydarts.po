@@ -5628,3 +5628,37 @@ msgstr "Normal"
 msgid "animated-effect-speed-fast"
 msgstr "Schnell"
 
+
+msgid "netwait-background"
+msgstr "Im Hintergrund warten"
+
+msgid "netwait-hint"
+msgstr "Sie können diesen Bildschirm verlassen: die Aktivitätsanzeige übernimmt"
+
+msgid "activity-netwait-master"
+msgstr "Spiel {name}: {players} Spieler"
+
+msgid "activity-netwait-slave"
+msgstr "Spiel {name}: wartet auf den Start"
+
+msgid "activity-netwait-launch"
+msgstr "Das Spiel {name} beginnt"
+
+msgid "activity-netwait-lost"
+msgstr "Spiel {name}: Server nicht erreichbar"
+
+msgid "netwait-choice-title"
+msgstr "Netzwerkspiel {name} wartet"
+
+msgid "netwait-resume"
+msgstr "Zurück zum Wartebildschirm"
+
+msgid "netwait-abandon"
+msgstr "Warten abbrechen"
+
+msgid "netwait-abandon-question"
+msgstr "Ein Netzwerkspiel wartet. Abbrechen?"
+
+msgid "netwait-abandon-explain"
+msgstr "Nein: das Netzwerkspiel wartet weiter auf seine Spieler"
+

@@ -5900,3 +5900,37 @@ msgstr "Normal"
 msgid "animated-effect-speed-fast"
 msgstr "Fast"
 
+
+msgid "netwait-background"
+msgstr "Wait in the background"
+
+msgid "netwait-hint"
+msgstr "You can leave this screen: the activity indicator takes over"
+
+msgid "activity-netwait-master"
+msgstr "Game {name}: {players} player(s)"
+
+msgid "activity-netwait-slave"
+msgstr "Game {name}: waiting for the start"
+
+msgid "activity-netwait-launch"
+msgstr "Game {name} is starting"
+
+msgid "activity-netwait-lost"
+msgstr "Game {name}: server unreachable"
+
+msgid "netwait-choice-title"
+msgstr "Network game {name} waiting"
+
+msgid "netwait-resume"
+msgstr "Back to the waiting screen"
+
+msgid "netwait-abandon"
+msgstr "Give up the wait"
+
+msgid "netwait-abandon-question"
+msgstr "A network game is waiting. Give it up?"
+
+msgid "netwait-abandon-explain"
+msgstr "No: the network game goes on waiting for its players"
+

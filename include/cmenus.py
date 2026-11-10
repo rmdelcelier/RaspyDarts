@@ -59,6 +59,8 @@ ACTIONS = {
     'button_leds': 'button-leds',
     'coins': 'coins',
     'update': 'update',
+    # A network game waiting in the background : its screen again (include/cnetwait.py)
+    'netresume': 'netresume',
     'back': 'escape',
     'setup_buttons': 'setup-buttons',
     'setup_pins_leds': 'setup-pinleds',

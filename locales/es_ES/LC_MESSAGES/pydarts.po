@@ -5633,3 +5633,37 @@ msgstr "Normal"
 msgid "animated-effect-speed-fast"
 msgstr "Rápida"
 
+
+msgid "netwait-background"
+msgstr "Esperar en segundo plano"
+
+msgid "netwait-hint"
+msgstr "Puede salir de esta pantalla: el indicador de actividad toma el relevo"
+
+msgid "activity-netwait-master"
+msgstr "Partida {name}: {players} jugador(es)"
+
+msgid "activity-netwait-slave"
+msgstr "Partida {name}: esperando el inicio"
+
+msgid "activity-netwait-launch"
+msgstr "La partida {name} empieza"
+
+msgid "activity-netwait-lost"
+msgstr "Partida {name}: servidor inalcanzable"
+
+msgid "netwait-choice-title"
+msgstr "Partida en red {name} en espera"
+
+msgid "netwait-resume"
+msgstr "Volver a la pantalla de espera"
+
+msgid "netwait-abandon"
+msgstr "Abandonar la espera"
+
+msgid "netwait-abandon-question"
+msgstr "Una partida en red está en espera. ¿Abandonarla?"
+
+msgid "netwait-abandon-explain"
+msgstr "No: la partida en red sigue esperando a sus jugadores"
+

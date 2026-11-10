@@ -5682,3 +5682,37 @@ msgstr "Normaal"
 msgid "animated-effect-speed-fast"
 msgstr "Snel"
 
+
+msgid "netwait-background"
+msgstr "Op de achtergrond wachten"
+
+msgid "netwait-hint"
+msgstr "U kunt dit scherm verlaten: de activiteitsindicator neemt het over"
+
+msgid "activity-netwait-master"
+msgstr "Spel {name}: {players} speler(s)"
+
+msgid "activity-netwait-slave"
+msgstr "Spel {name}: wacht op de start"
+
+msgid "activity-netwait-launch"
+msgstr "Spel {name} begint"
+
+msgid "activity-netwait-lost"
+msgstr "Spel {name}: server onbereikbaar"
+
+msgid "netwait-choice-title"
+msgstr "Netwerkspel {name} wacht"
+
+msgid "netwait-resume"
+msgstr "Terug naar het wachtscherm"
+
+msgid "netwait-abandon"
+msgstr "Wachten opgeven"
+
+msgid "netwait-abandon-question"
+msgstr "Er wacht een netwerkspel. Opgeven?"
+
+msgid "netwait-abandon-explain"
+msgstr "Nee: het netwerkspel blijft op zijn spelers wachten"
+

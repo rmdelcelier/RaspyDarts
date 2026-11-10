@@ -239,6 +239,8 @@ class Screen(pygame.Surface):
         self.bganim = cbganim.AnimatedBackground(self)
         # What goes on in the background, in a corner of the menus (include/cactivity.py)
         self.activities = cactivity.Activities(self)
+        # A network game waiting in the background (include/cnetwait.py)
+        self.net_wait = None
         # Something else done at these turns while a screen is shown (the video played in the
         # preview of the explorer...) : idle_hook
         self.idle_hook = None
@@ -298,6 +300,10 @@ class Screen(pygame.Surface):
                 self.logs.error(f"Screen : {error}")
                 self.idle_hook = None
         self.activities.tick()
+        wait = getattr(self, 'net_wait', None)
+        if can_redraw and wait is not None and wait.resume_wanted and not wait.woken and getattr(self, 'menu_shown', None):
+            wait.woken = True
+            return True
         if can_redraw and getattr(self, 'menu_shown', None) == 'main' and self.update_question_due() \
                 and not getattr(self, 'update_woken', False):
             self.update_woken = True
@@ -1681,8 +1687,21 @@ class Screen(pygame.Surface):
 
     def starting(self, NetClient, NetStatus, local_players, netgamename, game):
         '''
-        Display Players engaged in a network game menu
+        Display Players engaged in a network game menu. Its wait can go on in the background
+        (include/cnetwait.py : returns 'background') ; resumed from it : the game launched, given
+        up or lost there as always
         '''
+        wait = self.net_wait
+        if wait is not None:
+            # Resumed : the asking of the background stopped, what it saw used
+            wait.stop()
+            self.net_wait = None
+            self.activities.remove('netwait')
+            if wait.intent == 'abandon' or wait.state == 'lost':
+                return -1 if NetStatus == 'YOUARESLAVE' else []
+            if wait.state in ('launch', 'abort'):
+                return wait.players
+        from include import cnetwait    # pylint: disable=import-outside-toplevel
         self.display_background()    # display basic screen
         # Init empty values
         Rdy = {'REQUEST': None, 'PLAYERSNAMES': None}
@@ -1690,7 +1709,9 @@ class Screen(pygame.Surface):
         # This loop will ends when the game will be launched
         click_zones = {}
         selected = 1
-        nb_boutons = 1
+        nb_boutons = 2
+        # The button « Attendre en tâche de fond » : the last one
+        background_index = 2
         nb_players = len(local_players)
         nb_local_players = nb_players
         old_nb_players = nb_players
@@ -1718,6 +1739,13 @@ class Screen(pygame.Surface):
                 NetClient.send(data)    # Send message
                 # Display refreshing from server
                 #self.message([self.lang.translate('net-client-randomizing')], 500)
+
+            elif (key_pressed in ENTER_KEYS and selected == background_index) or key_pressed == 'background':
+                # The wait in the background, followed by the activity indicator : the menus
+                self.net_wait = cnetwait.NetWait(self.logs, NetClient, NetStatus, local_players, netgamename, game, None,
+                                                 players)
+                self.activities.add('netwait', self.net_wait_activity, self.net_wait_choice)
+                return 'background'
 
             elif (key_pressed in ENTER_KEYS and selected == 1) or key_pressed in ESCAPE_KEYS:
                 if NetStatus == 'YOUARESLAVE':
@@ -1756,12 +1784,23 @@ class Screen(pygame.Surface):
                     selected = 3
                 click_zones['shake'] = self.display_button(2 == selected, 'shake', special='refresh')
                 click_zones['continue'] = self.display_button(3 == selected, 'continue', special='return')
-                nb_boutons = 3
+                nb_boutons = 4
             else:
-                nb_boutons = 1
-                selected = 1
+                nb_boutons = 2
+                selected = min(selected, 2)
+            background_index = nb_boutons
 
             click_zones['escape'] = self.display_button(1 == selected, 'back', special='escape')
+            # The wait can go on in the background : said, and its button
+            hint = pygame.Rect(0, int(self.res['y'] * 0.71), self.res['x'], int(self.res_y_16 * 0.7))
+            self.blit_text2(self.lang.translate('netwait-hint'), hint, self.colorset['menu-text-white'])
+            chosen = selected == background_index
+            button = pygame.Rect(int(self.res['x'] * 0.3), int(self.res['y'] * 0.78), int(self.res['x'] * 0.4), int(self.res_y_16))
+            self.new_blit_rect2(button, self.colorset['menu-selected'] if chosen else self.colorset['menu-buttons'],
+                                corners='All', border_radius=self.get_radius(int(button.height / 2)))
+            self.blit_text2(self.lang.translate('netwait-background'), button,
+                            self.colorset['menu-text-white'] if chosen else self.colorset['menu-text-black'])
+            click_zones['background'] = button
 
             self.update_screen()
             # If we received the order to LAUNCH or to ABORT game
@@ -7706,6 +7745,9 @@ class Screen(pygame.Surface):
 
     # Places of the buttons at the bottom of the menus (footer : see display_button)
     FOOTERS = {'left': 'escape', 'center': 'refresh', 'right': 'return'}
+    # The activity indicator, a button of the menus when its task can be chosen (see run_menu)
+    FOOTER_KINDS = tuple(FOOTERS) + ('activity',)
+    ACTIVITY_BUTTON = {'id': 'activity', 'action': 'activity', 'text': '', 'footer': 'activity'}
     # Secret key of the menus : the shortcut of each button shown, or hidden again (until the
     # game is left ; in a game, c is the cheat dart)
     REVEAL_KEY = 'c'
@@ -7798,9 +7840,74 @@ class Screen(pygame.Surface):
         shown, self.menu_shown = getattr(self, 'menu_shown', None), name
         try:
             with self.bganim.scope(name):
-                return self.menu_of_files(name, items, everything, hook, initial, title, subtitle, columns)
+                while True:
+                    # The activity indicator, when its task can be chosen : one more button
+                    extra = [self.ACTIVITY_BUTTON] if name != 'question' and self.activities.selectable() else []
+                    button = self.menu_of_files(name, items + extra, everything + extra, hook, initial, title, subtitle,
+                                                columns)
+                    if button.get('action') != 'activity':
+                        return button
+                    self.activities.choose()
+                    initial = 'activity'
         finally:
             self.menu_shown = shown
+
+    def menu_exit(self, name, everything):
+        '''
+        A network game waiting in the background to resume (resumed, launched, given up, lost) :
+        the menus go back (their button Back) to the main menu, which gives it to the main loop.
+        The button returned, None : the menu goes on
+        '''
+        wait = getattr(self, 'net_wait', None)
+        if wait is None or not wait.resume_wanted or name == 'question':
+            return None
+        if name == 'main':
+            return {'id': 'netresume', 'action': 'netresume'}
+        back = next((button for button in everything if button.get('action') == 'back' or 'escape' in
+                     [cmenus.key_name(key) for key in cmenus.as_list(button.get('shortcut'))]), None)
+        return back or {'id': 'back', 'action': 'back'}
+
+    # ------------------------------------------------------------------ network game in the background
+    def net_wait_activity(self):
+        '''
+        The network game waiting in the background, in the activity indicator
+        '''
+        wait = getattr(self, 'net_wait', None)
+        if wait is None:
+            return None
+        translate = self.lang.translate
+        if wait.state in ('launch', 'abort'):
+            text = translate('activity-netwait-launch')
+        elif wait.state == 'lost':
+            text = translate('activity-netwait-lost')
+        elif wait.status == 'YOUAREMASTER':
+            text = translate('activity-netwait-master').replace('{players}', str(len(wait.players)))
+        else:
+            text = translate('activity-netwait-slave')
+        return {'text': text.replace('{name}', str(wait.gamename)), 'fraction': None}
+
+    def net_wait_choice(self):
+        '''
+        The indicator chosen : resume the screen of the wait, give up the wait, or back
+        '''
+        wait = getattr(self, 'net_wait', None)
+        if wait is None:
+            return None
+        translate = self.lang.translate
+        items = []
+        if wait.state != 'lost':
+            items.append({'id': 'resume', 'action': 'yes', 'text': 'netwait-resume', 'shortcut': 'F1'})
+        items.append({'id': 'abandon', 'action': 'no', 'text': 'netwait-abandon', 'shortcut': 'F2'})
+        back = {'id': 'back', 'action': 'back', 'text': 'back', 'shortcut': 'escape', 'footer': 'left'}
+        state = self.net_wait_activity() or {}
+        answer = self.run_menu('question', items + [back], items + [back],
+                               title=translate('netwait-choice-title').replace('{name}', str(wait.gamename)),
+                               subtitle=state.get('text')).get('id')
+        if answer == 'resume':
+            wait.want_resume('resume')
+        elif answer == 'abandon':
+            wait.want_resume('abandon')
+        return answer
 
     def menu_of_files(self, name, items, everything, hook=None, initial=None, title=None, subtitle=None, columns=None):
         '''
@@ -7823,8 +7930,8 @@ class Screen(pygame.Surface):
         layout = str(menu.get('layout') or 'list')
         keys = {direction: set(menus.keys(direction)) for direction in
                 ('up', 'down', 'left', 'right', 'next', 'previous', 'validate', 'back')}
-        listed = [button for button in items if button.get('footer') not in self.FOOTERS]
-        footers = [button for button in items if button.get('footer') in self.FOOTERS]
+        listed = [button for button in items if button.get('footer') not in self.FOOTER_KINDS]
+        footers = [button for button in items if button.get('footer') in self.FOOTER_KINDS]
         shown = listed + footers
         nb_listed = len(listed)
         nb_shown = len(shown)
@@ -7861,7 +7968,10 @@ class Screen(pygame.Surface):
 
         def draw(index):
             button = shown[index - 1]
-            if index > nb_listed:
+            if button.get('footer') == 'activity':
+                # The activity indicator : drawn by itself over the screen, framed when selected
+                rects[index] = self.activities.focus_place(index == selected)
+            elif index > nb_listed:
                 rects[index] = self.display_button(index == selected, self.button_text(button), self.FOOTERS[button['footer']])
             elif layout == 'tiles':
                 # The tiles of always : the logo of each button, in a row (logo_item)
@@ -7888,6 +7998,10 @@ class Screen(pygame.Surface):
                 return hooked
             if hooked:
                 full = True
+            # A network game waiting in the background resumed or ended : back to the main menu
+            leaving = self.menu_exit(name, everything)
+            if leaving is not None:
+                return leaving
             # Text of the selected button on the DMD
             dmd = shown[selected - 1].get('dmd') if 1 <= selected <= nb_shown else None
             if dmd and dmd != dmd_sent:
@@ -8205,8 +8319,8 @@ class Screen(pygame.Surface):
         remember = bool(menu.get('remember'))
         keys = {direction: set(menus.keys(direction)) for direction in
                 ('up', 'down', 'left', 'right', 'next', 'previous', 'validate', 'back')}
-        listed = [button for button in items if button.get('footer') not in self.FOOTERS]
-        footers = [button for button in items if button.get('footer') in self.FOOTERS]
+        listed = [button for button in items if button.get('footer') not in self.FOOTER_KINDS]
+        footers = [button for button in items if button.get('footer') in self.FOOTER_KINDS]
         shown = listed + footers
         nb_listed, nb_shown = len(listed), len(shown)
         styles = [self.button_style(menu, button) for button in listed]
@@ -8230,6 +8344,10 @@ class Screen(pygame.Surface):
             return 'disabled' if listed[index - 1].get('unavailable') else 'normal'
 
         def draw(index):
+            if index > nb_listed and shown[index - 1].get('footer') == 'activity':
+                rects[index] = drawn[index] = pygame.Rect(self.activities.focus_place(index == selected))
+                looks[index] = index == selected
+                return
             if index > nb_listed:
                 button = shown[index - 1]
                 rects[index] = drawn[index] = pygame.Rect(self.display_button(index == selected, self.button_text(button),
@@ -8282,6 +8400,9 @@ class Screen(pygame.Surface):
                 return hooked
             if hooked:
                 full = True
+            leaving = self.menu_exit(name, everything)
+            if leaving is not None:
+                return leaving
             dmd = shown[selected - 1].get('dmd') if 1 <= selected <= nb_shown else None
             if dmd and dmd != dmd_sent:
                 self.dmd.send_text(self.lang.translate(str(dmd)))
@@ -8901,8 +9022,19 @@ class Screen(pygame.Surface):
                 return True
             return banned()
 
-        button = self.run_menu('main', self.main_menu_items(), [self.favorite_button(button) for button in menus.buttons('main')],
-                               hook=hook)
+        while True:
+            button = self.run_menu('main', self.main_menu_items(), [self.favorite_button(button) for button in menus.buttons('main')],
+                                   hook=hook)
+            action = str(button.get('action'))
+            # A network game waiting in the background : the menus, the trophies, the gallery...
+            # are free ; another game, leaving : the wait given up first
+            if self.net_wait is None or action == 'netresume' or action.startswith('menu:') \
+                    or action in ('trophies', 'gallery', 'mp3', 'infos'):
+                break
+            translate = self.lang.translate
+            if self.ask_yes_no(translate('netwait-abandon-question'), translate('netwait-abandon-explain')):
+                self.net_wait.want_resume('abandon')
+                return 'netresume'
         # A button going straight to a game or to the games of a category : a local game,
         # whose players are chosen first
         self.menu_target = menus.target(button.get('action'))

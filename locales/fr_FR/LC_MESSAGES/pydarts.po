@@ -5704,3 +5704,37 @@ msgstr "Normale"
 msgid "animated-effect-speed-fast"
 msgstr "Rapide"
 
+
+msgid "netwait-background"
+msgstr "Attendre en tâche de fond"
+
+msgid "netwait-hint"
+msgstr "Vous pouvez quitter cet écran : l'indicateur d'activité prend le relais"
+
+msgid "activity-netwait-master"
+msgstr "Partie {name} : {players} joueur(s)"
+
+msgid "activity-netwait-slave"
+msgstr "Partie {name} : en attente du lancement"
+
+msgid "activity-netwait-launch"
+msgstr "La partie {name} commence"
+
+msgid "activity-netwait-lost"
+msgstr "Partie {name} : serveur injoignable"
+
+msgid "netwait-choice-title"
+msgstr "Partie réseau {name} en attente"
+
+msgid "netwait-resume"
+msgstr "Reprendre l'écran d'attente"
+
+msgid "netwait-abandon"
+msgstr "Abandonner l'attente"
+
+msgid "netwait-abandon-question"
+msgstr "Une partie réseau est en attente. L'abandonner ?"
+
+msgid "netwait-abandon-explain"
+msgstr "Non : la partie réseau continue d'attendre ses joueurs"
+

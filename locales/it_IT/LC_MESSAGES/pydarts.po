@@ -5695,3 +5695,37 @@ msgstr "Normale"
 msgid "animated-effect-speed-fast"
 msgstr "Veloce"
 
+
+msgid "netwait-background"
+msgstr "Attendere in background"
+
+msgid "netwait-hint"
+msgstr "Puoi lasciare questa schermata: l'indicatore di attività prende il testimone"
+
+msgid "activity-netwait-master"
+msgstr "Partita {name}: {players} giocatore/i"
+
+msgid "activity-netwait-slave"
+msgstr "Partita {name}: in attesa dell'avvio"
+
+msgid "activity-netwait-launch"
+msgstr "La partita {name} sta iniziando"
+
+msgid "activity-netwait-lost"
+msgstr "Partita {name}: server irraggiungibile"
+
+msgid "netwait-choice-title"
+msgstr "Partita in rete {name} in attesa"
+
+msgid "netwait-resume"
+msgstr "Tornare alla schermata di attesa"
+
+msgid "netwait-abandon"
+msgstr "Abbandonare l'attesa"
+
+msgid "netwait-abandon-question"
+msgstr "Una partita in rete è in attesa. Abbandonarla?"
+
+msgid "netwait-abandon-explain"
+msgstr "No: la partita in rete continua ad attendere i giocatori"
+

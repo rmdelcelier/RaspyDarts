@@ -803,6 +803,16 @@ try:
                 # Options of a favorite whose players are chosen at its launch (see FAVORITE)
                 favorite_options = None
                 game_type = display.main_menu()
+                if game_type == 'netresume':
+                    # A network game waiting in the background (include/cnetwait.py) : its screen
+                    # again (resumed, launched, given up or lost : done there as always)
+                    if display.net_wait is not None:
+                        game_type = display.net_wait.game_type
+                        net_status = display.net_wait.status
+                        menu = 'starting'
+                    else:
+                        menu = 'gametype'
+                    continue
                 if game_type in ('network', 'netjoin', 'netcreate'):
                     game_type = display.network_lobby()
                     if game_type is None:
@@ -1504,11 +1514,17 @@ try:
                 Network game menu - Starting - If network enabled, all_players (All players names)
                 list is updated via network
                 """
-                # Wait for the choosed game from server
-                if net_status == 'YOUARESLAVE':
+                # Wait for the choosed game from server (not again when its wait is resumed)
+                if net_status == 'YOUARESLAVE' and display.net_wait is None:
                     Game = net_client.get_game()
                 # Display starting page with a few game info
                 all_players = display.starting(net_client, net_status, local_players, netgamename, Game.replace(' ', '_'))
+                if all_players == 'background':
+                    # The wait goes on in the background, followed by the activity indicator : the
+                    # menus meanwhile ; the main menu gives it back (netresume)
+                    display.net_wait.game_type = game_type
+                    menu = 'gametype'
+                    continue
                 menu = True  # Means that goes on...
                 if all_players == [] or all_players == -1:  # Empty network Player List or -1 signal
                     net_client.leave_game(netgamename, local_players, net_status)

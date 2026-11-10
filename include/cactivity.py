@@ -6,7 +6,9 @@ top right by default), over the animated background or the background of the the
 
 Each task gives a function returning its state : None (finished, the line goes away), or a
 dict : text, fraction (0 to 1 ; None : waiting, an animation instead of a bar), final (its
-end said : shown a few seconds then gone).
+end said : shown a few seconds then gone). A task can be chosen (select : a function) : the
+indicator is then a button of the menus (see Screen.run_menu), reached with the wheel of a USB
+knob, the buttons, the arrows or a touch, framed when it is selected.
 """
 
 import time
@@ -28,6 +30,9 @@ class Activities:
     def __init__(self, screen):
         self.owner = screen
         self.items = {}
+        self.selects = {}
+        # Selected as a button of a menu
+        self.focused = False
         self.states = {}
         self.finals = {}
         self.under = None
@@ -37,15 +42,19 @@ class Activities:
         self.font_size = None
 
     # ------------------------------------------------------------------ tasks
-    def add(self, key, state):
+    def add(self, key, state, select=None):
         '''
-        A task shown while state() gives something (see the module)
+        A task shown while state() gives something (see the module) ; select : done when the
+        indicator is chosen
         '''
         self.items[key] = state
+        if select is not None:
+            self.selects[key] = select
         self.finals.pop(key, None)
 
     def remove(self, key):
         self.items.pop(key, None)
+        self.selects.pop(key, None)
         self.states.pop(key, None)
         self.finals.pop(key, None)
 
@@ -78,6 +87,28 @@ class Activities:
         '''
         animated = getattr(self.owner, 'bganim', None)
         return bool(self.items) and animated is not None and animated.depth > 0
+
+    def selectable(self):
+        '''
+        A task can be chosen : the indicator is a button of the menus
+        '''
+        return any(key in self.items for key in self.selects)
+
+    def choose(self):
+        '''
+        The indicator chosen : what its task does (the first one which can be chosen)
+        '''
+        for key, select in list(self.selects.items()):
+            if key in self.items:
+                return select()
+        return None
+
+    def focus_place(self, selected):
+        '''
+        As a button of a menu : selected or not, its place (to click, to move to)
+        '''
+        self.focused = bool(selected)
+        return tuple(self.place(max(1, len(self.items)))[0])
 
     # ------------------------------------------------------------------ drawing
     def corner(self):
@@ -133,7 +164,9 @@ class Activities:
         for index, state in enumerate(states):
             item = pygame.Rect(rect.x, rect.y + index * line, rect.width, line - 4)
             pygame.draw.rect(surface, background, item, border_radius=radius)
-            pygame.draw.rect(surface, good if state.get('final') else accent, item, 2, border_radius=radius)
+            framed = self.focused and self.selectable()
+            pygame.draw.rect(surface, good if state.get('final') else accent, item, max(2, int(line * 0.08)) if framed else 2,
+                             border_radius=radius)
             text = str(state.get('text') or '')
             rendered = self.font.render(text, True, (255, 255, 255))
             room = item.width - 2 * radius
@@ -164,6 +197,7 @@ class Activities:
         rectangle, None : nothing drawn
         '''
         if not self.visible():
+            self.focused = False
             return self.erase_rect()
         states_rect, _line = self.place(max(1, len(self.items)))
         area = states_rect.clip(surface.get_rect())
