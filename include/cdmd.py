@@ -24,6 +24,10 @@ class Cdmd():
         # In a game, with « Afficher les textes Raspy2DMD à la couleur du joueur » : the colour
         # of the player whose turn it is (its texts sent by msgcolor) ; None : msg, msgmove
         self.player_color = None
+        # The display of the score of the game played (include/cdmdscore.py) : its style, its
+        # GIF, its background sent (None : out of a game)
+        self.score_settings = None
+        self.background = None
 
     def init_insults(self):
         """
@@ -144,26 +148,62 @@ class Cdmd():
 
         self.send(msg)
 
+    def game_start(self, game):
+        """
+        A game starts : the display of its score (Afficheur (Raspy2DMD) > Affichage du score),
+        the background of its style sent (fondN|start|O/N)
+        """
+        from include import cdmdscore    # pylint: disable=import-outside-toplevel
+        self.game_end()
+        try:
+            settings = cdmdscore.of_game(game)
+        except Exception as error:    # pylint: disable=broad-except
+            self.logs.warning(f"DMD : display of the score not read ({error})")
+            settings = dict(cdmdscore.GENERAL)
+        if settings.get('style') != 'classic' and cdmdscore.styles_known() is False:
+            # Raspy2DMD of this Raspberry older than 1.6.2.3 : its styles refused
+            self.logs.debug("DMD : Raspy2DMD older than 1.6.2.3, classic score")
+            settings['style'] = 'classic'
+        self.score_settings = settings
+        self.dart = {0: 'X', 1: 'X', 2: 'X'}
+        background = cdmdscore.BACKGROUND.get(settings.get('style'))
+        if background:
+            self.background = background
+            self.send(f"{background}|start|{settings.get('wait', 'N')}")
+
+    def game_end(self):
+        """
+        The game left (ended, given up, the game quit) : the background of its style stopped
+        """
+        if self.background:
+            self.send(f'{self.background}|stop')
+        self.background = None
+        self.score_settings = None
+
+    def score_text(self, darts, style=None, gif=None):
+        """
+        The frame of a score : its style, the darts, the colour of the player, its GIF
+        """
+        from include import cdmdscore    # pylint: disable=import-outside-toplevel
+        settings = self.score_settings or {}
+        style = style or settings.get('style', 'classic')
+        gif = gif or settings.get('gif', 'O')
+        if style == 'classic':
+            values = [str(value) for value in darts]
+        else:
+            values = [cdmdscore.dart_value(value) for value in darts]
+        color = self.rgb(self.player_color) if self.player_color is not None else None
+        return f"{cdmdscore.PREFIX.get(style, 'score')}|{' - '.join(values)}||{color or ''}|{gif}"
+
     def send_score(self, dart, touch):
         """
-        Function used to send score to dmd
+        Function used to send score to dmd : score|X - X - X||R;G;B|O/N in the style chosen
+        (score1, score2 : Raspy2DMD 1.6.2.3 ; the colour of the player as an option, Raspy2DMD
+        1.6.1.2, an older one shows it in its colour, the fields ignored)
         """
-
-        if dart == 1:
-            self.dart[0] = touch
-            text = f'score|{touch} - X - X'
-        elif dart == 2:
-            self.dart[1] = touch
-            text = f'score|{self.dart[0]} - {touch} - X'
-        elif dart == 3:
-            self.dart[2] = touch
-            text = f'score|{self.dart[0]} - {self.dart[1]} - {touch}'
-        else:
+        if dart not in (1, 2, 3):
             return
-
-        # In the colour of the player (option) : score|X - X - X||R;G;B (Raspy2DMD 1.6.1.2 ; an
-        # older one shows it in its colour, the field ignored)
-        color = self.rgb(self.player_color) if self.player_color is not None else None
-        if color:
-            text += f'||{color}'
-        self.send(text)
+        if dart == 1:
+            self.dart = {0: 'X', 1: 'X', 2: 'X'}
+        self.dart[dart - 1] = touch
+        self.send(self.score_text([self.dart[0] or 'X', self.dart[1] or 'X', self.dart[2] or 'X']))

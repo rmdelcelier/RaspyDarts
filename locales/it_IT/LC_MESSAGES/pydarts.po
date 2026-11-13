@@ -5981,3 +5981,100 @@ msgstr "Nessun nome"
 msgid "editor-name-nothing"
 msgstr "Nessuna traduzione con questa parola"
 
+
+msgid "raspy2dmd-settings"
+msgstr "Impostazioni"
+
+msgid "raspy2dmd-commands"
+msgstr "Comandi"
+
+msgid "raspy2dmd-remote"
+msgstr "Raspy2DMD su un altro Raspberry Pi"
+
+msgid "raspy2dmd-remote-unknown"
+msgstr "Raspy2DMD non è installato sulla macchina. Su un altro Raspberry, la sua pagina web si apre all'indirizzo di quel Raspberry."
+
+msgid "raspy2dmd-install-here"
+msgstr "Installare Raspy2DMD sulla macchina"
+
+msgid "dmd-score"
+msgstr "Visualizzazione del punteggio"
+
+msgid "dmd-score-general"
+msgstr "Per tutti i giochi"
+
+msgid "dmd-score-by-game"
+msgstr "Per tipo e per gioco"
+
+msgid "dmd-score-whole-classic"
+msgstr "Tutti i giochi classici"
+
+msgid "dmd-score-whole-fun"
+msgstr "Tutti i giochi fun"
+
+msgid "dmd-score-whole-sport"
+msgstr "Tutti i giochi sport"
+
+msgid "dmd-score-try"
+msgstr "Provare la visualizzazione del punteggio"
+
+msgid "dmd-score-trying"
+msgstr "Prova inviata al display"
+
+msgid "dmd-style"
+msgstr "Stile del punteggio"
+
+msgid "dmd-style-modern"
+msgstr "Moderno"
+
+msgid "dmd-style-duck"
+msgstr "Caccia alle anatre"
+
+msgid "dmd-style-classic"
+msgstr "Classico"
+
+msgid "dmd-gif"
+msgstr "GIF dei tiri"
+
+msgid "dmd-gif-O"
+msgstr "Sì"
+
+msgid "dmd-gif-N"
+msgstr "No"
+
+msgid "dmd-gif-short-O"
+msgstr "con GIF"
+
+msgid "dmd-gif-short-N"
+msgstr "senza GIF"
+
+msgid "dmd-wait"
+msgstr "In attesa durante la partita"
+
+msgid "dmd-wait-N"
+msgstr "Scena dello stile"
+
+msgid "dmd-wait-O"
+msgstr "Animazione abituale"
+
+msgid "dmd-inherit-general"
+msgstr "Come per tutti i giochi"
+
+msgid "dmd-inherit-type"
+msgstr "Come il tipo"
+
+msgid "dmd-version-needed"
+msgstr "Moderno e Caccia alle anatre: Raspy2DMD 1.6.2.3 o successivo"
+
+msgid "dmd-version-old"
+msgstr "Moderno e Caccia alle anatre: Raspy2DMD 1.6.2.3 o successivo (installato: {}); il punteggio resta Classico"
+
+msgid "dmd-style-help-modern"
+msgstr "Una telecamera riprende il bersaglio: zoom sul segmento colpito, il bersaglio esplode su un tiro mancato. Durante la partita, sfondo: muro di mattoni e bersaglio."
+
+msgid "dmd-style-help-duck"
+msgstr "Un cane da caccia esce dall'erba con il segmento colpito e prende in giro un tiro mancato. Durante la partita, sfondo: cielo notturno, alberi ed erba."
+
+msgid "dmd-style-help-classic"
+msgstr "La visualizzazione abituale delle tre freccette, senza sfondo durante la partita."
+

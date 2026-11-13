@@ -5968,3 +5968,100 @@ msgstr "Geen naam"
 msgid "editor-name-nothing"
 msgstr "Geen vertaling met dit woord"
 
+
+msgid "raspy2dmd-settings"
+msgstr "Instellingen"
+
+msgid "raspy2dmd-commands"
+msgstr "Opdrachten"
+
+msgid "raspy2dmd-remote"
+msgstr "Raspy2DMD op een andere Raspberry Pi"
+
+msgid "raspy2dmd-remote-unknown"
+msgstr "Raspy2DMD is niet op de kast geïnstalleerd. Op een andere Raspberry opent de webpagina op het adres van die Raspberry."
+
+msgid "raspy2dmd-install-here"
+msgstr "Raspy2DMD op de kast installeren"
+
+msgid "dmd-score"
+msgstr "Weergave van de score"
+
+msgid "dmd-score-general"
+msgstr "Voor alle spellen"
+
+msgid "dmd-score-by-game"
+msgstr "Per type en per spel"
+
+msgid "dmd-score-whole-classic"
+msgstr "Alle klassieke spellen"
+
+msgid "dmd-score-whole-fun"
+msgstr "Alle fun-spellen"
+
+msgid "dmd-score-whole-sport"
+msgstr "Alle sportspellen"
+
+msgid "dmd-score-try"
+msgstr "Weergave van de score proberen"
+
+msgid "dmd-score-trying"
+msgstr "Test naar het display gestuurd"
+
+msgid "dmd-style"
+msgstr "Stijl van de score"
+
+msgid "dmd-style-modern"
+msgstr "Modern"
+
+msgid "dmd-style-duck"
+msgstr "Eendenjacht"
+
+msgid "dmd-style-classic"
+msgstr "Klassiek"
+
+msgid "dmd-gif"
+msgstr "GIF van de worpen"
+
+msgid "dmd-gif-O"
+msgstr "Ja"
+
+msgid "dmd-gif-N"
+msgstr "Nee"
+
+msgid "dmd-gif-short-O"
+msgstr "met GIF"
+
+msgid "dmd-gif-short-N"
+msgstr "zonder GIF"
+
+msgid "dmd-wait"
+msgstr "Wachten tijdens het spel"
+
+msgid "dmd-wait-N"
+msgstr "Scène van de stijl"
+
+msgid "dmd-wait-O"
+msgstr "Gewone animatie"
+
+msgid "dmd-inherit-general"
+msgstr "Zoals voor alle spellen"
+
+msgid "dmd-inherit-type"
+msgstr "Zoals het type"
+
+msgid "dmd-version-needed"
+msgstr "Modern en Eendenjacht: Raspy2DMD 1.6.2.3 of nieuwer"
+
+msgid "dmd-version-old"
+msgstr "Modern en Eendenjacht: Raspy2DMD 1.6.2.3 of nieuwer (geïnstalleerd: {}); de score blijft Klassiek"
+
+msgid "dmd-style-help-modern"
+msgstr "Een camera filmt het bord: zoom op het geraakte segment, het bord ontploft bij een misser. Tijdens het spel achtergrond: bakstenen muur en bord."
+
+msgid "dmd-style-help-duck"
+msgstr "Een jachthond komt uit het gras met het geraakte segment en lacht om een misser. Tijdens het spel achtergrond: nachtelijke hemel, bomen en gras."
+
+msgid "dmd-style-help-classic"
+msgstr "De gewone weergave van de drie pijlen, zonder achtergrond tijdens het spel."
+

@@ -6186,3 +6186,100 @@ msgstr "No name"
 msgid "editor-name-nothing"
 msgstr "No translation with this word"
 
+
+msgid "raspy2dmd-settings"
+msgstr "Settings"
+
+msgid "raspy2dmd-commands"
+msgstr "Commands"
+
+msgid "raspy2dmd-remote"
+msgstr "Raspy2DMD on another Raspberry Pi"
+
+msgid "raspy2dmd-remote-unknown"
+msgstr "Raspy2DMD is not installed on the cabinet. On another Raspberry, its web page opens at the address of that Raspberry."
+
+msgid "raspy2dmd-install-here"
+msgstr "Install Raspy2DMD on the cabinet"
+
+msgid "dmd-score"
+msgstr "Display of the score"
+
+msgid "dmd-score-general"
+msgstr "For every game"
+
+msgid "dmd-score-by-game"
+msgstr "By type and by game"
+
+msgid "dmd-score-whole-classic"
+msgstr "All the classic games"
+
+msgid "dmd-score-whole-fun"
+msgstr "All the fun games"
+
+msgid "dmd-score-whole-sport"
+msgstr "All the sport games"
+
+msgid "dmd-score-try"
+msgstr "Try the display of the score"
+
+msgid "dmd-score-trying"
+msgstr "Try sent to the display"
+
+msgid "dmd-style"
+msgstr "Style of the score"
+
+msgid "dmd-style-modern"
+msgstr "Modern"
+
+msgid "dmd-style-duck"
+msgstr "Duck hunting"
+
+msgid "dmd-style-classic"
+msgstr "Classic"
+
+msgid "dmd-gif"
+msgstr "GIF of the strokes"
+
+msgid "dmd-gif-O"
+msgstr "Yes"
+
+msgid "dmd-gif-N"
+msgstr "No"
+
+msgid "dmd-gif-short-O"
+msgstr "with GIF"
+
+msgid "dmd-gif-short-N"
+msgstr "without GIF"
+
+msgid "dmd-wait"
+msgstr "Waiting during the game"
+
+msgid "dmd-wait-N"
+msgstr "Scene of the style"
+
+msgid "dmd-wait-O"
+msgstr "Usual animation"
+
+msgid "dmd-inherit-general"
+msgstr "As for every game"
+
+msgid "dmd-inherit-type"
+msgstr "As the type"
+
+msgid "dmd-version-needed"
+msgstr "Modern and Duck hunting: Raspy2DMD 1.6.2.3 or later"
+
+msgid "dmd-version-old"
+msgstr "Modern and Duck hunting: Raspy2DMD 1.6.2.3 or later (installed: {}); the score stays Classic"
+
+msgid "dmd-style-help-modern"
+msgstr "A camera films the board: zoom on the segment hit, the board explodes on a missed dart. During the game, background: brick wall and board."
+
+msgid "dmd-style-help-duck"
+msgstr "A hunting dog comes out of the grass with the segment hit, and laughs at a missed dart. During the game, background: night sky, trees and grass."
+
+msgid "dmd-style-help-classic"
+msgstr "The usual display of the three darts, no background during the game."
+

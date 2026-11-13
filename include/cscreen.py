@@ -6885,7 +6885,9 @@ class Screen(pygame.Surface):
                     'music_source', 'music_volume',
                     # Animated background : in Modifier les écrans > Fond animé
                     'animated_background', 'animated_background_rate', 'animated_effect', 'animated_effect_color',
-                    'animated_effect_amount', 'animated_effect_speed', 'animated_scene', 'animated_scene_color'):
+                    'animated_effect_amount', 'animated_effect_speed', 'animated_scene', 'animated_scene_color',
+                    # Raspy2DMD : in Paramètres > Afficheur (Raspy2DMD)
+                    'dmd_shutdown', 'dmd_player_color'):
                 avoid.append([option, customization[option], '', 0, []])
                 continue
 
@@ -10328,83 +10330,10 @@ class Screen(pygame.Surface):
 
     def raspy2dmd_menu(self, dispatcher):
         '''
-        The DMD display Raspy2DMD : the QR code of its web page (all its settings, from a
-        phone), and a few commands sent to it (a message to check the link, the test pattern
-        of the Pico, the clock, the demo)
+        The DMD display Raspy2DMD : its settings and its commands (include/cdmdmenu.py)
         '''
-        # Its installation followed until its end : then its screen
-        if self.raspy2dmd_installing() and not self.raspy2dmd_install_progress():
-            return
-        if not self.raspy2dmd_installed() and not self.raspy2dmd_install():
-            return
-        from include import cgallery
-        import qrcode
-        import socket
-        # Its address by the name of the Raspberry (raspydarts.local) : it stays when the IP
-        # changes ; the IP written under it, if a device does not know the .local names
-        url = f"http://{socket.gethostname()}.local/"
-        address = f"http://{cgallery.local_ip()}/"
-        picture = qrcode.make(url)
-        picture = (picture.get_image() if hasattr(picture, 'get_image') else picture).convert('RGB')
-        side = int(self.res['y'] * 0.5)
-        code = pygame.transform.scale(pygame.image.fromstring(picture.tobytes(), picture.size, 'RGB'), (side, side))
-        selected = 1
-        while True:
-            # Stopped : start it (its commands go through it) ; running : its commands
-            running = self.raspy2dmd_running()
-            commands = [('raspy2dmd-test-message', f"msg|{self.lang.translate('raspy2dmd-hello')}"),
-                        ('raspy2dmd-test-pattern', 'pico|test_rgb'),
-                        ('raspy2dmd-clock', 'time|start'),
-                        ('raspy2dmd-demo', 'demo|gif')] if running else [('raspy2dmd-start', None)]
-            commands.append(('raspy2dmd-check-update', self.RASPY2DMD_UPDATE))
-            if os.path.isfile(self.RASPY2DMD_PICO_SEUL):
-                commands.append(('raspy2dmd-uninstall', self.RASPY2DMD_UNINSTALL))
-            nb_elements = len(commands)
-            selected = min(selected, nb_elements + 1)
-            self.display_background()
-            self.menu_header(self.lang.translate('raspy2dmd'), self.lang.translate('raspy2dmd-scan'))
-            pos_x = int(self.res_x_16 * 2)
-            pos_y = int(self.res['y'] / 5)
-            self.blit(code, (pos_x, pos_y))
-            line = int(self.res['y'] / 20)
-            self.blit_text(url, pos_x, pos_y + side + self.margin, side, line, self.colorset['menu-text-white'])
-            self.blit_text(address, pos_x, pos_y + side + self.margin + line, side, int(line * 0.8), self.colorset['menu-text-white'])
-            if not running:
-                # Installed, not started (just installed, out of its operating hours...)
-                self.blit_text(self.lang.translate('raspy2dmd-not-running'), 0, pos_y + side + self.margin + line,
-                               self.res['x'], line, self.colorset['menu-ko'])
-            click_zones = {}
-            for index, (text, _) in enumerate(commands, 1):
-                click_zones[f'F{index}'] = self.menu_item((index, nb_elements, selected), (f'F{index}', text, BTN_CHOICE, None),
-                                                          align='Right')
-            click_zones['escape'] = self.display_button(selected == nb_elements + 1, 'back', special='escape')
-            self.update_screen()
-
-            key = self.rpi.listen_inputs(['arrows', 'fx'],
-                                         ['escape', 'enter', 'space', 'PLAYERBUTTON', 'BACKUPBUTTON', 'GAMEBUTTON', 'single-click'])
-            clicked = self.is_clicked(click_zones, key)
-            if clicked:
-                key = clicked
-            if key in [f'F{index}' for index in range(1, nb_elements + 1)]:
-                selected = int(key[1:])
-                key = 'enter'
-            selected = self.navigate(selected, key, nb_elements, 1, 1, left_right=True)
-            if key in ESCAPE_KEYS or key == 'escape' or (key in ENTER_KEYS and selected == nb_elements + 1):
-                return
-            if key in ENTER_KEYS and 1 <= selected <= nb_elements:
-                if commands[selected - 1][1] is None:
-                    self.raspy2dmd_start()
-                    selected = 1
-                    continue
-                if commands[selected - 1][1] == self.RASPY2DMD_UPDATE:
-                    self.raspy2dmd_update()
-                    continue
-                if commands[selected - 1][1] == self.RASPY2DMD_UNINSTALL:
-                    if self.raspy2dmd_uninstall():
-                        return
-                    continue
-                dispatcher.mqtt_publish(self.RASPY2DMD_TOPIC, commands[selected - 1][1])
-                self.message([self.lang.translate('raspy2dmd-sent')], 1000, self.colorset['menu-ok'], 'middle', 'big')
+        from include import cdmdmenu    # pylint: disable=import-outside-toplevel
+        cdmdmenu.raspy2dmd_menu(self, dispatcher)
 
     def music_player(self):
         '''

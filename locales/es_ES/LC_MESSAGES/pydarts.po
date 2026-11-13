@@ -5919,3 +5919,100 @@ msgstr "Sin nombre"
 msgid "editor-name-nothing"
 msgstr "Ninguna traducción con esta palabra"
 
+
+msgid "raspy2dmd-settings"
+msgstr "Ajustes"
+
+msgid "raspy2dmd-commands"
+msgstr "Comandos"
+
+msgid "raspy2dmd-remote"
+msgstr "Raspy2DMD en otra Raspberry Pi"
+
+msgid "raspy2dmd-remote-unknown"
+msgstr "Raspy2DMD no está instalado en la máquina. En otra Raspberry, su página web se abre en la dirección de esa Raspberry."
+
+msgid "raspy2dmd-install-here"
+msgstr "Instalar Raspy2DMD en la máquina"
+
+msgid "dmd-score"
+msgstr "Visualización de la puntuación"
+
+msgid "dmd-score-general"
+msgstr "Para todos los juegos"
+
+msgid "dmd-score-by-game"
+msgstr "Por tipo y por juego"
+
+msgid "dmd-score-whole-classic"
+msgstr "Todos los juegos clásicos"
+
+msgid "dmd-score-whole-fun"
+msgstr "Todos los juegos fun"
+
+msgid "dmd-score-whole-sport"
+msgstr "Todos los juegos de deporte"
+
+msgid "dmd-score-try"
+msgstr "Probar la visualización de la puntuación"
+
+msgid "dmd-score-trying"
+msgstr "Prueba enviada a la pantalla"
+
+msgid "dmd-style"
+msgstr "Estilo de la puntuación"
+
+msgid "dmd-style-modern"
+msgstr "Moderno"
+
+msgid "dmd-style-duck"
+msgstr "Caza de patos"
+
+msgid "dmd-style-classic"
+msgstr "Clásico"
+
+msgid "dmd-gif"
+msgstr "GIF de los tiros"
+
+msgid "dmd-gif-O"
+msgstr "Sí"
+
+msgid "dmd-gif-N"
+msgstr "No"
+
+msgid "dmd-gif-short-O"
+msgstr "con GIF"
+
+msgid "dmd-gif-short-N"
+msgstr "sin GIF"
+
+msgid "dmd-wait"
+msgstr "En espera durante la partida"
+
+msgid "dmd-wait-N"
+msgstr "Escena del estilo"
+
+msgid "dmd-wait-O"
+msgstr "Animación habitual"
+
+msgid "dmd-inherit-general"
+msgstr "Como para todos los juegos"
+
+msgid "dmd-inherit-type"
+msgstr "Como el tipo"
+
+msgid "dmd-version-needed"
+msgstr "Moderno y Caza de patos: Raspy2DMD 1.6.2.3 o posterior"
+
+msgid "dmd-version-old"
+msgstr "Moderno y Caza de patos: Raspy2DMD 1.6.2.3 o posterior (instalado: {}); la puntuación queda en Clásico"
+
+msgid "dmd-style-help-modern"
+msgstr "Una cámara filma la diana: zoom en el segmento acertado, la diana explota con un tiro fallado. Durante la partida, fondo: muro de ladrillos y diana."
+
+msgid "dmd-style-help-duck"
+msgstr "Un perro de caza sale de la hierba con el segmento acertado y se burla de un tiro fallado. Durante la partida, fondo: cielo nocturno, árboles y hierba."
+
+msgid "dmd-style-help-classic"
+msgstr "La visualización habitual de los tres dardos, sin fondo durante la partida."
+

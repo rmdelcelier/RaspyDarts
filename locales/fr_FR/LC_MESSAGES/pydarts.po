@@ -5990,3 +5990,100 @@ msgstr "Aucun nom"
 msgid "editor-name-nothing"
 msgstr "Aucune traduction avec ce mot"
 
+
+msgid "raspy2dmd-settings"
+msgstr "Réglages"
+
+msgid "raspy2dmd-commands"
+msgstr "Commandes"
+
+msgid "raspy2dmd-remote"
+msgstr "Raspy2DMD sur un autre Raspberry Pi"
+
+msgid "raspy2dmd-remote-unknown"
+msgstr "Raspy2DMD n'est pas installé sur la borne. Sur un autre Raspberry, sa page web s'ouvre à l'adresse de ce Raspberry."
+
+msgid "raspy2dmd-install-here"
+msgstr "Installer Raspy2DMD sur la borne"
+
+msgid "dmd-score"
+msgstr "Affichage du score"
+
+msgid "dmd-score-general"
+msgstr "Pour tous les jeux"
+
+msgid "dmd-score-by-game"
+msgstr "Par type et par jeu"
+
+msgid "dmd-score-whole-classic"
+msgstr "Tous les jeux classiques"
+
+msgid "dmd-score-whole-fun"
+msgstr "Tous les jeux fun"
+
+msgid "dmd-score-whole-sport"
+msgstr "Tous les jeux sport"
+
+msgid "dmd-score-try"
+msgstr "Essayer l'affichage du score"
+
+msgid "dmd-score-trying"
+msgstr "Essai envoyé à l'afficheur"
+
+msgid "dmd-style"
+msgstr "Style du score"
+
+msgid "dmd-style-modern"
+msgstr "Moderne"
+
+msgid "dmd-style-duck"
+msgstr "Chasse aux canards"
+
+msgid "dmd-style-classic"
+msgstr "Classique"
+
+msgid "dmd-gif"
+msgstr "GIF des coups"
+
+msgid "dmd-gif-O"
+msgstr "Oui"
+
+msgid "dmd-gif-N"
+msgstr "Non"
+
+msgid "dmd-gif-short-O"
+msgstr "avec GIF"
+
+msgid "dmd-gif-short-N"
+msgstr "sans GIF"
+
+msgid "dmd-wait"
+msgstr "En attente pendant la partie"
+
+msgid "dmd-wait-N"
+msgstr "Scène du style"
+
+msgid "dmd-wait-O"
+msgstr "Animation habituelle"
+
+msgid "dmd-inherit-general"
+msgstr "Comme pour tous les jeux"
+
+msgid "dmd-inherit-type"
+msgstr "Comme le type"
+
+msgid "dmd-version-needed"
+msgstr "Moderne et Chasse aux canards : Raspy2DMD 1.6.2.3 ou plus"
+
+msgid "dmd-version-old"
+msgstr "Moderne et Chasse aux canards : Raspy2DMD 1.6.2.3 ou plus (installé : {}) ; le score reste en Classique"
+
+msgid "dmd-style-help-modern"
+msgstr "Une caméra filme la cible : zoom sur le segment touché, la cible explose sur un tir manqué. Pendant la partie, fond : mur de briques et cible."
+
+msgid "dmd-style-help-duck"
+msgstr "Un chien de chasse sort des herbes avec le segment touché, et se moque d'un tir manqué. Pendant la partie, fond : ciel de nuit, arbres et herbes."
+
+msgid "dmd-style-help-classic"
+msgstr "L'affichage habituel des trois fléchettes, sans fond pendant la partie."
+

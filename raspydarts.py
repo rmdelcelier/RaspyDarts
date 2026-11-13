@@ -686,8 +686,10 @@ def report_error(context):
 try:
     while game_type not in ('restart', 'quit', 'shutdown'):
 
-        # Out of a game : the texts of Raspy2DMD in its colours
+        # Out of a game : the texts of Raspy2DMD in its colours, the background of the style of
+        # score stopped
         dmd.player_color = None
+        dmd.game_end()
 
         # An error to report (a crash before this start, a game which failed) : once
         error_report = cerrors.take()
@@ -1662,6 +1664,10 @@ try:
                 interrupted = True
                 continue
 
+            # The display of the score on Raspy2DMD for this game (its style, its background)
+            if game.display_dmd():
+                dmd.game_start(Game.replace(' ', '_'))
+
             if stats_screen != 'startagain':
                 for ident in range(0, players_count):
                     # Override existing color
@@ -1812,7 +1818,9 @@ try:
                 next_stroke = None
                 ##############
                 # Its texts in the colour of the player whose turn it is (option)
-                dmd.player_color = players[actual_player].color if dmd_player_color else None
+                # Read at each turn : changed in Paramètres > Afficheur (Raspy2DMD)
+                dmd.player_color = players[actual_player].color \
+                    if bool(Config.get_value('SectionGlobals', 'dmd_player_color', False)) else None
                 pre_dart = game.pre_dart_check(players, actual_round, actual_player, player_launch)
                 publish_match()
 
@@ -2853,6 +2861,8 @@ finally:
     display.message(["Shutting down servers"], wait=0, refresh=True)
 
     logs.debug("Sending quit signal to external servers")
+    # A background of a style of score still shown : stopped
+    dmd.game_end()
     if game_type == 'shutdown':
         # Volontary exit : play leds animation
         dispatcher.publish('quit', ack=True, limit=['TARGET', 'STRIP', 'DMD', 'OTHER'])

@@ -5914,3 +5914,100 @@ msgstr "Kein Name"
 msgid "editor-name-nothing"
 msgstr "Keine Übersetzung mit diesem Wort"
 
+
+msgid "raspy2dmd-settings"
+msgstr "Einstellungen"
+
+msgid "raspy2dmd-commands"
+msgstr "Befehle"
+
+msgid "raspy2dmd-remote"
+msgstr "Raspy2DMD auf einem anderen Raspberry Pi"
+
+msgid "raspy2dmd-remote-unknown"
+msgstr "Raspy2DMD ist nicht auf dem Automaten installiert. Auf einem anderen Raspberry öffnet sich seine Webseite unter dessen Adresse."
+
+msgid "raspy2dmd-install-here"
+msgstr "Raspy2DMD auf dem Automaten installieren"
+
+msgid "dmd-score"
+msgstr "Anzeige der Punkte"
+
+msgid "dmd-score-general"
+msgstr "Für alle Spiele"
+
+msgid "dmd-score-by-game"
+msgstr "Nach Typ und Spiel"
+
+msgid "dmd-score-whole-classic"
+msgstr "Alle klassischen Spiele"
+
+msgid "dmd-score-whole-fun"
+msgstr "Alle Fun-Spiele"
+
+msgid "dmd-score-whole-sport"
+msgstr "Alle Sportspiele"
+
+msgid "dmd-score-try"
+msgstr "Anzeige der Punkte testen"
+
+msgid "dmd-score-trying"
+msgstr "Test an die Anzeige gesendet"
+
+msgid "dmd-style"
+msgstr "Stil der Punkte"
+
+msgid "dmd-style-modern"
+msgstr "Modern"
+
+msgid "dmd-style-duck"
+msgstr "Entenjagd"
+
+msgid "dmd-style-classic"
+msgstr "Klassisch"
+
+msgid "dmd-gif"
+msgstr "GIF der Würfe"
+
+msgid "dmd-gif-O"
+msgstr "Ja"
+
+msgid "dmd-gif-N"
+msgstr "Nein"
+
+msgid "dmd-gif-short-O"
+msgstr "mit GIF"
+
+msgid "dmd-gif-short-N"
+msgstr "ohne GIF"
+
+msgid "dmd-wait"
+msgstr "Warten während des Spiels"
+
+msgid "dmd-wait-N"
+msgstr "Szene des Stils"
+
+msgid "dmd-wait-O"
+msgstr "Übliche Animation"
+
+msgid "dmd-inherit-general"
+msgstr "Wie für alle Spiele"
+
+msgid "dmd-inherit-type"
+msgstr "Wie der Typ"
+
+msgid "dmd-version-needed"
+msgstr "Modern und Entenjagd: Raspy2DMD 1.6.2.3 oder neuer"
+
+msgid "dmd-version-old"
+msgstr "Modern und Entenjagd: Raspy2DMD 1.6.2.3 oder neuer (installiert: {}); die Punkte bleiben klassisch"
+
+msgid "dmd-style-help-modern"
+msgstr "Eine Kamera filmt die Scheibe: Zoom auf das getroffene Segment, die Scheibe explodiert bei einem Fehlwurf. Während des Spiels Hintergrund: Ziegelmauer und Scheibe."
+
+msgid "dmd-style-help-duck"
+msgstr "Ein Jagdhund kommt mit dem getroffenen Segment aus dem Gras und lacht über einen Fehlwurf. Während des Spiels Hintergrund: Nachthimmel, Bäume und Gras."
+
+msgid "dmd-style-help-classic"
+msgstr "Die übliche Anzeige der drei Darts, ohne Hintergrund während des Spiels."
+
