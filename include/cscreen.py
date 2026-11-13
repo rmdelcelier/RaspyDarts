@@ -440,6 +440,20 @@ class Screen(pygame.Surface):
         self.logs.debug(f"Background is now {self.background}")
         self.set_intro_background(background)
 
+    def i2c_restart_question(self, change, written):
+        '''
+        The I2C bus changed for the wiring (include/ci2c.py) : why, and the Raspberry restarted
+        now if wanted (else at its next start)
+        '''
+        translate = self.lang.translate
+        if not written:
+            self.message([translate(f'i2c-{change}-not-written')], 6000, self.colorset['menu-ko'], 'middle', 'big')
+            return
+        if self.ask_yes_no(translate(f'i2c-{change}-question')):
+            self.message([translate('i2c-restarting')], 0, None, 'middle', 'big')
+            import subprocess    # pylint: disable=import-outside-toplevel
+            subprocess.run(['sudo', '-n', 'reboot'], check=False, timeout=30)
+
     def mcp_error(self, error):
         '''
         To avoid a violent back to desktop

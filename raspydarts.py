@@ -263,6 +263,15 @@ releasedartstime = int(Config.get_value('SectionGlobals', 'releasedartstime'))# 
 wait_event_time = int(Config.get_value('SectionGlobals', 'waitevent_time', False))
 t_event = Event()
 
+# The I2C bus (GPIO 2 and 3) as the wiring wants it : off if the target or the buttons use
+# GPIO 2 or 3, on for a MCP card (applied at the next start, asked once the screen is shown)
+try:
+    from include import ci2c
+    i2c_change = ci2c.follow_wiring(Config, logs)
+except Exception as error:    # pylint: disable=broad-except
+    logs.error(f"I2C : wiring not checked ({error})")
+    i2c_change = None
+
 # Manage raspberry gpio
 try:
     rpi = craspberry.Craspberry(logs, Config, config_target_leds, dispatcher, t_event=t_event)
@@ -319,6 +328,10 @@ rpi.set_send_insult(dmd.send_insult)
 if rpi_error is not None:
     display.show()
     display.mcp_error(rpi_error)
+
+if i2c_change is not None:
+    display.show()
+    display.i2c_restart_question(*i2c_change)
 
 # Manage Webcam USB
 camera = ccamera.Camera(Config, display, logs)
@@ -2370,8 +2383,9 @@ try:
                     # early_player_button for Golf
                     elif early_player_button != 4 or dart_stroke == 'MISS':
                         logs.debug(f"Missed that dart : {early_player_button}!")
-                        # Show message on Raspydarts dmd
-                        dmd.send_text(Lang.translate('Missed !'))
+                        # Show message on Raspydarts dmd : a style of score animated (Moderne,
+                        # Chasse aux canards) shows the dart missed (MISS) ; else « Raté ! »
+                        dmd.send_miss(player_launch, Lang.translate('Missed !'))
                         if light_segment:
                             dispatcher.publish('miss', dart_stroke.upper(), limit=['TARGET', 'STRIP', 'OTHER'])
 

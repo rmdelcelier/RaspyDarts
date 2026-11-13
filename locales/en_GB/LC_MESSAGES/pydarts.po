@@ -6283,3 +6283,19 @@ msgstr "A hunting dog comes out of the grass with the segment hit, and laughs at
 msgid "dmd-style-help-classic"
 msgstr "The usual display of the three darts, no background during the game."
 
+
+msgid "i2c-off-question"
+msgstr "The target or the buttons use GPIO 2 and 3: the link of the extension cards (I2C) is turned off. Restart the cabinet now so that they work?"
+
+msgid "i2c-on-question"
+msgstr "Buttons are declared on a MCP extension card: its link (I2C) is turned on. Restart the cabinet now so that they work?"
+
+msgid "i2c-off-not-written"
+msgstr "The target or the buttons use GPIO 2 and 3, but the I2C link could not be turned off: these pins stay unusable"
+
+msgid "i2c-on-not-written"
+msgstr "Buttons are declared on a MCP card, but the I2C link could not be turned on"
+
+msgid "i2c-restarting"
+msgstr "Restarting the cabinet…"
+

@@ -6087,3 +6087,19 @@ msgstr "Un chien de chasse sort des herbes avec le segment touché, et se moque 
 msgid "dmd-style-help-classic"
 msgstr "L'affichage habituel des trois fléchettes, sans fond pendant la partie."
 
+
+msgid "i2c-off-question"
+msgstr "La cible ou les boutons utilisent les GPIO 2 et 3 : la liaison des cartes d'extension (I2C) est coupée. Redémarrer la borne maintenant pour qu'ils fonctionnent ?"
+
+msgid "i2c-on-question"
+msgstr "Des boutons sont déclarés sur une carte d'extension MCP : sa liaison (I2C) est activée. Redémarrer la borne maintenant pour qu'ils fonctionnent ?"
+
+msgid "i2c-off-not-written"
+msgstr "La cible ou les boutons utilisent les GPIO 2 et 3, mais la liaison I2C n'a pas pu être coupée : ces broches restent inutilisables"
+
+msgid "i2c-on-not-written"
+msgstr "Des boutons sont déclarés sur une carte MCP, mais la liaison I2C n'a pas pu être activée"
+
+msgid "i2c-restarting"
+msgstr "Redémarrage de la borne…"
+

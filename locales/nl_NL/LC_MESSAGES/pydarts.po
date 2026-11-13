@@ -6065,3 +6065,19 @@ msgstr "Een jachthond komt uit het gras met het geraakte segment en lacht om een
 msgid "dmd-style-help-classic"
 msgstr "De gewone weergave van de drie pijlen, zonder achtergrond tijdens het spel."
 
+
+msgid "i2c-off-question"
+msgstr "Het bord of de knoppen gebruiken GPIO 2 en 3: de verbinding van de uitbreidingskaarten (I2C) is uitgeschakeld. De kast nu herstarten zodat ze werken?"
+
+msgid "i2c-on-question"
+msgstr "Er zijn knoppen opgegeven op een MCP-uitbreidingskaart: de verbinding (I2C) is ingeschakeld. De kast nu herstarten zodat ze werken?"
+
+msgid "i2c-off-not-written"
+msgstr "Het bord of de knoppen gebruiken GPIO 2 en 3, maar de I2C-verbinding kon niet worden uitgeschakeld: deze pinnen blijven onbruikbaar"
+
+msgid "i2c-on-not-written"
+msgstr "Er zijn knoppen opgegeven op een MCP-kaart, maar de I2C-verbinding kon niet worden ingeschakeld"
+
+msgid "i2c-restarting"
+msgstr "De kast wordt herstart…"
+

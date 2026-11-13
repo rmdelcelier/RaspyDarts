@@ -195,6 +195,17 @@ class Cdmd():
         color = self.rgb(self.player_color) if self.player_color is not None else None
         return f"{cdmdscore.PREFIX.get(style, 'score')}|{' - '.join(values)}||{color or ''}|{gif}"
 
+    def send_miss(self, dart, text):
+        """
+        A dart missed (its button) : in a style of score animated (score1, score2), the dart
+        MISS, played by Raspy2DMD (the dog laughs, the board explodes) ; else the text
+        """
+        style = (self.score_settings or {}).get('style', 'classic')
+        if style != 'classic' and dart in (1, 2, 3):
+            self.send_score(dart, 'MISS')
+        else:
+            self.send_text(text)
+
     def send_score(self, dart, touch):
         """
         Function used to send score to dmd : score|X - X - X||R;G;B|O/N in the style chosen

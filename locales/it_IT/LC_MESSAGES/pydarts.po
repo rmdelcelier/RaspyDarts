@@ -6078,3 +6078,19 @@ msgstr "Un cane da caccia esce dall'erba con il segmento colpito e prende in gir
 msgid "dmd-style-help-classic"
 msgstr "La visualizzazione abituale delle tre freccette, senza sfondo durante la partita."
 
+
+msgid "i2c-off-question"
+msgstr "Il bersaglio o i pulsanti usano i GPIO 2 e 3: il collegamento delle schede di espansione (I2C) è disattivato. Riavviare ora la macchina perché funzionino?"
+
+msgid "i2c-on-question"
+msgstr "Ci sono pulsanti dichiarati su una scheda di espansione MCP: il suo collegamento (I2C) è attivato. Riavviare ora la macchina perché funzionino?"
+
+msgid "i2c-off-not-written"
+msgstr "Il bersaglio o i pulsanti usano i GPIO 2 e 3, ma il collegamento I2C non ha potuto essere disattivato: questi pin restano inutilizzabili"
+
+msgid "i2c-on-not-written"
+msgstr "Ci sono pulsanti dichiarati su una scheda MCP, ma il collegamento I2C non ha potuto essere attivato"
+
+msgid "i2c-restarting"
+msgstr "Riavvio della macchina…"
+

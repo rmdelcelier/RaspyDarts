@@ -6016,3 +6016,19 @@ msgstr "Un perro de caza sale de la hierba con el segmento acertado y se burla d
 msgid "dmd-style-help-classic"
 msgstr "La visualización habitual de los tres dardos, sin fondo durante la partida."
 
+
+msgid "i2c-off-question"
+msgstr "La diana o los botones usan los GPIO 2 y 3: el enlace de las tarjetas de extensión (I2C) está desactivado. ¿Reiniciar la máquina ahora para que funcionen?"
+
+msgid "i2c-on-question"
+msgstr "Hay botones declarados en una tarjeta de extensión MCP: su enlace (I2C) está activado. ¿Reiniciar la máquina ahora para que funcionen?"
+
+msgid "i2c-off-not-written"
+msgstr "La diana o los botones usan los GPIO 2 y 3, pero el enlace I2C no se pudo desactivar: estos pines siguen inutilizables"
+
+msgid "i2c-on-not-written"
+msgstr "Hay botones declarados en una tarjeta MCP, pero el enlace I2C no se pudo activar"
+
+msgid "i2c-restarting"
+msgstr "Reiniciando la máquina…"
+

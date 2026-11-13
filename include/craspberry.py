@@ -239,7 +239,8 @@ class Craspberry():
             self.start_target_reader()
             self.reset_gpio()
 
-        self.gpio = cgpio_extender.Gpio_extender(self.logs, self.buttons)
+        from include import ci2c    # pylint: disable=import-outside-toplevel
+        self.gpio = cgpio_extender.Gpio_extender(self.logs, self.buttons, use_i2c=not ci2c.pins_reserved(config))
         # Pads of keys and knobs plugged in USB (Paramètres > Pavés USB)
         self.usb_pads = cusbpads.shared(self.logs)
         # Coin acceptor (Paramétrage > Monnayeur) ; on_coins : its strip of credits drawn again
@@ -396,11 +397,15 @@ class Craspberry():
         """
         Pins of the target, when the game scans it
         """
-        for pin in self.inputs:
-            gpio.setup(pin, gpio.IN)
-
-        for pin in self.outputs:
-            gpio.setup(pin, gpio.OUT)
+        # A pin kept by the system (GPIO 2 / 3 with the I2C bus on...) : left aside, the
+        # rest of the target read, the game goes on
+        for pins, direction in ((self.inputs, gpio.IN), (self.outputs, gpio.OUT)):
+            for pin in list(pins):
+                try:
+                    gpio.setup(pin, direction)
+                except Exception as error: # pylint: disable=broad-except
+                    self.logs.error(f"GPIO {pin} of the target not usable, left aside : {error}")
+                    pins.remove(pin)
 
     def reset_gpio(self):
         """
@@ -413,7 +418,13 @@ class Craspberry():
             # default : NO button, connected between GPIO and GND
             if 0 < int(self.pins[pin]) <= MAX_GPIO:
                 self.logs.debug(f"GPIO {pin} set to input NC")
-                gpio.setup(self.pins[pin], gpio.IN, pull_up_down=gpio.PUD_UP)
+                try:
+                    gpio.setup(self.pins[pin], gpio.IN, pull_up_down=gpio.PUD_UP)
+                except Exception as error: # pylint: disable=broad-except
+                    # A pin kept by the system (GPIO 2 / 3 with the I2C bus on...) : this
+                    # button left aside, the game goes on
+                    self.logs.error(f"GPIO {self.pins[pin]} ({pin}) not usable, button left aside : {error}")
+                    del self.pins[pin]
 
     def init_gpio(self, pins, direction):
         """
@@ -423,10 +434,13 @@ class Craspberry():
         # The wiring assistant scans the target itself, on the pins it is given
         self.stop_target_reader()
         for pin in pins:
-            if direction == 'OUT':
-                gpio.setup(int(pins[pin]), gpio.OUT)
-            else:
-                gpio.setup(int(pins[pin]), gpio.IN)
+            try:
+                if direction == 'OUT':
+                    gpio.setup(int(pins[pin]), gpio.OUT)
+                else:
+                    gpio.setup(int(pins[pin]), gpio.IN)
+            except Exception as error: # pylint: disable=broad-except
+                self.logs.error(f"GPIO {pins[pin]} not usable : {error}")
 
     def set_inputs(self, pin_gpio):
         """

@@ -6011,3 +6011,19 @@ msgstr "Ein Jagdhund kommt mit dem getroffenen Segment aus dem Gras und lacht ü
 msgid "dmd-style-help-classic"
 msgstr "Die übliche Anzeige der drei Darts, ohne Hintergrund während des Spiels."
 
+
+msgid "i2c-off-question"
+msgstr "Die Scheibe oder die Tasten nutzen GPIO 2 und 3: die Verbindung der Erweiterungskarten (I2C) ist abgeschaltet. Den Automaten jetzt neu starten, damit sie funktionieren?"
+
+msgid "i2c-on-question"
+msgstr "Tasten sind auf einer MCP-Erweiterungskarte angegeben: ihre Verbindung (I2C) ist eingeschaltet. Den Automaten jetzt neu starten, damit sie funktionieren?"
+
+msgid "i2c-off-not-written"
+msgstr "Die Scheibe oder die Tasten nutzen GPIO 2 und 3, aber die I2C-Verbindung konnte nicht abgeschaltet werden: diese Pins bleiben unbenutzbar"
+
+msgid "i2c-on-not-written"
+msgstr "Tasten sind auf einer MCP-Karte angegeben, aber die I2C-Verbindung konnte nicht eingeschaltet werden"
+
+msgid "i2c-restarting"
+msgstr "Neustart des Automaten…"
+

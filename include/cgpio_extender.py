@@ -113,19 +113,29 @@ class Gpio_extender:
     Manage MCP2307 I/O
     """
 
-    def __init__(self, logs, buttons=None):
+    def __init__(self, logs, buttons=None, use_i2c=True):
         """
         Every MCP23017 found (addresses 0x20 to 0x27). The n-th one found has the letters
         A/B, the next one C/D, then E/F... (8 pins each). All their pins start as inputs.
-        The other chips of the bus are only told in the log : nothing is written to them
+        The other chips of the bus are only told in the log : nothing is written to them.
+        use_i2c False (GPIO 2 and 3 used by the wiring, see ci2c.py), or the bus off : no card
         """
         self.logs = logs
-        i2c = busio.I2C(board.SCL, board.SDA)
         self.chips = []
         self.all_io = None
+        i2c = None
+        if use_i2c:
+            try:
+                i2c = busio.I2C(board.SCL, board.SDA)
+            except Exception as error: # pylint: disable=broad-except
+                self.logs.warning(f"I2C bus not opened (no extension card) : {error}")
+        else:
+            self.logs.info("I2C : GPIO 2 and 3 used by the wiring, no extension card looked for")
 
         addresses = []
         try:
+            if i2c is None:
+                raise OSError('no I2C bus')
             while not i2c.try_lock():
                 time.sleep(0.01)
             try:
