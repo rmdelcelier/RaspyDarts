@@ -7973,6 +7973,13 @@ class Screen(pygame.Surface):
                 ('up', 'down', 'left', 'right', 'next', 'previous', 'validate', 'back')}
         listed = [button for button in items if button.get('footer') not in self.FOOTER_KINDS]
         footers = [button for button in items if button.get('footer') in self.FOOTER_KINDS]
+        if layout == 'tiles' and not all(button.get('logo') for button in listed):
+            # The tiles of always are a row of logos (categories) : buttons without logo (the
+            # 4 columns of Paramétrage, drawn so by the themes with menus.yaml) shown as a list,
+            # in two columns when there are many (the list of always has 2 columns at most)
+            layout = 'list'
+            if columns is None and int(menu.get('columns') or 1) >= 2 and len(listed) > 6:
+                columns = 2
         shown = listed + footers
         nb_listed = len(listed)
         nb_shown = len(shown)
@@ -8902,8 +8909,8 @@ class Screen(pygame.Surface):
     def error_report_screen(self, report, wait=60):
         '''
         An error to report (include/cerrors.py) : what happened, a QR code opening a new issue
-        on GitHub filled with its report (read with a phone). Gone with any button, or after
-        « wait » seconds without one (exhibition mode : the borne goes on alone)
+        on GitHub filled with its report (read with a phone). Gone with Continuer (any button) ;
+        in exhibition mode, after « wait » seconds without one too (the borne goes on alone)
         '''
         from include import cerrors
         url = cerrors.issue_url(report)
@@ -8912,8 +8919,10 @@ class Screen(pygame.Surface):
         translate = self.lang.translate
         crash = report.get('kind') == 'crash'
         line = int(self.res['y'] / 22)
-        end = time.monotonic() + wait
-        while time.monotonic() < end:
+        # Kept until Continuer (time to scan it) ; in exhibition mode only, gone by itself
+        exhibition = bool(self.config.get_value('SectionGlobals', 'exhibition_mode', False))
+        end = time.monotonic() + wait if exhibition else None
+        while end is None or time.monotonic() < end:
             self.display_background()
             self.menu_header(translate('error-report-title'),
                              translate('error-report-crash' if crash else 'error-report-error'))

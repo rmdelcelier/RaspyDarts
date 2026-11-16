@@ -595,34 +595,89 @@ class Craspberry():
             # Force output to False / Down / 0
             #gpio.output(self.outputs, gpio.LOW)
 
+            # Each pin through scan_output / scan_input : a pin the system refuses (GPIO 2 / 3
+            # with the I2C bus on, a pin taken by another program...) is set up again, else left
+            # aside and told in the log ; the game goes on (it stopped there : issue 12)
             if self.old_detection:
-                for pinout in self.outputs:
-                    gpio.output(pinout, gpio.HIGH)
+                for pinout in list(self.outputs):
+                    if not self.scan_output(pinout, gpio.HIGH):
+                        continue
 
-                    for pinin in self.inputs:
-                        gpio.setup(pinin, gpio.IN, pull_up_down=gpio.PUD_DOWN)
-                        if gpio.input(pinin):
+                    for pinin in list(self.inputs):
+                        if self.scan_input(pinin, setup=True):
                             gpio_input = f'{pinin}{pinout}'
 
-                    gpio.output(pinout, gpio.LOW)
+                    self.scan_output(pinout, gpio.LOW)
             else:
                 # Make GPIO readable and value is False / Down / 0
-                for pinin in self.inputs:
-                    gpio.setup(pinin, gpio.IN, pull_up_down=gpio.PUD_DOWN)
+                for pinin in list(self.inputs):
+                    self.scan_setup_input(pinin)
 
                 # Force output to False / Down / 0
-                gpio.output(self.outputs, gpio.LOW)
+                for pinout in list(self.outputs):
+                    self.scan_output(pinout, gpio.LOW)
 
-                for pinout in self.outputs:
-                    gpio.output(pinout, gpio.HIGH)
+                for pinout in list(self.outputs):
+                    if not self.scan_output(pinout, gpio.HIGH):
+                        continue
 
-                    for pinin in self.inputs:
-                        if gpio.input(pinin):
+                    for pinin in list(self.inputs):
+                        if self.scan_input(pinin):
                             gpio_input = f'{pinin}{pinout}'
 
-                    gpio.output(pinout, gpio.LOW)
+                    self.scan_output(pinout, gpio.LOW)
 
         return gpio_input if raw else self.keys.get(gpio_input, None)
+
+    def scan_output(self, pin, value):
+        """
+        An output of the target set (scan of the game) : set up again once if refused, else
+        left aside. True : set
+        """
+        try:
+            gpio.output(pin, value)
+            return True
+        except Exception: # pylint: disable=broad-except
+            try:
+                gpio.setup(pin, gpio.OUT)
+                gpio.output(pin, value)
+                return True
+            except Exception as error: # pylint: disable=broad-except
+                self.logs.error(f"GPIO {pin} of the target not usable as an output, left aside : {error}")
+                if pin in self.outputs:
+                    self.outputs.remove(pin)
+                return False
+
+    def scan_setup_input(self, pin):
+        """
+        An input of the target made readable (pull-down), else left aside. True : done
+        """
+        try:
+            gpio.setup(pin, gpio.IN, pull_up_down=gpio.PUD_DOWN)
+            return True
+        except Exception as error: # pylint: disable=broad-except
+            self.logs.error(f"GPIO {pin} of the target not usable as an input, left aside : {error}")
+            if pin in self.inputs:
+                self.inputs.remove(pin)
+            return False
+
+    def scan_input(self, pin, setup=False):
+        """
+        An input of the target read (setup : made readable first), 0 if it cannot be
+        """
+        if setup and not self.scan_setup_input(pin):
+            return 0
+        try:
+            return gpio.input(pin)
+        except Exception: # pylint: disable=broad-except
+            if not setup and self.scan_setup_input(pin):
+                try:
+                    return gpio.input(pin)
+                except Exception as error: # pylint: disable=broad-except
+                    self.logs.error(f"GPIO {pin} of the target not readable, left aside : {error}")
+                    if pin in self.inputs:
+                        self.inputs.remove(pin)
+            return 0
 
     def read_buttons(self):
         """
@@ -633,10 +688,17 @@ class Craspberry():
 
         gpio_read = None
         p_key = None
-        for key in self.pins:
-            if ((gpio.input(self.pins[key]) == gpio.LOW and key != 'SHOCKSENSOR')
+        for key in list(self.pins):
+            try:
+                level = gpio.input(self.pins[key])
+            except Exception as error: # pylint: disable=broad-except
+                # A pin the system refuses : this button left aside, the game goes on
+                self.logs.error(f"GPIO {self.pins[key]} ({key}) not readable, button left aside : {error}")
+                del self.pins[key]
+                continue
+            if ((level == gpio.LOW and key != 'SHOCKSENSOR')
                 or
-                (key == 'SHOCKSENSOR' and gpio.input(self.pins[key]) == gpio.HIGH)):
+                (key == 'SHOCKSENSOR' and level == gpio.HIGH)):
                 # NO Button pressed (connected between GPIO and GND)
                 # NC Piezzo case (connected between GPIO and +5V)
                 if key != self.banned_gpio:
