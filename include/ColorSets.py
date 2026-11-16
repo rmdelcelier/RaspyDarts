@@ -129,18 +129,27 @@ ColorSet['clear'] = {
     'main-sub-menu-shortcuts': '',
     # 'Left', 'Center', 'Right'
     'main-sub-menu-text-align': 'Left',
+    # Margin of the text in its box (pixels) ; its place in height : 'Top', 'Center', 'Bottom'
+    'main-sub-menu-text-margin': 0,
+    'main-sub-menu-text-valign': 'Center',
 
     # Show shortcuts or use a character for Parametrage Menu
     # same options as main-sub-shortcuts
     'parametrage-menu-shortcuts': '',
     # 'Left', 'Center', 'Right'
     'parametrage-menu-text-align': 'Left',
+    # Margin of the text in its box (pixels) ; its place in height : 'Top', 'Center', 'Bottom'
+    'parametrage-menu-text-margin': 0,
+    'parametrage-menu-text-valign': 'Center',
 
     # Show shortcuts or use a character for Players Menu
     # same options as main-sub-shortcuts
     'players-menu-shortcuts': '',
     # 'Left', 'Center', 'Right'
     'players-menu-text-align': 'Left',
+    # Margin of the text in its box (pixels) ; its place in height : 'Top', 'Center', 'Bottom'
+    'players-menu-text-margin': 0,
+    'players-menu-text-valign': 'Center',
 
     # Show shortcuts or use a character for Game Options Menu
     # same options as main-sub-shortcuts

@@ -6032,3 +6032,39 @@ msgstr "Hay botones declarados en una tarjeta MCP, pero el enlace I2C no se pudo
 msgid "i2c-restarting"
 msgstr "Reiniciando la máquina…"
 
+
+msgid "qr_popup_s"
+msgstr "Duración del código QR de las fotos al final de la partida"
+
+
+msgid "intro-video"
+msgstr "Vídeo de introducción"
+
+msgid "intro-video-theme"
+msgstr "La del tema"
+
+msgid "intro-video-game"
+msgstr "La del juego"
+
+msgid "intro-video-none"
+msgstr "Ninguna"
+
+msgid "intro-video-choose"
+msgstr "Elegir un vídeo…"
+
+msgid "intro-video-copying"
+msgstr "Preparando el vídeo de introducción…"
+
+msgid "intro-video-saved"
+msgstr "Vídeo de introducción del tema guardado: en el próximo inicio"
+
+msgid "intro-video-failed"
+msgstr "No se pudo preparar el vídeo"
+
+
+msgid "theme-valign-top"
+msgstr "Arriba"
+
+msgid "theme-valign-bottom"
+msgstr "Abajo"
+

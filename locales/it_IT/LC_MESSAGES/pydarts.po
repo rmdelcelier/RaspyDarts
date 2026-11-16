@@ -6094,3 +6094,39 @@ msgstr "Ci sono pulsanti dichiarati su una scheda MCP, ma il collegamento I2C no
 msgid "i2c-restarting"
 msgstr "Riavvio della macchina…"
 
+
+msgid "qr_popup_s"
+msgstr "Durata del codice QR delle foto a fine partita"
+
+
+msgid "intro-video"
+msgstr "Video di introduzione"
+
+msgid "intro-video-theme"
+msgstr "Quella del tema"
+
+msgid "intro-video-game"
+msgstr "Quella del gioco"
+
+msgid "intro-video-none"
+msgstr "Nessuna"
+
+msgid "intro-video-choose"
+msgstr "Scegliere un video…"
+
+msgid "intro-video-copying"
+msgstr "Preparazione del video di introduzione…"
+
+msgid "intro-video-saved"
+msgstr "Video di introduzione del tema salvato: al prossimo avvio"
+
+msgid "intro-video-failed"
+msgstr "Il video non ha potuto essere preparato"
+
+
+msgid "theme-valign-top"
+msgstr "In alto"
+
+msgid "theme-valign-bottom"
+msgstr "In basso"
+

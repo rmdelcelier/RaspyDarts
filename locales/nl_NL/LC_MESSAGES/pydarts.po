@@ -6081,3 +6081,39 @@ msgstr "Er zijn knoppen opgegeven op een MCP-kaart, maar de I2C-verbinding kon n
 msgid "i2c-restarting"
 msgstr "De kast wordt herstart…"
 
+
+msgid "qr_popup_s"
+msgstr "Duur van de QR-code van de foto's aan het einde van het spel"
+
+
+msgid "intro-video"
+msgstr "Introvideo"
+
+msgid "intro-video-theme"
+msgstr "Die van het thema"
+
+msgid "intro-video-game"
+msgstr "Die van het spel"
+
+msgid "intro-video-none"
+msgstr "Geen"
+
+msgid "intro-video-choose"
+msgstr "Een video kiezen…"
+
+msgid "intro-video-copying"
+msgstr "Introvideo wordt voorbereid…"
+
+msgid "intro-video-saved"
+msgstr "Introvideo van het thema opgeslagen: bij de volgende start"
+
+msgid "intro-video-failed"
+msgstr "De video kon niet worden voorbereid"
+
+
+msgid "theme-valign-top"
+msgstr "Boven"
+
+msgid "theme-valign-bottom"
+msgstr "Onder"
+

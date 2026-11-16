@@ -525,6 +525,11 @@ class Camera:
         self.upload_cloud = bool(config_camera['upload_cloud'] == '1')
         self.fullscreen = bool(config_camera['fullscreen_pop'] == '1')
         self.duree = int(config_camera['duree_ms'])
+        # The QR code of the photos at the end of the game : its time on the screen (seconds)
+        try:
+            self.qr_seconds = max(5, int(config_camera.get('qr_popup_s', 30)))
+        except (TypeError, ValueError):
+            self.qr_seconds = 30
         # Photos and clips come from the same recording : the size of the videos (the one
         # the setup menu offers) is used for both
         flips = tuple(f for f, wanted in (('hflip', self.flip_horizontal), ('vflip', self.flip_vertical)) if wanted)
@@ -1271,7 +1276,7 @@ class Camera:
                 popup_script,
                 'qr',
                 tmp_path,
-                '30000'
+                str(getattr(self, 'qr_seconds', 30) * 1000)
             ]
             
             # Lancer en arrière-plan (non-bloquant)

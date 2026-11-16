@@ -562,13 +562,24 @@ class Painter:
         position = str(settings.get('position') or 'center')
         anchor = ANCHORS.get(position, (0.5, 0.5))
         align = str(settings.get('align') or 'center')
-        if align == 'theme':
-            align = str(self.screen.colorset.get('main-sub-menu-text-align') or 'Left').lower()
-        horizontal = {'left': 0.0, 'right': 1.0}.get(align, anchor[0]) if position in ('center', 'top', 'bottom') else anchor[0]
         margin = rect.height * 0.08
+        vertical = anchor[1]
+        if align == 'theme':
+            # As the buttons of always of the theme (Personnaliser le thème > Raccourcis et
+            # alignement des textes) : its alignment, its margin, its place in height
+            colorset = self.screen.colorset
+            align = str(colorset.get('main-sub-menu-text-align') or 'Left').lower()
+            try:
+                margin += max(0, min(60, int(colorset.get('main-sub-menu-text-margin', 0) or 0)))
+            except (TypeError, ValueError):
+                pass
+            valign = str(colorset.get('main-sub-menu-text-valign') or 'Center').lower()
+            if position == 'center' and valign in ('top', 'bottom'):
+                vertical = 0.0 if valign == 'top' else 1.0
+        horizontal = {'left': 0.0, 'right': 1.0}.get(align, anchor[0]) if position in ('center', 'top', 'bottom') else anchor[0]
         offset = settings.get('offset') or [0, 0]
         pos_x = rect.x + margin + (rect.width - 2 * margin - rendered.get_width()) * horizontal + float(offset[0]) * rect.width
-        pos_y = rect.y + margin + (rect.height - 2 * margin - rendered.get_height()) * anchor[1] + float(offset[1]) * rect.height
+        pos_y = rect.y + margin + (rect.height - 2 * margin - rendered.get_height()) * vertical + float(offset[1]) * rect.height
         if settings.get('shadow'):
             shade.set_alpha(150)
             self.blend(surface, shade, (int(pos_x) + max(1, size // 20), int(pos_y) + max(1, size // 20)))

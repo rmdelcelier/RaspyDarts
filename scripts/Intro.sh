@@ -23,6 +23,11 @@ PYDARTS_VIDEOS="$RASPYDARTS_DIR/videos"
 PYDARTS_THEME="`grep 'colorset:' $PYDARTS_HOME/$PYDARTS_CFG 2> /dev/null | cut -d':' -f 2`"
 PYDARTS_THEME_VIDEOS=$PYDARTS_HOME/themes/$PYDARTS_THEME/videos
 
+# No intro video for this theme (Modifier les écrans > Vidéo d'introduction > Aucune)
+if [ -s $PYDARTS_HOME/$PYDARTS_CFG -a -f $PYDARTS_THEME_VIDEOS/intro.none ]; then
+	exit 0
+fi
+
 if [ -s $PYDARTS_HOME/$PYDARTS_CFG ]; then
 	if [ -d $PYDARTS_THEME_VIDEOS -a `find $PYDARTS_THEME_VIDEOS -maxdepth 1 -type f -name "intro.mp4" -o -name "intro.mkv" | wc -l` -ge 1 ]; then
 		echo "Find in $PYDARTS_THEME_VIDEOS"

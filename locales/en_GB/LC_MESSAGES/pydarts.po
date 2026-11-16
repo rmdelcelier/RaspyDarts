@@ -6299,3 +6299,39 @@ msgstr "Buttons are declared on a MCP card, but the I2C link could not be turned
 msgid "i2c-restarting"
 msgstr "Restarting the cabinet…"
 
+
+msgid "qr_popup_s"
+msgstr "Time of the QR code of the photos at the end of the game"
+
+
+msgid "intro-video"
+msgstr "Intro video"
+
+msgid "intro-video-theme"
+msgstr "The theme's own"
+
+msgid "intro-video-game"
+msgstr "The game's"
+
+msgid "intro-video-none"
+msgstr "None"
+
+msgid "intro-video-choose"
+msgstr "Choose a video…"
+
+msgid "intro-video-copying"
+msgstr "Preparing the intro video…"
+
+msgid "intro-video-saved"
+msgstr "Intro video of the theme saved: at the next start"
+
+msgid "intro-video-failed"
+msgstr "The video could not be prepared"
+
+
+msgid "theme-valign-top"
+msgstr "Top"
+
+msgid "theme-valign-bottom"
+msgstr "Bottom"
+

@@ -6027,3 +6027,39 @@ msgstr "Tasten sind auf einer MCP-Karte angegeben, aber die I2C-Verbindung konnt
 msgid "i2c-restarting"
 msgstr "Neustart des Automaten…"
 
+
+msgid "qr_popup_s"
+msgstr "Dauer des QR-Codes der Fotos am Spielende"
+
+
+msgid "intro-video"
+msgstr "Intro-Video"
+
+msgid "intro-video-theme"
+msgstr "Die des Themas"
+
+msgid "intro-video-game"
+msgstr "Die des Spiels"
+
+msgid "intro-video-none"
+msgstr "Keine"
+
+msgid "intro-video-choose"
+msgstr "Ein Video wählen…"
+
+msgid "intro-video-copying"
+msgstr "Intro-Video wird vorbereitet…"
+
+msgid "intro-video-saved"
+msgstr "Intro-Video des Themas gespeichert: beim nächsten Start"
+
+msgid "intro-video-failed"
+msgstr "Das Video konnte nicht vorbereitet werden"
+
+
+msgid "theme-valign-top"
+msgstr "Oben"
+
+msgid "theme-valign-bottom"
+msgstr "Unten"
+

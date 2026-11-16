@@ -6103,3 +6103,39 @@ msgstr "Des boutons sont déclarés sur une carte MCP, mais la liaison I2C n'a p
 msgid "i2c-restarting"
 msgstr "Redémarrage de la borne…"
 
+
+msgid "qr_popup_s"
+msgstr "Durée du QR code des photos en fin de partie"
+
+
+msgid "intro-video"
+msgstr "Vidéo d'introduction"
+
+msgid "intro-video-theme"
+msgstr "Celle du thème"
+
+msgid "intro-video-game"
+msgstr "Celle du jeu"
+
+msgid "intro-video-none"
+msgstr "Aucune"
+
+msgid "intro-video-choose"
+msgstr "Choisir une vidéo…"
+
+msgid "intro-video-copying"
+msgstr "Préparation de la vidéo d'introduction…"
+
+msgid "intro-video-saved"
+msgstr "Vidéo d'introduction du thème enregistrée : au prochain démarrage"
+
+msgid "intro-video-failed"
+msgstr "La vidéo n'a pas pu être préparée"
+
+
+msgid "theme-valign-top"
+msgstr "En haut"
+
+msgid "theme-valign-bottom"
+msgstr "En bas"
+

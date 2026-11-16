@@ -1591,15 +1591,22 @@ class Editor:
 
 
 # Modifier les écrans : its two panels (as Personnaliser le thème)
+# A tuple : its items side by side on one line
 SCREENS_PANELS = (('edit-screens-panel-buttons', None), ('edit-screens-panel-theme',
-                  ('theme', 'theme-colors', 'animated-background', 'font', 'theme-export', 'theme-import')))
+                  ('theme', 'theme-colors', 'animated-background', 'intro-video', 'font', ('theme-export', 'theme-import'))))
+# Side by side : the one on the left, the one on the right
+PAIRS = {'theme-export': 'theme-import'}
 
 
 def screens_entries():
     '''
-    The lines of the two panels : the screens whose buttons are placed, then the theme
+    The lines of the two panels : the screens whose buttons are placed, then the theme (the
+    items side by side one after the other)
     '''
-    return [[name for name, _text in SCREENS], list(SCREENS_PANELS[1][1])]
+    theme = []
+    for item in SCREENS_PANELS[1][1]:
+        theme += list(item) if isinstance(item, tuple) else [item]
+    return [[name for name, _text in SCREENS], theme]
 
 
 def screens_menu(screen, keys):
@@ -1636,6 +1643,11 @@ def screens_menu(screen, keys):
             selected = (selected + 1) % len(entries)
         elif key in UP_KEYS:
             selected = (selected - 1) % len(entries)
+        elif key in RIGHT_KEYS and entries[selected] in PAIRS:
+            # Side by side : the one on the right
+            selected = entries.index(PAIRS[entries[selected]])
+        elif key in LEFT_KEYS and entries[selected] in PAIRS.values():
+            selected = entries.index(next(left for left, right in PAIRS.items() if right == entries[selected]))
         elif key in RIGHT_KEYS and selected < first:
             selected = first + min(selected, second - 1)
         elif key in LEFT_KEYS and first <= selected < first + second:
@@ -1667,10 +1679,12 @@ def draw_screens_menu(screen, panels, selected):
         animated = translate('animated-background-none')
     values = {'theme': str(globals_.get('colorset') or ''),
               'font': str(globals_.get('font') or '').replace('.ttf', ''),
-              'animated-background': animated}
+              'animated-background': animated,
+              'intro-video': translate(f'intro-video-{intro_state(screen)}')}
     texts = {'theme': translate('colorset'), 'theme-colors': translate('theme-customize'),
              'animated-background': translate('animated-background'), 'font': translate('font'),
-             'theme-export': translate('theme-export'), 'theme-import': translate('theme-import')}
+             'theme-export': translate('theme-export'), 'theme-import': translate('theme-import'),
+             'intro-video': translate('intro-video')}
     texts.update({name: translate(text) for name, text in SCREENS})
     screen.display_background()
     screen.menu_header(translate('edit-screens'))
@@ -1678,27 +1692,34 @@ def draw_screens_menu(screen, panels, selected):
     index = 0
     colorset = screen.colorset
     for number, names in enumerate(panels):
+        # The lines as drawn : the items side by side together
+        lines = list(SCREENS_PANELS[1][1]) if number == 1 else names
         panel = pygame.Rect(int(width * (1 + number * 7.25) / 16), int(height * 2.4 / 16),
                             int(width * 6.75 / 16), int(height * 10.6 / 16))
         pygame.draw.rect(screen.screen, (30, 30, 30), panel, border_radius=18)
         pygame.draw.rect(screen.screen, (140, 140, 140), panel, 2, border_radius=18)
         title = pygame.Rect(panel.x, panel.y + int(height * 0.2 / 16), panel.width, int(height * 0.9 / 16))
         screen.blit_text(translate(SCREENS_PANELS[number][0]), title.x, title.y, title.width, title.height, (255, 200, 0))
-        step = min((panel.bottom - title.bottom - int(height * 0.3 / 16)) / max(1, len(names)), height * 1.6 / 16)
-        for row, name in enumerate(names):
-            rect = pygame.Rect(panel.x + int(width * 0.4 / 16), int(title.bottom + row * step + step * 0.12),
+        step = min((panel.bottom - title.bottom - int(height * 0.3 / 16)) / max(1, len(lines)), height * 1.6 / 16)
+        for row, line in enumerate(lines):
+            full = pygame.Rect(panel.x + int(width * 0.4 / 16), int(title.bottom + row * step + step * 0.12),
                                panel.width - int(width * 0.8 / 16), int(step * 0.76))
-            chosen = index == selected
-            if name in values:
-                # As the lines of always : its value in its box (left), its name (right)
-                value_item(screen, rect, texts[name], values[name], chosen)
-            else:
-                screen.new_blit_rect2(rect, colorset['menu-selected'] if chosen else colorset['menu-buttons'],
-                                      corners='All', border_radius=int(rect.height / 4))
-                color = colorset['menu-text-white'] if chosen else colorset['menu-text-black']
-                screen.blit_text(texts[name], rect.x, rect.y, rect.width, rect.height, color)
-            zones[index] = tuple(rect)
-            index += 1
+            items = list(line) if isinstance(line, tuple) else [line]
+            gap = int(width * 0.2 / 16)
+            part = (full.width - gap * (len(items) - 1)) // len(items)
+            for column, name in enumerate(items):
+                rect = pygame.Rect(full.x + column * (part + gap), full.y, part, full.height)
+                chosen = index == selected
+                if name in values:
+                    # As the lines of always : its value in its box (left), its name (right)
+                    value_item(screen, rect, texts[name], values[name], chosen)
+                else:
+                    screen.new_blit_rect2(rect, colorset['menu-selected'] if chosen else colorset['menu-buttons'],
+                                          corners='All', border_radius=int(rect.height / 4))
+                    color = colorset['menu-text-white'] if chosen else colorset['menu-text-black']
+                    screen.blit_text(texts[name], rect.x, rect.y, rect.width, rect.height, color)
+                zones[index] = tuple(rect)
+                index += 1
     zones[index] = screen.display_button(index == selected, 'back', special='escape')
     screen.update_screen()
     return zones
@@ -1746,11 +1767,91 @@ def screens_choice(screen, keys, name):
             screen.apply_look(font=chosen)
     elif name == 'animated-background':
         animated_background_menu(screen, keys)
+    elif name == 'intro-video':
+        intro_video_menu(screen)
     elif name in ('theme-export', 'theme-import'):
         from include import cthemefiles
         (cthemefiles.export_theme if name == 'theme-export' else cthemefiles.import_theme)(screen, keys)
     else:
         Editor(screen, name, keys).run()
+
+
+INTRO_NAMES = ('intro.mp4', 'intro.mkv', 'intro.none')
+
+
+def intro_dir(screen):
+    '''
+    The videos of the theme shown : its intro video there (scripts/Intro.sh)
+    '''
+    theme = str(screen.config.config['SectionGlobals'].get('colorset') or 'clear')
+    return os.path.join(cpaths.user_dir(), 'themes', theme, 'videos')
+
+
+def intro_state(screen):
+    '''
+    The intro video of the theme : its own (theme), none (none), or the one of the game (game)
+    '''
+    folder = intro_dir(screen)
+    if os.path.isfile(os.path.join(folder, 'intro.none')):
+        return 'none'
+    if any(os.path.isfile(os.path.join(folder, name)) for name in ('intro.mp4', 'intro.mkv')):
+        return 'theme'
+    return 'game'
+
+
+def intro_video_menu(screen):
+    '''
+    Modifier les écrans > Vidéo d'introduction (played when the borne starts, before the game) :
+    a video of the theme chosen in the explorer (copied in the videos of the theme ; MP4 or MKV,
+    another kind made MP4), the one of the game, or none. Seen at the next start
+    '''
+    import shutil    # pylint: disable=import-outside-toplevel
+    import subprocess    # pylint: disable=import-outside-toplevel
+    translate = screen.lang.translate
+    folder = intro_dir(screen)
+    choices = [['choose', translate('intro-video-choose')], ['game', translate('intro-video-game')],
+               ['none', translate('intro-video-none')]]
+    picked = screen.dropdown(screen.res['x'] * 6 / 16, 3 * screen.res_y_16, choices, navigate='choose',
+                             width=5 * screen.res_x_16)
+    if picked in ('escape', None, False):
+        return
+
+    def clear():
+        for name in INTRO_NAMES:
+            try:
+                os.remove(os.path.join(folder, name))
+            except OSError:
+                pass
+    if picked == 'game':
+        clear()
+    elif picked == 'none':
+        clear()
+        os.makedirs(folder, exist_ok=True)
+        open(os.path.join(folder, 'intro.none'), 'w', encoding='utf-8').close()
+    else:
+        chosen = cexplorer.explore(screen, translate('intro-video'), None, kinds=cexplorer.VIDEOS)
+        if not chosen or not os.path.isfile(chosen):
+            return
+        extension = os.path.splitext(chosen)[1].lower()
+        screen.message([translate('intro-video-copying')], 0, None, 'middle', 'big')
+        try:
+            os.makedirs(folder, exist_ok=True)
+            if extension in ('.mp4', '.mkv'):
+                target = os.path.join(folder, f'intro{extension}')
+                shutil.copyfile(chosen, target + '.tmp')
+            else:
+                # GIF, WebM, MOV... : made MP4 (H.264), as the player of the start reads it
+                target = os.path.join(folder, 'intro.mp4')
+                subprocess.run(['ffmpeg', '-nostdin', '-y', '-loglevel', 'error', '-i', chosen, '-c:v', 'libx264',
+                                '-preset', 'veryfast', '-pix_fmt', 'yuv420p', '-vf', 'scale=trunc(iw/2)*2:trunc(ih/2)*2',
+                                '-c:a', 'aac', '-f', 'mp4', target + '.tmp'], check=True, timeout=1800)
+            clear()
+            os.replace(target + '.tmp', target)
+        except (OSError, subprocess.SubprocessError) as error:
+            screen.logs.error(f"Intro video : {chosen} not kept ({error})")
+            screen.message([translate('intro-video-failed')], 2500, screen.colorset['menu-ko'], 'middle', 'big')
+            return
+    screen.message([translate('intro-video-saved')], 2000, None, 'middle', 'big')
 
 
 def rate_text(screen, rate, short=False):

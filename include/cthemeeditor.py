@@ -40,11 +40,16 @@ ALIGN_TAGS = ('main-sub-menu-text-align', 'parametrage-menu-text-align', 'player
 SHORTCUT_CHOICES = (('', 'theme-shortcut-keys'), (None, 'theme-shortcut-none'), ('>', '>'), ('-', '-'),
                     ('*', '*'), ('+', '+'))
 ALIGN_CHOICES = (('Left', 'theme-align-left'), ('Center', 'theme-align-center'), ('Right', 'theme-align-right'))
+# The place in height of the text, and its margin in its box (pixels)
+VALIGN_TAGS = ('main-sub-menu-text-valign', 'parametrage-menu-text-valign', 'players-menu-text-valign')
+VALIGN_CHOICES = (('Top', 'theme-valign-top'), ('Center', 'theme-align-center'), ('Bottom', 'theme-valign-bottom'))
+MARGIN_TAGS = ('main-sub-menu-text-margin', 'parametrage-menu-text-margin', 'players-menu-text-margin')
 # Shapes (not colours) : thickness of the border and margin of the item chosen, rounding of the
 # buttons and frames of the menus and of the buttons at the bottom ('max' : round)
 SHAPE_TAGS = ('border-size', 'padding', 'border-radius', 'button-radius')
 RADIUS_TAGS = ('border-radius', 'button-radius')
 SHAPE_LIMITS = {'border-size': 15, 'padding': 15, 'border-radius': 40, 'button-radius': 40}
+SHAPE_LIMITS.update({tag: 40 for tag in MARGIN_TAGS})
 
 # Plates : (name, drawer, tags on the left [(tag, x, y)], tags on the right) ; x, y : the point
 # of the mock-up the arrow goes to (parts of the mock-up)
@@ -91,10 +96,14 @@ PLATES = (
      [('border-size', 0.25, 0.26), ('padding', 0.3, 0.32)],
      [('border-radius', 0.88, 0.5), ('button-radius', 0.8, 0.84)]),
     ('theme-plate-shortcuts', 'draw_shortcuts',
-     [('main-sub-menu-shortcuts', 0.08, 0.15), ('parametrage-menu-shortcuts', 0.08, 0.4),
-      ('players-menu-shortcuts', 0.08, 0.65), ('game-options-menu-shortcuts', 0.08, 0.88)],
-     [('main-sub-menu-text-align', 0.7, 0.15), ('parametrage-menu-text-align', 0.7, 0.4),
-      ('players-menu-text-align', 0.7, 0.65), ('game-options-menu-text-align', 0.7, 0.88)]),
+     [('main-sub-menu-shortcuts', 0.08, 0.15), ('main-sub-menu-text-margin', 0.3, 0.15),
+      ('parametrage-menu-shortcuts', 0.08, 0.4), ('parametrage-menu-text-margin', 0.3, 0.4),
+      ('players-menu-shortcuts', 0.08, 0.65), ('players-menu-text-margin', 0.3, 0.65),
+      ('game-options-menu-shortcuts', 0.08, 0.88)],
+     [('main-sub-menu-text-align', 0.7, 0.15), ('main-sub-menu-text-valign', 0.7, 0.2),
+      ('parametrage-menu-text-align', 0.7, 0.4), ('parametrage-menu-text-valign', 0.7, 0.45),
+      ('players-menu-text-align', 0.7, 0.65), ('players-menu-text-valign', 0.7, 0.7),
+      ('game-options-menu-text-align', 0.7, 0.88)]),
 )
 
 
@@ -600,14 +609,14 @@ class ThemeEditor:
 
     def draw_value(self, tag, rect, font):
         value = self.work.get(tag)
-        if tag in SHAPE_TAGS:
+        if tag in SHAPE_TAGS + MARGIN_TAGS:
             pygame.draw.rect(self.screen.screen, (30, 30, 30), rect)
             text = font.render('M' if value == 'max' else str(value), True, (255, 255, 255))
             self.screen.screen.blit(text, text.get_rect(center=rect.center))
             return
-        if tag in SHORTCUT_TAGS + ALIGN_TAGS:
+        if tag in SHORTCUT_TAGS + ALIGN_TAGS + VALIGN_TAGS:
             pygame.draw.rect(self.screen.screen, (30, 30, 30), rect)
-            label = {'Left': 'G', 'Center': 'C', 'Right': 'D', None: '-', '': 'F'}.get(value, str(value)[:2])
+            label = {'Left': 'G', 'Center': 'C', 'Right': 'D', 'Top': 'H', 'Bottom': 'B', None: '-', '': 'F'}.get(value, str(value)[:2])
             text = font.render(label, True, (255, 255, 255))
             self.screen.screen.blit(text, text.get_rect(center=rect.center))
             return
@@ -836,13 +845,29 @@ class ThemeEditor:
             self.box(row, 'menu-buttons')
             shortcut = self.work.get(f'{prefix}-shortcuts')
             align = str(self.work.get(f'{prefix}-text-align') or 'Center').lower()
+            valign = str(self.work.get(f'{prefix}-text-valign') or 'Center').lower()
+            try:
+                margin = int(self.work.get(f'{prefix}-text-margin') or 0)
+            except (TypeError, ValueError):
+                margin = 0
             shown = 'F1' if shortcut == '' else ('' if shortcut is None else str(shortcut))
             short = pygame.Rect(row.x, row.y, int(row.height * 1.1), row.height)
             if shown:
                 self.box(short, 'menu-shortcut')
                 self.text(shown, short, 'menu-text-white')
             text_rect = pygame.Rect(short.right if shown else row.x, row.y, row.right - (short.right if shown else row.x), row.height)
-            self.text(label, text_rect, 'menu-text-black', 0.55, align if align in ('left', 'right') else 'center')
+            # The margin (at the scale of the plate) and the place in height of the text
+            scaled = int(margin * row.height / max(1, self.screen.res['y'] / 12))
+            inner = text_rect.inflate(-2 * scaled, -2 * scaled) if scaled else text_rect
+            if inner.width > 6 and inner.height > 6:
+                text_rect = inner
+            if valign in ('top', 'bottom'):
+                part = pygame.Rect(text_rect.x, text_rect.y, text_rect.width, int(text_rect.height * 0.6))
+                if valign == 'bottom':
+                    part.bottom = text_rect.bottom
+                text_rect = part
+            self.text(label, text_rect, 'menu-text-black', 0.55 if valign == 'center' else 0.9,
+                      align if align in ('left', 'right') else 'center')
 
     # ------------------------------------------------------------------ choosing
     def choose(self, tag):
@@ -851,7 +876,7 @@ class ThemeEditor:
         an alignment : its list)
         '''
         screen = self.screen
-        if tag in SHAPE_TAGS:
+        if tag in SHAPE_TAGS + MARGIN_TAGS:
             values = [['value', self.translate('theme-value')]]
             if tag in RADIUS_TAGS:
                 values.append(['max', self.translate('theme-round-max')])
@@ -867,8 +892,8 @@ class ThemeEditor:
                 if number != 'escape':
                     self.set(tag, int(number))
             return
-        if tag in SHORTCUT_TAGS + ALIGN_TAGS:
-            choices = SHORTCUT_CHOICES if tag in SHORTCUT_TAGS else ALIGN_CHOICES
+        if tag in SHORTCUT_TAGS + ALIGN_TAGS + VALIGN_TAGS:
+            choices = SHORTCUT_CHOICES if tag in SHORTCUT_TAGS else (VALIGN_CHOICES if tag in VALIGN_TAGS else ALIGN_CHOICES)
             values = [[str(index), self.translate(text)] for index, (_value, text) in enumerate(choices)]
             values.append(['origin', self.translate('theme-origin-value')])
             current = next((str(index) for index, (value, _text) in enumerate(choices) if value == self.work.get(tag)), None)

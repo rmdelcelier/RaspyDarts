@@ -284,7 +284,9 @@ DefaultConfig['Camera'] = {
     'upload_cloud': '0',
     'path_google_drive': '',
     'fullscreen_pop': '0',
-    'duree_ms': '5000'
+    'duree_ms': '5000',
+    # The QR code of the photos of the game, at its end : shown this many seconds
+    'qr_popup_s': '30'
     }
 # Gallery of the memories on the local network (see cgallery). Its own section : the
 # setup menu of the webcam writes back the [Camera] it read, and erased the password
