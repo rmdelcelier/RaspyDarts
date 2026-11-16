@@ -6285,3 +6285,142 @@ msgstr "Fléchettes retirées"
 msgid "autodarts-test-help"
 msgstr "Lancez des fléchettes puis retirez-les : elles s'affichent ici"
 
+######## RASPYHUB : THEMES ######
+
+msgid "theme-export-to-folder"
+msgstr "Vers un dossier ou une clé USB"
+
+msgid "theme-export-to-raspyhub"
+msgstr "Vers RaspyHub"
+
+msgid "hub-export"
+msgstr "Exporter le thème vers RaspyHub"
+
+msgid "hub-settings"
+msgstr "Réglages"
+
+msgid "hub-commands"
+msgstr "Commandes"
+
+msgid "hub-theme-name"
+msgstr "Nom du thème"
+
+msgid "hub-theme-name-type"
+msgstr "Nom du thème sur RaspyHub"
+
+msgid "hub-player"
+msgstr "Joueur (reçoit le succès)"
+
+msgid "hub-author"
+msgstr "Auteur affiché"
+
+msgid "hub-author-type"
+msgstr "Votre nom et/ou votre pseudo"
+
+msgid "hub-rights"
+msgstr "Mention sur les images lue"
+
+msgid "hub-to-choose"
+msgstr "À choisir"
+
+msgid "hub-generate"
+msgstr "Générer les captures"
+
+msgid "hub-choose"
+msgstr "Choisir les captures"
+
+msgid "hub-capture"
+msgstr "Prendre des captures"
+
+msgid "hub-send"
+msgstr "Envoyer vers RaspyHub"
+
+msgid "hub-no-capture"
+msgstr "Aucune capture : choisissez « Générer les captures »"
+
+msgid "hub-captures-count"
+msgstr "Captures au choix : {chosen} / {most}"
+
+msgid "hub-rights-mention"
+msgstr "Si les images de ce thème ne sont pas libres de droits ou ne vous appartiennent pas, vous en êtes seul responsable : RaspyDarts décline toute responsabilité."
+
+msgid "hub-generating"
+msgstr "Captures des écrans du thème…"
+
+msgid "hub-generate-partial"
+msgstr "Certaines pages n'ont pas pu être capturées (voir le journal)"
+
+msgid "hub-capture-question"
+msgstr "Prendre des captures ?"
+
+msgid "hub-capture-explain"
+msgstr "Allez où vous voulez (menus, parties). F1 ou Impr. écran : capture. Échap ou appui long sur Valider : terminer."
+
+msgid "hub-capture-help"
+msgstr "Capture : F1 ou Impr. écran — Terminer : Échap ou appui long sur Valider"
+
+msgid "hub-capture-failed"
+msgstr "La capture n'a pas pu être enregistrée"
+
+msgid "hub-missing"
+msgstr "Avant l'envoi :"
+
+msgid "hub-missing-name"
+msgstr "donnez un nom au thème"
+
+msgid "hub-missing-player"
+msgstr "choisissez le joueur"
+
+msgid "hub-missing-author"
+msgstr "indiquez l'auteur"
+
+msgid "hub-missing-captures"
+msgstr "générez les captures"
+
+msgid "hub-missing-rights"
+msgstr "lisez la mention sur les images"
+
+msgid "hub-no-internet"
+msgstr "Pas de connexion à Internet"
+
+msgid "hub-media-explain"
+msgstr "RaspyHub accepte un thème de {limit} Mo au plus : sans vidéos ni sons, il est bien plus léger."
+
+msgid "hub-zipping"
+msgstr "Préparation du thème"
+
+msgid "hub-zip-failed"
+msgstr "Le thème n'a pas pu être préparé (voir le journal)"
+
+msgid "hub-too-big"
+msgstr "Le thème fait {size} Mo : RaspyHub en accepte {limit} au plus (essayez sans vidéos ni sons)"
+
+msgid "hub-send-soon"
+msgstr "Le thème est prêt : l'envoi vers RaspyHub arrive bientôt"
+
+msgid "hub-no-player"
+msgstr "Aucun joueur sur la borne"
+
+msgid "hub-capture-asked"
+msgstr "Demandée"
+
+msgid "hub-capture-chosen"
+msgstr "Envoyée"
+
+msgid "hub-capture-not-chosen"
+msgstr "Non envoyée"
+
+msgid "hub-choose-help"
+msgstr "Valider : envoyer ou non — Supprimer ou Moins : effacer une capture prise"
+
+msgid "hub-capture-asked-why"
+msgstr "Cette capture est demandée par RaspyHub : elle est toujours envoyée"
+
+msgid "hub-choose-full"
+msgstr "{most} captures au choix au plus"
+
+msgid "hub-delete-only-free"
+msgstr "Seules les captures prises peuvent être effacées"
+
+msgid "hub-delete-question"
+msgstr "Effacer cette capture ?"

@@ -6214,3 +6214,142 @@ msgstr "Dardos retirados"
 msgid "autodarts-test-help"
 msgstr "Lance dardos y retírelos: se muestran aquí"
 
+######## RASPYHUB : THEMES ######
+
+msgid "theme-export-to-folder"
+msgstr "A una carpeta o una memoria USB"
+
+msgid "theme-export-to-raspyhub"
+msgstr "A RaspyHub"
+
+msgid "hub-export"
+msgstr "Exportar el tema a RaspyHub"
+
+msgid "hub-settings"
+msgstr "Ajustes"
+
+msgid "hub-commands"
+msgstr "Comandos"
+
+msgid "hub-theme-name"
+msgstr "Nombre del tema"
+
+msgid "hub-theme-name-type"
+msgstr "Nombre del tema en RaspyHub"
+
+msgid "hub-player"
+msgstr "Jugador (recibe el logro)"
+
+msgid "hub-author"
+msgstr "Autor mostrado"
+
+msgid "hub-author-type"
+msgstr "Su nombre y/o su seudónimo"
+
+msgid "hub-rights"
+msgstr "Aviso sobre las imágenes leído"
+
+msgid "hub-to-choose"
+msgstr "Por elegir"
+
+msgid "hub-generate"
+msgstr "Generar las capturas"
+
+msgid "hub-choose"
+msgstr "Elegir las capturas"
+
+msgid "hub-capture"
+msgstr "Tomar capturas"
+
+msgid "hub-send"
+msgstr "Enviar a RaspyHub"
+
+msgid "hub-no-capture"
+msgstr "Ninguna captura: elija «Generar las capturas»"
+
+msgid "hub-captures-count"
+msgstr "Capturas elegidas: {chosen} / {most}"
+
+msgid "hub-rights-mention"
+msgstr "Si las imágenes de este tema no son libres de derechos o no le pertenecen, usted es el único responsable: RaspyDarts declina toda responsabilidad."
+
+msgid "hub-generating"
+msgstr "Capturas de las pantallas del tema…"
+
+msgid "hub-generate-partial"
+msgstr "Algunas páginas no se pudieron capturar (ver el registro)"
+
+msgid "hub-capture-question"
+msgstr "¿Tomar capturas?"
+
+msgid "hub-capture-explain"
+msgstr "Vaya donde quiera (menús, partidas). F1 o Impr Pant: captura. Escape o mantener Validar: terminar."
+
+msgid "hub-capture-help"
+msgstr "Captura: F1 o Impr Pant — Terminar: Escape o mantener Validar"
+
+msgid "hub-capture-failed"
+msgstr "No se pudo guardar la captura"
+
+msgid "hub-missing"
+msgstr "Antes del envío:"
+
+msgid "hub-missing-name"
+msgstr "dé un nombre al tema"
+
+msgid "hub-missing-player"
+msgstr "elija el jugador"
+
+msgid "hub-missing-author"
+msgstr "indique el autor"
+
+msgid "hub-missing-captures"
+msgstr "genere las capturas"
+
+msgid "hub-missing-rights"
+msgstr "lea el aviso sobre las imágenes"
+
+msgid "hub-no-internet"
+msgstr "Sin conexión a Internet"
+
+msgid "hub-media-explain"
+msgstr "RaspyHub acepta un tema de {limit} MB como máximo: sin vídeos ni sonidos, es mucho más ligero."
+
+msgid "hub-zipping"
+msgstr "Preparando el tema"
+
+msgid "hub-zip-failed"
+msgstr "No se pudo preparar el tema (ver el registro)"
+
+msgid "hub-too-big"
+msgstr "El tema ocupa {size} MB: RaspyHub acepta {limit} como máximo (pruebe sin vídeos ni sonidos)"
+
+msgid "hub-send-soon"
+msgstr "El tema está listo: el envío a RaspyHub llegará pronto"
+
+msgid "hub-no-player"
+msgstr "Ningún jugador en la máquina"
+
+msgid "hub-capture-asked"
+msgstr "Requerida"
+
+msgid "hub-capture-chosen"
+msgstr "Enviada"
+
+msgid "hub-capture-not-chosen"
+msgstr "No enviada"
+
+msgid "hub-choose-help"
+msgstr "Validar: enviar o no — Supr o Menos: borrar una captura tomada"
+
+msgid "hub-capture-asked-why"
+msgstr "RaspyHub pide esta captura: siempre se envía"
+
+msgid "hub-choose-full"
+msgstr "{most} capturas elegidas como máximo"
+
+msgid "hub-delete-only-free"
+msgstr "Solo se pueden borrar las capturas tomadas"
+
+msgid "hub-delete-question"
+msgstr "¿Borrar esta captura?"

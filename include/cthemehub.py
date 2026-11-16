@@ -1,0 +1,563 @@
+"""
+Modifier les écrans > Exporter le thème > Vers RaspyHub : a theme shared on raspyhub.fr.
+
+- Its name (the one of the theme, changed if wanted), its author : a player of the borne (he gets
+  the trophy « Participation à la création artistique » when it is sent), shown with his name
+  and/or a pseudo, then # and the 6 first characters of the identifier of the borne (no double).
+- Its captures : 3 asked (the main screen, Paramètres, Choix du jeu in Classique) and 6 at most
+  chosen among the other pages of the menus and the captures taken by the player (mode capture :
+  include/ccapture.py), everything in ~/.raspydarts/raspyhub/export/<theme>.
+- The mention on the images (their author alone answers for them), the checks (Internet, the zip
+  read again, its size), then the sending (the API of RaspyHub : to come).
+"""
+
+import json
+import os
+import re
+import socket
+import time
+import zipfile
+
+import pygame
+
+from include import ccapture
+from include import cpaths
+
+EXTRA_MOST = 6
+# The zip of a theme sent : this size at most (the pages of RaspyHub, the downloads of Google Drive)
+SEND_LIMIT = 50 * 1024 ** 2
+HUB_HOST = 'raspyhub.fr'
+TROPHY = 'CREATION_ARTISTIQUE'
+
+
+def translate(screen, key):
+    return screen.lang.translate(key)
+
+
+def hub_dir(theme):
+    return os.path.join(cpaths.user_dir(), 'raspyhub', 'export', theme)
+
+
+def short_id():
+    '''
+    The 6 first characters of the identifier of the borne (the one of the statistics)
+    '''
+    try:
+        from include import cupdate    # pylint: disable=import-outside-toplevel
+        return (cupdate.machine_id() or '')[:6] or '000000'
+    except Exception:    # pylint: disable=broad-except
+        return '000000'
+
+
+class Draft:
+    '''
+    What is prepared for a theme : its name, its player, its author, the mention read, the
+    captures chosen (kept in draft.json, next to its captures)
+    '''
+
+    def __init__(self, theme):
+        self.theme = theme
+        self.folder = hub_dir(theme)
+        self.data = {'name': theme, 'player': '', 'author': '', 'rights': False, 'chosen': []}
+        try:
+            with open(os.path.join(self.folder, 'draft.json'), encoding='utf-8') as source:
+                self.data.update(json.load(source))
+        except (OSError, ValueError):
+            pass
+
+    def save(self):
+        os.makedirs(self.folder, exist_ok=True)
+        path = os.path.join(self.folder, 'draft.json')
+        with open(path + '.tmp', 'w', encoding='utf-8') as target:
+            json.dump(self.data, target, indent=2, ensure_ascii=False)
+        os.replace(path + '.tmp', path)
+
+    def captures(self):
+        '''
+        The captures there : those of the pages (in the order of PAGES), then those taken
+        '''
+        try:
+            names = set(os.listdir(self.folder))
+        except OSError:
+            names = set()
+        pages = [f'auto-{name}.jpg' for name, _kind in ccapture.PAGES if f'auto-{name}.jpg' in names]
+        free = sorted(name for name in names if name.startswith('free-') and name.endswith('.jpg'))
+        return pages + free
+
+    @staticmethod
+    def mandatory(name):
+        return name in [f'auto-{page}.jpg' for page in ccapture.MANDATORY]
+
+    def chosen(self):
+        '''
+        The captures chosen beyond the 3 asked (those still there, EXTRA_MOST at most)
+        '''
+        there = self.captures()
+        return [name for name in self.data.get('chosen', []) if name in there and not self.mandatory(name)][:EXTRA_MOST]
+
+    def missing(self):
+        '''
+        The captures asked not made yet
+        '''
+        there = self.captures()
+        return [page for page in ccapture.MANDATORY if f'auto-{page}.jpg' not in there]
+
+    def sent(self):
+        '''
+        The captures sent : the 3 asked, then those chosen
+        '''
+        return [f'auto-{page}.jpg' for page in ccapture.MANDATORY] + self.chosen()
+
+    def author_shown(self):
+        author = str(self.data.get('author') or '').strip()
+        return f"{author} #{short_id()}" if author else ''
+
+
+def players(screen):
+    '''
+    The players of the borne : those it knows (favorites, bank of firstnames), then those of
+    the trophies
+    '''
+    names = list(screen.known_players())
+    try:
+        with open(cpaths.trophies_file(), encoding='utf-8') as source:
+            for name in json.load(source):
+                name = str(name).strip()
+                # Not the totals of the file (_global_stats) nor the players without a name (Joueur 3)
+                if not name or name.startswith('_') or re.fullmatch(r'(Joueur|Player|Spieler|Jugador|Giocatore|Speler) \d+', name):
+                    continue
+                if name.casefold() not in [known.casefold() for known in names]:
+                    names.append(name)
+    except (OSError, ValueError):
+        pass
+    return names
+
+
+def picture(path, size):
+    '''
+    A capture made the size given (its proportions kept) ; None : unreadable
+    '''
+    try:
+        from PIL import Image    # pylint: disable=import-outside-toplevel
+        with Image.open(path) as source:
+            image = source.convert('RGB')
+            image.thumbnail(size)
+            return pygame.image.fromstring(image.tobytes(), image.size, 'RGB')
+    except Exception:    # pylint: disable=broad-except
+        return None
+
+
+def award(screen, player):
+    '''
+    The theme sent : its player gets the trophy « Participation à la création artistique »
+    '''
+    from include import ctrophies    # pylint: disable=import-outside-toplevel
+    try:
+        ctrophies.save_unlocked_trophy(player, TROPHY)
+    except Exception as error:    # pylint: disable=broad-except
+        screen.logs.error(f"Trophy {TROPHY} for {player} : {error}")
+
+
+# ---------------------------------------------------------------------- the screen
+def generate(screen, draft):
+    '''
+    Générer les captures : each page of the menus drawn and captured with the theme
+    '''
+    screen.message([translate(screen, 'hub-generating')], 1200, None, 'middle', 'big')
+    written = ccapture.generate(screen, draft.folder, screen.logs)
+    # The pages chosen first : the extras made now, while there is room
+    chosen = draft.chosen()
+    for name, _kind in ccapture.PAGES:
+        file_name = f'auto-{name}.jpg'
+        if name in written and not draft.mandatory(file_name) and file_name not in chosen and len(chosen) < EXTRA_MOST:
+            chosen.append(file_name)
+    draft.data['chosen'] = chosen
+    draft.save()
+    if len(written) < len(ccapture.PAGES):
+        screen.message([translate(screen, 'hub-generate-partial')], 2500, 'menu-ko', 'middle', 'big')
+
+
+def start_capture(screen, draft):
+    '''
+    Prendre des captures : the mode capture, back to this screen when it ends (from a menu)
+    '''
+    def ended(taken):
+        chosen = draft.chosen()
+        for name in taken:
+            if len(chosen) < EXTRA_MOST:
+                chosen.append(name)
+        draft.data['chosen'] = chosen
+        draft.save()
+        # Back to the screen of the export at the next turn of a menu (Screen.idle_turn)
+        screen.hub_return = draft.theme
+
+    if not screen.ask_yes_no(translate(screen, 'hub-capture-question'), translate(screen, 'hub-capture-explain')):
+        return False
+    os.makedirs(draft.folder, exist_ok=True)
+    ccapture.CaptureMode(screen, draft.folder, ended)
+    return True
+
+
+def ready(screen, draft):
+    '''
+    What is missing before the sending (texts), [] : it can be sent
+    '''
+    missing = []
+    if not str(draft.data.get('name') or '').strip():
+        missing.append(translate(screen, 'hub-missing-name'))
+    if not draft.data.get('player'):
+        missing.append(translate(screen, 'hub-missing-player'))
+    if not str(draft.data.get('author') or '').strip():
+        missing.append(translate(screen, 'hub-missing-author'))
+    if draft.missing():
+        missing.append(translate(screen, 'hub-missing-captures'))
+    if not draft.data.get('rights'):
+        missing.append(translate(screen, 'hub-missing-rights'))
+    return missing
+
+
+def check_zip(path, theme):
+    '''
+    The zip read again : its files whole, its theme there. Raises ValueError
+    '''
+    with zipfile.ZipFile(path) as archive:
+        broken = archive.testzip()
+        if broken is not None:
+            raise ValueError(f"damaged file {broken}")
+        names = archive.namelist()
+    if not any(name in (f'{theme}/other/Colorset.cfg', f'{theme}/Colorset.cfg') for name in names):
+        raise ValueError('no Colorset.cfg')
+
+
+def send(screen, draft):
+    '''
+    Envoyer vers RaspyHub : checks, the zip made and read again ; the sending itself : the API of
+    RaspyHub (to come)
+    '''
+    from include import cthemefiles    # pylint: disable=import-outside-toplevel
+    missing = ready(screen, draft)
+    if missing:
+        screen.message([f"{translate(screen, 'hub-missing')} {', '.join(missing)}"], 4000, 'menu-ko', 'middle', 'big')
+        return
+    try:
+        socket.create_connection((HUB_HOST, 443), timeout=5).close()
+    except OSError:
+        screen.message([translate(screen, 'hub-no-internet')], 3000, 'menu-ko', 'middle', 'big')
+        return
+    theme_dir = getattr(screen.file_class, 'theme_dir', None)
+    if not theme_dir or not os.path.isdir(theme_dir):
+        screen.message([translate(screen, 'theme-export-none')], 2500, 'menu-ko', 'middle', 'big')
+        return
+    media_size = sum(cthemefiles.folder_size(os.path.join(theme_dir, name)) for name in cthemefiles.MEDIA)
+    media = False
+    if media_size > 0:
+        answer = screen.ask_yes_no(translate(screen, 'theme-export-media').replace('{size}', f"{media_size / 1048576:.0f}"),
+                                   translate(screen, 'hub-media-explain').replace('{limit}', str(SEND_LIMIT // 1048576)),
+                                   cancel=True)
+        if answer is None:
+            return
+        media = bool(answer)
+    folder = os.path.join(draft.folder, 'envoi')
+    try:
+        for name in os.listdir(folder):
+            os.remove(os.path.join(folder, name))
+    except OSError:
+        pass
+    export = cthemefiles.Export(screen.logs, draft.theme, theme_dir, folder, media, theme_version(screen))
+    # The zip made : its progress shown
+    while export.state == 'running':
+        fraction = export.done / export.total
+        screen.message([f"{translate(screen, 'hub-zipping')} {int(fraction * 100)} %"], 0, None, 'middle', 'big')
+        time.sleep(0.3)
+    if export.state != 'done':
+        screen.message([translate(screen, 'hub-zip-failed')], 3000, 'menu-ko', 'middle', 'big')
+        return
+    try:
+        check_zip(export.target, draft.theme)
+    except (ValueError, zipfile.BadZipFile, OSError) as error:
+        screen.logs.error(f"RaspyHub : zip {export.target} refused ({error})")
+        screen.message([translate(screen, 'hub-zip-failed')], 3000, 'menu-ko', 'middle', 'big')
+        return
+    size = os.path.getsize(export.target)
+    if size > SEND_LIMIT:
+        screen.message([translate(screen, 'hub-too-big').replace('{size}', f"{size / 1048576:.0f}")
+                        .replace('{limit}', str(SEND_LIMIT // 1048576))], 4000, 'menu-ko', 'middle', 'big')
+        return
+    screen.logs.info(f"RaspyHub : theme {draft.data.get('name')} ready ({size // 1024} KB, captures "
+                     f"{', '.join(draft.sent())}) ; sending : the API of RaspyHub to come")
+    # The API of RaspyHub (Serveur Télémétrie) : not there yet. Sent, the trophy : award()
+    screen.message([translate(screen, 'hub-send-soon')], 4000, None, 'middle', 'big')
+
+
+def theme_version(screen):
+    try:
+        from include import cupdate    # pylint: disable=import-outside-toplevel
+        return cupdate.get_version(screen.logs)
+    except Exception:    # pylint: disable=broad-except
+        return getattr(screen.config, 'pyDartsVersion', '')
+
+
+def choose_player(screen, draft):
+    names = players(screen)
+    if not names:
+        screen.message([translate(screen, 'hub-no-player')], 2500, 'menu-ko', 'middle', 'big')
+        return
+    picked = screen.dropdown(screen.res['x'] * 6 / 16, 3 * screen.res_y_16, [[name, name] for name in names],
+                             navigate=draft.data.get('player') or None, width=5 * screen.res_x_16)
+    if picked in (None, False, 'escape') or picked not in names:
+        return
+    before = draft.data.get('player')
+    draft.data['player'] = picked
+    # The author : his name, unless another one was typed
+    if not draft.data.get('author') or draft.data.get('author') == before:
+        draft.data['author'] = picked
+    draft.save()
+
+
+def type_text(screen, value, most, key):
+    typed = screen.input_value_item('string', str(value or ''), 1, most, text=key)
+    if typed in (None, False, 'escape') or not str(typed).strip():
+        return None
+    return ' '.join(str(typed).split())[:most]
+
+
+def export_screen(screen):
+    '''
+    Exporter le thème vers RaspyHub : on the left the main capture and the mention on the images,
+    its settings, its commands
+    '''
+    from include import cmenueditor    # pylint: disable=import-outside-toplevel
+    from include import cautodartsmenu    # pylint: disable=import-outside-toplevel
+    from include.cscreen import DOWN_KEYS, ENTER_KEYS, ESCAPE_KEYS, UP_KEYS    # pylint: disable=import-outside-toplevel
+    theme = str(screen.config.get_value('SectionGlobals', 'colorset') or '')
+    if not theme or not os.path.isdir(getattr(screen.file_class, 'theme_dir', '') or ''):
+        screen.message([translate(screen, 'theme-export-none')], 2500, 'menu-ko', 'middle', 'big')
+        return
+    draft = Draft(theme)
+    unit_x, unit_y = screen.res['x'] / 16, screen.res['y'] / 16
+    selected = 0
+    shown_cache = {}
+    while True:
+        yes_no = translate(screen, 'yes' if draft.data.get('rights') else 'no')
+        chosen = draft.chosen()
+        entries = [('setting', 'name', 'hub-theme-name', str(draft.data.get('name') or '')),
+                   ('setting', 'player', 'hub-player', draft.data.get('player') or translate(screen, 'hub-to-choose')),
+                   ('setting', 'author', 'hub-author', draft.author_shown() or translate(screen, 'hub-to-choose')),
+                   ('setting', 'rights', 'hub-rights', yes_no),
+                   ('command', 'generate', 'hub-generate', None),
+                   ('command', 'choose', 'hub-choose', None if draft.captures() else 'greyed'),
+                   ('command', 'capture', 'hub-capture', None),
+                   ('command', 'send', 'hub-send', None),
+                   ('back', 'back', 'back', None)]
+        usable = [index for index, entry in enumerate(entries) if entry[3] != 'greyed']
+        if selected not in usable:
+            selected = min(usable, key=lambda index: abs(index - selected))
+
+        screen.display_background()
+        screen.menu_header(translate(screen, 'hub-export'), theme)
+        # On the left : the main capture, the captures sent, the mention on the images
+        left = pygame.Rect(int(0.5 * unit_x), int(3.0 * unit_y), int(4.2 * unit_x), int(11 * unit_y))
+        line = int(unit_y * 0.6)
+        main = os.path.join(draft.folder, 'auto-main.jpg')
+        size = (left.width, int(left.width * 9 / 16))
+        key = (main, os.path.getmtime(main) if os.path.isfile(main) else 0, size)
+        if key not in shown_cache:
+            shown_cache.clear()
+            shown_cache[key] = picture(main, size) if os.path.isfile(main) else None
+        text_y = left.y
+        if shown_cache[key] is not None:
+            image = shown_cache[key]
+            screen.blit(image, (left.centerx - image.get_width() // 2, left.y))
+            text_y += image.get_height() + screen.margin
+        else:
+            cmenueditor.paragraph(screen, translate(screen, 'hub-no-capture'), pygame.Rect(left.x, left.y, left.width, size[1]),
+                                  screen.colorset['menu-text-white'])
+            text_y += size[1] + screen.margin
+        screen.blit_text(translate(screen, 'hub-captures-count').replace('{chosen}', str(len(chosen)))
+                         .replace('{most}', str(EXTRA_MOST)), left.x, text_y, left.width, line, screen.colorset['menu-text-white'])
+        text_y += line + screen.margin
+        warning = screen.colorset.get('menu-warning', screen.colorset['menu-ko'])
+        cmenueditor.paragraph(screen, translate(screen, 'hub-rights-mention'),
+                              pygame.Rect(left.x, text_y, left.width, int(14 * unit_y) - text_y), warning)
+
+        zones = {}
+        rows = {'setting': 0, 'command': 0}
+        columns = {'setting': (5.0, 5.6), 'command': (11.0, 4.5)}
+        for title, kind in (('hub-settings', 'setting'), ('hub-commands', 'command')):
+            pos, width = columns[kind]
+            screen.blit_text(translate(screen, title), int(pos * unit_x), int(2.95 * unit_y), int(width * unit_x), int(0.7 * unit_y),
+                             screen.colorset.get('menu-favorite', screen.colorset['menu-text-white']))
+        for index, (kind, ident, text, value) in enumerate(entries):
+            if kind == 'back':
+                zones[index] = screen.display_button(index == selected, 'back', special='escape')
+                continue
+            pos, width = columns[kind]
+            rect = pygame.Rect(int(pos * unit_x), int((3.8 + rows[kind] * 1.3) * unit_y), int(width * unit_x), int(1.05 * unit_y))
+            rows[kind] += 1
+            if kind == 'setting':
+                cmenueditor.value_item(screen, rect, translate(screen, text), value, index == selected)
+            else:
+                label = translate(screen, text)
+                if ident == 'choose':
+                    label = f"{label} ({len(chosen)}/{EXTRA_MOST})"
+                cautodartsmenu.button(screen, rect, label, index == selected, greyed=value == 'greyed')
+            if value != 'greyed':
+                zones[index] = tuple(rect)
+        screen.update_screen()
+
+        key = screen.rpi.listen_inputs(['arrows', 'fx'], ['escape', 'enter', 'space', 'PLAYERBUTTON', 'BACKUPBUTTON',
+                                                          'GAMEBUTTON', 'single-click', 'resize'])
+        if key == 'resize':
+            continue
+        clicked = screen.is_clicked(zones, key)
+        if clicked is not False and clicked is not None:
+            selected, key = clicked, 'enter'
+        kind = entries[selected][0]
+        same = [index for index in usable if entries[index][0] == kind]
+        if key in ESCAPE_KEYS or key == 'escape':
+            return
+        if key in ('BTN_RIGHT',):
+            selected = usable[(usable.index(selected) + 1) % len(usable)]
+        elif key in ('BTN_LEFT',):
+            selected = usable[(usable.index(selected) - 1) % len(usable)]
+        elif key in DOWN_KEYS:
+            position = same.index(selected)
+            selected = same[position + 1] if position + 1 < len(same) else len(entries) - 1
+        elif key in UP_KEYS:
+            position = same.index(selected)
+            if kind == 'back':
+                selected = [index for index in usable if entries[index][0] == 'setting'][-1]
+            else:
+                selected = same[position - 1] if position > 0 else selected
+        elif key in ('left', 'right', 'S11', 'S6'):
+            if kind in ('setting', 'command'):
+                other = [index for index in usable if entries[index][0] == ('command' if kind == 'setting' else 'setting')]
+                selected = other[min(same.index(selected), len(other) - 1)]
+        elif key in ENTER_KEYS + ['space']:
+            ident, value = entries[selected][1], entries[selected][3]
+            if value == 'greyed':
+                continue
+            if kind == 'back':
+                return
+            if ident == 'name':
+                typed = type_text(screen, draft.data.get('name'), 40, 'hub-theme-name-type')
+                if typed:
+                    draft.data['name'] = typed
+                    draft.save()
+            elif ident == 'player':
+                choose_player(screen, draft)
+            elif ident == 'author':
+                typed = type_text(screen, draft.data.get('author'), 30, 'hub-author-type')
+                if typed:
+                    draft.data['author'] = typed.replace('#', '')
+                    draft.save()
+            elif ident == 'rights':
+                draft.data['rights'] = not draft.data.get('rights')
+                draft.save()
+            elif ident == 'generate':
+                generate(screen, draft)
+            elif ident == 'choose':
+                choose_captures(screen, draft)
+            elif ident == 'capture':
+                if start_capture(screen, draft):
+                    # Back to the screens : the player goes where he wants
+                    return
+            elif ident == 'send':
+                send(screen, draft)
+
+
+def choose_captures(screen, draft):
+    '''
+    Choisir les captures : the captures there as tiles ; the 3 asked always sent, the others
+    chosen (EXTRA_MOST at most) ; a capture taken can be deleted (Supprimer, Moins)
+    '''
+    from include.cscreen import DOWN_KEYS, ENTER_KEYS, ESCAPE_KEYS, LEFT_KEYS, RIGHT_KEYS, UP_KEYS    # pylint: disable=import-outside-toplevel
+    columns = 4
+    selected = 0
+    thumbs = {}
+    unit_x, unit_y = screen.res['x'] / 16, screen.res['y'] / 16
+    while True:
+        names = draft.captures()
+        if not names:
+            return
+        chosen = draft.chosen()
+        selected = max(0, min(selected, len(names)))
+        screen.display_background()
+        screen.menu_header(translate(screen, 'hub-choose'),
+                           translate(screen, 'hub-captures-count').replace('{chosen}', str(len(chosen))).replace('{most}', str(EXTRA_MOST)))
+        gap = int(unit_x * 0.3)
+        width = int((screen.res['x'] - 2 * unit_x - (columns - 1) * gap) / columns)
+        height = int(width * 9 / 16)
+        rows_shown = max(1, int((11.2 * unit_y) // (height + gap + 0.5 * unit_y)))
+        first_row = max(0, min(selected, len(names) - 1) // columns - rows_shown + 1)
+        zones = {}
+        for index, name in enumerate(names):
+            row, column = divmod(index, columns)
+            if not first_row <= row < first_row + rows_shown:
+                continue
+            rect = pygame.Rect(int(unit_x + column * (width + gap)), int(2.9 * unit_y + (row - first_row) * (height + gap + 0.5 * unit_y)),
+                               width, height)
+            path = os.path.join(draft.folder, name)
+            stamp = (name, os.path.getmtime(path) if os.path.isfile(path) else 0)
+            if stamp not in thumbs:
+                thumbs[stamp] = picture(path, (width, height))
+            image = thumbs[stamp]
+            mandatory = draft.mandatory(name)
+            on = mandatory or name in chosen
+            if image is not None:
+                if not on:
+                    image = image.copy()
+                    image.fill((90, 90, 90), special_flags=pygame.BLEND_RGB_MULT)
+                screen.blit(image, image.get_rect(center=rect.center))
+            color = ccapture.FRAME if mandatory else screen.colorset['menu-ok'] if on else (110, 110, 110)
+            pygame.draw.rect(screen.screen, color, rect, 4 if on else 2)
+            if index == selected:
+                pygame.draw.rect(screen.screen, screen.colorset['menu-selected'], rect.inflate(10, 10), 4)
+            label = translate(screen, 'hub-capture-asked' if mandatory else 'hub-capture-chosen' if on else 'hub-capture-not-chosen')
+            screen.blit_text(label, rect.x, rect.bottom, rect.width, int(0.45 * unit_y), color, margin=False)
+            zones[index] = tuple(rect)
+        screen.blit_text(translate(screen, 'hub-choose-help'), 0, int(13.6 * unit_y), screen.res['x'], int(0.5 * unit_y),
+                         screen.colorset['menu-text-white'])
+        zones[len(names)] = screen.display_button(selected == len(names), 'back', special='escape')
+        screen.update_screen()
+        key = screen.rpi.listen_inputs(['arrows', 'fx'], ['escape', 'enter', 'space', 'BACKUPBUTTON', 'single-click', 'delete',
+                                                          'backspace', 'resize'])
+        clicked = screen.is_clicked(zones, key)
+        if clicked is not False and clicked is not None:
+            selected, key = clicked, 'enter'
+        if key in ESCAPE_KEYS or key == 'escape':
+            return
+        if key in RIGHT_KEYS:
+            selected = min(len(names), selected + 1)
+        elif key in LEFT_KEYS:
+            selected = max(0, selected - 1)
+        elif key in DOWN_KEYS:
+            selected = min(len(names), selected + columns)
+        elif key in UP_KEYS:
+            selected = max(0, selected - columns) if selected < len(names) else len(names) - 1
+        elif key in ENTER_KEYS + ['space']:
+            if selected == len(names):
+                return
+            name = names[selected]
+            if draft.mandatory(name):
+                screen.message([translate(screen, 'hub-capture-asked-why')], 2000, None, 'middle', 'big')
+            elif name in chosen:
+                chosen.remove(name)
+            elif len(chosen) >= EXTRA_MOST:
+                screen.message([translate(screen, 'hub-choose-full').replace('{most}', str(EXTRA_MOST))], 2500, 'menu-ko',
+                               'middle', 'big')
+            else:
+                chosen.append(name)
+            draft.data['chosen'] = chosen
+            draft.save()
+        elif key in ('delete', 'backspace', 'BTN_MINUS', 'VOLUME-DOWN', 'BTN_VOLUME_DOWN') and selected < len(names):
+            name = names[selected]
+            if not name.startswith('free-'):
+                screen.message([translate(screen, 'hub-delete-only-free')], 2000, None, 'middle', 'big')
+            elif screen.wait_validation(translate(screen, 'hub-delete-question')):
+                try:
+                    os.remove(os.path.join(draft.folder, name))
+                except OSError:
+                    pass
+                draft.data['chosen'] = [item for item in chosen if item != name]
+                draft.save()

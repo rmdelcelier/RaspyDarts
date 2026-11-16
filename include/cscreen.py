@@ -304,6 +304,13 @@ class Screen(pygame.Surface):
             if spent > 0.5:
                 self.logs.warning(f"Screen : a turn of {getattr(hook, '__qualname__', hook)} took {spent:.1f} s")
         self.activities.tick()
+        # The mode capture ended (Exporter le thème vers RaspyHub) : back to the screen of the
+        # export, from a menu (drawn again after it)
+        if can_redraw and getattr(self, 'hub_return', None) and getattr(self, 'menu_shown', None)                 and getattr(self.rpi, 'capture', None) is None:
+            self.hub_return = None
+            from include import cthemehub    # pylint: disable=import-outside-toplevel
+            cthemehub.export_screen(self)
+            return True
         wait = getattr(self, 'net_wait', None)
         if can_redraw and wait is not None and wait.resume_wanted and not wait.woken and getattr(self, 'menu_shown', None):
             wait.woken = True
@@ -8028,6 +8035,9 @@ class Screen(pygame.Surface):
         subtitle = subtitle or self.menu_text_look(name, 'subtitle')[0]
         show_version = menu.get('show_version') or False
         info = [str(value) for value in cmenus.as_list(menu.get('info'))]
+        if getattr(self, 'capturing', False):
+            # A capture for RaspyHub (include/ccapture.py) : not the addresses of the borne
+            info = [value for value in info if value != 'ips']
         remember = bool(menu.get('remember'))
         layout = str(menu.get('layout') or 'list')
         keys = {direction: set(menus.keys(direction)) for direction in
@@ -13270,6 +13280,11 @@ class Screen(pygame.Surface):
             return
         # The activity indicator over what is sent, the screen keeping no trace of it
         activity = self.activities.over(self.screen)
+        # The frame of the mode capture too (include/ccapture.py) : drawn whole by its first
+        # display, then kept on the screen sent by the parts sent again
+        capture = getattr(rpi, 'capture', None)
+        if capture is not None:
+            capture.over(self.screen)
         if rect_array is not None:
             #self.display.update(rect_array)
             for rect in rect_array:
@@ -13286,6 +13301,8 @@ class Screen(pygame.Surface):
                 self.display.update(activity)
         else:
             self.display.flip()
+        if capture is not None:
+            capture.restore(self.screen)
         self.activities.restore(self.screen)
 
     def coins_badge(self):

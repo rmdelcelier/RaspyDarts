@@ -859,6 +859,17 @@ class AnimatedBackground:
         The activity indicator over the frame sent (made again from the video, the effect and
         the layer : nothing to restore) ; gone : its place made again. The place to send
         '''
+        drawn = self.activity_drawn()
+        # The frame of the mode capture (include/ccapture.py) over the frame sent too
+        capture = getattr(getattr(self.owner, 'rpi', None), 'capture', None)
+        if capture is not None and capture.active:
+            capture.draw(self.real)
+        return drawn
+
+    def activity_drawn(self):
+        '''
+        The activity indicator drawn over the frame (see activity_over) : the place to send
+        '''
         activities = getattr(self.owner, 'activities', None)
         if activities is None:
             return None

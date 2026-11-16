@@ -278,6 +278,12 @@ class Craspberry():
         # Animated background of the menus (include/cbganim.py) : its turn at each turn of the
         # reading ; True : the screen shown must be drawn again ('resize')
         self.on_idle = None
+        # Mode capture (Exporter le thème vers RaspyHub, include/ccapture.py) : its keys (F1,
+        # Print Screen, Escape, Valider held) taken here, whatever the screen shown
+        self.capture = None
+        # Inputs given by the game itself (the pages of the menus drawn for their captures) : a
+        # key returned, or a function called (a capture of the screen shown)
+        self.scripted = []
         self.send_insult = None
         self.t_event = t_event
         self.sleep = False
@@ -788,7 +794,18 @@ class Craspberry():
         menus as in a game, and the reading goes on : the screen shown never sees it
         """
         while True:
+            if self.scripted:
+                item = self.scripted.pop(0)
+                if callable(item):
+                    item()
+                    continue
+                return item
             key = self.read_inputs(*args, **kwargs)
+            if key == 'BTN_CAPTURE_END':
+                # Valider held in the mode capture : its end, nothing for the screen shown
+                if self.capture is not None:
+                    self.capture.finish()
+                continue
             if not (isinstance(key, str) and key.startswith('BTN_MUSIC_') and self.on_music is not None):
                 break
             try:
@@ -1070,6 +1087,14 @@ class Craspberry():
 
             # Case of key DOWN
             elif event.type == pygame.KEYDOWN:
+                # Mode capture : F1 / Print Screen take the screen, Escape ends it (for no screen)
+                if self.capture is not None and self.capture.active:
+                    if event.key in (pygame.K_F1, pygame.K_PRINT, pygame.K_SYSREQ):
+                        self.capture.shot()
+                        continue
+                    if event.key == pygame.K_ESCAPE:
+                        self.capture.finish()
+                        continue
                 keyname = pygame.key.name(event.key)
                 unicodekey = event.dict['unicode']
                 # The character typed when there is one (capitals, signs of the keyboard,

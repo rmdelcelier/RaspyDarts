@@ -161,6 +161,7 @@ ALL_TROPHIES = [
     {"id": "TOUCH_TRIPLE_10", "name": "Triple (I)", "desc": "Toucher un triple 10 fois", "img": "triple - 10", "category": "Succès de progression"},
     {"id": "TOUCH_TRIPLE_50", "name": "Triple (II)", "desc": "Toucher un triple 50 fois", "img": "triple - 50", "category": "Succès de progression"},
     {"id": "TOUCH_TRIPLE_100", "name": "Triple (III)", "desc": "Toucher un triple 100 fois", "img": "triple - 100", "category": "Succès de progression"},
+    {"id": "CREATION_ARTISTIQUE", "name": "Création artistique", "desc": "Participation à la création artistique : partager un thème sur RaspyHub", "img": "creation artistique", "category": "Succès de progression"},
 
     # --- 8. CRICKET ---
     {"id": "3_MARK_CRICKET", "name": "3 Mark Cricket", "desc": "Réaliser 3 marques au Cricket", "img": "cricket 3 mark", "category": "Cricket / Mickey"},

@@ -6276,3 +6276,142 @@ msgstr "Freccette ritirate"
 msgid "autodarts-test-help"
 msgstr "Lanciate delle freccette e ritiratele: compaiono qui"
 
+######## RASPYHUB : THEMES ######
+
+msgid "theme-export-to-folder"
+msgstr "In una cartella o una chiavetta USB"
+
+msgid "theme-export-to-raspyhub"
+msgstr "Su RaspyHub"
+
+msgid "hub-export"
+msgstr "Esporta il tema su RaspyHub"
+
+msgid "hub-settings"
+msgstr "Impostazioni"
+
+msgid "hub-commands"
+msgstr "Comandi"
+
+msgid "hub-theme-name"
+msgstr "Nome del tema"
+
+msgid "hub-theme-name-type"
+msgstr "Nome del tema su RaspyHub"
+
+msgid "hub-player"
+msgstr "Giocatore (riceve il trofeo)"
+
+msgid "hub-author"
+msgstr "Autore mostrato"
+
+msgid "hub-author-type"
+msgstr "Il tuo nome e/o il tuo pseudonimo"
+
+msgid "hub-rights"
+msgstr "Avviso sulle immagini letto"
+
+msgid "hub-to-choose"
+msgstr "Da scegliere"
+
+msgid "hub-generate"
+msgstr "Genera le catture"
+
+msgid "hub-choose"
+msgstr "Scegli le catture"
+
+msgid "hub-capture"
+msgstr "Fai delle catture"
+
+msgid "hub-send"
+msgstr "Invia a RaspyHub"
+
+msgid "hub-no-capture"
+msgstr "Nessuna cattura: scegli «Genera le catture»"
+
+msgid "hub-captures-count"
+msgstr "Catture scelte: {chosen} / {most}"
+
+msgid "hub-rights-mention"
+msgstr "Se le immagini di questo tema non sono libere da diritti o non ti appartengono, ne sei l'unico responsabile: RaspyDarts declina ogni responsabilità."
+
+msgid "hub-generating"
+msgstr "Catture delle schermate del tema…"
+
+msgid "hub-generate-partial"
+msgstr "Alcune pagine non sono state catturate (vedi il registro)"
+
+msgid "hub-capture-question"
+msgstr "Fare delle catture?"
+
+msgid "hub-capture-explain"
+msgstr "Vai dove vuoi (menu, partite). F1 o Stamp: cattura. Esc o tieni premuto Conferma: termina."
+
+msgid "hub-capture-help"
+msgstr "Cattura: F1 o Stamp — Termina: Esc o tieni premuto Conferma"
+
+msgid "hub-capture-failed"
+msgstr "Impossibile salvare la cattura"
+
+msgid "hub-missing"
+msgstr "Prima dell'invio:"
+
+msgid "hub-missing-name"
+msgstr "dai un nome al tema"
+
+msgid "hub-missing-player"
+msgstr "scegli il giocatore"
+
+msgid "hub-missing-author"
+msgstr "indica l'autore"
+
+msgid "hub-missing-captures"
+msgstr "genera le catture"
+
+msgid "hub-missing-rights"
+msgstr "leggi l'avviso sulle immagini"
+
+msgid "hub-no-internet"
+msgstr "Nessuna connessione a Internet"
+
+msgid "hub-media-explain"
+msgstr "RaspyHub accetta un tema di {limit} MB al massimo: senza video né suoni è molto più leggero."
+
+msgid "hub-zipping"
+msgstr "Preparazione del tema"
+
+msgid "hub-zip-failed"
+msgstr "Impossibile preparare il tema (vedi il registro)"
+
+msgid "hub-too-big"
+msgstr "Il tema pesa {size} MB: RaspyHub ne accetta {limit} al massimo (prova senza video né suoni)"
+
+msgid "hub-send-soon"
+msgstr "Il tema è pronto: l'invio a RaspyHub arriverà presto"
+
+msgid "hub-no-player"
+msgstr "Nessun giocatore sulla macchina"
+
+msgid "hub-capture-asked"
+msgstr "Richiesta"
+
+msgid "hub-capture-chosen"
+msgstr "Inviata"
+
+msgid "hub-capture-not-chosen"
+msgstr "Non inviata"
+
+msgid "hub-choose-help"
+msgstr "Conferma: inviare o no — Canc o Meno: cancellare una cattura fatta"
+
+msgid "hub-capture-asked-why"
+msgstr "Questa cattura è richiesta da RaspyHub: viene sempre inviata"
+
+msgid "hub-choose-full"
+msgstr "Al massimo {most} catture scelte"
+
+msgid "hub-delete-only-free"
+msgstr "Solo le catture fatte possono essere cancellate"
+
+msgid "hub-delete-question"
+msgstr "Cancellare questa cattura?"

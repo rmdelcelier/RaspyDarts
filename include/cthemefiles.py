@@ -160,6 +160,16 @@ def export_theme(screen, keys):
     if not theme or not theme_dir or not os.path.isdir(theme_dir):
         screen.message([translate('theme-export-none')], 2500, 'menu-ko', 'middle', 'big')
         return
+    # Where : a folder or a USB key, or RaspyHub (shared with the other bornes)
+    choices = [['folder', translate('theme-export-to-folder')], ['raspyhub', translate('theme-export-to-raspyhub')]]
+    picked = screen.dropdown(screen.res['x'] * 6 / 16, 3 * screen.res_y_16, choices, navigate='folder',
+                             width=6 * screen.res_x_16)
+    if picked == 'raspyhub':
+        from include import cthemehub    # pylint: disable=import-outside-toplevel
+        cthemehub.export_screen(screen)
+        return
+    if picked != 'folder':
+        return
     current = getattr(screen, 'theme_export', None)
     if current is not None and current.state == 'running':
         screen.message([translate('theme-export-running')], 2500, None, 'middle', 'big')

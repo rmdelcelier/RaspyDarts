@@ -6481,3 +6481,142 @@ msgstr "Darts taken out"
 msgid "autodarts-test-help"
 msgstr "Throw darts then take them out: they are shown here"
 
+######## RASPYHUB : THEMES ######
+
+msgid "theme-export-to-folder"
+msgstr "To a folder or a USB key"
+
+msgid "theme-export-to-raspyhub"
+msgstr "To RaspyHub"
+
+msgid "hub-export"
+msgstr "Export the theme to RaspyHub"
+
+msgid "hub-settings"
+msgstr "Settings"
+
+msgid "hub-commands"
+msgstr "Commands"
+
+msgid "hub-theme-name"
+msgstr "Name of the theme"
+
+msgid "hub-theme-name-type"
+msgstr "Name of the theme on RaspyHub"
+
+msgid "hub-player"
+msgstr "Player (gets the trophy)"
+
+msgid "hub-author"
+msgstr "Author shown"
+
+msgid "hub-author-type"
+msgstr "Your name and/or your nickname"
+
+msgid "hub-rights"
+msgstr "Note on the images read"
+
+msgid "hub-to-choose"
+msgstr "To choose"
+
+msgid "hub-generate"
+msgstr "Make the captures"
+
+msgid "hub-choose"
+msgstr "Choose the captures"
+
+msgid "hub-capture"
+msgstr "Take captures"
+
+msgid "hub-send"
+msgstr "Send to RaspyHub"
+
+msgid "hub-no-capture"
+msgstr "No capture: choose \"Make the captures\""
+
+msgid "hub-captures-count"
+msgstr "Captures chosen: {chosen} / {most}"
+
+msgid "hub-rights-mention"
+msgstr "If the images of this theme are not royalty-free or do not belong to you, you alone are responsible for them: RaspyDarts declines all responsibility."
+
+msgid "hub-generating"
+msgstr "Captures of the screens of the theme…"
+
+msgid "hub-generate-partial"
+msgstr "Some pages could not be captured (see the log)"
+
+msgid "hub-capture-question"
+msgstr "Take captures?"
+
+msgid "hub-capture-explain"
+msgstr "Go wherever you want (menus, games). F1 or Print Screen: capture. Escape or hold Validate: finish."
+
+msgid "hub-capture-help"
+msgstr "Capture: F1 or Print Screen — Finish: Escape or hold Validate"
+
+msgid "hub-capture-failed"
+msgstr "The capture could not be saved"
+
+msgid "hub-missing"
+msgstr "Before sending:"
+
+msgid "hub-missing-name"
+msgstr "give the theme a name"
+
+msgid "hub-missing-player"
+msgstr "choose the player"
+
+msgid "hub-missing-author"
+msgstr "enter the author"
+
+msgid "hub-missing-captures"
+msgstr "make the captures"
+
+msgid "hub-missing-rights"
+msgstr "read the note on the images"
+
+msgid "hub-no-internet"
+msgstr "No Internet connection"
+
+msgid "hub-media-explain"
+msgstr "RaspyHub accepts a theme of {limit} MB at most: without videos and sounds, it is much lighter."
+
+msgid "hub-zipping"
+msgstr "Preparing the theme"
+
+msgid "hub-zip-failed"
+msgstr "The theme could not be prepared (see the log)"
+
+msgid "hub-too-big"
+msgstr "The theme is {size} MB: RaspyHub accepts {limit} at most (try without videos and sounds)"
+
+msgid "hub-send-soon"
+msgstr "The theme is ready: sending to RaspyHub is coming soon"
+
+msgid "hub-no-player"
+msgstr "No player on the machine"
+
+msgid "hub-capture-asked"
+msgstr "Asked"
+
+msgid "hub-capture-chosen"
+msgstr "Sent"
+
+msgid "hub-capture-not-chosen"
+msgstr "Not sent"
+
+msgid "hub-choose-help"
+msgstr "Validate: send or not — Delete or Minus: erase a capture taken"
+
+msgid "hub-capture-asked-why"
+msgstr "This capture is asked by RaspyHub: it is always sent"
+
+msgid "hub-choose-full"
+msgstr "{most} captures chosen at most"
+
+msgid "hub-delete-only-free"
+msgstr "Only the captures taken can be erased"
+
+msgid "hub-delete-question"
+msgstr "Erase this capture?"

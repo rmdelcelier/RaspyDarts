@@ -6263,3 +6263,142 @@ msgstr "Darts uitgetrokken"
 msgid "autodarts-test-help"
 msgstr "Gooi darts en trek ze uit: ze verschijnen hier"
 
+######## RASPYHUB : THEMES ######
+
+msgid "theme-export-to-folder"
+msgstr "Naar een map of een USB-stick"
+
+msgid "theme-export-to-raspyhub"
+msgstr "Naar RaspyHub"
+
+msgid "hub-export"
+msgstr "Thema naar RaspyHub exporteren"
+
+msgid "hub-settings"
+msgstr "Instellingen"
+
+msgid "hub-commands"
+msgstr "Opdrachten"
+
+msgid "hub-theme-name"
+msgstr "Naam van het thema"
+
+msgid "hub-theme-name-type"
+msgstr "Naam van het thema op RaspyHub"
+
+msgid "hub-player"
+msgstr "Speler (krijgt de prestatie)"
+
+msgid "hub-author"
+msgstr "Getoonde auteur"
+
+msgid "hub-author-type"
+msgstr "Uw naam en/of uw bijnaam"
+
+msgid "hub-rights"
+msgstr "Opmerking over de afbeeldingen gelezen"
+
+msgid "hub-to-choose"
+msgstr "Te kiezen"
+
+msgid "hub-generate"
+msgstr "Schermafbeeldingen maken"
+
+msgid "hub-choose"
+msgstr "Schermafbeeldingen kiezen"
+
+msgid "hub-capture"
+msgstr "Zelf schermafbeeldingen maken"
+
+msgid "hub-send"
+msgstr "Naar RaspyHub sturen"
+
+msgid "hub-no-capture"
+msgstr "Geen schermafbeelding: kies „Schermafbeeldingen maken”"
+
+msgid "hub-captures-count"
+msgstr "Gekozen schermafbeeldingen: {chosen} / {most}"
+
+msgid "hub-rights-mention"
+msgstr "Als de afbeeldingen van dit thema niet rechtenvrij zijn of niet van u zijn, bent u daar alleen verantwoordelijk voor: RaspyDarts wijst elke verantwoordelijkheid af."
+
+msgid "hub-generating"
+msgstr "Schermafbeeldingen van het thema…"
+
+msgid "hub-generate-partial"
+msgstr "Sommige pagina's konden niet worden vastgelegd (zie het logboek)"
+
+msgid "hub-capture-question"
+msgstr "Schermafbeeldingen maken?"
+
+msgid "hub-capture-explain"
+msgstr "Ga waar u wilt (menu's, spellen). F1 of Print Screen: vastleggen. Escape of Bevestigen ingedrukt houden: stoppen."
+
+msgid "hub-capture-help"
+msgstr "Vastleggen: F1 of Print Screen — Stoppen: Escape of Bevestigen ingedrukt houden"
+
+msgid "hub-capture-failed"
+msgstr "De schermafbeelding kon niet worden opgeslagen"
+
+msgid "hub-missing"
+msgstr "Voor het versturen:"
+
+msgid "hub-missing-name"
+msgstr "geef het thema een naam"
+
+msgid "hub-missing-player"
+msgstr "kies de speler"
+
+msgid "hub-missing-author"
+msgstr "vul de auteur in"
+
+msgid "hub-missing-captures"
+msgstr "maak de schermafbeeldingen"
+
+msgid "hub-missing-rights"
+msgstr "lees de opmerking over de afbeeldingen"
+
+msgid "hub-no-internet"
+msgstr "Geen internetverbinding"
+
+msgid "hub-media-explain"
+msgstr "RaspyHub aanvaardt een thema van maximaal {limit} MB: zonder video's en geluiden is het veel lichter."
+
+msgid "hub-zipping"
+msgstr "Thema wordt voorbereid"
+
+msgid "hub-zip-failed"
+msgstr "Het thema kon niet worden voorbereid (zie het logboek)"
+
+msgid "hub-too-big"
+msgstr "Het thema is {size} MB: RaspyHub aanvaardt maximaal {limit} (probeer zonder video's en geluiden)"
+
+msgid "hub-send-soon"
+msgstr "Het thema is klaar: versturen naar RaspyHub komt binnenkort"
+
+msgid "hub-no-player"
+msgstr "Geen speler op de kast"
+
+msgid "hub-capture-asked"
+msgstr "Gevraagd"
+
+msgid "hub-capture-chosen"
+msgstr "Verstuurd"
+
+msgid "hub-capture-not-chosen"
+msgstr "Niet verstuurd"
+
+msgid "hub-choose-help"
+msgstr "Bevestigen: versturen of niet — Delete of Min: een gemaakte schermafbeelding wissen"
+
+msgid "hub-capture-asked-why"
+msgstr "RaspyHub vraagt deze schermafbeelding: ze wordt altijd verstuurd"
+
+msgid "hub-choose-full"
+msgstr "Maximaal {most} gekozen schermafbeeldingen"
+
+msgid "hub-delete-only-free"
+msgstr "Alleen zelf gemaakte schermafbeeldingen kunnen worden gewist"
+
+msgid "hub-delete-question"
+msgstr "Deze schermafbeelding wissen?"

@@ -37,6 +37,8 @@ REPEAT_EVERY = 0.15
 REPEATED = ('PIN_LEFT', 'PIN_RIGHT', 'PIN_UP', 'PIN_DOWN')
 # Held longer : a stuck button (wiring), banned until released
 STUCK = 10
+# Mode capture : Valider held this long (s) ends it
+HOLD_END = 2.0
 
 # Register of the MCP23017 used to recognise it : input polarity of the bank A (0 for the
 # game). Another chip on 0x20-0x27 (PCF8574 of a LCD, ...) does not give back what is written
@@ -191,6 +193,10 @@ class Gpio_extender:
         self.held_since = 0
         self.held_returned = 0
         self.released_at = {}
+        # Mode capture (include/ccapture.py) : Valider given when released, held HOLD_END its end
+        # (PIN_CAPTURE_END) ; held_fired : that end already given for this press
+        self.hold_validate = False
+        self.held_fired = False
         # TODO REMOVE RD
         #self._gpio_read_total = 0.0
         #self._gpio_read_count = 0
@@ -291,6 +297,7 @@ class Gpio_extender:
         now = time.monotonic()
         if pressed != self.held_button:
             # Released, or another button : a new press (unless a bounce of a release just before)
+            released = self.held_button
             if self.held_button is not None:
                 self.released_at[self.held_button] = now
             if self.banned_button is not None and pressed != self.banned_button:
@@ -298,13 +305,22 @@ class Gpio_extender:
                 self.banned_button = None
             self.held_button = pressed
             self.held_since = now
+            # Mode capture : Valider released before HOLD_END, a press as always (given now)
+            short_validate = (released == 'PIN_VALIDATE' and self.hold_validate and not self.held_fired)
+            self.held_fired = False
             if pressed is None or now - self.released_at.get(pressed, 0) < DEBOUNCE:
-                return None
+                return 'PIN_VALIDATE' if short_validate else None
+            if pressed == 'PIN_VALIDATE' and self.hold_validate:
+                # Held or not : known when released (or after HOLD_END)
+                return 'PIN_VALIDATE' if short_validate else None
             self.held_returned = now
             return pressed
 
         if pressed is None or pressed == self.banned_button:
             return None
+        if pressed == 'PIN_VALIDATE' and self.hold_validate and not self.held_fired and now - self.held_since >= HOLD_END:
+            self.held_fired = True
+            return 'PIN_CAPTURE_END'
         if now - self.held_since > STUCK:
             self.banned_button = pressed
             self.logs.warning(f"Button {self.banned_button} is banned ! (held more than {STUCK} s)")
