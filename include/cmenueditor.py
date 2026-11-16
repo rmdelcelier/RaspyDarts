@@ -41,7 +41,7 @@ MOVING = (255, 200, 0)
 # Smallest button, in parts of the screen
 SMALLEST = 0.02
 # Keys added by the game to the buttons it shows (not written in the file)
-RUNTIME_KEYS = ('logo_image', 'game_logo', 'unavailable')
+RUNTIME_KEYS = ('logo_image', 'game_logo', 'unavailable', 'place_free')
 # Keys of the automatic layouts : a button placed freely does not use them
 LAYOUT_KEYS = ('span', 'cell', 'zone', 'space_before', 'space_left')
 # A key held down : repeated after this delay, at this interval (ms)

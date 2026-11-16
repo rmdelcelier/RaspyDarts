@@ -6085,3 +6085,121 @@ msgstr "Bild (gedrückt)"
 msgid "intro-video-perso"
 msgstr "Die gewählte"
 
+
+msgid "autodarts"
+msgstr "Autodarts"
+
+msgid "autodarts-subtitle"
+msgstr "Seine Kameras erkennen die Darts"
+
+msgid "autodarts-settings"
+msgstr "Einstellungen"
+
+msgid "autodarts-commands"
+msgstr "Befehle"
+
+msgid "autodarts-enabled"
+msgstr "Darts von Autodarts lesen"
+
+msgid "autodarts-address"
+msgstr "Adresse von Autodarts"
+
+msgid "autodarts-address-local"
+msgstr "Dieser Automat"
+
+msgid "autodarts-address-other"
+msgstr "Ein anderes Gerät im Netzwerk…"
+
+msgid "autodarts-address-type"
+msgstr "IP-Adresse oder Name des Autodarts-Geräts"
+
+msgid "autodarts-address-bad"
+msgstr "Ungültige Adresse"
+
+msgid "autodarts-counting"
+msgstr "Zählung der Darts"
+
+msgid "autodarts-counting-live"
+msgstr "Bei jedem Dart"
+
+msgid "autodarts-counting-takeout"
+msgstr "Beim Herausziehen der Darts"
+
+msgid "autodarts-takeout-next"
+msgstr "Darts herausgezogen = nächster Spieler"
+
+msgid "autodarts-test"
+msgstr "Erkennung testen"
+
+msgid "autodarts-restart"
+msgstr "Autodarts starten / neu starten"
+
+msgid "autodarts-install"
+msgstr "Autodarts hier installieren"
+
+msgid "autodarts-page"
+msgstr "Seite von Autodarts (Konto, Kameras)"
+
+msgid "autodarts-account"
+msgstr "Autodarts-Konto erstellen"
+
+msgid "autodarts-state-ok"
+msgstr "Autodarts antwortet ({address})"
+
+msgid "autodarts-state-ko"
+msgstr "Autodarts antwortet nicht ({address})"
+
+msgid "autodarts-state-off"
+msgstr "Erkennung der Darts aus"
+
+msgid "autodarts-why-model"
+msgstr "Dieser Raspberry ist zu alt für Autodarts, das einen Raspberry Pi 4 oder 5 mit 64 Bit braucht. Sie können ein auf einem anderen Gerät installiertes Autodarts nutzen (Einstellung Adresse), auf einen Raspberry Pi 4 wechseln oder RaspyDarts auf einem Raspberry Pi 5 neu installieren mit dem Befehl: {command}"
+
+msgid "autodarts-why-bits"
+msgstr "Das System dieses Raspberry ist 32 Bit: Autodarts braucht ein 64-Bit-System. Sie können ein auf einem anderen Gerät installiertes Autodarts nutzen (Einstellung Adresse) oder RaspyDarts in 64 Bit neu installieren mit dem Befehl: {command}"
+
+msgid "autodarts-install-question"
+msgstr "Autodarts auf diesem Automaten installieren? (Internet nötig, einige Minuten)"
+
+msgid "autodarts-no-internet"
+msgstr "Kein Internetzugang"
+
+msgid "autodarts-installing"
+msgstr "Autodarts wird installiert"
+
+msgid "autodarts-install-continues"
+msgstr "Die Installation läuft im Hintergrund weiter"
+
+msgid "autodarts-install-error"
+msgstr "Die Installation von Autodarts ist fehlgeschlagen (Protokoll: logs/autodarts_install.log)"
+
+msgid "autodarts-install-done"
+msgstr "Autodarts ist installiert und gestartet: verbinden Sie Ihr Konto auf seiner Seite (QR-Code)"
+
+msgid "autodarts-starting"
+msgstr "Autodarts wird gestartet…"
+
+msgid "autodarts-started"
+msgstr "Autodarts ist gestartet"
+
+msgid "autodarts-start-failed"
+msgstr "Autodarts ist nicht gestartet"
+
+msgid "autodarts-page-help"
+msgstr "Scannen Sie diesen Code mit Ihrem Telefon: auf der Seite von Autodarts verbinden Sie Ihr Konto, stellen die Kameras ein und kalibrieren."
+
+msgid "autodarts-account-help"
+msgstr "Erstellen Sie Ihr Konto auf autodarts.io und verbinden Sie es dann auf der Autodarts-Seite des Automaten."
+
+msgid "autodarts-test-read"
+msgstr "Von Autodarts erkannt"
+
+msgid "autodarts-test-received"
+msgstr "Vom Spiel empfangen"
+
+msgid "autodarts-test-takeout"
+msgstr "Darts herausgezogen"
+
+msgid "autodarts-test-help"
+msgstr "Werfen Sie Darts und ziehen Sie sie heraus: sie werden hier angezeigt"
+

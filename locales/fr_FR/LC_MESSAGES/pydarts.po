@@ -6161,3 +6161,121 @@ msgstr "Image (enfoncé)"
 msgid "intro-video-perso"
 msgstr "Celle choisie"
 
+
+msgid "autodarts"
+msgstr "Autodarts"
+
+msgid "autodarts-subtitle"
+msgstr "Ses caméras lisent les fléchettes"
+
+msgid "autodarts-settings"
+msgstr "Réglages"
+
+msgid "autodarts-commands"
+msgstr "Commandes"
+
+msgid "autodarts-enabled"
+msgstr "Lire les fléchettes d'Autodarts"
+
+msgid "autodarts-address"
+msgstr "Adresse d'Autodarts"
+
+msgid "autodarts-address-local"
+msgstr "Cette borne"
+
+msgid "autodarts-address-other"
+msgstr "Une autre machine du réseau…"
+
+msgid "autodarts-address-type"
+msgstr "Adresse IP ou nom de la machine d'Autodarts"
+
+msgid "autodarts-address-bad"
+msgstr "Adresse non valable"
+
+msgid "autodarts-counting"
+msgstr "Comptage des fléchettes"
+
+msgid "autodarts-counting-live"
+msgstr "À chaque fléchette"
+
+msgid "autodarts-counting-takeout"
+msgstr "Au retrait des fléchettes"
+
+msgid "autodarts-takeout-next"
+msgstr "Fléchettes retirées = joueur suivant"
+
+msgid "autodarts-test"
+msgstr "Essayer la lecture"
+
+msgid "autodarts-restart"
+msgstr "Démarrer / redémarrer Autodarts"
+
+msgid "autodarts-install"
+msgstr "Installer Autodarts ici"
+
+msgid "autodarts-page"
+msgstr "Page d'Autodarts (compte, caméras)"
+
+msgid "autodarts-account"
+msgstr "Créer un compte Autodarts"
+
+msgid "autodarts-state-ok"
+msgstr "Autodarts répond ({address})"
+
+msgid "autodarts-state-ko"
+msgstr "Autodarts ne répond pas ({address})"
+
+msgid "autodarts-state-off"
+msgstr "Lecture des fléchettes désactivée"
+
+msgid "autodarts-why-model"
+msgstr "Ce Raspberry est trop ancien pour Autodarts, qui demande un Raspberry Pi 4 ou 5 en 64 bits. Vous pouvez utiliser un Autodarts installé sur une autre machine (réglage Adresse), migrer sur un Raspberry Pi 4, ou réinstaller RaspyDarts sur un Raspberry Pi 5 avec la commande : {command}"
+
+msgid "autodarts-why-bits"
+msgstr "Le système de ce Raspberry est en 32 bits : Autodarts demande un système 64 bits. Vous pouvez utiliser un Autodarts installé sur une autre machine (réglage Adresse), ou réinstaller RaspyDarts en 64 bits avec la commande : {command}"
+
+msgid "autodarts-install-question"
+msgstr "Installer Autodarts sur cette borne ? (Internet nécessaire, quelques minutes)"
+
+msgid "autodarts-no-internet"
+msgstr "Pas d'accès à Internet"
+
+msgid "autodarts-installing"
+msgstr "Installation d'Autodarts en cours"
+
+msgid "autodarts-install-continues"
+msgstr "L'installation continue en arrière-plan"
+
+msgid "autodarts-install-error"
+msgstr "L'installation d'Autodarts a échoué (journal : logs/autodarts_install.log)"
+
+msgid "autodarts-install-done"
+msgstr "Autodarts est installé et démarré : connectez votre compte sur sa page (QR code)"
+
+msgid "autodarts-starting"
+msgstr "Démarrage d'Autodarts…"
+
+msgid "autodarts-started"
+msgstr "Autodarts est démarré"
+
+msgid "autodarts-start-failed"
+msgstr "Autodarts n'a pas démarré"
+
+msgid "autodarts-page-help"
+msgstr "Scannez ce code avec votre téléphone : sur la page d'Autodarts, connectez votre compte, réglez les caméras et faites la calibration."
+
+msgid "autodarts-account-help"
+msgstr "Créez votre compte sur autodarts.io, puis connectez-le sur la page d'Autodarts de la borne."
+
+msgid "autodarts-test-read"
+msgstr "Lu par Autodarts"
+
+msgid "autodarts-test-received"
+msgstr "Reçu par le jeu"
+
+msgid "autodarts-test-takeout"
+msgstr "Fléchettes retirées"
+
+msgid "autodarts-test-help"
+msgstr "Lancez des fléchettes puis retirez-les : elles s'affichent ici"
+

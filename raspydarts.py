@@ -1096,6 +1096,13 @@ try:
                     display.raspy2dmd_menu(dispatcher)
                     menu = ''
 
+                elif menu == 'autodarts':
+                    # AUTODARTS : ITS CAMERAS READ THE DARTS (include/cautodartsmenu.py)
+                    dispatcher.publish('menu', limit=['TARGET', 'STRIP', 'OTHER'])
+                    from include import cautodartsmenu
+                    cautodartsmenu.autodarts_menu(display)
+                    menu = ''
+
                 elif menu == 'servers':
                     # SERVERS MENU
                     dispatcher.publish('menu', limit=['TARGET', 'STRIP', 'OTHER'])
@@ -1680,6 +1687,10 @@ try:
             # The display of the score on Raspy2DMD for this game (its style, its background)
             if game.display_dmd():
                 dmd.game_start(Game.replace(' ', '_'))
+            # Autodarts : the darts of a turn of this game ; what it read before forgotten
+            rpi.darts_per_turn = game.nb_darts
+            rpi.autodarts_waiting = False
+            rpi.autodarts.drop()
 
             if stats_screen != 'startagain':
                 for ident in range(0, players_count):
@@ -2462,6 +2473,8 @@ try:
                         rpi.button_led_wait_start('LIGHT_NEXTPLAYER')
 
                         # Game context, wait for PLAYERBUTTON only...
+                        # (Autodarts : the darts taken out of the target are Joueur suivant)
+                        rpi.autodarts_waiting = True
                         while dart_stroke not in ('PLAYERBUTTON', 'BTN_NEXTPLAYER', 'BTN_VALIDATE') and net_status is None:
                             logs.debug("Waiting for player to push PLAYERBUTTON...")
                             if players[actual_player].computer:
@@ -2496,6 +2509,7 @@ try:
                                 ClickZones = game.refresh_game_screen(players, actual_round, game.max_round, 0, game.nb_darts,
                                                 game.logo, game.headers, actual_player, OnScreenButtons=config_globals['onscreenbuttons'],
                                                 Set=Set, MaxSet=nb_sets)
+                        rpi.autodarts_waiting = False
 
                         if net_status is not None:
                             if net_client.play(actual_round, actual_player, player_launch, 'FINALPLAYERBUTTON') == 'TIMEOUT':

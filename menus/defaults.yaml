@@ -137,6 +137,13 @@ menus:
         action: raspy2dmd
         text: raspy2dmd
         shortcut: F10
+      # Autodarts : its cameras read the darts (its screen offers to install it). place_free : on
+      # a page placed by hand, it takes a free place by itself
+      - id: autodarts
+        action: autodarts
+        text: autodarts
+        shortcut: F12
+        place_free: true
       # Editor of the screens of menus on the borne (include/cmenueditor.py)
       - id: edit-screens
         action: edit_screens

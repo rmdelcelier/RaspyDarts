@@ -54,6 +54,8 @@ ACTIONS = {
     'backups': 'backups',
     'exhibition': 'exhibition',
     'raspy2dmd': 'raspy2dmd',
+    # Autodarts : its cameras read the darts (include/cautodartsmenu.py)
+    'autodarts': 'autodarts',
     'edit_screens': 'edit-screens',
     'usb_pads': 'usb-pads',
     'button_leds': 'button-leds',
@@ -149,6 +151,64 @@ def migrate_settings_page(logs, themes_dir):
             logs.info(f"Menus : Paramétrage of the theme {theme} moved to 4 columns with LED des boutons ({path})")
         except Exception as error:    # pylint: disable=broad-except
             logs.warning(f"Menus : Paramétrage of the theme {theme} not moved to 4 columns ({error})")
+
+
+def free_place(shown, gap, beside=None):
+    '''
+    A free place for a new button among buttons placed by hand (parts of the screen) : of the
+    size of the one before it (else of the last one), beside it (right, below, left, above),
+    else beside another one ; inside the screen, between the title and the buttons at the
+    bottom, over none. None : no room
+    '''
+    def box(button):
+        place = button.get('place') if isinstance(button, dict) else None
+        try:
+            return tuple(float(place[key]) for key in ('x', 'y', 'width', 'height'))
+        except (TypeError, KeyError, ValueError):
+            return None
+    boxes = [box(button) for button in shown]
+    if not boxes or any(item is None for item in boxes):
+        return None
+    model = box(beside) if beside is not None else boxes[-1]
+    width, height = model[2], model[3]
+    gap = gap if isinstance(gap, dict) else {}
+    try:
+        gap_x, gap_y = float(gap.get('x', 0.005)), float(gap.get('y', 0.005))
+    except (TypeError, ValueError):
+        gap_x, gap_y = 0.005, 0.005
+    top, bottom, side = 0.12, 0.88, 0.01
+
+    def free(x, y):
+        if x < side or y < top or x + width > 1 - side or y + height > bottom:
+            return False
+        return all(x + width <= other[0] + 1e-4 or other[0] + other[2] <= x + 1e-4 or
+                   y + height <= other[1] + 1e-4 or other[1] + other[3] <= y + 1e-4 for other in boxes)
+    anchors = ([model] if beside is not None else []) + sorted(boxes, key=lambda item: (item[1], item[0]))
+    for anchor in anchors:
+        for x, y in ((anchor[0] + anchor[2] + gap_x, anchor[1]), (anchor[0], anchor[1] + anchor[3] + gap_y),
+                     (anchor[0] - width - gap_x, anchor[1]), (anchor[0], anchor[1] - height - gap_y)):
+            if free(x, y):
+                return {'x': round(x, 4), 'y': round(y, 4), 'width': round(width, 4), 'height': round(height, 4)}
+    # A grid whose last row is not full (a button alone, centred) : its buttons on the columns
+    # of the rows above, the new one in the column left (the places of the others shown
+    # changed, not their file)
+    same = [button for button, item in zip(shown, boxes) if abs(item[2] - width) < 1e-3 and abs(item[3] - height) < 1e-3]
+    if same:
+        last_y = max(box(button)[1] for button in same)
+        row = sorted((button for button in same if abs(box(button)[1] - last_y) < 1e-3), key=lambda button: box(button)[0])
+        # The columns : those of the rows above
+        columns = sorted({round(box(button)[0], 4) for button in same if button not in row})
+        if 2 <= len(columns) and len(row) < len(columns):
+            others = [box(button) for button in shown if button not in row]
+            places = [(x, last_y) for x in columns]
+            if all(all(x + width <= other[0] + 1e-4 or other[0] + other[2] <= x + 1e-4 or
+                       y + height <= other[1] + 1e-4 or other[1] + other[3] <= y + 1e-4 for other in others)
+                   for x, y in places):
+                for button, (x, y) in zip(row, places):
+                    button['place'] = dict(button['place'], x=x, y=y)
+                x, y = places[len(row)]
+                return {'x': x, 'y': round(y, 4), 'width': round(width, 4), 'height': round(height, 4)}
+    return None
 
 
 def merge(base, top):
@@ -263,15 +323,31 @@ class Menus:
             extra = [dict(button) for button in before if isinstance(button, dict) and
                      self.button_id(button) not in named and self.button_id(button) not in removed
                      and not named & set(REPLACES.get(self.button_id(button), ()))]
-            # Every button placed by hand (place : the editor of the screens) : no room made for a
-            # new one (it was drawn over another one, in the first cell of the grid). Offered by
-            # « Ajouter un bouton » of the editor instead
+            # Every button placed by hand (place : the editor of the screens) : a new one which asks
+            # it (place_free in the files of the game) takes a free place of its size beside the
+            # others (beside the one before it first) ; the others, or none free : left to
+            # « Ajouter un bouton » of the editor (in the first cell of the grid, it was drawn over
+            # another one)
             shown = [button for button in menu['buttons'] if isinstance(button, dict)
                      and not button.get('footer') and button.get('visible', True) is not False]
             if extra and shown and all(isinstance(button.get('place'), dict) for button in shown):
-                self.logs.info(f"Menus : {name} placed by hand, new buttons left to the editor : "
-                               f"{', '.join(self.button_id(button) for button in extra)}")
-                extra = []
+                order = [self.button_id(other) if isinstance(other, dict) else None for other in before]
+                kept = []
+                for button in extra:
+                    if not button.pop('place_free', False):
+                        self.logs.info(f"Menus : {name} placed by hand, new button left to the editor : {self.button_id(button)}")
+                        continue
+                    previous = order[:order.index(self.button_id(button))]
+                    place = free_place(shown, menu.get('gap'), next(
+                        (other for other_id in reversed(previous) for other in shown if self.button_id(other) == other_id), None))
+                    if place is None:
+                        self.logs.info(f"Menus : {name} placed by hand, no free place : {self.button_id(button)} left to the editor")
+                        continue
+                    button['place'] = place
+                    shown.append(button)
+                    kept.append(button)
+                    self.logs.info(f"Menus : {name} placed by hand, {self.button_id(button)} put in a free place {place}")
+                extra = kept
             for button in extra:
                 ids = [self.button_id(other) if isinstance(other, dict) else None for other in menu['buttons']]
                 # Its shortcut already taken by a button of the file (the files moved them) : none

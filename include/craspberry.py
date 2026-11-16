@@ -10,6 +10,7 @@ import pygame
 
 from include import cvideos
 from include import cbuttonleds
+from include import cautodarts
 from include import cpaths
 # For GPIO Extender
 from RPi import GPIO as gpio
@@ -243,6 +244,15 @@ class Craspberry():
         self.gpio = cgpio_extender.Gpio_extender(self.logs, self.buttons, use_i2c=not ci2c.pins_reserved(config))
         # Pads of keys and knobs plugged in USB (Paramètres > Pavés USB)
         self.usb_pads = cusbpads.shared(self.logs)
+        # Autodarts (its cameras read the darts, Paramètres > Autodarts) : its darts read as those
+        # of the target. autodarts_waiting : the game waits for Joueur suivant (set by the main
+        # loop) ; darts_per_turn : the darts of a turn of the game played
+        self.autodarts = cautodarts.shared(self.logs)
+        self.autodarts_waiting = False
+        self.darts_per_turn = 3
+        if self.autodarts.settings.get('enabled') and self.autodarts.thread is None:
+            interior = config.get_value('SectionAdvanced', 'interior', False)
+            self.autodarts.configure(interior=interior is True or str(interior) == 'True')
         # Coin acceptor (Paramétrage > Monnayeur) ; on_coins : its strip of credits drawn again
         self.coins = ccoins.shared(self.logs, self.gpio)
         self.on_coins = None
@@ -909,6 +919,18 @@ class Craspberry():
                 self.reset_timers()
                 wake_up(video_process, sound_process)
                 return inputs
+
+            # Darts read by Autodarts : in a game (and the test of the target), as the darts of
+            # the target. Out of a game they wait (a game which starts forgets them)
+            if context in ('game', 'test') and self.autodarts.active and miss == 0:
+                inputs = self.autodarts.take(self.autodarts_waiting, self.darts_per_turn)
+                if inputs:
+                    self.logs.debug(f"Input debug (Autodarts) : {inputs}")
+                    if timeout > 0:
+                        pygame.time.set_timer(USEREVENT, 0)
+                    self.reset_timers()
+                    wake_up(video_process, sound_process)
+                    return inputs
 
             # Read target
             if not self.target_enabled:

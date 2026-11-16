@@ -6139,3 +6139,121 @@ msgstr "Afbeelding (ingedrukt)"
 msgid "intro-video-perso"
 msgstr "De gekozen video"
 
+
+msgid "autodarts"
+msgstr "Autodarts"
+
+msgid "autodarts-subtitle"
+msgstr "Zijn camera's lezen de darts"
+
+msgid "autodarts-settings"
+msgstr "Instellingen"
+
+msgid "autodarts-commands"
+msgstr "Opdrachten"
+
+msgid "autodarts-enabled"
+msgstr "Darts van Autodarts lezen"
+
+msgid "autodarts-address"
+msgstr "Adres van Autodarts"
+
+msgid "autodarts-address-local"
+msgstr "Deze kast"
+
+msgid "autodarts-address-other"
+msgstr "Een ander apparaat in het netwerk…"
+
+msgid "autodarts-address-type"
+msgstr "IP-adres of naam van het Autodarts-apparaat"
+
+msgid "autodarts-address-bad"
+msgstr "Ongeldig adres"
+
+msgid "autodarts-counting"
+msgstr "Telling van de darts"
+
+msgid "autodarts-counting-live"
+msgstr "Bij elke dart"
+
+msgid "autodarts-counting-takeout"
+msgstr "Bij het uittrekken van de darts"
+
+msgid "autodarts-takeout-next"
+msgstr "Darts uitgetrokken = volgende speler"
+
+msgid "autodarts-test"
+msgstr "Lezen testen"
+
+msgid "autodarts-restart"
+msgstr "Autodarts starten / herstarten"
+
+msgid "autodarts-install"
+msgstr "Autodarts hier installeren"
+
+msgid "autodarts-page"
+msgstr "Pagina van Autodarts (account, camera's)"
+
+msgid "autodarts-account"
+msgstr "Een Autodarts-account maken"
+
+msgid "autodarts-state-ok"
+msgstr "Autodarts antwoordt ({address})"
+
+msgid "autodarts-state-ko"
+msgstr "Autodarts antwoordt niet ({address})"
+
+msgid "autodarts-state-off"
+msgstr "Lezen van de darts uit"
+
+msgid "autodarts-why-model"
+msgstr "Deze Raspberry is te oud voor Autodarts, dat een Raspberry Pi 4 of 5 met 64 bits vraagt. U kunt een Autodarts gebruiken dat op een ander apparaat staat (instelling Adres), overstappen op een Raspberry Pi 4, of RaspyDarts opnieuw installeren op een Raspberry Pi 5 met de opdracht: {command}"
+
+msgid "autodarts-why-bits"
+msgstr "Het systeem van deze Raspberry is 32 bits: Autodarts vraagt een 64-bitsysteem. U kunt een Autodarts gebruiken dat op een ander apparaat staat (instelling Adres), of RaspyDarts opnieuw installeren in 64 bits met de opdracht: {command}"
+
+msgid "autodarts-install-question"
+msgstr "Autodarts op deze kast installeren? (Internet nodig, enkele minuten)"
+
+msgid "autodarts-no-internet"
+msgstr "Geen toegang tot internet"
+
+msgid "autodarts-installing"
+msgstr "Autodarts wordt geïnstalleerd"
+
+msgid "autodarts-install-continues"
+msgstr "De installatie gaat op de achtergrond verder"
+
+msgid "autodarts-install-error"
+msgstr "De installatie van Autodarts is mislukt (logboek: logs/autodarts_install.log)"
+
+msgid "autodarts-install-done"
+msgstr "Autodarts is geïnstalleerd en gestart: koppel uw account op zijn pagina (QR-code)"
+
+msgid "autodarts-starting"
+msgstr "Autodarts wordt gestart…"
+
+msgid "autodarts-started"
+msgstr "Autodarts is gestart"
+
+msgid "autodarts-start-failed"
+msgstr "Autodarts is niet gestart"
+
+msgid "autodarts-page-help"
+msgstr "Scan deze code met uw telefoon: op de pagina van Autodarts koppelt u uw account, stelt u de camera's in en doet u de kalibratie."
+
+msgid "autodarts-account-help"
+msgstr "Maak uw account op autodarts.io en koppel het daarna op de Autodarts-pagina van de kast."
+
+msgid "autodarts-test-read"
+msgstr "Gelezen door Autodarts"
+
+msgid "autodarts-test-received"
+msgstr "Ontvangen door het spel"
+
+msgid "autodarts-test-takeout"
+msgstr "Darts uitgetrokken"
+
+msgid "autodarts-test-help"
+msgstr "Gooi darts en trek ze uit: ze verschijnen hier"
+
