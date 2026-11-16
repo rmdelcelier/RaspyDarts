@@ -6107,6 +6107,12 @@ msgstr "Adresse von Autodarts"
 msgid "autodarts-address-local"
 msgstr "Dieser Automat"
 
+msgid "autodarts-address-none"
+msgstr "Festzulegen"
+
+msgid "autodarts-state-no-address"
+msgstr "Adresse von Autodarts festlegen: die eines anderen Geräts im Netzwerk"
+
 msgid "autodarts-address-other"
 msgstr "Ein anderes Gerät im Netzwerk…"
 

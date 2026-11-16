@@ -6112,6 +6112,12 @@ msgstr "Dirección de Autodarts"
 msgid "autodarts-address-local"
 msgstr "Esta máquina"
 
+msgid "autodarts-address-none"
+msgstr "Por definir"
+
+msgid "autodarts-state-no-address"
+msgstr "Dirección de Autodarts por definir: la de otra máquina de la red"
+
 msgid "autodarts-address-other"
 msgstr "Otra máquina de la red…"
 

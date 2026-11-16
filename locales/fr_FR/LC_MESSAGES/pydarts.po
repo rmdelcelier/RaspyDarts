@@ -6183,6 +6183,12 @@ msgstr "Adresse d'Autodarts"
 msgid "autodarts-address-local"
 msgstr "Cette borne"
 
+msgid "autodarts-address-none"
+msgstr "À définir"
+
+msgid "autodarts-state-no-address"
+msgstr "Adresse d'Autodarts à définir : celle d'une autre machine du réseau"
+
 msgid "autodarts-address-other"
 msgstr "Une autre machine du réseau…"
 

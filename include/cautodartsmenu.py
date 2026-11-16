@@ -61,14 +61,19 @@ def why_not(screen, reason):
     return text.replace('{command}', cautodarts.RASPYDARTS_INSTALL)
 
 
-def choose_address(screen, settings):
+def choose_address(screen, settings, local_ok=True):
     '''
-    Its address : this Raspberry, or another machine of the network (its IP or its name)
+    Its address : this Raspberry, or another machine of the network (its IP or its name).
+    Not this Raspberry when Autodarts cannot run here (not installed and not installable) :
+    its address typed at once
     '''
-    choices = [['local', translate(screen, 'autodarts-address-local')],
-               ['other', translate(screen, 'autodarts-address-other')]]
-    picked = screen.dropdown(screen.res['x'] * 6 / 16, 3 * screen.res_y_16, choices,
-                             navigate='local' if cautodarts.is_local(settings) else 'other', width=5 * screen.res_x_16)
+    if local_ok:
+        choices = [['local', translate(screen, 'autodarts-address-local')],
+                   ['other', translate(screen, 'autodarts-address-other')]]
+        picked = screen.dropdown(screen.res['x'] * 6 / 16, 3 * screen.res_y_16, choices,
+                                 navigate='local' if cautodarts.is_local(settings) else 'other', width=5 * screen.res_x_16)
+    else:
+        picked = 'other'
     if picked == 'local':
         settings['host'] = '127.0.0.1'
         return True
@@ -281,20 +286,30 @@ def autodarts_menu(screen):
     while True:
         local = cautodarts.is_local(settings)
         here = cautodarts.installed()
+        # Autodarts on this Raspberry : installed, or it can be (a Pi 4 or 5, 64 bits)
+        local_ok = here or not reason
+        # Its address : none while it is this Raspberry and Autodarts cannot run here
+        address_set = local_ok or not local
         yes_no = lambda value: translate(screen, 'yes' if value else 'no')    # pylint: disable=unnecessary-lambda-assignment
         entries = [('setting', 'enabled', 'autodarts-enabled', yes_no(settings.get('enabled'))),
                    ('setting', 'address', 'autodarts-address',
-                    translate(screen, 'autodarts-address-local') if local else str(settings.get('host'))),
+                    str(settings.get('host')) if not local
+                    else translate(screen, 'autodarts-address-local' if local_ok else 'autodarts-address-none')),
                    ('setting', 'counting', 'autodarts-counting', translate(screen, f"autodarts-counting-{settings.get('counting')}")),
                    ('setting', 'takeout', 'autodarts-takeout-next', yes_no(settings.get('takeout_next', True))),
-                   ('command', 'try', 'autodarts-test', None)]
+                   ('command', 'try', 'autodarts-test', None if address_set else 'greyed')]
         if here:
             entries.append(('command', 'restart', 'autodarts-restart', None))
         else:
             entries.append(('command', 'install', 'autodarts-install', 'greyed' if reason else None))
-        entries += [('command', 'page', 'autodarts-page', None), ('command', 'account', 'autodarts-account', None),
+        entries += [('command', 'page', 'autodarts-page', None if address_set else 'greyed'),
+                    ('command', 'account', 'autodarts-account', None),
                     ('back', 'back', 'back', None)]
+        # A greyed command cannot be chosen : never selected, its click ignored
+        usable = [index for index, entry in enumerate(entries) if entry[3] != 'greyed']
         selected = max(0, min(selected, len(entries) - 1))
+        if selected not in usable:
+            selected = min(usable, key=lambda index: abs(index - selected))
 
         screen.display_background()
         screen.menu_header(translate(screen, 'autodarts'), translate(screen, 'autodarts-subtitle'))
@@ -302,12 +317,16 @@ def autodarts_menu(screen):
         side = int(min(4 * unit_x, screen.res['y'] * 0.3))
         left = pygame.Rect(int(0.5 * unit_x), int(3.0 * unit_y), int(4.2 * unit_x), int(11 * unit_y))
         line = int(unit_y * 0.7)
-        url = page_url(settings)
-        screen.blit(qr_code(url, side), (left.centerx - side // 2, left.y))
-        text_y = left.y + side + screen.margin
-        screen.blit_text(url, left.x, text_y, left.width, line, screen.colorset['menu-text-white'])
-        text_y += line
-        if settings.get('enabled'):
+        text_y = left.y
+        if address_set:
+            url = page_url(settings)
+            screen.blit(qr_code(url, side), (left.centerx - side // 2, left.y))
+            text_y = left.y + side + screen.margin
+            screen.blit_text(url, left.x, text_y, left.width, line, screen.colorset['menu-text-white'])
+            text_y += line
+        if not address_set:
+            state, color = translate(screen, 'autodarts-state-no-address'), screen.colorset['menu-ko']
+        elif settings.get('enabled'):
             ok = reader.connected
             state = translate(screen, 'autodarts-state-ok' if ok else 'autodarts-state-ko').replace('{address}', reader.url())
             color = screen.colorset['menu-ok' if ok else 'menu-ko']
@@ -315,7 +334,7 @@ def autodarts_menu(screen):
             state, color = translate(screen, 'autodarts-state-off'), screen.colorset['menu-text-white']
         cmenueditor.paragraph(screen, state, pygame.Rect(left.x, text_y + int(unit_y * 0.2), left.width, int(1.6 * unit_y)), color)
         text_y += int(1.9 * unit_y)
-        if local and reason and not here:
+        if not local_ok:
             warning = screen.colorset.get('menu-warning', screen.colorset['menu-ko'])
             cmenueditor.paragraph(screen, why_not(screen, reason), pygame.Rect(left.x, text_y, left.width, int(14 * unit_y) - text_y),
                                   warning)
@@ -338,7 +357,8 @@ def autodarts_menu(screen):
                 cmenueditor.value_item(screen, rect, translate(screen, text), value, index == selected)
             else:
                 button(screen, rect, translate(screen, text), index == selected, greyed=value == 'greyed')
-            zones[index] = tuple(rect)
+            if value != 'greyed':
+                zones[index] = tuple(rect)
         screen.update_screen()
 
         key = screen.rpi.listen_inputs(['arrows', 'fx'], ['escape', 'enter', 'space', 'PLAYERBUTTON', 'BACKUPBUTTON',
@@ -350,13 +370,13 @@ def autodarts_menu(screen):
         if clicked is not False and clicked is not None:
             selected, key = clicked, 'enter'
         kind = entries[selected][0]
-        same = [index for index, entry in enumerate(entries) if entry[0] == kind]
+        same = [index for index in usable if entries[index][0] == kind]
         if key in ESCAPE_KEYS or key == 'escape':
             return
         if key in ('BTN_RIGHT',):
-            selected = (selected + 1) % len(entries)
+            selected = usable[(usable.index(selected) + 1) % len(usable)]
         elif key in ('BTN_LEFT',):
-            selected = (selected - 1) % len(entries)
+            selected = usable[(usable.index(selected) - 1) % len(usable)]
         elif key in DOWN_KEYS:
             position = same.index(selected)
             selected = same[position + 1] if position + 1 < len(same) else len(entries) - 1
@@ -368,17 +388,19 @@ def autodarts_menu(screen):
                 selected = same[position - 1] if position > 0 else selected
         elif key in ('left', 'right', 'S11', 'S6'):
             if kind in ('setting', 'command'):
-                other = [index for index, entry in enumerate(entries) if entry[0] == ('command' if kind == 'setting' else 'setting')]
+                other = [index for index in usable if entries[index][0] == ('command' if kind == 'setting' else 'setting')]
                 selected = other[min(same.index(selected), len(other) - 1)]
         elif key in ENTER_KEYS + ['space']:
             ident, value = entries[selected][1], entries[selected][3]
+            if value == 'greyed':
+                continue
             if kind == 'back':
                 return
             if ident == 'enabled':
                 settings['enabled'] = not settings.get('enabled')
                 changed()
             elif ident == 'address':
-                if choose_address(screen, settings):
+                if choose_address(screen, settings, local_ok):
                     changed()
             elif ident == 'counting':
                 if choose_counting(screen, settings):
@@ -394,11 +416,8 @@ def autodarts_menu(screen):
                 screen.message([translate(screen, 'autodarts-started' if running else 'autodarts-start-failed')], 3000,
                                screen.colorset['menu-ok' if running else 'menu-ko'], 'middle', 'big')
             elif ident == 'install':
-                if value == 'greyed':
-                    show_qr(screen, translate(screen, 'autodarts-install'), cautodarts.ACCOUNT_URL, why_not(screen, reason))
-                else:
-                    install(screen, reader)
-                    settings = cautodarts.load()
+                install(screen, reader)
+                settings = cautodarts.load()
             elif ident == 'page':
                 show_qr(screen, translate(screen, 'autodarts-page'), page_url(settings), translate(screen, 'autodarts-page-help'))
             elif ident == 'account':

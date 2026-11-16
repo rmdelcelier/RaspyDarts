@@ -6379,6 +6379,12 @@ msgstr "Address of Autodarts"
 msgid "autodarts-address-local"
 msgstr "This machine"
 
+msgid "autodarts-address-none"
+msgstr "To be set"
+
+msgid "autodarts-state-no-address"
+msgstr "Address of Autodarts to be set: the one of another machine of the network"
+
 msgid "autodarts-address-other"
 msgstr "Another machine of the network…"
 

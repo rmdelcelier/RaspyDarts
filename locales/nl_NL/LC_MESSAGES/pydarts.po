@@ -6161,6 +6161,12 @@ msgstr "Adres van Autodarts"
 msgid "autodarts-address-local"
 msgstr "Deze kast"
 
+msgid "autodarts-address-none"
+msgstr "In te stellen"
+
+msgid "autodarts-state-no-address"
+msgstr "Adres van Autodarts in te stellen: dat van een andere machine in het netwerk"
+
 msgid "autodarts-address-other"
 msgstr "Een ander apparaat in het netwerk…"
 
