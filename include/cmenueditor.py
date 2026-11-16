@@ -62,8 +62,9 @@ VERSION_ID = '__version__'
 # The band of the title of the menu (« Raspydarts » on the main screen) : an element placed as
 # the buttons, renamed or deleted, kept in title of the menu (false : no title)
 TITLE_ID = '__title__'
-# The states of a button which can have an image of their own (normal : its background)
-STATES = ('normal', 'selected', 'disabled')
+# The states of a button which can have an image of their own (normal : its background ;
+# pressed : seen for a moment when it is chosen ; disabled : greyed, when it can not be used)
+STATES = ('normal', 'selected', 'pressed', 'disabled')
 # States whose colour can be chosen
 COLOR_STATES = ('normal', 'selected')
 # Buttons arranged in a zone : the spaces between them (parts of the screen), the zone drawn
@@ -1776,7 +1777,10 @@ def screens_choice(screen, keys, name):
         Editor(screen, name, keys).run()
 
 
-INTRO_NAMES = ('intro.mp4', 'intro.mkv', 'intro.none')
+# In the videos of the theme : the video chosen (perso), none (none) ; without them, the one of the
+# theme (its own if it has one, else the one of the game : scripts/Intro.sh)
+PERSO_NAMES = ('intro-perso.mp4', 'intro-perso.mkv')
+INTRO_NAMES = PERSO_NAMES + ('intro.none',)
 
 
 def intro_dir(screen):
@@ -1789,31 +1793,35 @@ def intro_dir(screen):
 
 def intro_state(screen):
     '''
-    The intro video of the theme : its own (theme), none (none), or the one of the game (game)
+    The intro video of the theme : one chosen (perso), none (none), or the one of the theme (theme)
     '''
     folder = intro_dir(screen)
     if os.path.isfile(os.path.join(folder, 'intro.none')):
         return 'none'
-    if any(os.path.isfile(os.path.join(folder, name)) for name in ('intro.mp4', 'intro.mkv')):
-        return 'theme'
-    return 'game'
+    if any(os.path.isfile(os.path.join(folder, name)) for name in PERSO_NAMES):
+        return 'perso'
+    return 'theme'
 
 
 def intro_video_menu(screen):
     '''
     Modifier les écrans > Vidéo d'introduction (played when the borne starts, before the game) :
-    a video of the theme chosen in the explorer (copied in the videos of the theme ; MP4 or MKV,
-    another kind made MP4), the one of the game, or none. Seen at the next start
+    a video chosen in the explorer (copied in the videos of the theme as intro-perso ; MP4 or MKV,
+    another kind made MP4), the one of the theme (its own, never removed, else the one of the
+    game), or none. Seen at the next start
     '''
     import shutil    # pylint: disable=import-outside-toplevel
     import subprocess    # pylint: disable=import-outside-toplevel
     translate = screen.lang.translate
     folder = intro_dir(screen)
-    choices = [['choose', translate('intro-video-choose')], ['game', translate('intro-video-game')],
-               ['none', translate('intro-video-none')]]
-    picked = screen.dropdown(screen.res['x'] * 6 / 16, 3 * screen.res_y_16, choices, navigate='choose',
+    state = intro_state(screen)
+    choices = [['choose', translate('intro-video-choose')]]
+    if state == 'perso':
+        choices.append(['perso', translate('intro-video-perso')])
+    choices += [['theme', translate('intro-video-theme')], ['none', translate('intro-video-none')]]
+    picked = screen.dropdown(screen.res['x'] * 6 / 16, 3 * screen.res_y_16, choices, navigate=state,
                              width=5 * screen.res_x_16)
-    if picked in ('escape', None, False):
+    if picked in ('escape', None, False) or picked == state:
         return
 
     def clear():
@@ -1822,13 +1830,13 @@ def intro_video_menu(screen):
                 os.remove(os.path.join(folder, name))
             except OSError:
                 pass
-    if picked == 'game':
+    if picked == 'theme':
         clear()
     elif picked == 'none':
         clear()
         os.makedirs(folder, exist_ok=True)
         open(os.path.join(folder, 'intro.none'), 'w', encoding='utf-8').close()
-    else:
+    elif picked == 'choose':
         chosen = cexplorer.explore(screen, translate('intro-video'), None, kinds=cexplorer.VIDEOS)
         if not chosen or not os.path.isfile(chosen):
             return
@@ -1837,11 +1845,11 @@ def intro_video_menu(screen):
         try:
             os.makedirs(folder, exist_ok=True)
             if extension in ('.mp4', '.mkv'):
-                target = os.path.join(folder, f'intro{extension}')
+                target = os.path.join(folder, f'intro-perso{extension}')
                 shutil.copyfile(chosen, target + '.tmp')
             else:
                 # GIF, WebM, MOV... : made MP4 (H.264), as the player of the start reads it
-                target = os.path.join(folder, 'intro.mp4')
+                target = os.path.join(folder, 'intro-perso.mp4')
                 subprocess.run(['ffmpeg', '-nostdin', '-y', '-loglevel', 'error', '-i', chosen, '-c:v', 'libx264',
                                 '-preset', 'veryfast', '-pix_fmt', 'yuv420p', '-vf', 'scale=trunc(iw/2)*2:trunc(ih/2)*2',
                                 '-c:a', 'aac', '-f', 'mp4', target + '.tmp'], check=True, timeout=1800)

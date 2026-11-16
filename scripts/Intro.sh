@@ -29,7 +29,12 @@ if [ -s $PYDARTS_HOME/$PYDARTS_CFG -a -f $PYDARTS_THEME_VIDEOS/intro.none ]; the
 fi
 
 if [ -s $PYDARTS_HOME/$PYDARTS_CFG ]; then
-	if [ -d $PYDARTS_THEME_VIDEOS -a `find $PYDARTS_THEME_VIDEOS -maxdepth 1 -type f -name "intro.mp4" -o -name "intro.mkv" | wc -l` -ge 1 ]; then
+	# A video chosen (Modifier les écrans > Vidéo d'introduction > Choisir une vidéo)
+	if [ -f $PYDARTS_THEME_VIDEOS/intro-perso.mp4 ]; then
+		video=$PYDARTS_THEME_VIDEOS/intro-perso.mp4
+	elif [ -f $PYDARTS_THEME_VIDEOS/intro-perso.mkv ]; then
+		video=$PYDARTS_THEME_VIDEOS/intro-perso.mkv
+	elif [ -d $PYDARTS_THEME_VIDEOS -a `find $PYDARTS_THEME_VIDEOS -maxdepth 1 -type f -name "intro.mp4" -o -name "intro.mkv" | wc -l` -ge 1 ]; then
 		echo "Find in $PYDARTS_THEME_VIDEOS"
 		video=`find $PYDARTS_THEME_VIDEOS -maxdepth 1 -type f -name "intro.mp4" -o -name "intro.mkv" | shuf -n 1`
 	elif [ -d $PYDARTS_THEME_VIDEOS/intro -a `find $PYDARTS_THEME_VIDEOS/intro -maxdepth 1 -type f -name "*.mp4" -o -name "*.mkv" | wc -l` -ge 1 ]; then

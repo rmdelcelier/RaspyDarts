@@ -40,16 +40,18 @@ ALIGN_TAGS = ('main-sub-menu-text-align', 'parametrage-menu-text-align', 'player
 SHORTCUT_CHOICES = (('', 'theme-shortcut-keys'), (None, 'theme-shortcut-none'), ('>', '>'), ('-', '-'),
                     ('*', '*'), ('+', '+'))
 ALIGN_CHOICES = (('Left', 'theme-align-left'), ('Center', 'theme-align-center'), ('Right', 'theme-align-right'))
-# The place in height of the text, and its margin in its box (pixels)
+# The place in height of the text, and its margins in its box (left, right, top, bottom : %)
 VALIGN_TAGS = ('main-sub-menu-text-valign', 'parametrage-menu-text-valign', 'players-menu-text-valign')
 VALIGN_CHOICES = (('Top', 'theme-valign-top'), ('Center', 'theme-align-center'), ('Bottom', 'theme-valign-bottom'))
-MARGIN_TAGS = ('main-sub-menu-text-margin', 'parametrage-menu-text-margin', 'players-menu-text-margin')
+POSITION_TAGS = ('main-sub-menu-text-position', 'parametrage-menu-text-position', 'players-menu-text-position')
+# The examples of the plate (and of the window of the position)
+EXAMPLES = (('main-sub-menu', 'Partie simple'), ('parametrage-menu', 'Paramétrage'),
+            ('players-menu', 'Joueur 1'), ('game-options-menu', 'Nombre de tours'))
 # Shapes (not colours) : thickness of the border and margin of the item chosen, rounding of the
 # buttons and frames of the menus and of the buttons at the bottom ('max' : round)
 SHAPE_TAGS = ('border-size', 'padding', 'border-radius', 'button-radius')
 RADIUS_TAGS = ('border-radius', 'button-radius')
 SHAPE_LIMITS = {'border-size': 15, 'padding': 15, 'border-radius': 40, 'button-radius': 40}
-SHAPE_LIMITS.update({tag: 40 for tag in MARGIN_TAGS})
 
 # Plates : (name, drawer, tags on the left [(tag, x, y)], tags on the right) ; x, y : the point
 # of the mock-up the arrow goes to (parts of the mock-up)
@@ -96,9 +98,9 @@ PLATES = (
      [('border-size', 0.25, 0.26), ('padding', 0.3, 0.32)],
      [('border-radius', 0.88, 0.5), ('button-radius', 0.8, 0.84)]),
     ('theme-plate-shortcuts', 'draw_shortcuts',
-     [('main-sub-menu-shortcuts', 0.08, 0.15), ('main-sub-menu-text-margin', 0.3, 0.15),
-      ('parametrage-menu-shortcuts', 0.08, 0.4), ('parametrage-menu-text-margin', 0.3, 0.4),
-      ('players-menu-shortcuts', 0.08, 0.65), ('players-menu-text-margin', 0.3, 0.65),
+     [('main-sub-menu-shortcuts', 0.08, 0.15), ('main-sub-menu-text-position', 0.3, 0.15),
+      ('parametrage-menu-shortcuts', 0.08, 0.4), ('parametrage-menu-text-position', 0.3, 0.4),
+      ('players-menu-shortcuts', 0.08, 0.65), ('players-menu-text-position', 0.3, 0.65),
       ('game-options-menu-shortcuts', 0.08, 0.88)],
      [('main-sub-menu-text-align', 0.7, 0.15), ('main-sub-menu-text-valign', 0.7, 0.2),
       ('parametrage-menu-text-align', 0.7, 0.4), ('parametrage-menu-text-valign', 0.7, 0.45),
@@ -609,7 +611,13 @@ class ThemeEditor:
 
     def draw_value(self, tag, rect, font):
         value = self.work.get(tag)
-        if tag in SHAPE_TAGS + MARGIN_TAGS:
+        if tag in POSITION_TAGS:
+            # Margins chosen : %, none : 0
+            pygame.draw.rect(self.screen.screen, (30, 30, 30), rect)
+            text = font.render('%' if any(self.screen.text_position(value)) else '0', True, (255, 255, 255))
+            self.screen.screen.blit(text, text.get_rect(center=rect.center))
+            return
+        if tag in SHAPE_TAGS:
             pygame.draw.rect(self.screen.screen, (30, 30, 30), rect)
             text = font.render('M' if value == 'max' else str(value), True, (255, 255, 255))
             self.screen.screen.blit(text, text.get_rect(center=rect.center))
@@ -633,19 +641,26 @@ class ThemeEditor:
         pygame.draw.circle(self.screen.screen, color, end, max(3, width + 2))
 
     # ------------------------------------------------------------------ mock-ups
-    def text(self, text, rect, tag, size=0.6, align='center'):
+    def text(self, text, rect, tag, size=0.6, align='center', valign='center', height=None):
+        '''
+        height : the one which gives the size of the text (the one of rect by default)
+        '''
         color = self.color(tag)
         if color is None:
             return
-        font = self.screen.font(self.screen.defaultfontpath, max(8, int(rect.height * size)))
+        font = self.screen.font(self.screen.defaultfontpath, max(8, int((height or rect.height) * size)))
         rendered = font.render(text, True, color)
         if rendered.get_width() > rect.width - 4:
-            rendered = pygame.transform.smoothscale(rendered, (rect.width - 4, rendered.get_height()))
+            rendered = pygame.transform.smoothscale(rendered, (max(1, rect.width - 4), rendered.get_height()))
         place = rendered.get_rect(center=rect.center)
         if align == 'left':
             place.x = rect.x + 6
         elif align == 'right':
             place.right = rect.right - 6
+        if valign == 'top':
+            place.y = rect.y
+        elif valign == 'bottom':
+            place.bottom = rect.bottom
         self.screen.screen.blit(rendered, place)
 
     def box(self, rect, tag, radius=6, border=None):
@@ -838,36 +853,31 @@ class ThemeEditor:
 
     def draw_shortcuts(self, mockup):
         self.draw_background(mockup)
-        examples = (('main-sub-menu', 'Partie simple'), ('parametrage-menu', 'Paramétrage'),
-                    ('players-menu', 'Joueur 1'), ('game-options-menu', 'Nombre de tours'))
-        for index, (prefix, label) in enumerate(examples):
+        for index, (prefix, label) in enumerate(EXAMPLES):
             row = self.part(mockup, 0.05, 0.08 + index * 0.24, 0.9, 0.15)
-            self.box(row, 'menu-buttons')
-            shortcut = self.work.get(f'{prefix}-shortcuts')
-            align = str(self.work.get(f'{prefix}-text-align') or 'Center').lower()
-            valign = str(self.work.get(f'{prefix}-text-valign') or 'Center').lower()
-            try:
-                margin = int(self.work.get(f'{prefix}-text-margin') or 0)
-            except (TypeError, ValueError):
-                margin = 0
-            shown = 'F1' if shortcut == '' else ('' if shortcut is None else str(shortcut))
-            short = pygame.Rect(row.x, row.y, int(row.height * 1.1), row.height)
-            if shown:
-                self.box(short, 'menu-shortcut')
-                self.text(shown, short, 'menu-text-white')
-            text_rect = pygame.Rect(short.right if shown else row.x, row.y, row.right - (short.right if shown else row.x), row.height)
-            # The margin (at the scale of the plate) and the place in height of the text
-            scaled = int(margin * row.height / max(1, self.screen.res['y'] / 12))
-            inner = text_rect.inflate(-2 * scaled, -2 * scaled) if scaled else text_rect
-            if inner.width > 6 and inner.height > 6:
-                text_rect = inner
-            if valign in ('top', 'bottom'):
-                part = pygame.Rect(text_rect.x, text_rect.y, text_rect.width, int(text_rect.height * 0.6))
-                if valign == 'bottom':
-                    part.bottom = text_rect.bottom
-                text_rect = part
-            self.text(label, text_rect, 'menu-text-black', 0.55 if valign == 'center' else 0.9,
-                      align if align in ('left', 'right') else 'center')
+            self.example_row(prefix, label, row)
+
+    def example_row(self, prefix, label, row, values=None):
+        '''
+        An item of a menu of always as the theme draws it : its shortcut, its text in its place.
+        values : the margins of the text (those of the theme by default)
+        '''
+        self.box(row, 'menu-buttons')
+        shortcut = self.work.get(f'{prefix}-shortcuts')
+        align = str(self.work.get(f'{prefix}-text-align') or 'Center').lower()
+        valign = str(self.work.get(f'{prefix}-text-valign') or 'Center').lower()
+        shown = 'F1' if shortcut == '' else ('' if shortcut is None else str(shortcut))
+        short = pygame.Rect(row.x, row.y, int(row.height * 1.1), row.height)
+        if shown:
+            self.box(short, 'menu-shortcut')
+            self.text(shown, short, 'menu-text-white')
+        text_rect = pygame.Rect(short.right if shown else row.x, row.y, row.right - (short.right if shown else row.x), row.height)
+        # Its margins (parts of its box) and its place in height ; its size : the one of its box
+        full = text_rect.height
+        text_rect = self.screen.padded_box(text_rect, values if values is not None else self.work.get(f'{prefix}-text-position'))
+        self.text(label, text_rect, 'menu-text-black', 0.55, align if align in ('left', 'right') else 'center',
+                  valign if valign in ('top', 'bottom') else 'center', height=full)
+        return text_rect
 
     # ------------------------------------------------------------------ choosing
     def choose(self, tag):
@@ -876,7 +886,18 @@ class ThemeEditor:
         an alignment : its list)
         '''
         screen = self.screen
-        if tag in SHAPE_TAGS + MARGIN_TAGS:
+        if tag in POSITION_TAGS:
+            chosen = screen.dropdown(screen.res['x'] * 6 / 16, 3 * screen.res_y_16,
+                                     [['set', self.translate('theme-position-set')],
+                                      ['origin', self.translate('theme-origin-value')]], navigate='set')
+            if chosen == 'origin':
+                self.set(tag, 'origin')
+            elif chosen == 'set':
+                values = self.position_window(tag)
+                if values is not None:
+                    self.set(tag, values)
+            return
+        if tag in SHAPE_TAGS:
             values = [['value', self.translate('theme-value')]]
             if tag in RADIUS_TAGS:
                 values.append(['max', self.translate('theme-round-max')])
@@ -905,6 +926,113 @@ class ThemeEditor:
         chosen = self.palette(tag)
         if chosen != 'back':
             self.set(tag, chosen)
+
+    def position_window(self, tag):
+        '''
+        Définir la position : the margins of the text in its place (left, right, top, bottom,
+        parts of it, %) with 4 sliders (dragged or clicked with the mouse ; up / down : a slider,
+        left / right : its value, by 5 with Maj), the item drawn as they say, OK and Annuler
+        (Entrée, Échap). Returns the margins, None : cancelled
+        '''
+        screen = self.screen
+        width, height = screen.screen.get_size()
+        translate = self.translate
+        prefix = tag[:-len('-text-position')]
+        label = dict(EXAMPLES).get(prefix, 'Partie simple')
+        values = list(screen.text_position(self.work.get(tag)))
+        names = ('theme-position-left', 'theme-position-right', 'theme-position-top', 'theme-position-bottom')
+        active = 0
+        dragging = None
+        clock = pygame.time.Clock()
+        panel = pygame.Rect(int(width * 3 / 16), int(height * 2.5 / 16), int(width * 10 / 16), int(height * 11 / 16))
+        sample = pygame.Rect(panel.x + int(panel.width * 0.1), panel.y + int(panel.height * 0.14),
+                             int(panel.width * 0.8), int(panel.height * 0.2))
+        bars = [pygame.Rect(panel.x + int(panel.width * 0.34), panel.y + int(panel.height * (0.44 + 0.1 * index)),
+                            int(panel.width * 0.46), int(panel.height * 0.035)) for index in range(4)]
+        ok = pygame.Rect(panel.right - int(panel.width * 0.42), panel.bottom - int(panel.height * 0.13),
+                         int(panel.width * 0.18), int(panel.height * 0.09))
+        cancel = pygame.Rect(panel.right - int(panel.width * 0.22), ok.y, ok.width, ok.height)
+        font = screen.font(screen.defaultfontpath, max(12, int(min(panel.height, panel.width * 0.6) * 0.045)))
+
+        def value_at(index, pos_x):
+            bar = bars[index]
+            return max(0, min(90, round((pos_x - bar.x) / bar.width * 90)))
+
+        def put(index, value):
+            values[index] = max(0, min(90, value))
+            # The one facing it gives way (a tenth of the place left at least)
+            other = index ^ 1
+            values[other] = min(values[other], 90 - values[index])
+
+        def draw():
+            pygame.draw.rect(screen.screen, (20, 20, 20), panel, border_radius=16)
+            pygame.draw.rect(screen.screen, (200, 200, 200), panel, 2, border_radius=16)
+            screen.screen.blit(font.render(f"{translate('theme-position-title')} : {tag}", True, (255, 255, 255)),
+                               (panel.x + 20, panel.y + 14))
+            # The item as it will be, the place of its text dotted
+            pygame.draw.rect(screen.screen, (60, 60, 60), sample.inflate(16, 16), border_radius=8)
+            place = self.example_row(prefix, label, sample, values)
+            if place is not None:
+                for step in range(place.x, place.right, 8):
+                    pygame.draw.line(screen.screen, CHOSEN, (step, place.y), (min(step + 4, place.right), place.y))
+                    pygame.draw.line(screen.screen, CHOSEN, (step, place.bottom - 1), (min(step + 4, place.right), place.bottom - 1))
+                for step in range(place.y, place.bottom, 8):
+                    pygame.draw.line(screen.screen, CHOSEN, (place.x, step), (place.x, min(step + 4, place.bottom)))
+                    pygame.draw.line(screen.screen, CHOSEN, (place.right - 1, step), (place.right - 1, min(step + 4, place.bottom)))
+            for index, bar in enumerate(bars):
+                text = font.render(translate(names[index]), True, (255, 255, 255))
+                screen.screen.blit(text, (panel.x + 20, bar.centery - text.get_height() // 2))
+                pygame.draw.rect(screen.screen, (90, 90, 90), bar, border_radius=bar.height // 2)
+                filled = pygame.Rect(bar.x, bar.y, int(values[index] / 90 * bar.width), bar.height)
+                pygame.draw.rect(screen.screen, CHOSEN if index == active else (150, 150, 150), filled, border_radius=bar.height // 2)
+                if index == active:
+                    pygame.draw.rect(screen.screen, CHOSEN, bar.inflate(6, 6), 2, border_radius=bar.height)
+                knob_x = bar.x + int(values[index] / 90 * bar.width)
+                pygame.draw.circle(screen.screen, (255, 255, 255), (knob_x, bar.centery), bar.height)
+                pygame.draw.circle(screen.screen, (0, 0, 0), (knob_x, bar.centery), bar.height, 2)
+                number = font.render(f"{values[index]} %", True, (255, 255, 255))
+                screen.screen.blit(number, (bar.right + bar.height + 14, bar.centery - number.get_height() // 2))
+            for rect, text in ((ok, 'OK'), (cancel, translate('theme-cancel'))):
+                pygame.draw.rect(screen.screen, (70, 70, 70), rect, border_radius=10)
+                rendered = font.render(text, True, (255, 255, 255))
+                screen.screen.blit(rendered, rendered.get_rect(center=rect.center))
+            screen.update_screen(rect_array=[panel])
+
+        pygame.event.clear()
+        while True:
+            draw()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    return None
+                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                    if ok.collidepoint(event.pos):
+                        return tuple(values)
+                    if cancel.collidepoint(event.pos):
+                        return None
+                    for index, bar in enumerate(bars):
+                        if bar.inflate(bar.height * 2, bar.height * 3).collidepoint(event.pos):
+                            active, dragging = index, index
+                            put(index, value_at(index, event.pos[0]))
+                elif event.type == pygame.MOUSEBUTTONDOWN and event.button in (4, 5):
+                    # The wheel (a knob) : the value of the slider chosen
+                    put(active, values[active] + (1 if event.button == 4 else -1))
+                elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+                    dragging = None
+                elif event.type == pygame.MOUSEMOTION and dragging is not None:
+                    put(dragging, value_at(dragging, event.pos[0]))
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        return None
+                    if event.key in (pygame.K_RETURN, pygame.K_KP_ENTER):
+                        return tuple(values)
+                    if event.key == pygame.K_UP:
+                        active = (active - 1) % 4
+                    elif event.key == pygame.K_DOWN:
+                        active = (active + 1) % 4
+                    elif event.key in (pygame.K_LEFT, pygame.K_RIGHT):
+                        step = 5 if event.mod & pygame.KMOD_SHIFT else 1
+                        put(active, values[active] + (step if event.key == pygame.K_RIGHT else -step))
+            clock.tick(30)
 
     def set(self, tag, value):
         if value == 'origin':

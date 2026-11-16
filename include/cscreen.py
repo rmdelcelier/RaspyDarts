@@ -812,21 +812,41 @@ class Screen(pygame.Surface):
             divider += step
 
     #@debug
-    def menu_text_box(self, rect, family):
+    @staticmethod
+    def text_position(value):
         '''
-        The box of the text of an item of a menu, its margin taken (Personnaliser le thème >
-        Raccourcis et alignement des textes : <family>-text-margin, pixels)
+        The margins of a text in its box (Personnaliser le thème > Raccourcis et alignement des
+        textes > Définir la position) : (left, right, top, bottom), parts of the box (%)
         '''
         try:
-            margin = max(0, min(60, int(self.colorset.get(f'{family}-text-margin', 0) or 0)))
+            parts = [max(0, min(90, int(part))) for part in tuple(value)[:4]]
         except (TypeError, ValueError):
-            margin = 0
+            return (0, 0, 0, 0)
+        if len(parts) != 4:
+            return (0, 0, 0, 0)
+        # Two margins facing each other leave a tenth of the box at least
+        for first, second in ((0, 1), (2, 3)):
+            over = parts[first] + parts[second] - 90
+            if over > 0:
+                parts[second] = max(0, parts[second] - over)
+        return tuple(parts)
+
+    @classmethod
+    def padded_box(cls, rect, value):
+        '''
+        A box with the margins of its text taken (see text_position)
+        '''
         box = pygame.Rect(rect)
-        if margin:
-            inner = box.inflate(-2 * margin, -2 * margin)
-            if inner.width > 10 and inner.height > 10:
-                return inner
-        return box
+        left, right, top, bottom = cls.text_position(value)
+        return pygame.Rect(box.x + box.width * left // 100, box.y + box.height * top // 100,
+                           max(1, box.width * (100 - left - right) // 100), max(1, box.height * (100 - top - bottom) // 100))
+
+    def menu_text_box(self, rect, family):
+        '''
+        The place of the text of an item of a menu : its box less the margins chosen
+        (<family>-text-position). The text keeps the size of the box (fit=rect of blit_text2)
+        '''
+        return self.padded_box(rect, self.colorset.get(f'{family}-text-position'))
 
     def text_valign(self, family):
         '''
@@ -835,12 +855,16 @@ class Screen(pygame.Surface):
         value = str(self.colorset.get(f'{family}-text-valign', 'Center') or 'Center').lower()
         return value if value in ('top', 'bottom') else 'center'
 
-    def blit_text2(self, text, rect, color=None, font=None, align='Center', valign='center', margin=True, divider=1.5, alpha=255):
-        self.blit_text(text, rect[0], rect[1], rect[2], rect[3], color=color, dafont=font, align=align, valign=valign, margin=margin, divider=divider, Alpha=alpha)
+    def blit_text2(self, text, rect, color=None, font=None, align='Center', valign='center', margin=True, divider=1.5, alpha=255, fit=None):
+        '''
+        fit : the box whose height gives the size of the text (the text placed in rect, a part of it)
+        '''
+        self.blit_text(text, rect[0], rect[1], rect[2], rect[3], color=color, dafont=font, align=align, valign=valign, margin=margin, divider=divider, Alpha=alpha,
+                       fit_height=None if fit is None else fit[3])
         return rect
 
     #@debug
-    def blit_text(self, text, pos_x, pos_y, width, height, color=None, dafont=None, image=None, align='Center', valign='center', margin=True, divider=1.5, Alpha=255, game=None):
+    def blit_text(self, text, pos_x, pos_y, width, height, color=None, dafont=None, image=None, align='Center', valign='center', margin=True, divider=1.5, Alpha=255, game=None, fit_height=None):
         '''
         Render text in a box, directly at best size
         '''
@@ -869,7 +893,8 @@ class Screen(pygame.Surface):
             text_margin = 0
 
         # Display Text
-        scaled_text = self.scale_text(text, width - 2 * text_margin, height - 2 * text_margin, divider=divider, dafont=dafont)
+        # The size of the text : the one of its box (fit_height : the box its place is a part of)
+        scaled_text = self.scale_text(text, width - 2 * text_margin, (fit_height or height) - 2 * text_margin, divider=divider, dafont=dafont)
         font_path = dafont if dafont == self.defaultfontpath else self.file_class.get_full_filename(dafont, 'fonts')
         if image is None:
             # Render text (the same texts at each dart : rendered once)
@@ -886,6 +911,8 @@ class Screen(pygame.Surface):
             text_y = int(pos_y + text_margin)
         elif valign == 'bottom':
             text_y = int(pos_y + height - scaled_text[4] - text_margin)
+        elif fit_height:
+            text_y = int(pos_y + (height - scaled_text[4]) / 2)
         else:
             text_y = int(pos_y + scaled_text[2] + text_margin)
 
@@ -3099,19 +3126,19 @@ class Screen(pygame.Surface):
                     self.blit_text2(pict_shortcut, s_rect, color=shortcut[2])
                 else:
                     self.blit_text2(shortcut[1], s_rect, color=shortcut[2])
-                self.blit_text2(text[1], self.menu_text_box(t_rect, 'main-sub-menu'), color=text[2], align=align_text, valign=valign_text, divider=divider)
+                self.blit_text2(text[1], self.menu_text_box(t_rect, 'main-sub-menu'), fit=t_rect, color=text[2], align=align_text, valign=valign_text, divider=divider)
                 
             else:
-                self.blit_text2(text[1], self.menu_text_box(rect, 'main-sub-menu'), color=text[2], align=align_text, valign=valign_text, divider=divider)
+                self.blit_text2(text[1], self.menu_text_box(rect, 'main-sub-menu'), fit=rect, color=text[2], align=align_text, valign=valign_text, divider=divider)
 
         elif shortcut[1] is None or pict_shortcut is None:
             # Display text
             self.new_blit_rect2(rect, text[0], alpha=alpha, corners=corners)
-            self.blit_text2(text[1], self.menu_text_box(rect, 'main-sub-menu'), color=text[2], align=align_text, valign=valign_text, divider=divider)
+            self.blit_text2(text[1], self.menu_text_box(rect, 'main-sub-menu'), fit=rect, color=text[2], align=align_text, valign=valign_text, divider=divider)
         else:
             # Display text
             self.new_blit_rect2(rect, text[0], alpha=alpha, corners=self.adapt_corners(corners, 'All'))            
-            self.blit_text2(text[1], self.menu_text_box(t_rect, 'main-sub-menu'), color=text[2], align=align_text, valign=valign_text, divider=divider)
+            self.blit_text2(text[1], self.menu_text_box(t_rect, 'main-sub-menu'), fit=t_rect, color=text[2], align=align_text, valign=valign_text, divider=divider)
 
             ## Display shortcut
             self.new_blit_rect2(s_rect, shortcut[0], alpha=alpha, corners='All')
@@ -3156,7 +3183,7 @@ class Screen(pygame.Surface):
             if pict_shortcut is not None :
                 # Display text
                 self.new_blit_rect2(inside_rect, text[0], alpha=alpha, corners='All', border_radius=border_radius)
-                self.blit_text2(text[1], self.menu_text_box(t_rect, 'parametrage-menu'), color=text[2], align=align_text, valign=valign_text)
+                self.blit_text2(text[1], self.menu_text_box(t_rect, 'parametrage-menu'), fit=t_rect, color=text[2], align=align_text, valign=valign_text)
 
                 # Display value
                 inside_rect = pygame.Rect(s_rect.x + minus, v_rect.y + minus, v_rect.w + s_rect.w - minus, inside_rect.h)
@@ -3176,7 +3203,7 @@ class Screen(pygame.Surface):
                 self.new_blit_rect2(inside_rect, text[0], alpha=alpha, corners='All', border_radius=border_radius)
                 t_rect.x -= s_rect.w
                 t_rect.w += s_rect.w
-                self.blit_text2(text[1], self.menu_text_box(t_rect, 'parametrage-menu'), color=text[2], align=align_text, valign=valign_text)
+                self.blit_text2(text[1], self.menu_text_box(t_rect, 'parametrage-menu'), fit=t_rect, color=text[2], align=align_text, valign=valign_text)
 
                 # Display value
                 inside_rect = pygame.Rect(s_rect.x + minus, v_rect.y + minus, v_rect.w - minus, inside_rect.h)                
@@ -3188,7 +3215,7 @@ class Screen(pygame.Surface):
             if pict_shortcut is not None : 
                 # Display text
                 self.new_blit_rect2(rect, text[0], alpha=alpha, corners='All')
-                self.blit_text2(text[1], self.menu_text_box(t_rect, 'parametrage-menu'), color=text[2], align=align_text, valign=valign_text)
+                self.blit_text2(text[1], self.menu_text_box(t_rect, 'parametrage-menu'), fit=t_rect, color=text[2], align=align_text, valign=valign_text)
                 
                 # Display value
                 v_rect.x -= s_rect.w
@@ -3209,7 +3236,7 @@ class Screen(pygame.Surface):
                 self.new_blit_rect2(rect, text[0], alpha=alpha, corners='All')
                 t_rect.x -= s_rect.w
                 t_rect.w += s_rect.w
-                self.blit_text2(text[1], self.menu_text_box(t_rect, 'parametrage-menu'), color=text[2], align=align_text, valign=valign_text)
+                self.blit_text2(text[1], self.menu_text_box(t_rect, 'parametrage-menu'), fit=t_rect, color=text[2], align=align_text, valign=valign_text)
                 
                 # Display value
                 v_rect.x = s_rect.x
@@ -3281,7 +3308,7 @@ class Screen(pygame.Surface):
             self.new_blit_rect2(rect, value_bg_color, corners='All', border_radius=border_radius)
             # To keep same text size
             rect2 = pygame.Rect(pos_x + height, pos_y, width - height, height)
-            self.blit_text2(favorite[1], self.menu_text_box(rect2, 'parametrage-menu'), color=value_text_color, align=align_text, valign=valign_text)
+            self.blit_text2(favorite[1], self.menu_text_box(rect2, 'parametrage-menu'), fit=rect2, color=value_text_color, align=align_text, valign=valign_text)
             
             # Display shortcut
             rect = pygame.Rect(pos_x + minus
@@ -3489,7 +3516,7 @@ class Screen(pygame.Surface):
                 rect.x += height
                 rect.width -= height
                 
-            self.blit_text2(name, self.menu_text_box(rect, 'players-menu'), color=text_color, align=align_text, valign=valign_text)
+            self.blit_text2(name, self.menu_text_box(rect, 'players-menu'), fit=rect, color=text_color, align=align_text, valign=valign_text)
 
             if pict_shortcut is not None :
                 # Display Shortcut
@@ -3554,7 +3581,7 @@ class Screen(pygame.Surface):
             if pict_shortcut is None :
                 rect.x -= height - 2 * minus
                 rect.w += height - 2
-            self.blit_text2(name, self.menu_text_box(rect, 'players-menu'), color=text_color, align=align_text, valign=valign_text)
+            self.blit_text2(name, self.menu_text_box(rect, 'players-menu'), fit=rect, color=text_color, align=align_text, valign=valign_text)
 
             if pict_shortcut is not None :
                 # Display Shortcut
@@ -5321,7 +5348,8 @@ class Screen(pygame.Surface):
             elif conf == 'qr_popup_s':
                 # The QR code of the photos at the end of the game : its time on the screen
                 conf_type = 'dropdown'
-                conf_values = [('15', '15 s'), ('30', '30 s'), ('60', '1 min'), ('120', '2 min'), ('300', '5 min')]
+                conf_values = [('0', '0 s'), ('5', '5 s'), ('10', '10 s'), ('15', '15 s'), ('30', '30 s'), ('60', '1 min'),
+                               ('120', '2 min'), ('300', '5 min')]
             elif ('fps' in conf):
                 conf_type = 'dropdown'
                 for a in [ 15, 30, 60 ]:

@@ -548,6 +548,11 @@ class Painter:
         path = self.font_path(settings.get('font'))
         color = self.color(settings.get('color'), (0, 0, 0))
         bold = bool(settings.get('bold'))
+        area = rect
+        if str(settings.get('align') or '') == 'theme':
+            # As the buttons of always of the theme : the margins of their text (Personnaliser
+            # le thème > Raccourcis et alignement des textes > Définir la position)
+            area = self.screen.padded_box(rect, self.screen.colorset.get('main-sub-menu-text-position'))
         while True:
             font = self.screen.font(path, size)
             # The fonts are shared (Screen.font) : bold for this text only
@@ -556,7 +561,7 @@ class Painter:
             if settings.get('shadow'):
                 shade = font.render(str(text), True, (0, 0, 0))
             font.set_bold(False)
-            if rendered.get_width() <= rect.width * 0.94 or size <= 6:
+            if rendered.get_width() <= area.width * 0.94 or size <= 6:
                 break
             size = int(size * 0.9)
         position = str(settings.get('position') or 'center')
@@ -566,20 +571,16 @@ class Painter:
         vertical = anchor[1]
         if align == 'theme':
             # As the buttons of always of the theme (Personnaliser le thème > Raccourcis et
-            # alignement des textes) : its alignment, its margin, its place in height
+            # alignement des textes) : its alignment, its place in height, in its margins (area)
             colorset = self.screen.colorset
             align = str(colorset.get('main-sub-menu-text-align') or 'Left').lower()
-            try:
-                margin += max(0, min(60, int(colorset.get('main-sub-menu-text-margin', 0) or 0)))
-            except (TypeError, ValueError):
-                pass
             valign = str(colorset.get('main-sub-menu-text-valign') or 'Center').lower()
             if position == 'center' and valign in ('top', 'bottom'):
                 vertical = 0.0 if valign == 'top' else 1.0
         horizontal = {'left': 0.0, 'right': 1.0}.get(align, anchor[0]) if position in ('center', 'top', 'bottom') else anchor[0]
         offset = settings.get('offset') or [0, 0]
-        pos_x = rect.x + margin + (rect.width - 2 * margin - rendered.get_width()) * horizontal + float(offset[0]) * rect.width
-        pos_y = rect.y + margin + (rect.height - 2 * margin - rendered.get_height()) * vertical + float(offset[1]) * rect.height
+        pos_x = area.x + margin + (area.width - 2 * margin - rendered.get_width()) * horizontal + float(offset[0]) * rect.width
+        pos_y = area.y + margin + (area.height - 2 * margin - rendered.get_height()) * vertical + float(offset[1]) * rect.height
         if settings.get('shadow'):
             shade.set_alpha(150)
             self.blend(surface, shade, (int(pos_x) + max(1, size // 20), int(pos_y) + max(1, size // 20)))

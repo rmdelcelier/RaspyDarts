@@ -4998,7 +4998,7 @@ msgid "editor-image-selected"
 msgstr "Immagine (selezionato)"
 
 msgid "editor-image-disabled"
-msgstr "Immagine (disattivato)"
+msgstr "Immagine (non disponibile, grigio)"
 
 msgid "editor-image-style"
 msgstr "Quella dello stile"
@@ -5429,7 +5429,7 @@ msgid "theme-help"
 msgstr "Clic o frecce: un'etichetta · Clic o Invio: cambiare il colore · Esc: i pannelli (*: colore scelto)"
 
 msgid "theme-save-question"
-msgstr "Salvare i colori scelti?"
+msgstr "Salvare il tema?"
 
 msgid "theme-fine"
 msgstr "Regolazione fine"
@@ -6105,9 +6105,6 @@ msgstr "Video di introduzione"
 msgid "intro-video-theme"
 msgstr "Quella del tema"
 
-msgid "intro-video-game"
-msgstr "Quella del gioco"
-
 msgid "intro-video-none"
 msgstr "Nessuna"
 
@@ -6129,4 +6126,29 @@ msgstr "In alto"
 
 msgid "theme-valign-bottom"
 msgstr "In basso"
+
+
+msgid "theme-position-set"
+msgstr "Definire la posizione…"
+
+msgid "theme-position-title"
+msgstr "Posizione del testo nel suo spazio"
+
+msgid "theme-position-left"
+msgstr "Margine sinistro"
+
+msgid "theme-position-right"
+msgstr "Margine destro"
+
+msgid "theme-position-top"
+msgstr "Margine superiore"
+
+msgid "theme-position-bottom"
+msgstr "Margine inferiore"
+
+msgid "editor-image-pressed"
+msgstr "Immagine (premuto)"
+
+msgid "intro-video-perso"
+msgstr "Quella scelta"
 

@@ -527,7 +527,8 @@ class Camera:
         self.duree = int(config_camera['duree_ms'])
         # The QR code of the photos at the end of the game : its time on the screen (seconds)
         try:
-            self.qr_seconds = max(5, int(config_camera.get('qr_popup_s', 30)))
+            # 0 : not shown
+            self.qr_seconds = max(0, int(config_camera.get('qr_popup_s', 30)))
         except (TypeError, ValueError):
             self.qr_seconds = 30
         # Photos and clips come from the same recording : the size of the videos (the one
@@ -1248,6 +1249,9 @@ class Camera:
         """
         Affiche le QR code en popup via subprocess
         """
+        if getattr(self, 'qr_seconds', 30) <= 0:
+            # Paramétrage de la caméra : durée 0 s, pas de QR code
+            return
         try:
             # Sauvegarder le QR code temporairement
             tmp_path = "/tmp/temp_qr_popup.png"

@@ -129,8 +129,9 @@ ColorSet['clear'] = {
     'main-sub-menu-shortcuts': '',
     # 'Left', 'Center', 'Right'
     'main-sub-menu-text-align': 'Left',
-    # Margin of the text in its box (pixels) ; its place in height : 'Top', 'Center', 'Bottom'
-    'main-sub-menu-text-margin': 0,
+    # Place of the text in its box : margins left, right, top, bottom (parts of the box, %) ;
+    # its place in height : 'Top', 'Center', 'Bottom'
+    'main-sub-menu-text-position': (0, 0, 0, 0),
     'main-sub-menu-text-valign': 'Center',
 
     # Show shortcuts or use a character for Parametrage Menu
@@ -138,8 +139,9 @@ ColorSet['clear'] = {
     'parametrage-menu-shortcuts': '',
     # 'Left', 'Center', 'Right'
     'parametrage-menu-text-align': 'Left',
-    # Margin of the text in its box (pixels) ; its place in height : 'Top', 'Center', 'Bottom'
-    'parametrage-menu-text-margin': 0,
+    # Place of the text in its box : margins left, right, top, bottom (parts of the box, %) ;
+    # its place in height : 'Top', 'Center', 'Bottom'
+    'parametrage-menu-text-position': (0, 0, 0, 0),
     'parametrage-menu-text-valign': 'Center',
 
     # Show shortcuts or use a character for Players Menu
@@ -147,8 +149,9 @@ ColorSet['clear'] = {
     'players-menu-shortcuts': '',
     # 'Left', 'Center', 'Right'
     'players-menu-text-align': 'Left',
-    # Margin of the text in its box (pixels) ; its place in height : 'Top', 'Center', 'Bottom'
-    'players-menu-text-margin': 0,
+    # Place of the text in its box : margins left, right, top, bottom (parts of the box, %) ;
+    # its place in height : 'Top', 'Center', 'Bottom'
+    'players-menu-text-position': (0, 0, 0, 0),
     'players-menu-text-valign': 'Center',
 
     # Show shortcuts or use a character for Game Options Menu

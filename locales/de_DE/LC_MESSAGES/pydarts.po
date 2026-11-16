@@ -4931,7 +4931,7 @@ msgid "editor-image-selected"
 msgstr "Bild (ausgewählt)"
 
 msgid "editor-image-disabled"
-msgstr "Bild (deaktiviert)"
+msgstr "Bild (nicht verfügbar, grau)"
 
 msgid "editor-image-style"
 msgstr "Die des Stils"
@@ -5362,7 +5362,7 @@ msgid "theme-help"
 msgstr "Klick oder Pfeile: ein Tag · Klick oder Eingabe: Farbe ändern · Esc: die Tafeln (*: gewählte Farbe)"
 
 msgid "theme-save-question"
-msgstr "Gewählte Farben speichern?"
+msgstr "Thema speichern?"
 
 msgid "theme-fine"
 msgstr "Feineinstellung"
@@ -6038,9 +6038,6 @@ msgstr "Intro-Video"
 msgid "intro-video-theme"
 msgstr "Die des Themas"
 
-msgid "intro-video-game"
-msgstr "Die des Spiels"
-
 msgid "intro-video-none"
 msgstr "Keine"
 
@@ -6062,4 +6059,29 @@ msgstr "Oben"
 
 msgid "theme-valign-bottom"
 msgstr "Unten"
+
+
+msgid "theme-position-set"
+msgstr "Position festlegen…"
+
+msgid "theme-position-title"
+msgstr "Position des Textes in seinem Feld"
+
+msgid "theme-position-left"
+msgstr "Rand links"
+
+msgid "theme-position-right"
+msgstr "Rand rechts"
+
+msgid "theme-position-top"
+msgstr "Rand oben"
+
+msgid "theme-position-bottom"
+msgstr "Rand unten"
+
+msgid "editor-image-pressed"
+msgstr "Bild (gedrückt)"
+
+msgid "intro-video-perso"
+msgstr "Die gewählte"
 

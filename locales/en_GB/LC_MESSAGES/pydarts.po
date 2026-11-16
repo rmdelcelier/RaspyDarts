@@ -5203,7 +5203,7 @@ msgid "editor-image-selected"
 msgstr "Image (selected)"
 
 msgid "editor-image-disabled"
-msgstr "Image (disabled)"
+msgstr "Image (unavailable, greyed)"
 
 msgid "editor-image-style"
 msgstr "The style's one"
@@ -5634,7 +5634,7 @@ msgid "theme-help"
 msgstr "Click or arrows: a tag · Click or Enter: change its colour · Escape: the panels (*: colour chosen)"
 
 msgid "theme-save-question"
-msgstr "Save the colours chosen?"
+msgstr "Save the theme?"
 
 msgid "theme-fine"
 msgstr "Fine setting"
@@ -6310,9 +6310,6 @@ msgstr "Intro video"
 msgid "intro-video-theme"
 msgstr "The theme's own"
 
-msgid "intro-video-game"
-msgstr "The game's"
-
 msgid "intro-video-none"
 msgstr "None"
 
@@ -6334,4 +6331,29 @@ msgstr "Top"
 
 msgid "theme-valign-bottom"
 msgstr "Bottom"
+
+
+msgid "theme-position-set"
+msgstr "Set the position…"
+
+msgid "theme-position-title"
+msgstr "Position of the text in its place"
+
+msgid "theme-position-left"
+msgstr "Left margin"
+
+msgid "theme-position-right"
+msgstr "Right margin"
+
+msgid "theme-position-top"
+msgstr "Top margin"
+
+msgid "theme-position-bottom"
+msgstr "Bottom margin"
+
+msgid "editor-image-pressed"
+msgstr "Image (pressed)"
+
+msgid "intro-video-perso"
+msgstr "The one chosen"
 

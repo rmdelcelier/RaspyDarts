@@ -4985,7 +4985,7 @@ msgid "editor-image-selected"
 msgstr "Afbeelding (geselecteerd)"
 
 msgid "editor-image-disabled"
-msgstr "Afbeelding (uitgeschakeld)"
+msgstr "Afbeelding (niet beschikbaar, grijs)"
 
 msgid "editor-image-style"
 msgstr "Die van de stijl"
@@ -5416,7 +5416,7 @@ msgid "theme-help"
 msgstr "Klik of pijlen: een label · Klik of Enter: kleur wijzigen · Esc: de panelen (*: gekozen kleur)"
 
 msgid "theme-save-question"
-msgstr "Gekozen kleuren opslaan?"
+msgstr "Thema opslaan?"
 
 msgid "theme-fine"
 msgstr "Fijnafstelling"
@@ -6092,9 +6092,6 @@ msgstr "Introvideo"
 msgid "intro-video-theme"
 msgstr "Die van het thema"
 
-msgid "intro-video-game"
-msgstr "Die van het spel"
-
 msgid "intro-video-none"
 msgstr "Geen"
 
@@ -6116,4 +6113,29 @@ msgstr "Boven"
 
 msgid "theme-valign-bottom"
 msgstr "Onder"
+
+
+msgid "theme-position-set"
+msgstr "Positie instellen…"
+
+msgid "theme-position-title"
+msgstr "Positie van de tekst in zijn vak"
+
+msgid "theme-position-left"
+msgstr "Marge links"
+
+msgid "theme-position-right"
+msgstr "Marge rechts"
+
+msgid "theme-position-top"
+msgstr "Marge boven"
+
+msgid "theme-position-bottom"
+msgstr "Marge onder"
+
+msgid "editor-image-pressed"
+msgstr "Afbeelding (ingedrukt)"
+
+msgid "intro-video-perso"
+msgstr "De gekozen video"
 
