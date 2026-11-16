@@ -4998,7 +4998,7 @@ msgid "editor-image-selected"
 msgstr "Immagine (selezionato)"
 
 msgid "editor-image-disabled"
-msgstr "Immagine (non disponibile, grigio)"
+msgstr "Immagine (preferito vuoto)"
 
 msgid "editor-image-style"
 msgstr "Quella dello stile"

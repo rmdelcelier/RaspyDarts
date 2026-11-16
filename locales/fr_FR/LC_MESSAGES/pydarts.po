@@ -5007,7 +5007,7 @@ msgid "editor-image-selected"
 msgstr "Image (sélectionné)"
 
 msgid "editor-image-disabled"
-msgstr "Image (indisponible, grisé)"
+msgstr "Image (favori vide)"
 
 msgid "editor-image-style"
 msgstr "Celle du style"

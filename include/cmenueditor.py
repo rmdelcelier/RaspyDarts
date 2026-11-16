@@ -674,7 +674,9 @@ class Editor:
                           {'id': 'shape', 'action': 'shape', 'text': 'editor-shape', 'value': self.shape_text(button)},
                           {'id': 'icon', 'action': 'icon', 'text': 'editor-icon', 'value': self.icon_text(button)}]
                 items += [{'id': state, 'action': state, 'text': f'editor-image-{state}',
-                           'value': self.state_image_text(button, state)} for state in STATES]
+                           'value': self.state_image_text(button, state)} for state in STATES
+                          # Greyed : only a favorite without its game (Favori N : vide)
+                          if state != 'disabled' or str(button.get('action') or '').startswith('favorite:')]
                 items += [{'id': f'color-{state}', 'action': f'color-{state}', 'text': f'editor-color-{state}',
                            'value': self.color_text(button, state)} for state in COLOR_STATES]
             items.append({'id': 'delete', 'action': 'delete', 'text': 'editor-delete'})

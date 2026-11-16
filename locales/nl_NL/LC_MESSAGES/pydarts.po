@@ -4985,7 +4985,7 @@ msgid "editor-image-selected"
 msgstr "Afbeelding (geselecteerd)"
 
 msgid "editor-image-disabled"
-msgstr "Afbeelding (niet beschikbaar, grijs)"
+msgstr "Afbeelding (lege favoriet)"
 
 msgid "editor-image-style"
 msgstr "Die van de stijl"
