@@ -3,12 +3,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>RaspyDarts : installation</title>
 <link rel="canonical" href="https://raspydarts.raspyhub.fr/installation.html">
-<meta http-equiv="refresh" content="0; url=https://raspydarts.raspyhub.fr/installation.html">
+<meta http-equiv="refresh" content="0; url=https://raspydarts.raspyhub.fr/installation.html?depuis=github">
 <script>
-  // La page d'installation est sur RaspyHub : la langue (?lang=) et l'ancre (#3) suivent
+  // La page d'installation est sur RaspyHub : la langue (?lang=) et l'ancre (#3) suivent ;
+  // depuis=github : RaspyHub n'affiche pas les menus du site (la personne vient de GitHub pour installer)
   var CIBLE = 'https://raspydarts.raspyhub.fr/installation.html';
   var l = new URLSearchParams(location.search).get('lang');
-  location.replace(CIBLE + (l ? (CIBLE.indexOf('?') < 0 ? '?' : '&') + 'lang=' + encodeURIComponent(l) : '') + location.hash);
+  CIBLE += (CIBLE.indexOf('?') < 0 ? '?' : '&') + 'depuis=github';
+  location.replace(CIBLE + (l ? '&lang=' + encodeURIComponent(l) : '') + location.hash);
 </script>
 </head><body style="font-family:system-ui,sans-serif;padding:2em">
 <p>La page d'installation de RaspyDarts a déménagé · The RaspyDarts installation page has moved :
