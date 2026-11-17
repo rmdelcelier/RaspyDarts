@@ -38,21 +38,105 @@
         menu.buttons = buttons;
       }
       // Une liste de boutons : ceux du jeu qu'elle ne nomme pas (un bouton d'une version plus
-      // recente) s'ajoutent apres les siens, avant ceux du bas, sauf ceux retires (removed)
+      // recente) s'ajoutent apres celui qui les precede dans le jeu (sinon apres les siens,
+      // avant ceux du bas), sauf ceux retires (removed) ou remplaces (REPLACES)
       const removed = asList(menu.removed).map(String);
       delete menu.removed;
-      if (Array.isArray(menu.buttons)) {
-        const named = new Set(menu.buttons.filter(b => L.isDict(b)).map(buttonId));
-        const before = ((((defaults.menus || {})[name]) || {}).buttons || []);
-        const extra = before.filter(b => L.isDict(b) && !named.has(buttonId(b)) && !removed.includes(buttonId(b))).map(b => Object.assign({}, b));
-        if (extra.length) {
-          let at = menu.buttons.findIndex(b => L.isDict(b) && b.footer);
-          if (at < 0) at = menu.buttons.length;
-          menu.buttons.splice(at, 0, ...extra);
+      if (!Array.isArray(menu.buttons)) continue;
+      const named = new Set(menu.buttons.filter(b => L.isDict(b)).map(buttonId));
+      const before = ((((defaults.menus || {})[name]) || {}).buttons || []);
+      let extra = before.filter(b => L.isDict(b) && !named.has(buttonId(b)) && !removed.includes(buttonId(b)) &&
+        !(REPLACES[buttonId(b)] || []).some(other => named.has(other))).map(b => Object.assign({}, b));
+      const order = before.map(b => (L.isDict(b) ? buttonId(b) : null));
+      // Tous les boutons places a la main (place : l'editeur des ecrans) : un nouveau qui le
+      // demande (place_free) prend une place libre de sa taille ; les autres restent a
+      // « Ajouter un bouton »
+      const shown = menu.buttons.filter(b => L.isDict(b) && !b.footer && b.visible !== false);
+      if (extra.length && shown.length && shown.every(b => L.isDict(b.place))) {
+        const kept = [];
+        for (const button of extra) {
+          const wanted = button.place_free;
+          delete button.place_free;
+          if (!wanted) continue;
+          const previous = order.slice(0, order.indexOf(buttonId(button)));
+          let beside = null;
+          for (const otherId of previous.slice().reverse()) {
+            beside = shown.find(other => buttonId(other) === otherId) || null;
+            if (beside) break;
+          }
+          const place = freePlace(shown, menu.gap, beside);
+          if (!place) continue;
+          button.place = place;
+          shown.push(button);
+          kept.push(button);
         }
+        extra = kept;
+      }
+      for (const button of extra) {
+        delete button.place_free;
+        const ids = menu.buttons.map(b => (L.isDict(b) ? buttonId(b) : null));
+        // Son raccourci deja pris par un bouton du fichier : aucun
+        if (button.shortcut && menu.buttons.some(b => L.isDict(b) && b.shortcut === button.shortcut)) delete button.shortcut;
+        const previous = order.slice(0, order.indexOf(buttonId(button)));
+        let at = null;
+        for (const other of previous.slice().reverse()) { if (ids.includes(other)) { at = ids.indexOf(other) + 1; break; } }
+        if (at === null) {
+          at = menu.buttons.findIndex(b => L.isDict(b) && b.footer);
+          if (at < 0) at = menu.buttons.length;
+        }
+        menu.buttons.splice(at, 0, button);
       }
     }
     return merge(defaults, content);
+  }
+  // cmenus.REPLACES : un bouton du jeu que d'autres remplacent dans un fichier
+  const REPLACES = { network: ['netjoin', 'netcreate'] };
+  // cmenus.free_place : une place libre (parts de l'ecran) pour un nouveau bouton parmi des
+  // boutons places a la main, de la taille de celui d'avant (sinon du dernier), a cote de lui
+  // (droite, dessous, gauche, dessus), sinon a cote d'un autre ; dans l'ecran, entre le titre et
+  // les boutons du bas, sur aucun. null : pas de place
+  function freePlace(shown, gap, beside) {
+    const box = (button) => {
+      const place = L.isDict(button) ? button.place : null;
+      if (!L.isDict(place)) return null;
+      const values = ['x', 'y', 'width', 'height'].map(k => parseFloat(place[k]));
+      return values.some(v => !isFinite(v)) ? null : values;
+    };
+    const boxes = shown.map(box);
+    if (!boxes.length || boxes.some(b => b === null)) return null;
+    const model = beside ? box(beside) : boxes[boxes.length - 1];
+    const [width, height] = [model[2], model[3]];
+    const g = L.isDict(gap) ? gap : {};
+    const gapX = isFinite(parseFloat(g.x)) ? parseFloat(g.x) : 0.005, gapY = isFinite(parseFloat(g.y)) ? parseFloat(g.y) : 0.005;
+    const top = 0.12, bottom = 0.88, side = 0.01;
+    const apart = (x, y, other) => x + width <= other[0] + 1e-4 || other[0] + other[2] <= x + 1e-4 ||
+      y + height <= other[1] + 1e-4 || other[1] + other[3] <= y + 1e-4;
+    const free = (x, y) => !(x < side || y < top || x + width > 1 - side || y + height > bottom) && boxes.every(o => apart(x, y, o));
+    const r4 = (v) => Math.round(v * 10000) / 10000;
+    const anchors = (beside ? [model] : []).concat(boxes.slice().sort((a, b) => a[1] - b[1] || a[0] - b[0]));
+    for (const a of anchors) {
+      for (const [x, y] of [[a[0] + a[2] + gapX, a[1]], [a[0], a[1] + a[3] + gapY], [a[0] - width - gapX, a[1]], [a[0], a[1] - height - gapY]]) {
+        if (free(x, y)) return { x: r4(x), y: r4(y), width: r4(width), height: r4(height) };
+      }
+    }
+    // Une grille dont la derniere rangee n'est pas pleine (un bouton seul, centre) : ses boutons
+    // sur les colonnes des rangees du dessus, le nouveau dans la colonne restante
+    const same = shown.filter((b, i) => Math.abs(boxes[i][2] - width) < 1e-3 && Math.abs(boxes[i][3] - height) < 1e-3);
+    if (same.length) {
+      const lastY = Math.max(...same.map(b => box(b)[1]));
+      const row = same.filter(b => Math.abs(box(b)[1] - lastY) < 1e-3).sort((a, b) => box(a)[0] - box(b)[0]);
+      const columns = [...new Set(same.filter(b => !row.includes(b)).map(b => r4(box(b)[0])))].sort((a, b) => a - b);
+      if (columns.length >= 2 && row.length < columns.length) {
+        const others = shown.filter(b => !row.includes(b)).map(box);
+        const places = columns.map(x => [x, lastY]);
+        if (places.every(([x, y]) => others.every(o => apart(x, y, o)))) {
+          row.forEach((b, i) => { b.place = Object.assign({}, b.place, { x: places[i][0], y: places[i][1] }); });
+          const [x, y] = places[row.length];
+          return { x: x, y: r4(y), width: r4(width), height: r4(height) };
+        }
+      }
+    }
+    return null;
   }
   function asList(value) { return value === null || value === undefined ? [] : (Array.isArray(value) ? value : [value]); }
 

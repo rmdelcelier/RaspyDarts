@@ -8,6 +8,7 @@ const DATA = MENUS_DATA;
 const L = MenusLayout, R = MenusRender;
 const LANGS = ['fr', 'en', 'de', 'es', 'it'];
 const FILE_MENUS = ['main', 'miscellaneous', 'settings', 'categories'];
+const EDITED_SCREENS = ['main', 'miscellaneous', 'settings'];
 const GAME_SCREENS = ['games', 'options', 'players'];
 const RESOLUTIONS = [[1024, 600], [1280, 720], [1366, 768], [1600, 900], [1920, 1080], [800, 480]];
 const FITS = ['stretch', 'cover', 'contain', 'center', 'tile', 'slice'];
@@ -83,7 +84,11 @@ function menuButtons(name) {
 function ownButtons(name) {
   // La liste des boutons dans le fichier (copiee des menus du jeu au premier changement)
   const menu = userMenu(name, true);
-  if (!Array.isArray(menu.buttons)) { menu.buttons = clone(menuButtons(name)); delete menu.button_changes; }
+  if (!Array.isArray(menu.buttons)) {
+    // place_free : une consigne du jeu pour ses nouveaux boutons, jamais ecrite dans le fichier
+    menu.buttons = clone(menuButtons(name)).map(b => { if (L.isDict(b)) delete b.place_free; return b; });
+    delete menu.button_changes;
+  }
   return menu.buttons;
 }
 function cleanUser() {
@@ -100,9 +105,13 @@ function cleanUser() {
   }
 }
 function screens() {
+  // Les ecrans que l'editeur du jeu modifie (include/cmenueditor.py SCREENS)
+  return EDITED_SCREENS.slice();
+}
+function allMenus() {
+  // Les menus qu'un bouton peut ouvrir (menu:...)
   const menus = Object.keys(merged().menus || {}).filter(n => !['favorite_save', 'favorite_players', 'favorite_game', 'question', 'editor_games', 'online_lobby', 'online_chat'].includes(n));
   const own = menus.filter(n => !FILE_MENUS.includes(n) && !GAME_SCREENS.includes(n));
-  // Les ecrans du jeu (liste des jeux, options, joueurs) : plus tard
   return FILE_MENUS.concat(own);
 }
 function isLook(text) {
@@ -343,7 +352,8 @@ function geometry() {
       areas[''] = [left, top, Math.max(...shown.map(r => r[0] + r[2])) - left, Math.max(...shown.map(r => r[1] + r[3])) - top];
     }
   }
-  return { ids: ids, rects: rects, listed: info.listed.map(R.buttonId), areas: areas, area: areas[''] || null, version: version };
+  return { ids: ids, rects: rects, listed: info.listed.map(R.buttonId), areas: areas, area: areas[''] || null, version: version,
+    title: titleRect() };
 }
 function zoneAt(point) {
   // La zone de boutons sous ce point (la plus petite si elles se chevauchent)
@@ -413,6 +423,10 @@ function drawOverlay() {
   if (geo.version) {
     if (selection.kind === 'version') { frame(geo.version, '#0a84ff', 3, false); knobs(geo.version); }
     else if (hover === '__version') frame(geo.version, 'rgba(255,255,255,0.7)', 1, false);
+  }
+  if (geo.title) {
+    if (selection.kind === 'title') { frame(geo.title, '#0a84ff', 3, false); knobs(geo.title); }
+    else if (hover === '__title') frame(geo.title, 'rgba(255,255,255,0.7)', 1, false);
   }
   if (selection.kind === 'button' && geo.rects[selection.id]) {
     const rect = geo.rects[selection.id];
@@ -545,6 +559,57 @@ function setSpan(button, units, rows) {
 function setArea(rect, zone) {
   setPath(zoneOwn(zone || '', true), ['area'], { x: pxToFile(rect[0], 'x'), y: pxToFile(rect[1], 'y'), width: pxToFile(rect[2], 'x'), height: pxToFile(rect[3], 'y') });
 }
+// Le bandeau du titre (comme cmenueditor TITLE_ID) : place, nom, supprime (title: false) ou
+// rajoute ; un titre deplace garde l'allure du bandeau habituel (couleur menu-header, meme
+// transparence que le jeu : alpha 210)
+const HEADER_OPACITY = Math.round(210 / 255 * 1000) / 1000;
+function rawTitle(name) {
+  return makeRenderer().menu(name || screen).title;
+}
+function titleRect() {
+  if (GAME_SCREENS.includes(screen)) return null;
+  const [text, look] = makeRenderer().textLook(screen, 'title');
+  if (!text) return null;
+  const [W, H] = previewSize();
+  const place = L.isDict(look) ? look.place : null;
+  if (!L.isDict(place)) return [0, Math.trunc(H / 30), W, Math.trunc(H / 15)];
+  const u = new L.Units([W, H], reference());
+  return [u.length(place.x !== undefined ? place.x : 0, 'x'), u.length(place.y !== undefined ? place.y : 0, 'y'),
+    u.length(place.width !== undefined ? place.width : '100%', 'x'), u.length(place.height !== undefined ? place.height : '7%', 'y')];
+}
+function titleBlock(name) {
+  // Le titre en bloc {text, ...aspect} : celui qu'il a, ou l'allure du bandeau habituel
+  const raw = rawTitle(name);
+  let block;
+  if (isLook(raw)) block = clone(raw);
+  else block = { text: raw === undefined || raw === null || raw === false ? 'game-type-menu' : clone(raw) };
+  if (Object.keys(block).every(k => k === 'text' || k === 'place')) {
+    block.size = 'auto';
+    block.background = { color: 'menu-header', opacity: HEADER_OPACITY };
+  }
+  return block;
+}
+function setTitle(rect) {
+  const block = titleBlock();
+  block.place = { x: pxToFile(rect[0], 'x'), y: pxToFile(rect[1], 'y'), width: pxToFile(rect[2], 'x'), height: pxToFile(rect[3], 'y') };
+  userMenu(screen, true).title = block;
+}
+function addTitle() {
+  // Le bandeau rajoute : en haut, comme l'entete habituel (le texte du jeu pour cet ecran)
+  const own = userMenu(screen, true);
+  delete own.title;
+  if (!makeRenderer().textLook(screen, 'title')[0]) {
+    const original = ((DATA.defaults.menus || {})[screen] || {}).title;
+    own.title = isLook(original) ? original.text : (original || 'game-type-menu');
+  }
+  selection = { kind: 'title' };
+  changed(true);
+}
+function deleteTitle() {
+  userMenu(screen, true).title = false;
+  selection = { kind: 'screen' };
+  changed(true);
+}
 function setVersion(rect) {
   // La version placee : un bloc de sa place (et de son aspect s'il en avait un)
   const current = ((merged().menus || {})[screen] || {}).show_version;
@@ -596,6 +661,10 @@ $('overlay').addEventListener('pointerdown', (event) => {
     const handle = handleAt(geo.version, point);
     if (handle) { op = { type: 'version', handle: handle, start: point, rect: geo.version.slice() }; capture(event); return; }
   }
+  if (selection.kind === 'title' && geo.title) {
+    const handle = handleAt(geo.title, point);
+    if (handle) { op = { type: 'title', handle: handle, start: point, rect: geo.title.slice() }; capture(event); return; }
+  }
   if (GAME_SCREENS.includes(screen)) {
     // Ecran du jeu : ses boutons montrent leur aspect choisi, le panneau reste celui de l'ecran
     if (zoneArea && onEdge(zoneArea, point)) { op = { type: 'area', zone: '', handle: 'move', start: point, rect: zoneArea.slice() }; capture(event); return; }
@@ -612,6 +681,10 @@ $('overlay').addEventListener('pointerdown', (event) => {
   if (geo.version && inside(point, geo.version)) {
     if (selection.kind !== 'version') selectVersion();
     op = { type: 'version', handle: 'move', start: point, rect: geo.version.slice() }; capture(event); return;
+  }
+  if (geo.title && inside(point, geo.title)) {
+    if (selection.kind !== 'title') selectTitle();
+    op = { type: 'title', handle: 'move', start: point, rect: geo.title.slice() }; capture(event); return;
   }
   // Une zone de boutons : choisie, et deplacee en la glissant par son interieur
   const under = zoneAt(point);
@@ -634,11 +707,13 @@ $('overlay').addEventListener('pointermove', (event) => {
     const id = currentId();
     const zoneArea = selection.kind === 'zone' ? (geo.areas || {})[selection.zone] : (screen === 'games' && selection.kind === 'screen' ? geo.area : null);
     const handle = (id && geo.rects[id] && resizable(id) && handleAt(geo.rects[id], point)) ||
-                   (zoneArea && handleAt(zoneArea, point)) || (selection.kind === 'version' && geo.version && handleAt(geo.version, point));
+                   (zoneArea && handleAt(zoneArea, point)) || (selection.kind === 'version' && geo.version && handleAt(geo.version, point)) ||
+                   (selection.kind === 'title' && geo.title && handleAt(geo.title, point));
     let over = GAME_SCREENS.includes(screen) ? null : buttonAt(point);
     if (!over && geo.version && inside(point, geo.version)) over = '__version';
+    if (!over && geo.title && inside(point, geo.title)) over = '__title';
     if (handle) cursor = CURSORS[handle];
-    else if (over === '__version' || (over && (resizable(over) || movableFooter(over)))) cursor = 'move';
+    else if (over === '__version' || over === '__title' || (over && (resizable(over) || movableFooter(over)))) cursor = 'move';
     else if (over) cursor = 'pointer';
     else if (!GAME_SCREENS.includes(screen) && zoneAt(point) !== null) cursor = 'move';
     else if (zoneArea && onEdge(zoneArea, point)) cursor = 'move';
@@ -718,6 +793,12 @@ $('overlay').addEventListener('pointermove', (event) => {
     const rect = snap(op.handle === 'move' ? moved(op.rect) : resized(op.rect, op.handle, dx, dy), op.handle, ['__version'], event.altKey);
     setVersion(rect);
     schedule();
+  } else if (op.type === 'title') {
+    if (!op.moved && Math.hypot(dx, dy) < 4 * overlayScale()) return;
+    op.moved = true;
+    const rect = snap(op.handle === 'move' ? moved(op.rect) : resized(op.rect, op.handle, dx, dy), op.handle, ['__title'], event.altKey);
+    setTitle(rect);
+    schedule();
   }
 });
 $('overlay').addEventListener('pointerup', async () => {
@@ -732,7 +813,7 @@ $('overlay').addEventListener('pointerup', async () => {
     else leaveRows(done.origin);
     changed(true);
   }
-  else if ((done.type === 'area' || done.type === 'version') && done.moved) changed(true);
+  else if ((done.type === 'area' || done.type === 'version' || done.type === 'title') && done.moved) changed(true);
   else if (done.type === 'resize' && !done.current && done.before) { user = JSON.parse(done.before); schedule(); }
   else if (done.type === 'resize' && done.current) {
     if (done.free) { changed(true); return; }
@@ -795,6 +876,12 @@ $('overlay').addEventListener('keydown', (event) => {
   if (selection.kind === 'version' && geo && geo.version) {
     const r = geo.version;
     setVersion([r[0] + dx * step, r[1] + dy * step, r[2], r[3]]);
+    changed(true);
+    return;
+  }
+  if (selection.kind === 'title' && geo && geo.title) {
+    const r = geo.title;
+    setTitle([r[0] + dx * step, r[1] + dy * step, r[2], r[3]]);
     changed(true);
     return;
   }
@@ -873,7 +960,13 @@ function selectVersion() {
   showTab('edit');
   buildPanel(); schedule();
 }
+function selectTitle() {
+  selection = { kind: 'title' };
+  showTab('edit');
+  buildPanel(); schedule();
+}
 function validateSelection() {
+  if (selection.kind === 'title' && (GAME_SCREENS.includes(screen) || !makeRenderer().textLook(screen, 'title')[0])) selection = { kind: 'screen' };
   if (selection.kind === 'button' && !buttonOf(selection.id)) selection = { kind: 'screen' };
   if (selection.kind === 'zone' && (GAME_SCREENS.includes(screen) || !zoneNames(menuInfo(screen).menu).includes(selection.zone))) selection = { kind: 'screen' };
   if (selection.kind === 'version' && !((merged().menus || {})[screen] || {}).show_version) selection = { kind: 'screen' };
@@ -1061,8 +1154,8 @@ function fieldset(parent, legend, open) {
 function sizeLabel() { return reference() ? t('f-size-px') : t('f-size'); }
 
 // Titre ou sous-titre : texte, et aspect (bloc) si l'un de ses reglages est donne
-function titleFields(parent, name, key) {
-  const fs = fieldset(parent, t(key === 'title' ? 'f-title' : 'f-subtitle'));
+function titleFields(parent, name, key, open) {
+  const fs = fieldset(parent, t(key === 'title' ? 'f-title' : 'f-subtitle'), open);
   const get = () => userMenu(name)[key];
   const look = () => (L.isDict(get()) && !Object.keys(get()).every(k => R.LANGUAGES.includes(k)) ? get() : {});
   const write = (text, lookValues) => {
@@ -1166,6 +1259,7 @@ function buildPanel() {
   if (selection.kind === 'button') buildButtonPanel(panel);
   else if (selection.kind === 'zone') buildZonePanel(panel);
   else if (selection.kind === 'version') buildVersionPanel(panel);
+  else if (selection.kind === 'title') buildTitlePanel(panel);
   else buildScreenPanel(panel);
   $('side').scrollTop = scroll;
 }
@@ -1187,7 +1281,19 @@ function buildScreenPanel(panel) {
     rectInputs(fs, k => getPath(own(), ['area', k]), (k, v) => setPath(userMenu(name, true), ['area', k], v));
     fs.appendChild(el('p', { class: 'hint', text: t('area-hint') }));
   }
-  titleFields(panel, name, 'title');
+  if (GAME_SCREENS.includes(name)) titleFields(panel, name, 'title');
+  else {
+    // Le bandeau du titre : un element de l'ecran (place, texte, supprime ou rajoute)
+    const fsTitle = fieldset(panel, t('f-title'), true);
+    if (makeRenderer().textLook(name, 'title')[0]) {
+      fsTitle.appendChild(el('div', { class: 'row' }, [
+        el('button', { class: 'act', text: '✥ ' + t('title-edit'), onclick: selectTitle }),
+        el('button', { class: 'act danger', text: '✕ ' + t('title-delete'), onclick: deleteTitle })]));
+    } else {
+      fsTitle.appendChild(el('p', { class: 'hint', text: t('title-none') }));
+      fsTitle.appendChild(el('div', { class: 'row' }, [el('button', { class: 'act', text: '＋ ' + t('title-add'), onclick: addTitle })]));
+    }
+  }
   adv(titleFields(panel, name, 'subtitle'));
   backgroundFields(panel, () => own().background, set('background'), t('f-menu-background'));
   if (GAME_SCREENS.includes(name)) return;
@@ -1340,6 +1446,30 @@ function buildZonePanel(panel) {
   panel.appendChild(row);
   if (!several) panel.appendChild(el('p', { class: 'hint', text: t('zone-only') }));
 }
+function buildTitlePanel(panel) {
+  // Le bandeau du titre : sa place (glissee dans l'apercu), son texte et son aspect
+  panel.appendChild(el('a', { class: 'back', text: t('back-screen'), onclick: selectScreen }));
+  panel.appendChild(el('h2', { text: t('title-band') }));
+  panel.appendChild(el('p', { class: 'hint', text: t('title-band-hint') }));
+  const rect = (lastDraw && lastDraw.geometry && lastDraw.geometry.title) || [0, 0, 0, 0];
+  const now = { x: pxToFile(rect[0], 'x'), y: pxToFile(rect[1], 'y'), width: pxToFile(rect[2], 'x'), height: pxToFile(rect[3], 'y') };
+  const place = () => { const raw = rawTitle(); return isLook(raw) && L.isDict(raw.place) ? raw.place : {}; };
+  adv(rectInputs(panel, k => (place()[k] !== undefined ? place()[k] : now[k]), (k, v) => {
+    const block = titleBlock();
+    block.place = Object.assign({}, now, place());
+    if (v === undefined) delete block.place[k]; else block.place[k] = v;
+    userMenu(screen, true).title = block;
+  }));
+  titleFields(panel, screen, 'title', true);
+  panel.appendChild(el('div', { class: 'row', style: 'margin-top:10px' }, [
+    el('button', { class: 'act', text: '↩ ' + t('title-reset'), onclick: () => {
+      const block = titleBlock();
+      delete block.place;
+      userMenu(screen, true).title = block;
+      changed(true);
+    } }),
+    el('button', { class: 'act danger', text: '✕ ' + t('title-delete'), onclick: deleteTitle })]));
+}
 function buildVersionPanel(panel) {
   // La version (V4.6) : sa place et son aspect
   const current = () => ((merged().menus || {})[screen] || {}).show_version;
@@ -1477,7 +1607,7 @@ function buildButtonList(panel, name) {
 // ------------------------------------------------------------------ panneau : un bouton
 function actionChoices() {
   const groups = [[t('g-actions'), DATA.actions.map(a => [a, gameText(actionText(a)) + ` (${a})`])]];
-  const menus = screens().filter(n => !GAME_SCREENS.includes(n) && n !== 'main');
+  const menus = allMenus().filter(n => !GAME_SCREENS.includes(n) && n !== 'main');
   groups.push([t('g-menus'), menus.map(n => [`menu:${n}`, screenLabel(n)])]);
   groups.push([t('g-categories'), ['classic', 'fun', 'sport', 'favorites'].map(c => [`category:${c}`, t('cat-' + c)])]);
   const games = [];
@@ -1518,6 +1648,8 @@ function buildButtonPanel(panel) {
   const content = fieldset(panel, t('f-text'), true);
   field(content, 'f-text', textInput(() => (L.isDict(labelOf(button)) ? undefined : labelOf(button)), v => editButton(id, b => setLabel(b, v)),
     gameText(actionText(button.action))), 'f-button-text-hint');
+  // Sans nom (son image ou son icone seule), comme dans l'editeur du jeu
+  content.appendChild(checkInput('f-no-name', () => labelOf(button) === '', v => editButton(id, b => setLabel(b, v ? '' : undefined)), true));
   const select = el('select');
   for (const [group, options] of actionChoices()) {
     const og = el('optgroup', { label: group });
@@ -1727,7 +1859,9 @@ function buildLookFields(parent, id) {
   cell(gi, t('f-position'), selectInput(['left', 'top', 'right', 'center'].map(p => [p, t('pos-' + p)]), get(['icon', 'position']), set(['icon', 'position']), ''));
   cell(gi, t('f-size-part'), numberInput(get(['icon', 'size']), set(['icon', 'size']), 0.05, 0.1, 1));
   fsIcon.appendChild(gi);
-  for (const state of ['selected', 'disabled', 'pressed']) {
+  // Grise : seulement un favori sans son jeu (Favori N : vide), comme dans l'editeur du jeu
+  const favorite = String((buttonOf(id) || button || {}).action || '').startsWith('favorite:');
+  for (const state of ['selected', 'disabled', 'pressed'].filter(s => s !== 'disabled' || favorite || scope === 'all')) {
     const fs = adv(fieldset(parent, t('state-' + state), state === 'selected' && showSelected ? 'force' : false));
     if (state === 'selected') {
       fs.addEventListener('toggle', () => {
@@ -1960,6 +2094,7 @@ function snap(rect, mode, exclude, off, area) {
   // Les zones de boutons (sauf celle qu'on tire : area est son nom), la version
   for (const [zone, a] of Object.entries(geo.areas || {})) if (area === undefined || area === false || zone !== area) add(a);
   if (geo.version && !exclude.includes('__version')) add(geo.version);
+  if (geo.title && !exclude.includes('__title')) add(geo.title);
   const result = rect.slice();
   for (const axis of ['x', 'y']) {
     const [p, size] = axis === 'x' ? [0, 2] : [1, 3];
@@ -1989,7 +2124,108 @@ function snap(rect, mode, exclude, off, area) {
   }
   return result;
 }
+function addableChoices() {
+  // Ce que « Ajouter » propose, comme cmenueditor.addable : les boutons du jeu absents de
+  // l'ecran, et pour l'ecran principal les favoris, les categories, un jeu, la version, le
+  // panneau des joueurs en ligne ; le bandeau du titre s'il n'y est plus ; un nouveau bouton
+  const shown = menuButtons(screen);
+  const present = new Set(shown.map(R.buttonId));
+  const actions = new Set(shown.map(b => String(b.action)));
+  const groups = [];
+  const game = ((DATA.defaults.menus || {})[screen] || {}).buttons || [];
+  const missing = game.filter(b => L.isDict(b) && !present.has(R.buttonId(b)) && !b.footer && b.visible !== false);
+  if (missing.length) groups.push([t('add-g-game'), missing.map(b => [`copy:${R.buttonId(b)}`, buttonLabelText(b)])]);
+  const others = [];
+  if (!makeRenderer().textLook(screen, 'title')[0]) others.push(['title', t('title-band')]);
+  if (screen === 'main') {
+    if (!((merged().menus || {}).main || {}).show_version) others.push(['version', t('version-title')]);
+    if (!actions.has('online_players')) others.push(['online', t('add-online-panel')]);
+  }
+  if (others.length) groups.push([t('add-g-elements'), others]);
+  if (screen === 'main') {
+    const favorites = Array.from({ length: 9 }, (_, i) => `fav${i + 1}`).filter(slot => !actions.has(`favorite:${slot}`));
+    if (favorites.length) groups.push([t('g-favorites'), favorites.map(slot => [`favorite:${slot}`, `${t('favorite')} ${slot.slice(3)}`])]);
+    const categories = ['classic', 'fun', 'sport', 'favorites'].filter(c => !actions.has(`category:${c}`));
+    if (categories.length) groups.push([t('g-categories'), categories.map(c => [`category:${c}`, t('cat-' + c)])]);
+    const games = [];
+    for (const [cat, names] of Object.entries(DATA.games)) names.forEach(n => games.push([`game:${n}`, `${n.replace(/_/g, ' ')} (${t('cat-' + cat)})`]));
+    groups.push([t('g-games'), games]);
+  }
+  groups.push([t('add-g-new'), [['new', t('new-button-title')]]]);
+  return groups;
+}
+function placeLikeOthers(button) {
+  // Un ecran dont tous les boutons sont places a la main : le nouveau au milieu, de la taille
+  // mediane des autres (comme cmenueditor.add) ; true : place
+  const info = menuInfo(screen);
+  const geo = lastDraw && lastDraw.geometry;
+  if (!info.listed.length || !info.listed.every(b => L.isDict(b.place)) || !geo) return false;
+  const rects = info.listed.map(b => geo.rects[R.buttonId(b)]).filter(Boolean);
+  if (!rects.length) return false;
+  const median = (values) => values.sort((a, b) => a - b)[Math.floor(values.length / 2)];
+  const [W, H] = previewSize();
+  const w = median(rects.map(r => r[2])), h = median(rects.map(r => r[3]));
+  button.place = { x: pxToFile((W - w) / 2, 'x'), y: pxToFile((H - h) / 2, 'y'), width: pxToFile(w, 'x'), height: pxToFile(h, 'y') };
+  return true;
+}
 async function addButton() {
+  // D'abord : quoi ajouter
+  const what = el('select', { style: 'width:100%' });
+  for (const [group, options] of addableChoices()) {
+    const og = el('optgroup', { label: group });
+    for (const [value, text] of options) og.appendChild(el('option', { value: value, text: text }));
+    what.appendChild(og);
+  }
+  if (await ask(t('btn-add'), '', [['add', t('btn-add')], ['cancel', t('cancel')]], null,
+    el('div', {}, [el('label', { text: t('add-what') }), what])) !== 'add') return;
+  const choice = what.value;
+  if (choice === 'title') { addTitle(); return; }
+  if (choice === 'version') { userMenu(screen, true).show_version = true; selection = { kind: 'version' }; changed(true); return; }
+  if (choice === 'new') { await addNewButton(); return; }
+  let button;
+  if (choice.startsWith('copy:')) {
+    const source = (((DATA.defaults.menus || {})[screen] || {}).buttons || []).find(b => L.isDict(b) && R.buttonId(b) === choice.slice(5));
+    button = clone(source);
+    delete button.place_free;
+  } else if (choice === 'online') button = { id: 'online-players', action: 'online_players', text: 'online-players-panel' };
+  else if (choice.startsWith('favorite:')) button = { id: choice.slice(9), action: choice };
+  else if (choice.startsWith('category:')) {
+    const category = choice.slice(9);
+    const logos = { classic: 'menu_classic', fun: 'menu_fun', sport: 'menu_sport', favorites: 'menu_favoris' };
+    button = { id: `category-${category}`, action: choice, text: `dmd-game-${category}`, logo: logos[category] };
+  } else if (choice.startsWith('game:')) button = { id: `game-${choice.slice(5)}`, action: choice, text: choice.slice(5).replace(/_/g, ' ') };
+  else return;
+  insertButton(button);
+}
+function insertButton(button) {
+  // Un id libre dans cet ecran ; son raccourci deja pris : aucun
+  const buttons = ownButtons(screen);
+  const ident = R.buttonId(button);
+  let n = 2;
+  while (buttons.some(b => R.buttonId(b) === R.buttonId(button))) button.id = `${ident}-${n++}`;
+  if (button.shortcut && buttons.some(b => b.shortcut === button.shortcut)) delete button.shortcut;
+  if (!placeLikeOthers(button)) {
+    const info = menuInfo(screen);
+    if (info.styled) {
+      const m = metrics(info.menu, info.listed, '');
+      let smallest = null;
+      for (const index of m.members) {
+        const c = m.cells[index];
+        if (c && (!smallest || c[2] * c[3] < smallest[0] * smallest[1])) smallest = [c[2], c[3]];
+      }
+      if (smallest) setSpan(button, smallest[0], smallest[1]);
+      // Zone disposee a la main : il se met sous la derniere rangee (pas dans une rangee laissee vide)
+      if (fixedOf('').length) button.cell = { row: m.rows, column: 0 };
+    }
+  }
+  const footer = buttons.findIndex(b => b.footer);
+  buttons.splice(footer >= 0 ? footer : buttons.length, 0, button);
+  const own = userMenu(screen, true);
+  if (Array.isArray(own.removed)) { own.removed = own.removed.filter(r => r !== ident); if (!own.removed.length) delete own.removed; }
+  selection = { kind: 'button', id: R.buttonId(button) };
+  changed(true);
+}
+async function addNewButton() {
   // Son nom et sa fonction d'abord
   const name = el('input', { type: 'text', value: t('new-button'), style: 'width:100%' });
   const action = el('select', { style: 'width:100%' });
@@ -2005,26 +2241,9 @@ async function addButton() {
   const buttons = ownButtons(screen);
   let n = 1;
   while (buttons.some(b => R.buttonId(b) === `button${n}`)) n++;
-  const button = { id: `button${n}`, action: action.value, text: name.value.trim() || gameText(actionText(action.value)) };
-  // La taille du plus petit bouton de la premiere zone (une rangee de grille peut etre petite)
-  const info = menuInfo(screen);
-  if (info.styled) {
-    const m = metrics(info.menu, info.listed, '');
-    let smallest = null;
-    for (const index of m.members) {
-      const c = m.cells[index];
-      if (c && (!smallest || c[2] * c[3] < smallest[0] * smallest[1])) smallest = [c[2], c[3]];
-    }
-    if (smallest) setSpan(button, smallest[0], smallest[1]);
-    // Zone disposee a la main : il se met sous la derniere rangee (pas dans une rangee laissee vide)
-    if (fixedOf('').length) button.cell = { row: m.rows, column: 0 };
-  }
-  const footer = buttons.findIndex(b => b.footer);
-  buttons.splice(footer >= 0 ? footer : buttons.length, 0, button);
-  const own = userMenu(screen, true);
-  if (Array.isArray(own.removed)) { own.removed = own.removed.filter(r => r !== button.id); if (!own.removed.length) delete own.removed; }
-  selection = { kind: 'button', id: button.id };
-  changed(true);
+  // La taille du plus petit bouton de la premiere zone (une rangee de grille peut etre petite),
+  // ou celle des autres boutons places a la main
+  insertButton({ id: `button${n}`, action: action.value, text: name.value.trim() || gameText(actionText(action.value)) });
 }
 function moveButton(id, delta) {
   const buttons = ownButtons(screen);
