@@ -6,7 +6,7 @@
 const $ = (id) => document.getElementById(id);
 const DATA = MENUS_DATA;
 const L = MenusLayout, R = MenusRender;
-const LANGS = ['fr', 'en', 'de', 'es', 'it'];
+const LANGS = ['fr', 'en', 'de', 'es', 'it', 'nl'];
 const FILE_MENUS = ['main', 'miscellaneous', 'settings', 'categories'];
 const EDITED_SCREENS = ['main', 'miscellaneous', 'settings'];
 const GAME_SCREENS = ['games', 'options', 'players'];
@@ -283,7 +283,8 @@ function imageUrl(path) {
   }
   return null;
 }
-function themeSetup() {
+function themeSetup(bare) {
+  // bare : le theme lui-meme, sans les couleurs choisies dans l'onglet Theme (Colorset_perso.cfg)
   const theme = DATA.themes[themeName() === 'own' ? 'clear' : themeName()];
   let colors = Object.assign({}, theme.colors), font = theme.font, background = theme.background;
   if (themeName() === 'own' && ownTheme) {
@@ -291,6 +292,7 @@ function themeSetup() {
     if (ownTheme.font) font = ownTheme.font;
     if (ownTheme.images['images/background/background.png']) background = 'images/background/background.png';
   }
+  if (!bare && window.MenusTheme) colors = Object.assign(colors, MenusTheme.values());
   return { colors: colors, font: font, background: background };
 }
 MenusDraw.fontUrl = (file) => (ownTheme && ownTheme.fonts[file]) || DATA.fonts[file] || null;
@@ -2467,8 +2469,11 @@ function buildThemes() {
 function showTab(name) {
   $('tab-edit').classList.toggle('hidden', name !== 'edit');
   $('tab-file').classList.toggle('hidden', name !== 'file');
+  $('tab-theme').classList.toggle('hidden', name !== 'theme');
   $('tab-edit-btn').classList.toggle('active', name === 'edit');
   $('tab-file-btn').classList.toggle('active', name === 'file');
+  $('tab-theme-btn').classList.toggle('active', name === 'theme');
+  if (name === 'theme') MenusTheme.build();
 }
 function buildAll() {
   writeYaml();
@@ -2482,12 +2487,14 @@ function translate() {
   document.querySelectorAll('[data-t-title]').forEach(node => { node.title = t(node.dataset.tTitle); node.setAttribute('aria-label', node.title); });
   buildThemes();
   buildAll();
+  MenusTheme.build();
 }
 
 // ------------------------------------------------------------------ evenements
 $('lang').addEventListener('change', () => { lang = $('lang').value; store('lang', lang); translate(); });
 $('tab-edit-btn').addEventListener('click', () => showTab('edit'));
 $('tab-file-btn').addEventListener('click', () => showTab('file'));
+$('tab-theme-btn').addEventListener('click', () => showTab('theme'));
 function restartFromTheme() {
   user = themeMenus(); selection = { kind: 'screen' }; resumed = false; remember(); buildAll();
 }
@@ -2525,6 +2532,7 @@ $('theme').addEventListener('change', () => {
   store('theme', $('theme').value); $('own-theme').classList.toggle('hidden', $('theme').value !== 'own');
   // Rien de change : les menus du theme choisi
   if (untouched(user)) { user = themeMenus(); resumed = false; remember(); changed(true); }
+  MenusTheme.themeChanged();
   buildPanel(); schedule();
 });
 $('theme-folder').addEventListener('change', (e) => loadTheme([...e.target.files]));

@@ -42,6 +42,12 @@ main { display: grid; grid-template-columns: minmax(320px, 400px) 1fr; gap: 16px
 .tabs { display: flex; gap: 4px; margin-bottom: 8px; }
 .tabs button { flex: 1; border: 1px solid var(--line); background: var(--panel); color: var(--muted); border-radius: 8px; padding: 5px 8px; }
 .tabs button.active { border-color: var(--accent); color: var(--text); font-weight: 600; box-shadow: inset 0 -2px 0 var(--accent); }
+.theme-row { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 6px; align-items: center; padding: 3px 0; border-bottom: 1px solid var(--line); }
+.theme-row.changed .theme-tag { font-weight: 600; color: var(--accent); }
+.theme-tag { font-family: ui-monospace, monospace; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.theme-value { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+.theme-value input[type=color] { width: 44px; height: 26px; padding: 0; }
+#tab-theme h3 { margin: 14px 0 4px; font-size: 15px; }
 .seg { display: flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; margin: 6px 0; }
 .seg button { flex: 1; border: 0; background: var(--bg); color: var(--muted); padding: 5px 6px; font-size: .88rem; }
 .seg button.active { background: var(--accent); color: var(--accent-text); font-weight: 600; }
@@ -120,7 +126,7 @@ footer { text-align: center; color: var(--muted); font-size: .85rem; padding: 10
       <a class="social" href="https://www.facebook.com/groups/1124845401274184/" target="_blank" rel="noopener" data-t-title="menu-facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg></a>
       <select id="lang" aria-label="Langue">
         <option value="fr">Français</option><option value="en">English</option><option value="de">Deutsch</option>
-        <option value="es">Español</option><option value="it">Italiano</option>
+        <option value="es">Español</option><option value="it">Italiano</option><option value="nl">Nederlands</option>
       </select>
     </nav>
   </div>
@@ -131,8 +137,10 @@ footer { text-align: center; color: var(--muted); font-size: .85rem; padding: 10
     <div class="tabs">
       <button id="tab-edit-btn" class="active" data-t="tab-edit"></button>
       <button id="tab-file-btn" data-t="tab-file"></button>
+      <button id="tab-theme-btn" data-t="tab-theme"></button>
     </div>
     <div id="tab-edit" class="panel"></div>
+    <div id="tab-theme" class="panel hidden"></div>
     <div id="tab-file" class="hidden">
       <div class="panel">
         <h2 data-t="intro-title"></h2>
@@ -205,6 +213,7 @@ footer { text-align: center; color: var(--muted); font-size: .85rem; padding: 10
 <script src="menus-layout.js"></script>
 <script src="menus-draw.js"></script>
 <script src="menus-render.js"></script>
+<script src="menus-theme.js"></script>
 <script src="menus-app.js"></script>
 </body>
 </html>

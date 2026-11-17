@@ -26,7 +26,11 @@ from include import cmenustyle  # noqa: E402
 DOCS = os.path.join(ROOT, 'docs')
 ASSETS = os.path.join(DOCS, 'assets')
 EXAMPLE_THEMES = os.path.join(ROOT, '.raspydarts_example', 'themes')
-LANGUAGES = {'fr': 'fr_FR', 'en': 'en_GB', 'de': 'de_DE', 'es': 'es_ES', 'it': 'it_IT'}
+LANGUAGES = {'fr': 'fr_FR', 'en': 'en_GB', 'de': 'de_DE', 'es': 'es_ES', 'it': 'it_IT', 'nl': 'nl_NL'}
+# Personnaliser le theme (include/cthemeeditor.py) : ce que le configurateur en reprend
+THEME_EDITOR = ('PLATES', 'GROUPS', 'NONE_ALLOWED', 'SHORTCUT_TAGS', 'SHORTCUT_CHOICES', 'ALIGN_TAGS', 'ALIGN_CHOICES',
+                'VALIGN_TAGS', 'VALIGN_CHOICES', 'POSITION_TAGS', 'SHAPE_TAGS', 'RADIUS_TAGS', 'SHAPE_LIMITS', 'PALETTE',
+                'PERSO_NAME')
 # Taille des vignettes (le plus grand cote) : fonds, logos
 BACKGROUND_SIZE = 1280
 LOGO_SIZE = 256
@@ -41,6 +45,34 @@ def colorset_clear():
             if getattr(target.value, 'id', '') == 'ColorSet' and ast.literal_eval(target.slice) == 'clear':
                 return ast.literal_eval(node.value)
     raise SystemExit('ColorSet clear introuvable')
+
+
+def theme_editor():
+    ''' Les planches de Personnaliser le theme (include/cthemeeditor.py, lu sans pygame) '''
+    tree = ast.parse(open(os.path.join(ROOT, 'include', 'cthemeeditor.py'), encoding='utf-8').read())
+    values = {}
+    for node in tree.body:
+        if isinstance(node, ast.Assign) and isinstance(node.targets[0], ast.Name) and node.targets[0].id in THEME_EDITOR:
+            values[node.targets[0].id] = eval(compile(ast.Expression(node.value), 'cthemeeditor', 'eval'), {'range': range})  # noqa: S307
+    missing = set(THEME_EDITOR) - set(values)
+    if missing:
+        raise SystemExit(f'cthemeeditor : {missing} introuvable(s)')
+    # Une planche : son nom et ses etiquettes (gauche puis droite, sans doublon)
+    plates = []
+    for name, _drawer, left, right in values['PLATES']:
+        tags = []
+        for tag, _x, _y in list(left) + list(right):
+            if tag not in tags:
+                tags.append(tag)
+        plates.append({'name': name, 'tags': tags})
+    return {'plates': plates, 'groups': [[name, list(names)] for name, names in values['GROUPS']],
+            'noneAllowed': list(values['NONE_ALLOWED']), 'shortcutTags': list(values['SHORTCUT_TAGS']),
+            'shortcutChoices': [list(item) for item in values['SHORTCUT_CHOICES']],
+            'alignTags': list(values['ALIGN_TAGS']), 'alignChoices': [list(item) for item in values['ALIGN_CHOICES']],
+            'valignTags': list(values['VALIGN_TAGS']), 'valignChoices': [list(item) for item in values['VALIGN_CHOICES']],
+            'positionTags': list(values['POSITION_TAGS']), 'shapeTags': list(values['SHAPE_TAGS']),
+            'radiusTags': list(values['RADIUS_TAGS']), 'shapeLimits': values['SHAPE_LIMITS'],
+            'palette': [list(color) for color in values['PALETTE']], 'file': values['PERSO_NAME']}
 
 
 def colorset_file(path):
@@ -201,7 +233,7 @@ def main():
     texts = {}
     for lang, lang_dir in LANGUAGES.items():
         all_texts = po_texts(lang_dir)
-        prefixed = {key for key in all_texts if key.startswith(('game-type', 'favorite', 'dmd-'))}
+        prefixed = {key for key in all_texts if key.startswith(('game-type', 'favorite', 'dmd-', 'theme-'))}
         texts[lang] = {key: all_texts[key] for key in sorted(keys | prefixed) if key in all_texts and all_texts[key]}
 
     data = {
@@ -216,6 +248,7 @@ def main():
         'styleDefaults': cmenustyle.STYLE_DEFAULTS,
         'layoutDefaults': cmenustyle.LAYOUT_DEFAULTS,
         'gapDefault': cmenustyle.GAP_DEFAULT,
+        'themeEditor': theme_editor(),
     }
     with open(os.path.join(DOCS, 'menus-data.js'), 'w', encoding='utf-8', newline='\n') as file:
         file.write('// Genere par docs/generer_menus.py : ne pas modifier a la main\n')

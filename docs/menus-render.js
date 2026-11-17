@@ -5,7 +5,7 @@
   'use strict';
   const L = root.MenusLayout;
   const D = root.MenusDraw;
-  const LANGUAGES = ['fr', 'en', 'de', 'es', 'it'];
+  const LANGUAGES = ['fr', 'en', 'de', 'es', 'it', 'nl'];
   const STYLE_KEYS = ['shape', 'radius', 'background', 'border', 'shadow', 'selected', 'disabled', 'pressed'];
   const FOOTERS = { left: 'escape', center: 'refresh', right: 'return' };
 
