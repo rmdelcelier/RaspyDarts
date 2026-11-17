@@ -5767,10 +5767,7 @@ msgid "theme-import-folder"
 msgstr "Map importeren"
 
 msgid "theme-import-raspyhub"
-msgstr "Downloaden van Raspyhub"
-
-msgid "theme-import-raspyhub-soon"
-msgstr "Binnenkort: de thema's van Raspyhub zijn nog niet beschikbaar"
+msgstr "Downloaden van RaspyHub"
 
 msgid "theme-import-reading"
 msgstr "Thema wordt gelezen…"
@@ -6373,9 +6370,6 @@ msgstr "Het thema kon niet worden voorbereid (zie het logboek)"
 msgid "hub-too-big"
 msgstr "Het thema is {size} MB: RaspyHub aanvaardt maximaal {limit} (probeer zonder video's en geluiden)"
 
-msgid "hub-send-soon"
-msgstr "Het thema is klaar: versturen naar RaspyHub komt binnenkort"
-
 msgid "hub-no-player"
 msgstr "Geen speler op de kast"
 
@@ -6402,3 +6396,87 @@ msgstr "Alleen zelf gemaakte schermafbeeldingen kunnen worden gewist"
 
 msgid "hub-delete-question"
 msgstr "Deze schermafbeelding wissen?"
+
+msgid "hub-sending"
+msgstr "Versturen naar RaspyHub… {seconds} s"
+
+msgid "hub-sent"
+msgstr "Thema verstuurd: het verschijnt op RaspyHub zodra het is goedgekeurd"
+
+msgid "hub-sent-on"
+msgstr "Verstuurd op {date} (versie {version})"
+
+msgid "hub-send-failed"
+msgstr "Versturen mislukt: probeer het later opnieuw (zie het logboek)"
+
+msgid "hub-send-refused"
+msgstr "RaspyHub weigert het thema: {message}"
+
+msgid "hub-error-name-taken"
+msgstr "Deze themanaam is al bezet op RaspyHub: kies een andere"
+
+msgid "hub-error-too-many"
+msgstr "Vandaag te veel thema's verstuurd vanaf deze kast: probeer het morgen opnieuw"
+
+msgid "hub-error-removed"
+msgstr "Dit thema is van RaspyHub verwijderd: het kan niet meer onder deze naam worden verstuurd"
+
+msgid "hub-error-too-large"
+msgstr "RaspyHub weigert dit thema: het is te groot (probeer het zonder video's en geluiden)"
+
+msgid "hub-catalog-loading"
+msgstr "Thema's van RaspyHub worden gelezen…"
+
+msgid "hub-catalog-failed"
+msgstr "De thema's van RaspyHub konden niet worden gelezen: controleer internet of probeer het later opnieuw"
+
+msgid "hub-catalog-empty"
+msgstr "Nog geen thema's op RaspyHub"
+
+msgid "hub-catalog-count"
+msgstr "{count} thema('s)"
+
+msgid "hub-catalog-help"
+msgstr "Omhoog / Omlaag: thema - Links / Rechts: schermafbeelding - Bevestigen: downloaden"
+
+msgid "hub-capture-loading"
+msgstr "Schermafbeelding wordt geladen…"
+
+msgid "hub-capture-unavailable"
+msgstr "Schermafbeelding niet beschikbaar"
+
+msgid "hub-by"
+msgstr "door {author}"
+
+msgid "hub-updated"
+msgstr "bijgewerkt op {date}"
+
+msgid "hub-size"
+msgstr "{size} MB"
+
+msgid "hub-with-media"
+msgstr "met video's en geluiden"
+
+msgid "hub-without-media"
+msgstr "zonder video's en geluiden"
+
+msgid "hub-installed"
+msgstr "Geïnstalleerd"
+
+msgid "hub-update-available"
+msgstr "Update beschikbaar"
+
+msgid "hub-download-button"
+msgstr "Downloaden"
+
+msgid "hub-downloading"
+msgstr "Thema wordt gedownload: {percent} %"
+
+msgid "hub-download-failed"
+msgstr "Downloaden mislukt: probeer het later opnieuw (zie het logboek)"
+
+msgid "hub-needs-version"
+msgstr "Dit thema is gemaakt met RaspyDarts {version}. Toch downloaden?"
+
+msgid "hub-needs-version-explain"
+msgstr "Deze kast heeft een oudere versie: sommige instellingen van het thema worden misschien niet getoond. RaspyDarts bijwerken lost dat op."

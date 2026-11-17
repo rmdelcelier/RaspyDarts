@@ -5985,10 +5985,7 @@ msgid "theme-import-folder"
 msgstr "Import a folder"
 
 msgid "theme-import-raspyhub"
-msgstr "Download from Raspyhub"
-
-msgid "theme-import-raspyhub-soon"
-msgstr "Soon: the themes of Raspyhub are not available yet"
+msgstr "Download from RaspyHub"
 
 msgid "theme-import-reading"
 msgstr "Reading the theme…"
@@ -6591,9 +6588,6 @@ msgstr "The theme could not be prepared (see the log)"
 msgid "hub-too-big"
 msgstr "The theme is {size} MB: RaspyHub accepts {limit} at most (try without videos and sounds)"
 
-msgid "hub-send-soon"
-msgstr "The theme is ready: sending to RaspyHub is coming soon"
-
 msgid "hub-no-player"
 msgstr "No player on the machine"
 
@@ -6620,3 +6614,87 @@ msgstr "Only the captures taken can be erased"
 
 msgid "hub-delete-question"
 msgstr "Erase this capture?"
+
+msgid "hub-sending"
+msgstr "Sending to RaspyHub… {seconds} s"
+
+msgid "hub-sent"
+msgstr "Theme sent: it will appear on RaspyHub once approved"
+
+msgid "hub-sent-on"
+msgstr "Sent on {date} (version {version})"
+
+msgid "hub-send-failed"
+msgstr "Sending failed: try again later (see the log)"
+
+msgid "hub-send-refused"
+msgstr "RaspyHub refused the theme: {message}"
+
+msgid "hub-error-name-taken"
+msgstr "This theme name is already taken on RaspyHub: choose another one"
+
+msgid "hub-error-too-many"
+msgstr "Too many themes sent from this machine today: try again tomorrow"
+
+msgid "hub-error-removed"
+msgstr "This theme was removed from RaspyHub: it can no longer be sent under this name"
+
+msgid "hub-error-too-large"
+msgstr "RaspyHub refused this theme: it is too big (try without videos or sounds)"
+
+msgid "hub-catalog-loading"
+msgstr "Reading the themes of RaspyHub…"
+
+msgid "hub-catalog-failed"
+msgstr "The themes of RaspyHub could not be read: check the Internet connection or try again later"
+
+msgid "hub-catalog-empty"
+msgstr "No theme on RaspyHub yet"
+
+msgid "hub-catalog-count"
+msgstr "{count} theme(s)"
+
+msgid "hub-catalog-help"
+msgstr "Up / Down: theme - Left / Right: capture - Validate: download"
+
+msgid "hub-capture-loading"
+msgstr "Loading the capture…"
+
+msgid "hub-capture-unavailable"
+msgstr "Capture unavailable"
+
+msgid "hub-by"
+msgstr "by {author}"
+
+msgid "hub-updated"
+msgstr "updated {date}"
+
+msgid "hub-size"
+msgstr "{size} MB"
+
+msgid "hub-with-media"
+msgstr "with videos and sounds"
+
+msgid "hub-without-media"
+msgstr "without videos or sounds"
+
+msgid "hub-installed"
+msgstr "Installed"
+
+msgid "hub-update-available"
+msgstr "Update available"
+
+msgid "hub-download-button"
+msgstr "Download"
+
+msgid "hub-downloading"
+msgstr "Downloading the theme: {percent} %"
+
+msgid "hub-download-failed"
+msgstr "The download failed: try again later (see the log)"
+
+msgid "hub-needs-version"
+msgstr "This theme was made with RaspyDarts {version}. Download it anyway?"
+
+msgid "hub-needs-version-explain"
+msgstr "This machine has an older version: some settings of the theme may not show. Updating RaspyDarts solves it."

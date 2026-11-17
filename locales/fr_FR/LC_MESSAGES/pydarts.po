@@ -5789,10 +5789,7 @@ msgid "theme-import-folder"
 msgstr "Importer un dossier"
 
 msgid "theme-import-raspyhub"
-msgstr "Télécharger depuis Raspyhub"
-
-msgid "theme-import-raspyhub-soon"
-msgstr "Bientôt : les thèmes de Raspyhub ne sont pas encore disponibles"
+msgstr "Télécharger depuis RaspyHub"
 
 msgid "theme-import-reading"
 msgstr "Lecture du thème…"
@@ -6395,9 +6392,6 @@ msgstr "Le thème n'a pas pu être préparé (voir le journal)"
 msgid "hub-too-big"
 msgstr "Le thème fait {size} Mo : RaspyHub en accepte {limit} au plus (essayez sans vidéos ni sons)"
 
-msgid "hub-send-soon"
-msgstr "Le thème est prêt : l'envoi vers RaspyHub arrive bientôt"
-
 msgid "hub-no-player"
 msgstr "Aucun joueur sur la borne"
 
@@ -6424,3 +6418,87 @@ msgstr "Seules les captures prises peuvent être effacées"
 
 msgid "hub-delete-question"
 msgstr "Effacer cette capture ?"
+
+msgid "hub-sending"
+msgstr "Envoi vers RaspyHub… {seconds} s"
+
+msgid "hub-sent"
+msgstr "Thème envoyé : il apparaîtra sur RaspyHub une fois validé"
+
+msgid "hub-sent-on"
+msgstr "Envoyé le {date} (version {version})"
+
+msgid "hub-send-failed"
+msgstr "L'envoi n'a pas abouti : réessayez plus tard (voir le journal)"
+
+msgid "hub-send-refused"
+msgstr "RaspyHub refuse l'envoi : {message}"
+
+msgid "hub-error-name-taken"
+msgstr "Ce nom de thème est déjà pris sur RaspyHub : choisissez-en un autre"
+
+msgid "hub-error-too-many"
+msgstr "Trop d'envois depuis cette borne aujourd'hui : réessayez demain"
+
+msgid "hub-error-removed"
+msgstr "Ce thème a été retiré de RaspyHub : il ne peut plus être envoyé sous ce nom"
+
+msgid "hub-error-too-large"
+msgstr "RaspyHub refuse ce thème : il est trop gros (essayez sans vidéos ni sons)"
+
+msgid "hub-catalog-loading"
+msgstr "Lecture des thèmes de RaspyHub…"
+
+msgid "hub-catalog-failed"
+msgstr "Les thèmes de RaspyHub n'ont pas pu être lus : vérifiez Internet ou réessayez plus tard"
+
+msgid "hub-catalog-empty"
+msgstr "Aucun thème sur RaspyHub pour l'instant"
+
+msgid "hub-catalog-count"
+msgstr "{count} thème(s)"
+
+msgid "hub-catalog-help"
+msgstr "Haut / Bas : thème - Gauche / Droite : capture - Valider : télécharger"
+
+msgid "hub-capture-loading"
+msgstr "Chargement de la capture…"
+
+msgid "hub-capture-unavailable"
+msgstr "Capture indisponible"
+
+msgid "hub-by"
+msgstr "par {author}"
+
+msgid "hub-updated"
+msgstr "mis à jour le {date}"
+
+msgid "hub-size"
+msgstr "{size} Mo"
+
+msgid "hub-with-media"
+msgstr "avec vidéos et sons"
+
+msgid "hub-without-media"
+msgstr "sans vidéos ni sons"
+
+msgid "hub-installed"
+msgstr "Installé"
+
+msgid "hub-update-available"
+msgstr "Mise à jour disponible"
+
+msgid "hub-download-button"
+msgstr "Télécharger"
+
+msgid "hub-downloading"
+msgstr "Téléchargement du thème : {percent} %"
+
+msgid "hub-download-failed"
+msgstr "Le téléchargement n'a pas abouti : réessayez plus tard (voir le journal)"
+
+msgid "hub-needs-version"
+msgstr "Ce thème a été fait avec RaspyDarts {version}. Le télécharger quand même ?"
+
+msgid "hub-needs-version-explain"
+msgstr "Cette borne a une version plus ancienne : certains réglages du thème peuvent ne pas s'afficher. Une mise à jour de RaspyDarts règle cela."

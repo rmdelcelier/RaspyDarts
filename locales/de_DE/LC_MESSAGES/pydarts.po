@@ -5713,10 +5713,7 @@ msgid "theme-import-folder"
 msgstr "Ordner importieren"
 
 msgid "theme-import-raspyhub"
-msgstr "Von Raspyhub herunterladen"
-
-msgid "theme-import-raspyhub-soon"
-msgstr "Bald: die Themen von Raspyhub sind noch nicht verfügbar"
+msgstr "Von RaspyHub herunterladen"
 
 msgid "theme-import-reading"
 msgstr "Thema wird gelesen…"
@@ -6319,9 +6316,6 @@ msgstr "Das Thema konnte nicht vorbereitet werden (siehe Protokoll)"
 msgid "hub-too-big"
 msgstr "Das Thema hat {size} MB: RaspyHub nimmt höchstens {limit} an (ohne Videos und Töne versuchen)"
 
-msgid "hub-send-soon"
-msgstr "Das Thema ist bereit: das Senden an RaspyHub kommt bald"
-
 msgid "hub-no-player"
 msgstr "Kein Spieler auf dem Automaten"
 
@@ -6348,3 +6342,87 @@ msgstr "Nur gemachte Aufnahmen können gelöscht werden"
 
 msgid "hub-delete-question"
 msgstr "Diese Aufnahme löschen?"
+
+msgid "hub-sending"
+msgstr "Senden an RaspyHub… {seconds} s"
+
+msgid "hub-sent"
+msgstr "Thema gesendet: es erscheint auf RaspyHub, sobald es freigegeben ist"
+
+msgid "hub-sent-on"
+msgstr "Gesendet am {date} (Version {version})"
+
+msgid "hub-send-failed"
+msgstr "Senden fehlgeschlagen: später erneut versuchen (siehe Protokoll)"
+
+msgid "hub-send-refused"
+msgstr "RaspyHub lehnt das Thema ab: {message}"
+
+msgid "hub-error-name-taken"
+msgstr "Dieser Themenname ist auf RaspyHub bereits vergeben: wählen Sie einen anderen"
+
+msgid "hub-error-too-many"
+msgstr "Heute zu viele Themen von diesem Gerät gesendet: morgen erneut versuchen"
+
+msgid "hub-error-removed"
+msgstr "Dieses Thema wurde von RaspyHub entfernt: es kann unter diesem Namen nicht mehr gesendet werden"
+
+msgid "hub-error-too-large"
+msgstr "RaspyHub lehnt dieses Thema ab: es ist zu groß (ohne Videos und Töne versuchen)"
+
+msgid "hub-catalog-loading"
+msgstr "Themen von RaspyHub werden gelesen…"
+
+msgid "hub-catalog-failed"
+msgstr "Die Themen von RaspyHub konnten nicht gelesen werden: Internet prüfen oder später erneut versuchen"
+
+msgid "hub-catalog-empty"
+msgstr "Noch kein Thema auf RaspyHub"
+
+msgid "hub-catalog-count"
+msgstr "{count} Thema(s)"
+
+msgid "hub-catalog-help"
+msgstr "Hoch / Runter: Thema - Links / Rechts: Bildschirmfoto - Bestätigen: herunterladen"
+
+msgid "hub-capture-loading"
+msgstr "Bildschirmfoto wird geladen…"
+
+msgid "hub-capture-unavailable"
+msgstr "Bildschirmfoto nicht verfügbar"
+
+msgid "hub-by"
+msgstr "von {author}"
+
+msgid "hub-updated"
+msgstr "aktualisiert am {date}"
+
+msgid "hub-size"
+msgstr "{size} MB"
+
+msgid "hub-with-media"
+msgstr "mit Videos und Tönen"
+
+msgid "hub-without-media"
+msgstr "ohne Videos und Töne"
+
+msgid "hub-installed"
+msgstr "Installiert"
+
+msgid "hub-update-available"
+msgstr "Aktualisierung verfügbar"
+
+msgid "hub-download-button"
+msgstr "Herunterladen"
+
+msgid "hub-downloading"
+msgstr "Thema wird heruntergeladen: {percent} %"
+
+msgid "hub-download-failed"
+msgstr "Download fehlgeschlagen: später erneut versuchen (siehe Protokoll)"
+
+msgid "hub-needs-version"
+msgstr "Dieses Thema wurde mit RaspyDarts {version} erstellt. Trotzdem herunterladen?"
+
+msgid "hub-needs-version-explain"
+msgstr "Dieses Gerät hat eine ältere Version: einige Einstellungen des Themas werden eventuell nicht angezeigt. Eine Aktualisierung von RaspyDarts behebt das."

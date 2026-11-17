@@ -10,9 +10,10 @@ size), the images of ~/.raspydarts/images its menus use (placed in the theme : f
 another borne), and theme.json (name, date, version). Made in the background, followed by the
 activity window ; written on a USB key or in ~/Exports.
 
-Import : a zip, a folder, or (later) a download from Raspyhub ; the theme is the folder holding
-other/Colorset.cfg (or Colorset.cfg) ; copied in ~/.raspydarts/themes (a theme of the same name :
-replaced, the old one kept aside, or the new one renamed), then used if wanted.
+Import : a zip, a folder, or a download from RaspyHub (include/cthemecatalog.py) ; the theme is
+the folder holding other/Colorset.cfg (or Colorset.cfg) ; copied in ~/.raspydarts/themes (a theme
+of the same name : replaced, the old one kept aside, or the new one renamed), then used if wanted.
+A theme of RaspyHub keeps there raspyhub.json (its id, its version : « Mise à jour disponible »).
 """
 
 import json
@@ -31,6 +32,8 @@ STORED = ('.mp4', '.mkv', '.webm', '.avi', '.mov', '.gif', '.png', '.jpg', '.jpe
           '.otf', '.zip')
 # A theme imported bigger than this is refused (a zip bomb, the card filled)
 IMPORT_LIMIT = 2 * 1024 ** 3
+# What RaspyHub knows of a theme downloaded from it (never exported again with it)
+HUB_FILE = 'raspyhub.json'
 
 
 def themes_dir(screen):
@@ -113,7 +116,7 @@ class Export:
                 folders.clear()
                 continue
             for name in files:
-                if name.endswith(('.bak', '.tmp')) or '.avant-' in name:
+                if name.endswith(('.bak', '.tmp')) or '.avant-' in name or (relative_root == '.' and name == HUB_FILE):
                     continue
                 path = os.path.join(root, name)
                 listed.append((path, os.path.normpath(os.path.join(relative_root, name))))
@@ -252,19 +255,30 @@ def safe_extract(path, target):
 
 def import_theme(screen, keys):
     '''
-    A theme imported : a zip, a folder, or a download from Raspyhub (later) ; then used if
-    wanted
+    A theme imported : a zip, a folder, or a download from RaspyHub ; then used if wanted
     '''
     from include import cexplorer    # pylint: disable=import-outside-toplevel
     translate = screen.lang.translate
-    # One explorer : a zip chosen, a folder (Choisir ce dossier), or Raspyhub first ; Back : nothing
+    # One explorer : a zip chosen, a folder (Choisir ce dossier), or RaspyHub first ; Back : nothing
     source = cexplorer.explore(screen, translate('theme-import'), None, [('raspyhub', translate('theme-import-raspyhub'))],
                                kinds=('.zip',), pick_folder=True, subtitle=translate('theme-import-hint'))
     if source == 'raspyhub':
-        screen.message([translate('theme-import-raspyhub-soon')], 3500, None, 'middle', 'big')
+        from include import cthemecatalog    # pylint: disable=import-outside-toplevel
+        cthemecatalog.catalog_screen(screen)
         return
     if not source or not os.path.exists(source):
         return
+    install(screen, source)
+
+
+def install(screen, source, origin=None, name=None):
+    '''
+    A zip or a folder copied in the themes, then used if wanted ; origin : what RaspyHub knows of
+    it (written in HUB_FILE) ; name : its name (that of the catalogue) instead of the folder of the
+    zip. Returns its name, or
+    None (not a theme, refused, failed)
+    '''
+    translate = screen.lang.translate
     work = os.path.join(themes_dir(screen), '.import')
     shutil.rmtree(work, ignore_errors=True)
     os.makedirs(work, exist_ok=True)
@@ -273,7 +287,7 @@ def import_theme(screen, keys):
         if os.path.isfile(source):
             safe_extract(source, work)
             root = theme_root(work)
-            name = os.path.basename(root) if root and root != work else os.path.splitext(os.path.basename(source))[0]
+            name = name or (os.path.basename(root) if root and root != work else os.path.splitext(os.path.basename(source))[0])
         else:
             if folder_size(source) > IMPORT_LIMIT:
                 raise ValueError('too big')
@@ -281,7 +295,7 @@ def import_theme(screen, keys):
             name = os.path.basename(root.rstrip(os.sep)) if root else None
         if root is None:
             screen.message([translate('theme-import-not-theme')], 3500, 'menu-ko', 'middle', 'big')
-            return
+            return None
         name = re.sub(r'[^\w.-]+', '_', name.replace('theme_', '', 1)).strip('._') or 'theme'
         if name == 'clear':
             name = 'clear_importe'
@@ -290,7 +304,7 @@ def import_theme(screen, keys):
             answer = screen.ask_yes_no(translate('theme-import-exists').replace('{theme}', name),
                                        translate('theme-import-exists-explain'), cancel=True)
             if answer is None:
-                return
+                return None
             if answer:
                 kept = f"{target}.avant-import-{time.strftime('%Y%m%d_%H%M')}"
                 os.rename(target, kept)
@@ -305,12 +319,16 @@ def import_theme(screen, keys):
             shutil.move(root, target)
         else:
             shutil.copytree(root, target, ignore=shutil.ignore_patterns('*.bak', '*.tmp'))
+        if origin:
+            with open(os.path.join(target, HUB_FILE), 'w', encoding='utf-8') as written:
+                json.dump(origin, written, indent=2, ensure_ascii=False)
         screen.logs.info(f"Theme {name} imported from {source}")
     except (OSError, ValueError, zipfile.BadZipFile) as error:
         screen.logs.error(f"Theme not imported from {source} ({error})")
         screen.message([translate('theme-import-failed')], 3500, 'menu-ko', 'middle', 'big')
-        return
+        return None
     finally:
         shutil.rmtree(work, ignore_errors=True)
     if screen.ask_yes_no(translate('theme-import-use').replace('{theme}', name)):
         screen.apply_look(theme=name)
+    return name

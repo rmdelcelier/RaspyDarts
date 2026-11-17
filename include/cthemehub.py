@@ -8,13 +8,18 @@ Modifier les écrans > Exporter le thème > Vers RaspyHub : a theme shared on ra
   chosen among the other pages of the menus and the captures taken by the player (mode capture :
   include/ccapture.py), everything in ~/.raspydarts/raspyhub/export/<theme>.
 - The mention on the images (their author alone answers for them), the checks (Internet, the zip
-  read again, its size), then the sending (the API of RaspyHub : to come).
+  read again, the limits of the server), then the sending : the API of the themes (Serveur
+  Télémétrie, raspythemes/README.md), the theme waiting there to be validated ; sent, its player
+  gets the trophy.
+- Only the address of the catalogue is written here : the captures and the downloads are given by
+  it (include/cthemecatalog.py).
 """
 
 import json
 import os
 import re
 import socket
+import threading
 import time
 import zipfile
 
@@ -24,10 +29,18 @@ from include import ccapture
 from include import cpaths
 
 EXTRA_MOST = 6
-# The zip of a theme sent : this size at most (the pages of RaspyHub, the downloads of Google Drive)
-SEND_LIMIT = 50 * 1024 ** 2
-HUB_HOST = 'raspyhub.fr'
+# The API of the themes : the catalogue (read by every borne), the sending (with its key)
+API = 'https://raspystats.raspyhub.fr/api/v1/raspydarts/themes'
+API_KEY = 'raspydarts_themes_2026'
+HUB_HOST = 'raspystats.raspyhub.fr'
+# The limits of the server (GET .../limits) : these ones when it cannot be read
+LIMITS = {'max_zip_mb': 50, 'max_unzipped_mb': 400, 'min_captures': 3, 'max_captures': 9, 'max_capture_mb': 5,
+          'uploads_per_day': 5, 'name_max': 40, 'author_max': 40}
 TROPHY = 'CREATION_ARTISTIQUE'
+# The refusals of the server shown in the language of the borne (the others : its message, in French)
+ERRORS = {'name_taken': 'hub-error-name-taken', 'too_many_uploads': 'hub-error-too-many',
+          'theme_removed': 'hub-error-removed', 'too_large': 'hub-error-too-large',
+          'capture_too_large': 'hub-error-too-large'}
 
 
 def translate(screen, key):
@@ -36,6 +49,21 @@ def translate(screen, key):
 
 def hub_dir(theme):
     return os.path.join(cpaths.user_dir(), 'raspyhub', 'export', theme)
+
+
+def limits(logs):
+    '''
+    The limits of the server (size of the zip, captures, lengths) ; LIMITS when it cannot be read
+    '''
+    found = dict(LIMITS)
+    try:
+        import requests    # pylint: disable=import-outside-toplevel
+        answer = requests.get(f"{API}/limits", timeout=8)
+        answer.raise_for_status()
+        found.update({key: value for key, value in answer.json().items() if isinstance(value, (int, float))})
+    except Exception as error:    # pylint: disable=broad-except
+        logs.warning(f"RaspyHub : limits not read ({error}), those of the borne used")
+    return found
 
 
 def short_id():
@@ -231,8 +259,7 @@ def check_zip(path, theme):
 
 def send(screen, draft):
     '''
-    Envoyer vers RaspyHub : checks, the zip made and read again ; the sending itself : the API of
-    RaspyHub (to come)
+    Envoyer vers RaspyHub : checks, the zip made and read again, then sent (upload)
     '''
     from include import cthemefiles    # pylint: disable=import-outside-toplevel
     missing = ready(screen, draft)
@@ -244,6 +271,7 @@ def send(screen, draft):
     except OSError:
         screen.message([translate(screen, 'hub-no-internet')], 3000, 'menu-ko', 'middle', 'big')
         return
+    most = limits(screen.logs)
     theme_dir = getattr(screen.file_class, 'theme_dir', None)
     if not theme_dir or not os.path.isdir(theme_dir):
         screen.message([translate(screen, 'theme-export-none')], 2500, 'menu-ko', 'middle', 'big')
@@ -252,7 +280,7 @@ def send(screen, draft):
     media = False
     if media_size > 0:
         answer = screen.ask_yes_no(translate(screen, 'theme-export-media').replace('{size}', f"{media_size / 1048576:.0f}"),
-                                   translate(screen, 'hub-media-explain').replace('{limit}', str(SEND_LIMIT // 1048576)),
+                                   translate(screen, 'hub-media-explain').replace('{limit}', str(most['max_zip_mb'])),
                                    cancel=True)
         if answer is None:
             return
@@ -279,14 +307,74 @@ def send(screen, draft):
         screen.message([translate(screen, 'hub-zip-failed')], 3000, 'menu-ko', 'middle', 'big')
         return
     size = os.path.getsize(export.target)
-    if size > SEND_LIMIT:
+    if size > most['max_zip_mb'] * 1024 ** 2:
         screen.message([translate(screen, 'hub-too-big').replace('{size}', f"{size / 1048576:.0f}")
-                        .replace('{limit}', str(SEND_LIMIT // 1048576))], 4000, 'menu-ko', 'middle', 'big')
+                        .replace('{limit}', str(most['max_zip_mb']))], 4000, 'menu-ko', 'middle', 'big')
         return
-    screen.logs.info(f"RaspyHub : theme {draft.data.get('name')} ready ({size // 1024} KB, captures "
-                     f"{', '.join(draft.sent())}) ; sending : the API of RaspyHub to come")
-    # The API of RaspyHub (Serveur Télémétrie) : not there yet. Sent, the trophy : award()
-    screen.message([translate(screen, 'hub-send-soon')], 4000, None, 'middle', 'big')
+    upload(screen, draft, export.target)
+
+
+def post(draft, zip_path, version, outcome):
+    '''
+    The theme sent (in a thread) : outcome gets status (the HTTP code, 0 : not reached), answer
+    (the JSON of the server) or error
+    '''
+    files = []
+    try:
+        import requests    # pylint: disable=import-outside-toplevel
+        from include import cupdate    # pylint: disable=import-outside-toplevel
+        fields = {'machine_id': cupdate.machine_id(), 'name': str(draft.data.get('name') or '').strip(),
+                  'author': str(draft.data.get('author') or '').strip(), 'raspydarts_version': version,
+                  'accept_terms': '1'}
+        files.append(('theme', (os.path.basename(zip_path), open(zip_path, 'rb'), 'application/zip')))
+        for name in draft.sent():
+            files.append(('captures', (name, open(os.path.join(draft.folder, name), 'rb'), 'image/jpeg')))
+        answer = requests.post(API, data=fields, files=files, headers={'X-API-Key': API_KEY}, timeout=(10, 600))
+        outcome['status'] = answer.status_code
+        try:
+            outcome['answer'] = answer.json()
+        except ValueError:
+            outcome['answer'] = {}
+    except Exception as error:    # pylint: disable=broad-except
+        outcome['status'] = 0
+        outcome['error'] = str(error)
+    finally:
+        for _field, (_name, handle, _kind) in files:
+            handle.close()
+
+
+def upload(screen, draft, zip_path):
+    '''
+    Envoyer : the theme and its captures sent to the API, the time shown ; sent : kept in the
+    draft (id, version, date), the trophy to its player
+    '''
+    outcome = {}
+    worker = threading.Thread(target=post, args=(draft, zip_path, theme_version(screen), outcome), daemon=True)
+    started = time.time()
+    worker.start()
+    while worker.is_alive():
+        screen.message([translate(screen, 'hub-sending').replace('{seconds}', str(int(time.time() - started)))],
+                       0, None, 'middle', 'big')
+        worker.join(0.5)
+    status, answer = outcome.get('status', 0), outcome.get('answer') or {}
+    if status == 201:
+        draft.data['sent'] = {'id': answer.get('id'), 'version': answer.get('version'), 'date': time.strftime('%Y-%m-%d %H:%M')}
+        draft.save()
+        screen.logs.info(f"RaspyHub : theme {draft.data.get('name')} sent (id {answer.get('id')}, version "
+                         f"{answer.get('version')}, {answer.get('state')})")
+        screen.message([translate(screen, 'hub-sent')], 4000, 'menu-ok', 'middle', 'big')
+        award(screen, draft.data.get('player'))
+        return
+    code = str(answer.get('error') or '')
+    screen.logs.error(f"RaspyHub : theme {draft.data.get('name')} not sent (HTTP {status}, {code or outcome.get('error')} "
+                      f"{answer.get('message') or ''})")
+    if status == 0:
+        text = translate(screen, 'hub-send-failed')
+    elif code in ERRORS:
+        text = translate(screen, ERRORS[code])
+    else:
+        text = translate(screen, 'hub-send-refused').replace('{message}', str(answer.get('message') or code or status))
+    screen.message([text], 5000, 'menu-ko', 'middle', 'big')
 
 
 def theme_version(screen):
@@ -376,6 +464,13 @@ def export_screen(screen):
         screen.blit_text(translate(screen, 'hub-captures-count').replace('{chosen}', str(len(chosen)))
                          .replace('{most}', str(EXTRA_MOST)), left.x, text_y, left.width, line, screen.colorset['menu-text-white'])
         text_y += line + screen.margin
+        sent = draft.data.get('sent') or {}
+        if sent.get('date'):
+            # Sent before : sent again, its new version replaces it once validated
+            screen.blit_text(translate(screen, 'hub-sent-on').replace('{date}', str(sent['date'])[:10])
+                             .replace('{version}', str(sent.get('version') or 1)), left.x, text_y, left.width, line,
+                             screen.colorset['menu-ok'])
+            text_y += line + screen.margin
         warning = screen.colorset.get('menu-warning', screen.colorset['menu-ko'])
         cmenueditor.paragraph(screen, translate(screen, 'hub-rights-mention'),
                               pygame.Rect(left.x, text_y, left.width, int(14 * unit_y) - text_y), warning)

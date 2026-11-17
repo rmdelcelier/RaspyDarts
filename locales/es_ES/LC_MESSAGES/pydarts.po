@@ -5718,10 +5718,7 @@ msgid "theme-import-folder"
 msgstr "Importar una carpeta"
 
 msgid "theme-import-raspyhub"
-msgstr "Descargar desde Raspyhub"
-
-msgid "theme-import-raspyhub-soon"
-msgstr "Pronto: los temas de Raspyhub aún no están disponibles"
+msgstr "Descargar desde RaspyHub"
 
 msgid "theme-import-reading"
 msgstr "Leyendo el tema…"
@@ -6324,9 +6321,6 @@ msgstr "No se pudo preparar el tema (ver el registro)"
 msgid "hub-too-big"
 msgstr "El tema ocupa {size} MB: RaspyHub acepta {limit} como máximo (pruebe sin vídeos ni sonidos)"
 
-msgid "hub-send-soon"
-msgstr "El tema está listo: el envío a RaspyHub llegará pronto"
-
 msgid "hub-no-player"
 msgstr "Ningún jugador en la máquina"
 
@@ -6353,3 +6347,87 @@ msgstr "Solo se pueden borrar las capturas tomadas"
 
 msgid "hub-delete-question"
 msgstr "¿Borrar esta captura?"
+
+msgid "hub-sending"
+msgstr "Enviando a RaspyHub… {seconds} s"
+
+msgid "hub-sent"
+msgstr "Tema enviado: aparecerá en RaspyHub una vez validado"
+
+msgid "hub-sent-on"
+msgstr "Enviado el {date} (versión {version})"
+
+msgid "hub-send-failed"
+msgstr "El envío ha fallado: inténtelo más tarde (ver el registro)"
+
+msgid "hub-send-refused"
+msgstr "RaspyHub rechaza el tema: {message}"
+
+msgid "hub-error-name-taken"
+msgstr "Este nombre de tema ya existe en RaspyHub: elija otro"
+
+msgid "hub-error-too-many"
+msgstr "Demasiados envíos desde esta máquina hoy: inténtelo mañana"
+
+msgid "hub-error-removed"
+msgstr "Este tema fue retirado de RaspyHub: ya no puede enviarse con este nombre"
+
+msgid "hub-error-too-large"
+msgstr "RaspyHub rechaza este tema: es demasiado grande (pruebe sin vídeos ni sonidos)"
+
+msgid "hub-catalog-loading"
+msgstr "Leyendo los temas de RaspyHub…"
+
+msgid "hub-catalog-failed"
+msgstr "No se pudieron leer los temas de RaspyHub: compruebe Internet o inténtelo más tarde"
+
+msgid "hub-catalog-empty"
+msgstr "Todavía no hay temas en RaspyHub"
+
+msgid "hub-catalog-count"
+msgstr "{count} tema(s)"
+
+msgid "hub-catalog-help"
+msgstr "Arriba / Abajo: tema - Izquierda / Derecha: captura - Validar: descargar"
+
+msgid "hub-capture-loading"
+msgstr "Cargando la captura…"
+
+msgid "hub-capture-unavailable"
+msgstr "Captura no disponible"
+
+msgid "hub-by"
+msgstr "por {author}"
+
+msgid "hub-updated"
+msgstr "actualizado el {date}"
+
+msgid "hub-size"
+msgstr "{size} MB"
+
+msgid "hub-with-media"
+msgstr "con vídeos y sonidos"
+
+msgid "hub-without-media"
+msgstr "sin vídeos ni sonidos"
+
+msgid "hub-installed"
+msgstr "Instalado"
+
+msgid "hub-update-available"
+msgstr "Actualización disponible"
+
+msgid "hub-download-button"
+msgstr "Descargar"
+
+msgid "hub-downloading"
+msgstr "Descargando el tema: {percent} %"
+
+msgid "hub-download-failed"
+msgstr "La descarga ha fallado: inténtelo más tarde (ver el registro)"
+
+msgid "hub-needs-version"
+msgstr "Este tema se hizo con RaspyDarts {version}. ¿Descargarlo de todos modos?"
+
+msgid "hub-needs-version-explain"
+msgstr "Esta máquina tiene una versión más antigua: algunos ajustes del tema pueden no mostrarse. Actualizar RaspyDarts lo soluciona."

@@ -5780,10 +5780,7 @@ msgid "theme-import-folder"
 msgstr "Importare una cartella"
 
 msgid "theme-import-raspyhub"
-msgstr "Scaricare da Raspyhub"
-
-msgid "theme-import-raspyhub-soon"
-msgstr "Presto: i temi di Raspyhub non sono ancora disponibili"
+msgstr "Scaricare da RaspyHub"
 
 msgid "theme-import-reading"
 msgstr "Lettura del tema…"
@@ -6386,9 +6383,6 @@ msgstr "Impossibile preparare il tema (vedi il registro)"
 msgid "hub-too-big"
 msgstr "Il tema pesa {size} MB: RaspyHub ne accetta {limit} al massimo (prova senza video né suoni)"
 
-msgid "hub-send-soon"
-msgstr "Il tema è pronto: l'invio a RaspyHub arriverà presto"
-
 msgid "hub-no-player"
 msgstr "Nessun giocatore sulla macchina"
 
@@ -6415,3 +6409,87 @@ msgstr "Solo le catture fatte possono essere cancellate"
 
 msgid "hub-delete-question"
 msgstr "Cancellare questa cattura?"
+
+msgid "hub-sending"
+msgstr "Invio a RaspyHub… {seconds} s"
+
+msgid "hub-sent"
+msgstr "Tema inviato: apparirà su RaspyHub una volta convalidato"
+
+msgid "hub-sent-on"
+msgstr "Inviato il {date} (versione {version})"
+
+msgid "hub-send-failed"
+msgstr "Invio non riuscito: riprovare più tardi (vedere il registro)"
+
+msgid "hub-send-refused"
+msgstr "RaspyHub rifiuta il tema: {message}"
+
+msgid "hub-error-name-taken"
+msgstr "Questo nome di tema è già usato su RaspyHub: sceglierne un altro"
+
+msgid "hub-error-too-many"
+msgstr "Troppi invii da questa macchina oggi: riprovare domani"
+
+msgid "hub-error-removed"
+msgstr "Questo tema è stato ritirato da RaspyHub: non può più essere inviato con questo nome"
+
+msgid "hub-error-too-large"
+msgstr "RaspyHub rifiuta questo tema: è troppo grande (provare senza video né suoni)"
+
+msgid "hub-catalog-loading"
+msgstr "Lettura dei temi di RaspyHub…"
+
+msgid "hub-catalog-failed"
+msgstr "Impossibile leggere i temi di RaspyHub: verificare Internet o riprovare più tardi"
+
+msgid "hub-catalog-empty"
+msgstr "Ancora nessun tema su RaspyHub"
+
+msgid "hub-catalog-count"
+msgstr "{count} tema/i"
+
+msgid "hub-catalog-help"
+msgstr "Su / Giù: tema - Sinistra / Destra: schermata - Convalida: scaricare"
+
+msgid "hub-capture-loading"
+msgstr "Caricamento della schermata…"
+
+msgid "hub-capture-unavailable"
+msgstr "Schermata non disponibile"
+
+msgid "hub-by"
+msgstr "di {author}"
+
+msgid "hub-updated"
+msgstr "aggiornato il {date}"
+
+msgid "hub-size"
+msgstr "{size} MB"
+
+msgid "hub-with-media"
+msgstr "con video e suoni"
+
+msgid "hub-without-media"
+msgstr "senza video né suoni"
+
+msgid "hub-installed"
+msgstr "Installato"
+
+msgid "hub-update-available"
+msgstr "Aggiornamento disponibile"
+
+msgid "hub-download-button"
+msgstr "Scaricare"
+
+msgid "hub-downloading"
+msgstr "Download del tema: {percent} %"
+
+msgid "hub-download-failed"
+msgstr "Download non riuscito: riprovare più tardi (vedere il registro)"
+
+msgid "hub-needs-version"
+msgstr "Questo tema è stato creato con RaspyDarts {version}. Scaricarlo comunque?"
+
+msgid "hub-needs-version-explain"
+msgstr "Questa macchina ha una versione più vecchia: alcune impostazioni del tema potrebbero non apparire. Aggiornare RaspyDarts risolve il problema."
