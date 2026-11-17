@@ -6421,6 +6421,15 @@ msgstr "Thema wird heruntergeladen: {percent} %"
 msgid "hub-download-failed"
 msgstr "Download fehlgeschlagen: später erneut versuchen (siehe Protokoll)"
 
+msgid "hub-download-big"
+msgstr "Dieses Thema ist {size} MB groß. Herunterladen?"
+
+msgid "hub-download-big-explain"
+msgstr "Videos und Töne machen den Großteil aus: der Download kann mehrere Minuten dauern."
+
+msgid "hub-no-room"
+msgstr "Nicht genug Platz auf der Karte: dieses Thema ist {size} MB groß, {free} MB frei"
+
 msgid "hub-needs-version"
 msgstr "Dieses Thema wurde mit RaspyDarts {version} erstellt. Trotzdem herunterladen?"
 

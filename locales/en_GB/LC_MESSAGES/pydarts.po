@@ -6693,6 +6693,15 @@ msgstr "Downloading the theme: {percent} %"
 msgid "hub-download-failed"
 msgstr "The download failed: try again later (see the log)"
 
+msgid "hub-download-big"
+msgstr "This theme is {size} MB. Download it?"
+
+msgid "hub-download-big-explain"
+msgstr "Its videos and sounds make up most of it: the download can take several minutes."
+
+msgid "hub-no-room"
+msgstr "Not enough room on the card: this theme is {size} MB, {free} MB left"
+
 msgid "hub-needs-version"
 msgstr "This theme was made with RaspyDarts {version}. Download it anyway?"
 

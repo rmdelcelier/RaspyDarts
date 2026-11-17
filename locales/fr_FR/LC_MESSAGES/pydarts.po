@@ -6497,6 +6497,15 @@ msgstr "Téléchargement du thème : {percent} %"
 msgid "hub-download-failed"
 msgstr "Le téléchargement n'a pas abouti : réessayez plus tard (voir le journal)"
 
+msgid "hub-download-big"
+msgstr "Ce thème fait {size} Mo. Le télécharger ?"
+
+msgid "hub-download-big-explain"
+msgstr "Ses vidéos et ses sons en font l'essentiel : le téléchargement peut prendre plusieurs minutes."
+
+msgid "hub-no-room"
+msgstr "Pas assez de place sur la carte : ce thème fait {size} Mo, il reste {free} Mo"
+
 msgid "hub-needs-version"
 msgstr "Ce thème a été fait avec RaspyDarts {version}. Le télécharger quand même ?"
 

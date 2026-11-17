@@ -6488,6 +6488,15 @@ msgstr "Download del tema: {percent} %"
 msgid "hub-download-failed"
 msgstr "Download non riuscito: riprovare più tardi (vedere il registro)"
 
+msgid "hub-download-big"
+msgstr "Questo tema pesa {size} MB. Scaricarlo?"
+
+msgid "hub-download-big-explain"
+msgstr "Video e suoni ne sono la parte principale: il download può richiedere diversi minuti."
+
+msgid "hub-no-room"
+msgstr "Spazio insufficiente sulla scheda: questo tema pesa {size} MB, restano {free} MB"
+
 msgid "hub-needs-version"
 msgstr "Questo tema è stato creato con RaspyDarts {version}. Scaricarlo comunque?"
 

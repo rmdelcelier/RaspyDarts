@@ -6426,6 +6426,15 @@ msgstr "Descargando el tema: {percent} %"
 msgid "hub-download-failed"
 msgstr "La descarga ha fallado: inténtelo más tarde (ver el registro)"
 
+msgid "hub-download-big"
+msgstr "Este tema ocupa {size} MB. ¿Descargarlo?"
+
+msgid "hub-download-big-explain"
+msgstr "Sus vídeos y sonidos ocupan la mayor parte: la descarga puede tardar varios minutos."
+
+msgid "hub-no-room"
+msgstr "No hay suficiente espacio en la tarjeta: este tema ocupa {size} MB, quedan {free} MB"
+
 msgid "hub-needs-version"
 msgstr "Este tema se hizo con RaspyDarts {version}. ¿Descargarlo de todos modos?"
 

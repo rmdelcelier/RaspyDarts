@@ -12,6 +12,7 @@ RaspyHub (the API of the themes, include/cthemehub.py).
   never an address kept : the catalogue gives them each time.
 """
 
+import html
 import os
 import re
 import shutil
@@ -26,6 +27,8 @@ from include import cthemehub
 CACHE_MOST = 50 * 1024 ** 2
 # A capture shown this long, then the next one
 TURN = 4.0
+# A theme bigger than this : its size said before it is downloaded
+BIG = 100 * 1024 ** 2
 
 
 def translate(screen, key):
@@ -137,6 +140,22 @@ class Captures:
             self.logs.warning(f"RaspyHub : capture {url} not read ({error})")
 
 
+def past_warning(session, answer):
+    '''
+    A big file of Google Drive : a page « impossible to scan it for viruses » comes first, its
+    form sent again gives the file. Any other answer : as it is
+    '''
+    if 'text/html' not in answer.headers.get('Content-Type', ''):
+        return answer
+    page = answer.text
+    answer.close()
+    form = re.search(r'<form[^>]*action="([^"]+)"[^>]*>(.*?)</form>', page, re.S)
+    if not form:
+        raise ValueError('a page instead of the zip')
+    fields = dict(re.findall(r'<input type="hidden" name="([^"]+)" value="([^"]*)"', form.group(2)))
+    return session.get(html.unescape(form.group(1)), params=fields, stream=True, timeout=(10, 60))
+
+
 def download(screen, theme):
     '''
     The zip of the theme read (the address of the catalogue, its redirections followed), its
@@ -152,9 +171,11 @@ def download(screen, theme):
     def run():
         try:
             import requests    # pylint: disable=import-outside-toplevel
-            with requests.get(theme['download_url'], stream=True, timeout=(10, 60), allow_redirects=True) as answer:
+            session = requests.Session()
+            answer = session.get(theme['download_url'], stream=True, timeout=(10, 60), allow_redirects=True)
+            answer = past_warning(session, answer)
+            with answer:
                 answer.raise_for_status()
-                # A page instead of the zip (Google Drive asking to confirm) : refused
                 if 'text/html' in answer.headers.get('Content-Type', ''):
                     raise ValueError('a page instead of the zip')
                 state['total'] = int(answer.headers.get('Content-Length') or state['total'] or 0)
@@ -195,6 +216,20 @@ def take(screen, theme):
         if not screen.ask_yes_no(translate(screen, 'hub-needs-version').replace('{version}', str(needed)),
                                  translate(screen, 'hub-needs-version-explain')):
             return
+    # A big theme (its videos) : its size said first, the room on the card checked (the zip, then
+    # the theme unpacked beside it)
+    size = int(theme.get('size') or 0)
+    try:
+        free = shutil.disk_usage(cthemefiles.themes_dir(screen)).free
+    except OSError:
+        free = None
+    if free is not None and free < 2.2 * size + 200 * 1024 ** 2:
+        screen.message([translate(screen, 'hub-no-room').replace('{size}', f"{size / 1048576:.0f}")
+                        .replace('{free}', f"{free / 1048576:.0f}")], 5000, 'menu-ko', 'middle', 'big')
+        return
+    if size > BIG and not screen.ask_yes_no(translate(screen, 'hub-download-big').replace('{size}', f"{size / 1048576:.0f}"),
+                                            translate(screen, 'hub-download-big-explain')):
+        return
     zip_path = download(screen, theme)
     if zip_path is None:
         return

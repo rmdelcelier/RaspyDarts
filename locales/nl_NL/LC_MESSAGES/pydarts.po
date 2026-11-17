@@ -6475,6 +6475,15 @@ msgstr "Thema wordt gedownload: {percent} %"
 msgid "hub-download-failed"
 msgstr "Downloaden mislukt: probeer het later opnieuw (zie het logboek)"
 
+msgid "hub-download-big"
+msgstr "Dit thema is {size} MB. Downloaden?"
+
+msgid "hub-download-big-explain"
+msgstr "Video's en geluiden nemen het meeste in: het downloaden kan enkele minuten duren."
+
+msgid "hub-no-room"
+msgstr "Niet genoeg ruimte op de kaart: dit thema is {size} MB, nog {free} MB vrij"
+
 msgid "hub-needs-version"
 msgstr "Dit thema is gemaakt met RaspyDarts {version}. Toch downloaden?"
 

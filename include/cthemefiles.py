@@ -30,8 +30,9 @@ MEDIA = ('videos', 'sounds')
 # Files already compressed : stored as they are in the zip (quicker on a Pi)
 STORED = ('.mp4', '.mkv', '.webm', '.avi', '.mov', '.gif', '.png', '.jpg', '.jpeg', '.mp3', '.ogg', '.wav', '.ttf',
           '.otf', '.zip')
-# A theme imported bigger than this is refused (a zip bomb, the card filled)
-IMPORT_LIMIT = 2 * 1024 ** 3
+# A theme imported bigger than this is refused (a zip bomb, the card filled) ; the old themes with
+# their videos go up to 2.3 GB
+IMPORT_LIMIT = 4 * 1024 ** 3
 # What RaspyHub knows of a theme downloaded from it (never exported again with it)
 HUB_FILE = 'raspyhub.json'
 
