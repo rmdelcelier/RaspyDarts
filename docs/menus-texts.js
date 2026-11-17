@@ -1,4 +1,4 @@
-// Textes du configurateur de menus (docs/menus.html), dans les langues du jeu
+// Textes du configurateur de menus (docs/configurateur-menus.html), dans les langues du jeu
 const T = {
 fr: {
   'menu-install': 'Installation', 'menu-custom': 'Personnalisation des menus', 'menu-site': 'Site',

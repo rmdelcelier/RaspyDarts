@@ -1,5 +1,5 @@
 """
-Donnees et images du configurateur de menus (docs/menus.html), tirees du jeu :
+Donnees et images du configurateur de menus (docs/configurateur-menus.html), tirees du jeu :
 - docs/menus-data.js : menus par defaut (menus/defaults.yaml), actions, jeux par categorie,
   textes traduits, couleurs et polices des themes clear et sombre ;
 - docs/assets/ : vignettes des fonds et des logos (images allegees), polices.

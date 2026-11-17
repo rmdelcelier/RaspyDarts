@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RaspyDarts · Menus</title>
+<meta name="description" content="Fabriquer le fichier de menus de RaspyDarts (menus.yaml), avec un aperçu de la borne">
+<style>
+:root {
+  --bg: #f4f1ec; --panel: #ffffff; --text: #1d1b19; --muted: #6b645c; --line: #ddd6cc;
+  --accent: #b3261e; --accent-text: #ffffff; --ok: #2e7d32; --warn: #a15c00; --code: #f0ebe3;
+  --radius: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #161412; --panel: #211e1b; --text: #eee9e2; --muted: #a59d93; --line: #3a352f;
+    --accent: #e0574e; --accent-text: #1a0d0c; --ok: #6cc070; --warn: #e0a040; --code: #2b2723;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #161412; --panel: #211e1b; --text: #eee9e2; --muted: #a59d93; --line: #3a352f;
+  --accent: #e0574e; --accent-text: #1a0d0c; --ok: #6cc070; --warn: #e0a040; --code: #2b2723;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+header { padding: 12px 16px; border-bottom: 1px solid var(--line); background: var(--panel); }
+header .brand { text-align: center; }
+header h1 { margin: 0 0 6px; font-size: 1.7rem; letter-spacing: .5px; }
+header h1 span { color: var(--accent); }
+nav.menu { display: flex; justify-content: center; align-items: center; gap: 6px; flex-wrap: wrap; }
+nav.menu select { padding: 3px 6px; margin-left: 6px; }
+nav.menu a { border: 1px solid transparent; color: var(--text); padding: 4px 12px; border-radius: 999px; text-decoration: none; }
+nav.menu .active { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+nav.menu a:hover { border-color: var(--line); }
+nav.menu a.social { display: inline-flex; padding: 6px; border-radius: 50%; }
+nav.menu a.social svg { width: 20px; height: 20px; display: block; }
+nav.menu a.social:hover { color: var(--accent); }
+main { display: grid; grid-template-columns: minmax(320px, 400px) 1fr; gap: 16px; padding: 16px; max-width: 1800px; margin: 0 auto; }
+@media (max-width: 900px) { main { grid-template-columns: 1fr; } #stage { position: static !important; order: -1; } #side { max-height: none !important; } }
+#side { min-width: 0; position: sticky; top: 10px; align-self: start; max-height: calc(100vh - 20px); overflow-y: auto; padding-right: 4px; }
+#stage { position: sticky; top: 10px; align-self: start; min-width: 0; }
+.tabs { display: flex; gap: 4px; margin-bottom: 8px; }
+.tabs button { flex: 1; border: 1px solid var(--line); background: var(--panel); color: var(--muted); border-radius: 8px; padding: 5px 8px; }
+.tabs button.active { border-color: var(--accent); color: var(--text); font-weight: 600; box-shadow: inset 0 -2px 0 var(--accent); }
+.seg { display: flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; margin: 6px 0; }
+.seg button { flex: 1; border: 0; background: var(--bg); color: var(--muted); padding: 5px 6px; font-size: .88rem; }
+.seg button.active { background: var(--accent); color: var(--accent-text); font-weight: 600; }
+a.back { display: inline-block; margin-bottom: 4px; color: var(--accent); cursor: pointer; font-size: .9rem; }
+dialog { border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); color: var(--text); max-width: 440px; }
+dialog::backdrop { background: rgba(0,0,0,.45); }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; margin-bottom: 12px; }
+details.panel > summary { cursor: pointer; font-weight: 700; font-size: 1.02rem; }
+details.panel[open] > summary { margin-bottom: 8px; }
+h2 { margin: 0 0 8px; font-size: 1.1rem; }
+label { display: block; font-weight: 600; margin: 9px 0 3px; font-size: .9rem; }
+label.inline { display: flex; gap: 6px; align-items: center; font-weight: 400; margin: 4px 0; }
+.hint { color: var(--muted); font-size: .85rem; margin: 2px 0 6px; }
+.note { border-left: 4px solid var(--accent); background: var(--code); padding: 8px 12px; border-radius: 0 var(--radius) var(--radius) 0; margin: 10px 0; font-size: .9rem; }
+.note.warn { border-color: var(--warn); }
+select, input[type="number"], input[type="text"], textarea { font: inherit; color: var(--text); background: var(--bg); border: 1px solid var(--line); border-radius: 7px; padding: 4px 7px; max-width: 100%; }
+input[type="color"] { width: 42px; height: 28px; padding: 0 2px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); }
+.row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+.grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.grid2 label, .grid4 label { margin: 2px 0; font-weight: 400; font-size: .82rem; }
+.grid2 input, .grid2 select, .grid4 input, .grid4 select { width: 100%; }
+button { font: inherit; cursor: pointer; }
+button.main, a.button { border: 1px solid var(--accent); background: var(--accent); color: var(--accent-text); border-radius: 8px; padding: 5px 12px; text-decoration: none; display: inline-block; }
+button.ghost { background: transparent; color: var(--text); border: 1px solid var(--line); border-radius: 8px; padding: 4px 10px; }
+button.tiny { padding: 1px 7px; font-size: .82rem; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--text); }
+button:disabled { opacity: .45; cursor: default; }
+#screens { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 8px; }
+#screens button { border: 1px solid var(--line); background: var(--panel); color: var(--muted); border-radius: 999px; padding: 3px 11px; font-size: .88rem; }
+#screens button.active { border-color: var(--accent); color: var(--text); box-shadow: inset 0 -2px 0 var(--accent); }
+#canvas-wrap { background: #000; border-radius: 8px; overflow: hidden; line-height: 0; position: relative; }
+canvas#overlay { position: absolute; left: 0; top: 0; width: 100%; height: 100%; outline: none; touch-action: none; }
+canvas#preview { width: 100%; height: auto; display: block; cursor: default; }
+.bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 4px; font-size: .9rem; }
+#stage .hint { margin: 0 0 4px; }
+#stage .errors { margin: 0 0 6px; }
+#stage .errors:empty { display: none; }
+ul.buttons { list-style: none; padding: 0; margin: 6px 0; }
+ul.buttons li { display: flex; align-items: center; gap: 4px; padding: 3px 5px; border: 1px solid var(--line); border-radius: 7px; margin: 3px 0; background: var(--bg); cursor: pointer; }
+ul.buttons li.active { border-color: var(--accent); box-shadow: inset 3px 0 0 var(--accent); }
+ul.buttons li .name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+ul.buttons li .tag { font-size: .75rem; color: var(--muted); }
+details.group { border: 1px solid var(--line); border-radius: 8px; margin: 10px 0; padding: 4px 10px 8px; }
+details.group > summary { cursor: pointer; font-weight: 700; font-size: .92rem; }
+details.group[open] > summary { margin-bottom: 4px; }
+fieldset { border: 1px solid var(--line); border-radius: 8px; margin: 10px 0; padding: 2px 10px 10px; }
+legend { font-weight: 700; padding: 0 5px; font-size: .9rem; }
+textarea#yaml { width: 100%; min-height: 220px; font-family: ui-monospace, Consolas, monospace; font-size: .8rem; }
+.hidden { display: none !important; }
+body.basic .adv { display: none !important; }
+button.act { font: inherit; font-size: .86rem; border: 1px solid var(--accent); color: var(--accent); background: var(--panel); border-radius: 8px; padding: 4px 10px; font-weight: 600; }
+button.act:hover:not(:disabled) { background: var(--accent); color: var(--accent-text); }
+button.act.danger { border-color: #c62828; color: #c62828; }
+button.act.danger:hover:not(:disabled) { background: #c62828; color: #fff; }
+dialog label { display: block; font-weight: 600; margin: 8px 0 3px; }
+body.embedded header, body.embedded footer { display: none; }
+body.embedded main { padding: 8px; }
+/* Integree a l'installation : tout s'affiche, la page d'installation defile (pas le cadre) */
+body.embedded #side, body.embedded #stage { position: static; max-height: none; overflow: visible; }
+body.embedded { overflow: hidden; }
+.image-note { color: #d11a1a; font-weight: 600; font-size: .84rem; margin: 3px 0 6px; }
+.image-note:empty { display: none; }
+.errors { color: var(--accent); font-weight: 600; font-size: .9rem; }
+footer { text-align: center; color: var(--muted); font-size: .85rem; padding: 10px 16px 26px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <h1>Raspy<span>Darts</span></h1>
+    <nav class="menu">
+      <a href="index.html" data-t="menu-install"></a>
+      <a class="active" href="menus.html" data-t="menu-custom"></a>
+      <a class="social" href="https://raspydarts.wordpress.com/" target="_blank" rel="noopener" data-t-title="menu-site"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21.469 6.825c.84 1.537 1.318 3.3 1.318 5.175 0 3.979-2.156 7.456-5.363 9.325l3.295-9.527c.615-1.54.82-2.771.82-3.864 0-.405-.026-.78-.07-1.11m-7.981.105c.647-.03 1.232-.105 1.232-.105.582-.075.514-.93-.067-.899 0 0-1.755.135-2.88.135-1.064 0-2.85-.15-2.85-.15-.585-.03-.661.855-.075.885 0 0 .54.061 1.125.09l1.68 4.605-2.37 7.08L5.354 6.9c.649-.03 1.234-.1 1.234-.1.585-.075.516-.93-.065-.896 0 0-1.746.138-2.874.138-.2 0-.438-.008-.69-.015C4.911 3.15 8.235 1.215 12 1.215c2.809 0 5.365 1.072 7.286 2.833-.046-.003-.091-.009-.141-.009-1.06 0-1.812.923-1.812 1.914 0 .89.513 1.643 1.06 2.531.411.72.89 1.643.89 2.977 0 .915-.354 1.994-.821 3.479l-1.075 3.585-3.9-11.61.001.014zM12 22.784c-1.059 0-2.081-.153-3.048-.437l3.237-9.406 3.315 9.087c.024.053.05.101.078.149-1.12.393-2.325.609-3.582.609M1.211 12c0-1.564.336-3.05.935-4.39L7.29 21.709C3.694 19.96 1.212 16.271 1.211 12M12 0C5.385 0 0 5.385 0 12s5.385 12 12 12 12-5.385 12-12S18.615 0 12 0"/></svg></a>
+      <a class="social" href="https://discord.gg/eNB5bEfzgS" target="_blank" rel="noopener" data-t-title="menu-discord"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg></a>
+      <a class="social" href="https://www.facebook.com/groups/1124845401274184/" target="_blank" rel="noopener" data-t-title="menu-facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg></a>
+      <select id="lang" aria-label="Langue">
+        <option value="fr">Français</option><option value="en">English</option><option value="de">Deutsch</option>
+        <option value="es">Español</option><option value="it">Italiano</option>
+      </select>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <aside id="side">
+    <div class="tabs">
+      <button id="tab-edit-btn" class="active" data-t="tab-edit"></button>
+      <button id="tab-file-btn" data-t="tab-file"></button>
+    </div>
+    <div id="tab-edit" class="panel"></div>
+    <div id="tab-file" class="hidden">
+      <div class="panel">
+        <h2 data-t="intro-title"></h2>
+        <p class="hint" data-t="intro"></p>
+        <div class="row">
+          <button class="ghost" id="new-file" data-t="new-file"></button>
+          <label class="ghost" style="display:inline;margin:0"><input type="file" id="open-file" accept=".yaml,.yml" class="hidden"><span class="button ghost" style="border:1px solid var(--line);border-radius:8px;padding:4px 10px;cursor:pointer;display:inline-block;font-weight:400" data-t="open-file"></span></label>
+          <button class="main" id="download" data-t="download"></button>
+        </div>
+      </div>
+      <details class="panel" open>
+        <summary data-t="screen-title"></summary>
+        <label data-t="resolution-mode"></label>
+        <label class="inline"><input type="radio" name="resmode" value="auto"> <span data-t="res-auto"></span></label>
+        <label class="inline"><input type="radio" name="resmode" value="known"> <span data-t="res-known"></span></label>
+        <div id="res-known-box" class="row hidden">
+          <select id="res-ref"></select>
+          <input type="number" id="res-w" min="320" max="7680" style="width:80px"> × <input type="number" id="res-h" min="240" max="4320" style="width:80px">
+        </div>
+        <p class="hint" id="res-hint"></p>
+        <label for="start" data-t="start"></label>
+        <select id="start"></select>
+        <p class="hint" data-t="start-hint"></p>
+      </details>
+      <details class="panel" open>
+        <summary data-t="theme-title"></summary>
+        <select id="theme"></select>
+        <p class="hint" data-t="theme-for"></p>
+        <div id="own-theme" class="hidden">
+          <label data-t="own-theme-load"></label>
+          <input type="file" id="theme-folder" webkitdirectory directory multiple>
+          <p class="hint" id="own-theme-info"></p>
+        </div>
+        <div class="note warn" data-t="theme-note"></div>
+      </details>
+      <details class="panel">
+        <summary data-t="images-title"></summary>
+        <p class="hint" data-t="images-hint"></p>
+        <input type="file" id="images-load" accept="image/*" multiple>
+        <ul class="buttons" id="images"></ul>
+      </details>
+      <details class="panel">
+        <summary data-t="yaml-title"></summary>
+        <p class="hint" data-t="yaml-hint"></p>
+        <textarea id="yaml" readonly></textarea>
+      </details>
+    </div>
+  </aside>
+
+  <div id="stage">
+    <div id="screens"></div>
+    <div class="bar">
+      <button class="ghost" id="undo" disabled data-t="undo"></button>
+      <span data-t="preview-size"></span> <select id="preview-res"></select>
+      <label class="inline hidden" id="fav-games-box"><input type="checkbox" id="fav-games"> <span data-t="fav-games"></span></label>
+      <button class="main" id="download2" data-t="download"></button>
+    </div>
+    <p class="hint" data-t="preview-hint"></p>
+    <p class="hint hidden" id="choice-note"></p>
+    <p class="errors" id="file-errors"></p>
+    <div id="canvas-wrap"><canvas id="preview" width="1920" height="1080"></canvas><canvas id="overlay" width="1920" height="1080" tabindex="0"></canvas></div>
+  </div>
+</main>
+<dialog id="ask"><p id="ask-text"></p><p class="hint" id="ask-sub"></p><div id="ask-keep"></div><div class="row" id="ask-buttons" style="margin-top:8px"></div></dialog>
+<footer data-t="footer"></footer>
+
+<script src="vendor/js-yaml.min.js"></script>
+<script src="menus-data.js"></script>
+<script src="menus-texts.js"></script>
+<script src="menus-layout.js"></script>
+<script src="menus-draw.js"></script>
+<script src="menus-render.js"></script>
+<script src="menus-app.js"></script>
+</body>
+</html>

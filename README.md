@@ -15,7 +15,7 @@
   <img src="https://img.shields.io/badge/jeux-61-orange" alt="61 jeux">
   <img src="https://img.shields.io/badge/Raspberry%20Pi%20OS-Trixie%2032%20bits-c51a4a" alt="Raspberry Pi OS Trixie 32 bits">
   <a href="https://raspydarts.wordpress.com/"><img src="https://img.shields.io/badge/site-raspydarts.wordpress.com-lightgrey" alt="Site officiel"></a>
-  <a href="https://rmdelcelier.github.io/RaspyDarts/"><img src="https://img.shields.io/badge/installation-pas%20%C3%A0%20pas-c51a4a" alt="Page d'installation"></a>
+  <a href="https://raspydarts.raspyhub.fr/installation.html"><img src="https://img.shields.io/badge/installation-pas%20%C3%A0%20pas-c51a4a" alt="Page d'installation"></a>
 </p>
 
 ---
@@ -26,7 +26,7 @@ et transforme une cible du commerce en borne digne d'une salle de jeux.
 
 **Site officiel et documentation : [raspydarts.wordpress.com](https://raspydarts.wordpress.com/)**
 
-**Installer sa borne pas à pas : [la page d'installation](https://rmdelcelier.github.io/RaspyDarts/)**
+**Installer sa borne pas à pas : [la page d'installation](https://raspydarts.raspyhub.fr/installation.html)**
 (carte SD, configuration du matériel, personnalisation des menus)
 
 ## Fonctionnalités
@@ -59,7 +59,7 @@ interface DMX, ampoules Philips Hue, webcam USB, écran tactile.
 
 ## Installation
 
-La [page d'installation](https://rmdelcelier.github.io/RaspyDarts/) guide chaque étape :
+La [page d'installation](https://raspydarts.raspyhub.fr/installation.html) guide chaque étape :
 écriture de la carte SD, fichier de configuration de votre matériel, personnalisation des
 menus, puis dépôt de ces fichiers sur la carte. Les étapes ci-dessous en sont le résumé.
 
