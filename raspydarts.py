@@ -1224,7 +1224,8 @@ try:
                                 dispatcher.publish('reload', "|".join(color_values), limit=['TARGET','STRIP','OTHER'])
 
                         elif setup == 'setup-cam':
-                            tmp = display.setup_cam_menu(config_camera)
+                            # Read again : camera_id I may have been set up by the camera at the start
+                            tmp = display.setup_cam_menu(Config.read_file("Camera"))
                             if tmp != 'escape':
                                 config_camera = tmp
                                 rpi.config.set_config('Camera', config_camera)

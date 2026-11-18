@@ -463,6 +463,8 @@ def encode_clip(segments, start, duration, size, flips, filter_path, target, log
     return False
 
 
+# camera_id of a camera to look for at the start (the page of installation : « Caméra : oui »)
+AUTO = 'I'
 #
 # Start of Camera Class
 #
@@ -490,7 +492,7 @@ class Camera:
         # Filters already read and scaled, see filter_layer()
         self._filter_layers = {}
         self.init_list_of_filters()
-        self.init_var(config.read_file("Camera"), show_in_parametrage)
+        self.init_var(self.settings(config), show_in_parametrage)
         self.showing_in_progress = False
         self.qrPopThread = None
         self.qrPopWindow = None
@@ -505,6 +507,37 @@ class Camera:
                 self.logs.debug(f"No credentials found to upload via Google Drive")
         except Exception as ex:
             self.logs.error(f"Error in ccamera __init__() : {ex}")
+
+    def settings(self, config):
+        '''
+        The section Camera of the file. camera_id = I (« à initialiser », written by the page of
+        installation : the camera is not always /dev/video0) : the camera looked for now, as
+        « Initialiser la caméra » of the setup does (the first one found, its sizes, the first
+        one for the photos and the videos), and written in the file ; none found : kept at I,
+        looked for again at the next start (a camera plugged later), no camera meanwhile
+        '''
+        config_camera = config.read_file("Camera")
+        if str(config_camera.get('camera_id', '')).strip().upper() != AUTO:
+            return config_camera
+        cameras = self.find_camera()
+        if not cameras:
+            self.logs.info("Camera : camera_id I, no USB camera found (looked for again at the next start)")
+            return config_camera
+        camera_id = list(cameras.keys())[0]
+        sizes = [size for size, _label in cameras[camera_id]]
+        width, height = sizes[0].split('x')
+        found = {'camera_id': camera_id, 'resolutions_available': ','.join(sizes),
+                 'picture_res_width': width, 'picture_res_height': height,
+                 'video_res_width': width, 'video_res_height': height}
+        config_camera.update(found)
+        try:
+            for key, value in found.items():
+                config.config['Camera'][key] = value
+            config.write_file()
+            self.logs.info(f"Camera : camera_id I, /dev/video{camera_id} found ({sizes[0]}), written in the config file")
+        except Exception as error:    # pylint: disable=broad-except
+            self.logs.error(f"Camera : camera_id I, {camera_id} found but not written ({error})")
+        return config_camera
 
     def init_var(self, config_camera, show_in_parametrage=False):
         self.camera_id = str(config_camera['camera_id'])
