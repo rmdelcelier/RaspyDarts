@@ -260,13 +260,15 @@ def import_theme(screen, keys):
     '''
     from include import cexplorer    # pylint: disable=import-outside-toplevel
     translate = screen.lang.translate
-    # One explorer : a zip chosen, a folder (Choisir ce dossier), or RaspyHub first ; Back : nothing
-    source = cexplorer.explore(screen, translate('theme-import'), None, [('raspyhub', translate('theme-import-raspyhub'))],
-                               kinds=('.zip',), pick_folder=True, subtitle=translate('theme-import-hint'))
-    if source == 'raspyhub':
+    # One explorer : a zip chosen, a folder (Choisir ce dossier), or RaspyHub first ; Back : nothing.
+    # Leaving Télécharger depuis RaspyHub : back to this explorer
+    while True:
+        source = cexplorer.explore(screen, translate('theme-import'), None, [('raspyhub', translate('theme-import-raspyhub'))],
+                                   kinds=('.zip',), pick_folder=True, subtitle=translate('theme-import-hint'))
+        if source != 'raspyhub':
+            break
         from include import cthemecatalog    # pylint: disable=import-outside-toplevel
         cthemecatalog.catalog_screen(screen)
-        return
     if not source or not os.path.exists(source):
         return
     install(screen, source)

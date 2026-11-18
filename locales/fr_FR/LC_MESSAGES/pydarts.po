@@ -982,7 +982,7 @@ msgid "need-restart"
 msgstr "Voulez-vous redémarrer ?"
 
 msgid "press-enter"
-msgstr "Appuyer sur Entrée, sur le bouton Validation ou un appui sur l'écran pour confirmer"
+msgstr "Entrée, bouton Validation ou toucher ce bandeau pour confirmer (ailleurs : annuler)"
 
 msgid "are-you-sure"
 msgstr "Etes-vous sûr(e) ?"
@@ -5475,7 +5475,7 @@ msgstr "À droite"
 
 
 msgid "theme-keyboard-mouse"
-msgstr "La personnalisation du thème se fait avec un clavier et une souris"
+msgstr "Molette ou flèches : choisir - Valider : ouvrir ou changer - Appui long ou Échap : retour"
 
 msgid "theme-group-menus"
 msgstr "Menus"
@@ -6315,7 +6315,7 @@ msgid "hub-author-type"
 msgstr "Votre nom et/ou votre pseudo"
 
 msgid "hub-rights"
-msgstr "Mention sur les images lue"
+msgstr "J'accepte la mention sur les droits des images"
 
 msgid "hub-to-choose"
 msgstr "À choisir"
@@ -6375,7 +6375,7 @@ msgid "hub-missing-captures"
 msgstr "générez les captures"
 
 msgid "hub-missing-rights"
-msgstr "lisez la mention sur les images"
+msgstr "acceptez la mention sur les droits des images"
 
 msgid "hub-no-internet"
 msgstr "Pas de connexion à Internet"
@@ -6459,7 +6459,7 @@ msgid "hub-catalog-count"
 msgstr "{count} thème(s)"
 
 msgid "hub-catalog-help"
-msgstr "Haut / Bas : thème - Gauche / Droite : capture - Valider : télécharger"
+msgstr "Molette ou Haut / Bas : thème, Retour, Télécharger - Gauche / Droite : capture - Valider : choisir"
 
 msgid "hub-capture-loading"
 msgstr "Chargement de la capture…"

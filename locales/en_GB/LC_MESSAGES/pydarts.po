@@ -982,7 +982,7 @@ msgid "need-restart"
 msgstr "Do you want to restart?"
 
 msgid "press-enter"
-msgstr "Press Enter, Confirm button, or tap screen to confirm"
+msgstr "Enter, Confirm button or tap this band to confirm (elsewhere: cancel)"
 
 msgid "are-you-sure"
 msgstr "Are you sure?"
@@ -5671,7 +5671,7 @@ msgstr "Right"
 
 
 msgid "theme-keyboard-mouse"
-msgstr "The theme is customised with a keyboard and a mouse"
+msgstr "Knob or arrows: choose - Validate: open or change - Long press or Esc: back"
 
 msgid "theme-group-menus"
 msgstr "Menus"
@@ -6511,7 +6511,7 @@ msgid "hub-author-type"
 msgstr "Your name and/or your nickname"
 
 msgid "hub-rights"
-msgstr "Note on the images read"
+msgstr "I accept the note on image rights"
 
 msgid "hub-to-choose"
 msgstr "To choose"
@@ -6571,7 +6571,7 @@ msgid "hub-missing-captures"
 msgstr "make the captures"
 
 msgid "hub-missing-rights"
-msgstr "read the note on the images"
+msgstr "accept the note on image rights"
 
 msgid "hub-no-internet"
 msgstr "No Internet connection"
@@ -6655,7 +6655,7 @@ msgid "hub-catalog-count"
 msgstr "{count} theme(s)"
 
 msgid "hub-catalog-help"
-msgstr "Up / Down: theme - Left / Right: capture - Validate: download"
+msgstr "Knob or Up / Down: theme, Back, Download - Left / Right: capture - Validate: choose"
 
 msgid "hub-capture-loading"
 msgstr "Loading the capture…"

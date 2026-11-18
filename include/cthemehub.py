@@ -3,7 +3,7 @@ Modifier les écrans > Exporter le thème > Vers RaspyHub : a theme shared on ra
 
 - Its name (the one of the theme, changed if wanted), its author : a player of the borne (he gets
   the trophy « Participation à la création artistique » when it is sent), shown with his name
-  and/or a pseudo, then # and the 6 first characters of the identifier of the borne (no double).
+  and/or a pseudo (RaspyHub adds # and 6 characters of the identifier of the borne : no double).
 - Its captures : 3 asked (the main screen, Paramètres, Choix du jeu in Classique) and 6 at most
   chosen among the other pages of the menus and the captures taken by the player (mode capture :
   include/ccapture.py), everything in ~/.raspydarts/raspyhub/export/<theme>.
@@ -66,17 +66,6 @@ def limits(logs):
     return found
 
 
-def short_id():
-    '''
-    The 6 first characters of the identifier of the borne (the one of the statistics)
-    '''
-    try:
-        from include import cupdate    # pylint: disable=import-outside-toplevel
-        return (cupdate.machine_id() or '')[:6] or '000000'
-    except Exception:    # pylint: disable=broad-except
-        return '000000'
-
-
 class Draft:
     '''
     What is prepared for a theme : its name, its player, its author, the mention read, the
@@ -135,10 +124,6 @@ class Draft:
         The captures sent : the 3 asked, then those chosen
         '''
         return [f'auto-{page}.jpg' for page in ccapture.MANDATORY] + self.chosen()
-
-    def author_shown(self):
-        author = str(self.data.get('author') or '').strip()
-        return f"{author} #{short_id()}" if author else ''
 
 
 def players(screen):
@@ -430,7 +415,7 @@ def export_screen(screen):
         chosen = draft.chosen()
         entries = [('setting', 'name', 'hub-theme-name', str(draft.data.get('name') or '')),
                    ('setting', 'player', 'hub-player', draft.data.get('player') or translate(screen, 'hub-to-choose')),
-                   ('setting', 'author', 'hub-author', draft.author_shown() or translate(screen, 'hub-to-choose')),
+                   ('setting', 'author', 'hub-author', str(draft.data.get('author') or '').strip() or translate(screen, 'hub-to-choose')),
                    ('setting', 'rights', 'hub-rights', yes_no),
                    ('command', 'generate', 'hub-generate', None),
                    ('command', 'choose', 'hub-choose', None if draft.captures() else 'greyed'),

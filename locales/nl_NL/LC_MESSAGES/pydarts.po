@@ -982,7 +982,7 @@ msgid "need-restart"
 msgstr "Wilt u herstarten?"
 
 msgid "press-enter"
-msgstr "Druk op Enter, op de Bevestigingsknop of tik op het scherm om te bevestigen"
+msgstr "Enter, Bevestigingsknop of tik op deze band om te bevestigen (elders: annuleren)"
 
 msgid "are-you-sure"
 msgstr "Weet u het zeker?"
@@ -5453,7 +5453,7 @@ msgstr "Rechts"
 
 
 msgid "theme-keyboard-mouse"
-msgstr "Het thema pas je aan met een toetsenbord en een muis"
+msgstr "Draaiknop of pijlen: kiezen - Bevestigen: openen of wijzigen - Lang drukken of Esc: terug"
 
 msgid "theme-group-menus"
 msgstr "Menu's"
@@ -6293,7 +6293,7 @@ msgid "hub-author-type"
 msgstr "Uw naam en/of uw bijnaam"
 
 msgid "hub-rights"
-msgstr "Opmerking over de afbeeldingen gelezen"
+msgstr "Ik aanvaard de opmerking over beeldrechten"
 
 msgid "hub-to-choose"
 msgstr "Te kiezen"
@@ -6353,7 +6353,7 @@ msgid "hub-missing-captures"
 msgstr "maak de schermafbeeldingen"
 
 msgid "hub-missing-rights"
-msgstr "lees de opmerking over de afbeeldingen"
+msgstr "aanvaard de opmerking over beeldrechten"
 
 msgid "hub-no-internet"
 msgstr "Geen internetverbinding"
@@ -6437,7 +6437,7 @@ msgid "hub-catalog-count"
 msgstr "{count} thema('s)"
 
 msgid "hub-catalog-help"
-msgstr "Omhoog / Omlaag: thema - Links / Rechts: schermafbeelding - Bevestigen: downloaden"
+msgstr "Draaiknop of Omhoog / Omlaag: thema, Terug, Downloaden - Links / Rechts: schermafbeelding - Bevestigen: kiezen"
 
 msgid "hub-capture-loading"
 msgstr "Schermafbeelding wordt geladen…"

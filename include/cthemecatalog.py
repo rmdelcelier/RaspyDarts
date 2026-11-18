@@ -29,6 +29,8 @@ CACHE_MOST = 50 * 1024 ** 2
 TURN = 4.0
 # A theme bigger than this : its size said before it is downloaded
 BIG = 100 * 1024 ** 2
+# The wheel of a knob : through the themes and the buttons (the arrows of the keyboard : the captures)
+WHEEL = {'BTN_RIGHT': 1, 'BTN_LEFT': -1}
 
 
 def translate(screen, key):
@@ -353,18 +355,25 @@ def catalog_screen(screen):
         clicked = screen.is_clicked(zones, key)
         if clicked is not False and clicked is not None:
             if isinstance(clicked, tuple):
-                if clicked[1] == selected:
-                    key = 'enter'
-                selected, number, focus, turned = clicked[1], 1, 'list', time.time()
-                if key != 'enter':
-                    continue
-            elif clicked in ('previous', 'next'):
-                key = LEFT_KEYS[0] if clicked == 'previous' else RIGHT_KEYS[0]
+                # A theme touched : chosen ; touched again : Télécharger chosen (as Valider)
+                focus = 'download' if clicked[1] == selected else 'list'
+                if clicked[1] != selected:
+                    selected, number, turned = clicked[1], 1, time.time()
+                continue
+            if clicked in ('previous', 'next'):
+                key = 'left' if clicked == 'previous' else 'right'
             else:
                 focus, key = clicked, 'enter'
         if key in ESCAPE_KEYS or key == 'escape':
             return
-        if key in LEFT_KEYS:
+        if key in WHEEL:
+            # The wheel of a knob : the themes, then Retour, then Télécharger (and round again)
+            places = [('list', index) for index in range(len(themes))] + [('back', None), ('download', None)]
+            here_at = places.index(('list', selected)) if focus == 'list' else places.index((focus, None))
+            focus, index = places[(here_at + WHEEL[key]) % len(places)]
+            if focus == 'list' and index != selected:
+                selected, number, turned = index, 1, time.time()
+        elif key in LEFT_KEYS:
             number = (number - 2) % count + 1
             turned = time.time()
         elif key in RIGHT_KEYS:
@@ -387,6 +396,10 @@ def catalog_screen(screen):
         elif key in ENTER_KEYS + ['space']:
             if focus == 'back':
                 return
+            if focus == 'list':
+                # Valider on a theme : Télécharger chosen (one more Valider downloads it)
+                focus = 'download'
+                continue
             take(screen, theme)
             here = installed(screen)
             turned = time.time()

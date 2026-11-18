@@ -982,7 +982,7 @@ msgid "need-restart"
 msgstr "Vuoi riavviare?"
 
 msgid "press-enter"
-msgstr "Premi Invio, Conferma o tocca lo schermo"
+msgstr "Invio, Conferma o tocca questa banda per confermare (altrove: annullare)"
 
 msgid "are-you-sure"
 msgstr "Sei sicuro?"
@@ -5466,7 +5466,7 @@ msgstr "A destra"
 
 
 msgid "theme-keyboard-mouse"
-msgstr "Il tema si personalizza con tastiera e mouse"
+msgstr "Manopola o frecce: scegliere - Convalida: aprire o cambiare - Pressione lunga o Esc: indietro"
 
 msgid "theme-group-menus"
 msgstr "Menu"
@@ -6306,7 +6306,7 @@ msgid "hub-author-type"
 msgstr "Il tuo nome e/o il tuo pseudonimo"
 
 msgid "hub-rights"
-msgstr "Avviso sulle immagini letto"
+msgstr "Accetto l'avviso sui diritti delle immagini"
 
 msgid "hub-to-choose"
 msgstr "Da scegliere"
@@ -6366,7 +6366,7 @@ msgid "hub-missing-captures"
 msgstr "genera le catture"
 
 msgid "hub-missing-rights"
-msgstr "leggi l'avviso sulle immagini"
+msgstr "accetta l'avviso sui diritti delle immagini"
 
 msgid "hub-no-internet"
 msgstr "Nessuna connessione a Internet"
@@ -6450,7 +6450,7 @@ msgid "hub-catalog-count"
 msgstr "{count} tema/i"
 
 msgid "hub-catalog-help"
-msgstr "Su / Giù: tema - Sinistra / Destra: schermata - Convalida: scaricare"
+msgstr "Manopola o Su / Giù: tema, Indietro, Scaricare - Sinistra / Destra: schermata - Convalida: scegliere"
 
 msgid "hub-capture-loading"
 msgstr "Caricamento della schermata…"

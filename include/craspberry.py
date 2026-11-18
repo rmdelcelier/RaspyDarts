@@ -786,6 +786,25 @@ class Craspberry():
         for index in (5, 6, 7):
             pygame.time.set_timer(USEREVENT + index, 0)
 
+    def poll_menu_buttons(self):
+        """
+        A button of the menus pressed now (GPIO, MCP, pad of USB : the wheel of a knob gives
+        BTN_LEFT / BTN_RIGHT), None if none ; without waiting. For the windows which read the
+        mouse themselves (sliders dragged : Réglage fin, Définir la position)
+        """
+        key = self.read_buttons()
+        if key and key not in ('MISSDART', 'SHOCKSENSOR'):
+            return key
+        if self.gpio is not None and self.gpio.mcp1 is not None:
+            inputs = self.gpio.read_entries()
+            first = inputs if isinstance(inputs, str) else (inputs[0] if inputs else None)
+            if first and first != 'PIN_MISSDART':
+                if isinstance(inputs, str):
+                    self.button_led_press(inputs)
+                return first.replace('PIN_', 'BTN_')
+        self.usb_pads.context = 'menus'
+        return self.usb_pads.take()
+
     def listen_inputs(self, *args, **kwargs):
         """
         Read input (see read_inputs). The time of an input is kept : the screen logs the

@@ -1088,6 +1088,7 @@ class Screen(pygame.Surface):
         self.blit_text2(second, rect2, self.colorset['message-text'])
 
         self.update_screen()
+        return rect
 
     def wait_validation(self, text):
         '''
@@ -1095,8 +1096,10 @@ class Screen(pygame.Surface):
         '''
         self.save_background()
         self.display_background(image=True)
-        self.validation_band(text)
-        if self.wait_touch() in ENTER_KEYS:
+        band = self.validation_band(text)
+        press = self.wait_touch()
+        # A touch (or a click) : on the band, it is validated ; elsewhere, given up
+        if press in ENTER_KEYS or (isinstance(press, tuple) and band.collidepoint(press[0], press[1])):
             self.restore_background()
             self.reset_background()
             return True

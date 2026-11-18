@@ -982,7 +982,7 @@ msgid "need-restart"
 msgstr "Möchten Sie neu starten?"
 
 msgid "press-enter"
-msgstr "Drücken Sie Enter, Bestätigen oder berühren Sie den Bildschirm"
+msgstr "Enter, Bestätigen oder dieses Band berühren zum Bestätigen (anderswo: abbrechen)"
 
 msgid "are-you-sure"
 msgstr "Sind Sie sicher?"
@@ -5399,7 +5399,7 @@ msgstr "Rechts"
 
 
 msgid "theme-keyboard-mouse"
-msgstr "Das Thema wird mit Tastatur und Maus angepasst"
+msgstr "Drehknopf oder Pfeile: wählen - Bestätigen: öffnen oder ändern - Lang drücken oder Esc: zurück"
 
 msgid "theme-group-menus"
 msgstr "Menüs"
@@ -6239,7 +6239,7 @@ msgid "hub-author-type"
 msgstr "Ihr Name und/oder Ihr Pseudonym"
 
 msgid "hub-rights"
-msgstr "Hinweis zu den Bildern gelesen"
+msgstr "Ich akzeptiere den Hinweis zu den Bildrechten"
 
 msgid "hub-to-choose"
 msgstr "Auswählen"
@@ -6299,7 +6299,7 @@ msgid "hub-missing-captures"
 msgstr "die Aufnahmen erstellen"
 
 msgid "hub-missing-rights"
-msgstr "den Hinweis zu den Bildern lesen"
+msgstr "den Hinweis zu den Bildrechten akzeptieren"
 
 msgid "hub-no-internet"
 msgstr "Keine Internetverbindung"
@@ -6383,7 +6383,7 @@ msgid "hub-catalog-count"
 msgstr "{count} Thema(s)"
 
 msgid "hub-catalog-help"
-msgstr "Hoch / Runter: Thema - Links / Rechts: Bildschirmfoto - Bestätigen: herunterladen"
+msgstr "Drehknopf oder Hoch / Runter: Thema, Zurück, Herunterladen - Links / Rechts: Bildschirmfoto - Bestätigen: wählen"
 
 msgid "hub-capture-loading"
 msgstr "Bildschirmfoto wird geladen…"

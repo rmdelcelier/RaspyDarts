@@ -982,7 +982,7 @@ msgid "need-restart"
 msgstr "¿Desea reiniciar?"
 
 msgid "press-enter"
-msgstr "Pulse Intro, el botón de confirmar o toque la pantalla para confirmar"
+msgstr "Intro, botón de confirmar o toque esta banda para confirmar (en otro sitio: cancelar)"
 
 msgid "are-you-sure"
 msgstr "¿Está seguro?"
@@ -5404,7 +5404,7 @@ msgstr "A la derecha"
 
 
 msgid "theme-keyboard-mouse"
-msgstr "El tema se personaliza con un teclado y un ratón"
+msgstr "Rueda o flechas: elegir - Validar: abrir o cambiar - Pulsación larga o Esc: volver"
 
 msgid "theme-group-menus"
 msgstr "Menús"
@@ -6244,7 +6244,7 @@ msgid "hub-author-type"
 msgstr "Su nombre y/o su seudónimo"
 
 msgid "hub-rights"
-msgstr "Aviso sobre las imágenes leído"
+msgstr "Acepto el aviso sobre los derechos de las imágenes"
 
 msgid "hub-to-choose"
 msgstr "Por elegir"
@@ -6304,7 +6304,7 @@ msgid "hub-missing-captures"
 msgstr "genere las capturas"
 
 msgid "hub-missing-rights"
-msgstr "lea el aviso sobre las imágenes"
+msgstr "acepte el aviso sobre los derechos de las imágenes"
 
 msgid "hub-no-internet"
 msgstr "Sin conexión a Internet"
@@ -6388,7 +6388,7 @@ msgid "hub-catalog-count"
 msgstr "{count} tema(s)"
 
 msgid "hub-catalog-help"
-msgstr "Arriba / Abajo: tema - Izquierda / Derecha: captura - Validar: descargar"
+msgstr "Rueda o Arriba / Abajo: tema, Volver, Descargar - Izquierda / Derecha: captura - Validar: elegir"
 
 msgid "hub-capture-loading"
 msgstr "Cargando la captura…"

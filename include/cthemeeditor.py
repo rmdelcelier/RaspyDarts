@@ -252,6 +252,34 @@ def pick_color(screen, keys, title, current, buttons, label, panel=None, hover=N
             shown = None
 
 
+def slider_button(key, active, sliders):
+    '''
+    A button of a window of sliders (Réglage fin, Définir la position) read without the keyboard
+    (buttons, the wheel of a knob) : the wheel changes the value of the slider chosen, Valider
+    goes to the next slider then to OK ; on OK and Annuler the wheel goes from one to the other,
+    Valider does it ; Retour (or the knob held) cancels. Returns (done : 'ok', 'cancel' or None,
+    the slider or button chosen, the change of the value : -1, 0, 1)
+    '''
+    from include.cscreen import DOWN_KEYS, ENTER_KEYS, ESCAPE_KEYS, UP_KEYS    # pylint: disable=import-outside-toplevel
+    wheel = {'BTN_RIGHT': 1, 'S6': 1, 'BTN_LEFT': -1, 'S11': -1}
+    count = sliders + 2
+    if key in ESCAPE_KEYS:
+        return 'cancel', active, 0
+    if key in UP_KEYS:
+        return None, (active - 1) % count, 0
+    if key in DOWN_KEYS:
+        return None, (active + 1) % count, 0
+    if key in wheel:
+        if active < sliders:
+            return None, active, wheel[key]
+        return None, sliders + (active - sliders + 1) % 2, 0
+    if key in ENTER_KEYS:
+        if active < sliders:
+            return None, active + 1, 0
+        return ('ok' if active == sliders else 'cancel'), active, 0
+    return None, active, 0
+
+
 def fine_color(screen, title, before, panel=None, hover=None):
     '''
     Réglage fin : a window with the sliders red, green, blue (dragged or clicked with the
@@ -312,8 +340,10 @@ def fine_color(screen, title, before, panel=None, hover=None):
         pygame.draw.rect(screen.screen, (255, 255, 255), preview, 2)
         code = font.render(f"({color[0]}, {color[1]}, {color[2]})", True, (255, 255, 255))
         screen.screen.blit(code, (preview.centerx - code.get_width() // 2, preview.bottom + 8))
-        for rect, text in ((ok, 'OK'), (cancel, translate('theme-cancel'))):
-            pygame.draw.rect(screen.screen, (70, 70, 70), rect, border_radius=10)
+        for number, (rect, text) in enumerate(((ok, 'OK'), (cancel, translate('theme-cancel'))), 3):
+            pygame.draw.rect(screen.screen, (90, 80, 30) if active == number else (70, 70, 70), rect, border_radius=10)
+            if active == number:
+                pygame.draw.rect(screen.screen, CHOSEN, rect, 3, border_radius=10)
             rendered = font.render(text, True, (255, 255, 255))
             screen.screen.blit(rendered, rendered.get_rect(center=rect.center))
         screen.update_screen(rect_array=[panel])
@@ -346,9 +376,19 @@ def fine_color(screen, title, before, panel=None, hover=None):
                     active = (active - 1) % 3
                 elif event.key == pygame.K_DOWN:
                     active = (active + 1) % 3
-                elif event.key in (pygame.K_LEFT, pygame.K_RIGHT):
+                elif event.key in (pygame.K_LEFT, pygame.K_RIGHT) and active < 3:
                     step = 1 if event.mod & pygame.KMOD_SHIFT else 5
                     color[active] = max(0, min(255, color[active] + (step if event.key == pygame.K_RIGHT else -step)))
+        # The buttons and the wheel of a knob (not the keyboard : read above)
+        button = screen.rpi.poll_menu_buttons()
+        if button:
+            done, active, change = slider_button(button, active, 3)
+            if done == 'ok':
+                return tuple(color)
+            if done == 'cancel':
+                return None
+            if change:
+                color[active] = max(0, min(255, color[active] + 5 * change))
         # What is shown under it going on (the preview of Fond animé)
         if screen.idle_hook is not None:
             screen.idle_turn()
@@ -405,15 +445,16 @@ class ThemeEditor:
             # Two columns (the panels) of their own lengths, then the two buttons at the bottom
             first = len(GROUPS[0][1])
             plates = first + len(GROUPS[1][1])
-            if key in ('down', 'BTN_DOWN'):
+            # The wheel of a knob (BTN_LEFT / BTN_RIGHT) : every entry in the order of reading
+            if key in ('down', 'BTN_DOWN', 'BTN_RIGHT'):
                 selected = (selected + 1) % len(entries)
-            elif key in ('up', 'BTN_UP'):
+            elif key in ('up', 'BTN_UP', 'BTN_LEFT'):
                 selected = (selected - 1) % len(entries)
-            elif key in ('right', 'BTN_RIGHT') and selected < first:
+            elif key == 'right' and selected < first:
                 selected = min(first + selected, plates - 1)
-            elif key in ('left', 'BTN_LEFT') and first <= selected < plates:
+            elif key == 'left' and first <= selected < plates:
                 selected = min(selected - first, first - 1)
-            elif key in ('right', 'BTN_RIGHT', 'left', 'BTN_LEFT') and selected >= plates:
+            elif key in ('right', 'left') and selected >= plates:
                 selected = plates + 1 if selected == plates else plates
             elif key in self.keys['enter'] + ['space']:
                 entry = entries[selected]
@@ -430,7 +471,7 @@ class ThemeEditor:
 
     def banner(self):
         '''
-        This screen is used with a keyboard and a mouse : said in a band under the title
+        How this screen is used (the wheel of a knob, the arrows, Valider) : said in a band under the title
         '''
         width, height = self.size
         band = pygame.Rect(0, int(height * 2.0 / 16), width, int(height * 0.85 / 16))
@@ -992,8 +1033,10 @@ class ThemeEditor:
                 pygame.draw.circle(screen.screen, (0, 0, 0), (knob_x, bar.centery), bar.height, 2)
                 number = font.render(f"{values[index]} %", True, (255, 255, 255))
                 screen.screen.blit(number, (bar.right + bar.height + 14, bar.centery - number.get_height() // 2))
-            for rect, text in ((ok, 'OK'), (cancel, translate('theme-cancel'))):
-                pygame.draw.rect(screen.screen, (70, 70, 70), rect, border_radius=10)
+            for number, (rect, text) in enumerate(((ok, 'OK'), (cancel, translate('theme-cancel'))), 4):
+                pygame.draw.rect(screen.screen, (90, 80, 30) if active == number else (70, 70, 70), rect, border_radius=10)
+                if active == number:
+                    pygame.draw.rect(screen.screen, CHOSEN, rect, 3, border_radius=10)
                 rendered = font.render(text, True, (255, 255, 255))
                 screen.screen.blit(rendered, rendered.get_rect(center=rect.center))
             screen.update_screen(rect_array=[panel])
@@ -1013,7 +1056,7 @@ class ThemeEditor:
                         if bar.inflate(bar.height * 2, bar.height * 3).collidepoint(event.pos):
                             active, dragging = index, index
                             put(index, value_at(index, event.pos[0]))
-                elif event.type == pygame.MOUSEBUTTONDOWN and event.button in (4, 5):
+                elif event.type == pygame.MOUSEBUTTONDOWN and event.button in (4, 5) and active < 4:
                     # The wheel (a knob) : the value of the slider chosen
                     put(active, values[active] + (1 if event.button == 4 else -1))
                 elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
@@ -1029,9 +1072,19 @@ class ThemeEditor:
                         active = (active - 1) % 4
                     elif event.key == pygame.K_DOWN:
                         active = (active + 1) % 4
-                    elif event.key in (pygame.K_LEFT, pygame.K_RIGHT):
+                    elif event.key in (pygame.K_LEFT, pygame.K_RIGHT) and active < 4:
                         step = 5 if event.mod & pygame.KMOD_SHIFT else 1
                         put(active, values[active] + (step if event.key == pygame.K_RIGHT else -step))
+            # The buttons and the wheel of a knob (not the keyboard : read above)
+            button = screen.rpi.poll_menu_buttons()
+            if button:
+                done, active, change = slider_button(button, active, 4)
+                if done == 'ok':
+                    return tuple(values)
+                if done == 'cancel':
+                    return None
+                if change:
+                    put(active, values[active] + change)
             clock.tick(30)
 
     def set(self, tag, value):
