@@ -10108,6 +10108,14 @@ class Screen(pygame.Surface):
         15 to 45 minutes) ; the game stays usable meanwhile. Its log : logs/raspy2dmd_install.log.
         Followed at once (see raspy2dmd_install_progress) : True when installed
         '''
+        from include import craspy2dmdarch    # pylint: disable=import-outside-toplevel
+        if craspy2dmdarch.system_64bits():
+            # Its last release read before (a few seconds) : a 32 bits one would be installed for
+            # nothing (its engine would not start)
+            self.message([self.lang.translate('raspy2dmd-checking-64bits')], 0, None, 'middle', 'big')
+            if craspy2dmdarch.release_fits(self.RASPY2DMD_RELEASES, self.logs) is False:
+                self.raspy2dmd_no_64bits('raspy2dmd-no-64bits')
+                return
         if not self.wait_validation('raspy2dmd-install-question'):
             return
         import socket
@@ -10131,12 +10139,25 @@ class Screen(pygame.Surface):
         # Followed at once (the screen of the settings came back : nothing showed it)
         return self.raspy2dmd_install_progress()
 
+    def raspy2dmd_no_64bits(self, text):
+        '''
+        Raspy2DMD in 32 bits only on a 64 bits system : said in two messages, each one on the
+        screen drawn again (the band of a message lets see what is behind it)
+        '''
+        for key in (text, 'raspy2dmd-no-64bits-wait'):
+            self.message([self.lang.translate(key)], 4000, self.colorset['menu-ko'], 'middle', 'big')
+
     def raspy2dmd_start(self):
         '''
         Start it at once, as at the start of the machine (rc.local) : its engine and its web
         page (each script once : the engine has its lock, the page is checked), in a unit of
-        their own ; then up to 30 s for the engine
+        their own ; then up to 30 s for the engine. A 32 bits version on a 64 bits system :
+        said, not started (it would stop at once)
         '''
+        from include import craspy2dmdarch    # pylint: disable=import-outside-toplevel
+        if craspy2dmdarch.installed_fits(self.RASPY2DMD_DIR) is False:
+            self.raspy2dmd_no_64bits('raspy2dmd-no-64bits-installed')
+            return
         command = ("(pgrep -f 'python.*ServerRaspy2DMD[.]py' > /dev/null || bash /Raspy2DMD/ServerRaspy2DMD.sh) & "
                    "(pgrep -f 'node.*app[.]js' > /dev/null || bash /Raspy2DMD/ServerRaspy2DMDWeb.sh) & wait")
         try:

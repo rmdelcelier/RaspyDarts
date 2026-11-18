@@ -4012,6 +4012,18 @@ msgstr "Raspy2DMD display not installed. Install now? (Requires Internet, 15-45 
 msgid "raspy2dmd-no-internet"
 msgstr "No Internet connection: installation failed"
 
+msgid "raspy2dmd-checking-64bits"
+msgstr "Checking Raspy2DMD for 64 bits…"
+
+msgid "raspy2dmd-no-64bits"
+msgstr "Raspy2DMD is not available in 64 bits yet"
+
+msgid "raspy2dmd-no-64bits-installed"
+msgstr "This Raspy2DMD is 32 bits: it cannot start here"
+
+msgid "raspy2dmd-no-64bits-wait"
+msgstr "A 64-bit version of Raspy2DMD is needed"
+
 msgid "raspy2dmd-install-started"
 msgstr "Installation started: follow progress in menu"
 

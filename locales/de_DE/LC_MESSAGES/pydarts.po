@@ -4007,6 +4007,18 @@ msgstr "Raspy2DMD-Bildschirm nicht installiert. Jetzt installieren? (Internet er
 msgid "raspy2dmd-no-internet"
 msgstr "Keine Internetverbindung: Installation fehlgeschlagen"
 
+msgid "raspy2dmd-checking-64bits"
+msgstr "Raspy2DMD wird für 64 Bit geprüft…"
+
+msgid "raspy2dmd-no-64bits"
+msgstr "Raspy2DMD gibt es noch nicht in 64 Bit"
+
+msgid "raspy2dmd-no-64bits-installed"
+msgstr "Dieses Raspy2DMD ist 32 Bit: es startet hier nicht"
+
+msgid "raspy2dmd-no-64bits-wait"
+msgstr "Eine 64-Bit-Version von Raspy2DMD ist nötig"
+
 msgid "raspy2dmd-install-started"
 msgstr "Installation gestartet: Verfolgen Sie den Fortschritt im Menü"
 

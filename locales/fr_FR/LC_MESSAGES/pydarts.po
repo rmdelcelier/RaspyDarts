@@ -4150,6 +4150,18 @@ msgstr "L'afficheur DMD Raspy2DMD n'est pas installé. L'installer maintenant ? 
 msgid "raspy2dmd-no-internet"
 msgstr "Pas d'accès à Internet : l'installation est impossible"
 
+msgid "raspy2dmd-checking-64bits"
+msgstr "Vérification de Raspy2DMD pour le 64 bits…"
+
+msgid "raspy2dmd-no-64bits"
+msgstr "Raspy2DMD n'existe pas encore en 64 bits"
+
+msgid "raspy2dmd-no-64bits-installed"
+msgstr "Ce Raspy2DMD est en 32 bits : il ne démarre pas ici"
+
+msgid "raspy2dmd-no-64bits-wait"
+msgstr "Il faut attendre une version 64 bits de Raspy2DMD"
+
 msgid "raspy2dmd-install-started"
 msgstr "Installation lancée : suivez-la dans ce menu"
 

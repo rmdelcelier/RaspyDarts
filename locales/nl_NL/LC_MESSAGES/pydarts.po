@@ -4128,6 +4128,18 @@ msgstr "Het DMD-display Raspy2DMD is niet geïnstalleerd. Nu installeren? (Inter
 msgid "raspy2dmd-no-internet"
 msgstr "Geen internettoegang: installatie is onmogelijk"
 
+msgid "raspy2dmd-checking-64bits"
+msgstr "Raspy2DMD wordt gecontroleerd voor 64 bits…"
+
+msgid "raspy2dmd-no-64bits"
+msgstr "Raspy2DMD bestaat nog niet in 64 bits"
+
+msgid "raspy2dmd-no-64bits-installed"
+msgstr "Deze Raspy2DMD is 32 bits: hij start hier niet"
+
+msgid "raspy2dmd-no-64bits-wait"
+msgstr "Er is een 64-bits versie van Raspy2DMD nodig"
+
 msgid "raspy2dmd-install-started"
 msgstr "Installatie gestart: volg deze in dit menu"
 
