@@ -97,6 +97,8 @@ class Editor:
         self.size = screen.screen.get_size()
         self.units = cmenustyle.Units(self.size, self.resolution)
         self.removed = []
+        # The buttons deleted which stay hidden instead (Redémarrer RaspyDarts : its shortcut F11)
+        self.hidden_again = set()
         self.changed = False
         self.step = FIRST_STEP
         self.mode = 'select'
@@ -713,7 +715,10 @@ class Editor:
                 self.handle = 4
             elif choice == 'delete' and self.screen.ask_yes_no(f"{self.translate('editor-delete-confirm')} ({name})"):
                 ident = self.menus.button_id(button)
-                if not item.get('new') and not button.get('version') and not button.get('title'):
+                if button.get('action') == 'restart':
+                    # Redémarrer RaspyDarts : hidden again (its shortcut kept), not removed
+                    self.hidden_again.add(ident)
+                elif not item.get('new') and not button.get('version') and not button.get('title'):
                     self.removed.append(ident)
                 del self.items[self.selected - 1]
                 self.selected = max(1, min(self.selected, len(self.items)))
@@ -1402,6 +1407,15 @@ class Editor:
                                     {'id': f'category-{category}', 'action': f'category:{category}',
                                      'text': text, 'logo': logo}))
             choices.append((self.translate('editor-add-game'), 'game'))
+            # Redémarrer RaspyDarts : the button of the game hidden on this screen (its shortcut
+            # kept), shown once added ; never there in a fresh installation
+            if 'restart' not in actions:
+                hidden = next((button for button in self.menu.get('buttons') or [] if isinstance(button, dict)
+                               and button.get('action') == 'restart'), None)
+                restart = self.clean(hidden) if hidden is not None else {'id': 'restart', 'action': 'restart'}
+                restart.pop('visible', None)
+                restart['text'] = 'restart-raspydarts'
+                choices.append((self.translate('restart-raspydarts'), restart))
             # The version, deleted before
             if not any(item['button'].get('version') for item in self.items):
                 choices.append((self.translate('editor-version'), {'id': VERSION_ID, 'version': True}))
@@ -1481,6 +1495,7 @@ class Editor:
         self.items.append({'button': button, 'rect': rect, 'new': True})
         if ident in self.removed:
             self.removed.remove(ident)
+        self.hidden_again.discard(ident)
         self.selected = len(self.items)
         self.changed = True
 
@@ -1547,6 +1562,11 @@ class Editor:
                 if ident in self.removed:
                     continue
                 button = self.clean(button)
+                if ident in self.hidden_again and ident not in placed:
+                    # Deleted from the screen, kept hidden (its shortcut still works)
+                    button['visible'] = False
+                    for key in ('place', 'text') + LAYOUT_KEYS:
+                        button.pop(key, None)
                 if ident in placed:
                     item = placed.pop(ident)
                     button = dict(item['button'])

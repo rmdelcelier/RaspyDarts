@@ -1,9 +1,10 @@
 """
-Autodarts (its cameras read the darts) : its settings, the reading of its darts, its installation.
+Autodarts (its cameras read the darts) : its settings, the reading of its darts.
 
-- Autodarts is a program of its own (https://autodarts.io) : on this Raspberry (a Pi 4 or a
-  Pi 5, 64 bits) or on another machine of the network. RaspyDarts only reads what its board
-  says on its port 3180 (/api/state : numThrows, throws[].segment), 10 times a second.
+- Autodarts is a program of its own (https://autodarts.io), on another machine of the network
+  (a PC, or a Raspberry Pi 4 or 5 with a 64 bits system) : RaspyDarts runs on a 32 bits system,
+  Autodarts needs 64 bits, it is never installed on the borne. RaspyDarts only reads what its
+  board says on its port 3180 (/api/state : numThrows, throws[].segment), 10 times a second.
 - Its darts come to the game as the darts of the target (Craspberry.read_inputs) : every game
   plays with them. Counted at once (live), or the three of a turn when they are taken out of
   the target (takeout), which leaves the time to correct them in Autodarts.
@@ -16,9 +17,7 @@ Autodarts (its cameras read the darts) : its settings, the reading of its darts,
 import collections
 import json
 import os
-import platform
 import queue
-import subprocess
 import threading
 import time
 import urllib.request
@@ -26,40 +25,11 @@ import urllib.request
 from include import cpaths
 
 SETTINGS_FILE = os.path.join(cpaths.user_dir(), 'autodarts.json')
-# host 127.0.0.1 : Autodarts on this Raspberry
-DEFAULTS = {'enabled': False, 'host': '127.0.0.1', 'port': 3180, 'counting': 'live', 'takeout_next': True}
+# host : the machine of Autodarts on the network ('' : none yet ; 127.0.0.1 : the setting of before, none)
+DEFAULTS = {'enabled': False, 'host': '', 'port': 3180, 'counting': 'live', 'takeout_next': True}
 COUNTINGS = ('live', 'takeout')
 LOCAL_HOSTS = ('127.0.0.1', 'localhost', '')
 
-# Its installation : the headless board of Autodarts v2, by its own script (get.autodarts.io,
-# without a terminal, would install the old v1). As the user of the game : its files in
-# ~/.local/share/autodarts, its command ~/.local/bin/autodarts
-INSTALLER = 'https://autodarts.sh'
-INSTALL_COMMAND = f'curl -fsSL {INSTALLER} | bash -s -- --headless --no-color'
-INSTALL_UNIT = 'autodarts-install'
-INSTALL_LOG = os.path.join(cpaths.ROOT_DIR, 'logs', 'autodarts_install.log')
-INSTALL_DONE = 'Installed Autodarts'
-BINARY = os.path.expanduser('~/.local/bin/autodarts')
-# Its service, started with the session of the game (its installer installs none : its own
-# screen offers it ; same name and place as the one it writes)
-UNIT_NAME = 'autodarts.service'
-UNIT_FILE = os.path.expanduser(f'~/.config/systemd/user/{UNIT_NAME}')
-UNIT_TEXT = """[Unit]
-Description=Autodarts (board), started for RaspyDarts
-After=network-online.target
-
-[Service]
-ExecStart=%h/.local/bin/autodarts run
-Restart=on-failure
-RestartSec=3
-
-[Install]
-WantedBy=default.target
-"""
-# Installed by an older way : a service of the system
-SYSTEM_UNIT_FILE = '/etc/systemd/system/autodarts.service'
-# RaspyDarts installed again on a Raspberry able to run Autodarts
-RASPYDARTS_INSTALL = 'curl -fsSL https://raw.githubusercontent.com/rmdelcelier/RaspyDarts/main/install.sh | sudo bash'
 ACCOUNT_URL = 'https://autodarts.io'
 
 
@@ -93,144 +63,10 @@ def save(settings):
 
 
 def is_local(settings):
+    '''
+    No address of Autodarts yet (empty, or this Raspberry : never possible, Autodarts needs 64 bits)
+    '''
     return str(settings.get('host') or '').strip() in LOCAL_HOSTS
-
-
-def machine():
-    '''
-    This Raspberry : its model (its text, its number : 3, 4, 5, None) and a 64 bits system
-    '''
-    model = ''
-    try:
-        with open('/proc/device-tree/model', encoding='utf-8', errors='ignore') as file:
-            model = file.read().strip('\x00\n ')
-    except OSError:
-        pass
-    number = None
-    for candidate in (5, 4, 3, 2):
-        if f'Raspberry Pi {candidate}' in model or (candidate == 5 and 'Compute Module 5' in model) \
-                or (candidate == 4 and ('Compute Module 4' in model or 'Pi 400' in model)):
-            number = candidate
-            break
-    # The system, not the kernel : a 64 bits kernel can run a 32 bits system
-    bits64 = platform.architecture()[0] == '64bit' and platform.machine() in ('aarch64', 'arm64', 'x86_64')
-    return {'model': model, 'number': number, 'bits64': bits64}
-
-
-def capable(info=None):
-    '''
-    Autodarts can run here : a Raspberry Pi 4 or 5 with a 64 bits system. None if it can, else
-    why not : 'model' (an older Raspberry), 'bits' (a 32 bits system)
-    '''
-    info = info or machine()
-    if info['number'] is not None and info['number'] < 4:
-        return 'model'
-    if not info['bits64']:
-        return 'bits'
-    return None
-
-
-def installed():
-    return os.path.exists(BINARY) or os.path.isfile(SYSTEM_UNIT_FILE)
-
-
-def has_service():
-    return os.path.isfile(UNIT_FILE) or os.path.isfile(SYSTEM_UNIT_FILE)
-
-
-def service_active():
-    '''
-    Its service running (of the session of the game, or of the system)
-    '''
-    for command in (['systemctl', '--user', 'is-active', '--quiet', UNIT_NAME],
-                    ['systemctl', 'is-active', '--quiet', UNIT_NAME]):
-        try:
-            if subprocess.run(command, check=False, timeout=5).returncode == 0:
-                return True
-        except Exception:    # pylint: disable=broad-except
-            pass
-    return False
-
-
-def installing():
-    try:
-        return subprocess.run(['systemctl', '--user', 'is-active', '--quiet', INSTALL_UNIT],
-                              check=False, timeout=5).returncode == 0
-    except Exception:    # pylint: disable=broad-except
-        return False
-
-
-def launch_install(logs):
-    '''
-    Its installation launched in the background, in a unit of the session of the game (it goes
-    on if the game is restarted). True : launched
-    '''
-    os.makedirs(os.path.dirname(INSTALL_LOG), exist_ok=True)
-    command = f"{INSTALL_COMMAND} > {INSTALL_LOG} 2>&1"
-    try:
-        subprocess.run(['systemd-run', '--user', f'--unit={INSTALL_UNIT}', '--collect', '/bin/bash', '-c', command],
-                       check=True, timeout=30, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        logs.info(f"Autodarts : installation launched ({command})")
-        return True
-    except Exception as error:    # pylint: disable=broad-except
-        logs.error(f"Autodarts : installation not launched : {error}")
-        return False
-
-
-def install_log():
-    '''
-    The lines of its log of installation, without the colours of the terminal
-    '''
-    import re    # pylint: disable=import-outside-toplevel
-    try:
-        with open(INSTALL_LOG, encoding='utf-8', errors='ignore') as file:
-            text = file.read()
-    except OSError:
-        return []
-    lines = [re.sub(r'\x1b\[[0-9;]*[a-zA-Z]', '', line).strip() for line in text.replace('\r', '\n').split('\n')]
-    return [line for line in lines if line]
-
-
-def install_succeeded():
-    return installed() and any(INSTALL_DONE in line for line in install_log()[-40:])
-
-
-def install_service(logs):
-    '''
-    Its service : started with the session of the game, at once. True : running
-    '''
-    try:
-        if not os.path.isfile(SYSTEM_UNIT_FILE):
-            os.makedirs(os.path.dirname(UNIT_FILE), exist_ok=True)
-            if not os.path.isfile(UNIT_FILE):
-                with open(UNIT_FILE, 'w', encoding='utf-8') as file:
-                    file.write(UNIT_TEXT)
-            subprocess.run(['systemctl', '--user', 'daemon-reload'], check=False, timeout=30)
-            subprocess.run(['systemctl', '--user', 'enable', '--now', UNIT_NAME], check=False, timeout=60,
-                           stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        else:
-            subprocess.run(['sudo', '-n', 'systemctl', 'restart', UNIT_NAME], check=False, timeout=60,
-                           stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    except Exception as error:    # pylint: disable=broad-except
-        logs.error(f"Autodarts : service not started : {error}")
-    return service_active()
-
-
-def restart_service(logs):
-    '''
-    Autodarts started again (its service), or its service installed if it has none
-    '''
-    if not has_service():
-        return install_service(logs)
-    if os.path.isfile(UNIT_FILE):
-        command = ['systemctl', '--user', 'restart', UNIT_NAME]
-    else:
-        command = ['sudo', '-n', 'systemctl', 'restart', UNIT_NAME]
-    try:
-        subprocess.run(command, check=False, timeout=60, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    except Exception as error:    # pylint: disable=broad-except
-        logs.error(f"Autodarts : not started again : {error}")
-    return service_active()
 
 
 def segment_code(throw, interior=False):
@@ -307,7 +143,8 @@ class Reader:
         if interior is not None:
             self.interior = bool(interior)
         self.stop()
-        if self.settings.get('enabled'):
+        # Read only from the machine of Autodarts (none given : nothing to read)
+        if self.settings.get('enabled') and not is_local(self.settings):
             self.stop_event = threading.Event()
             self.last = None
             self.pending = []

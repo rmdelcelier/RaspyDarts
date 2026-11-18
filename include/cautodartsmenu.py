@@ -2,15 +2,14 @@
 Paramètres > Autodarts : everything about Autodarts in one screen (as Afficheur (Raspy2DMD)).
 
 - On the left : the QR code of its page (its account, its cameras, its calibration are set
-  there : RaspyDarts never sees a password), its state, what this Raspberry can do.
-- Its settings : the reading of its darts, its address (this Raspberry or another machine of
-  the network), the counting of the darts (at once, or when they are taken out), the darts
-  taken out = Joueur suivant.
-- Its commands : a try of the reading, its installation here (a Raspberry Pi 4 or 5, 64 bits ;
-  greyed otherwise, with why and what to do), started again, its account.
+  there : RaspyDarts never sees a password), its state ; no address yet : where Autodarts runs.
+- Its settings : the reading of its darts, its address (another machine of the network : a PC,
+  or a Raspberry Pi 4 or 5 in 64 bits ; RaspyDarts runs in 32 bits, Autodarts never on the
+  borne), the counting of the darts (at once, or when they are taken out), the darts taken out
+  = Joueur suivant.
+- Its commands : a try of the reading, its page, its account.
 """
 
-import socket
 import time
 
 import pygame
@@ -44,41 +43,15 @@ def button(screen, rect, text, chosen, greyed=False):
 
 def page_url(settings):
     '''
-    Its page (port 3180) : the address set, or this Raspberry seen from a phone
+    Its page (port 3180) on the machine of Autodarts
     '''
-    from include import cgallery    # pylint: disable=import-outside-toplevel
-    host = str(settings.get('host') or '').strip()
-    if cautodarts.is_local(settings):
-        host = cgallery.local_ip() or socket.gethostname() + '.local'
-    return f"http://{host}:{settings.get('port') or 3180}"
+    return f"http://{str(settings.get('host') or '').strip()}:{settings.get('port') or 3180}"
 
 
-def why_not(screen, reason):
+def choose_address(screen, settings):
     '''
-    Why Autodarts cannot be installed here, and what can be done
+    Its address : the machine of the network where Autodarts runs (its IP or its name)
     '''
-    text = translate(screen, 'autodarts-why-model' if reason == 'model' else 'autodarts-why-bits')
-    return text.replace('{command}', cautodarts.RASPYDARTS_INSTALL)
-
-
-def choose_address(screen, settings, local_ok=True):
-    '''
-    Its address : this Raspberry, or another machine of the network (its IP or its name).
-    Not this Raspberry when Autodarts cannot run here (not installed and not installable) :
-    its address typed at once
-    '''
-    if local_ok:
-        choices = [['local', translate(screen, 'autodarts-address-local')],
-                   ['other', translate(screen, 'autodarts-address-other')]]
-        picked = screen.dropdown(screen.res['x'] * 6 / 16, 3 * screen.res_y_16, choices,
-                                 navigate='local' if cautodarts.is_local(settings) else 'other', width=5 * screen.res_x_16)
-    else:
-        picked = 'other'
-    if picked == 'local':
-        settings['host'] = '127.0.0.1'
-        return True
-    if picked != 'other':
-        return False
     before = '' if cautodarts.is_local(settings) else str(settings.get('host'))
     typed = screen.input_value_item('string', before, 1, 60, text='autodarts-address-type')
     if typed in (None, False, 'escape') or not str(typed).strip():
@@ -198,74 +171,15 @@ def show_qr(screen, title, url, text):
     screen.rpi.listen_inputs(['arrows', 'fx'], ['escape', 'enter', 'space', 'single-click', 'PLAYERBUTTON', 'BACKUPBUTTON'])
 
 
-def install(screen, reader):
-    '''
-    Installer Autodarts ici : asked, launched in the background, followed
-    '''
-    if not screen.wait_validation('autodarts-install-question'):
-        return
-    try:
-        socket.create_connection(('autodarts.sh', 443), timeout=5).close()
-    except OSError:
-        screen.message([translate(screen, 'autodarts-no-internet')], 3000, screen.colorset['menu-ko'], 'middle', 'big')
-        return
-    if not cautodarts.launch_install(screen.logs):
-        screen.message([translate(screen, 'autodarts-install-error')], 4000, screen.colorset['menu-ko'], 'middle', 'big')
-        return
-    install_progress(screen, reader)
-
-
-def install_progress(screen, reader):
-    '''
-    Its installation followed : its last line, the time gone by ; Retour leaves it going on.
-    Its end : its service started, the reading of this Raspberry on
-    '''
-    from include.cscreen import ENTER_KEYS, ESCAPE_KEYS    # pylint: disable=import-outside-toplevel
-    started = time.monotonic()
-    while cautodarts.installing():
-        screen.display_background()
-        screen.menu_header(translate(screen, 'autodarts'), translate(screen, 'autodarts-installing'))
-        lines = cautodarts.install_log()
-        line = int(screen.res['y'] / 18)
-        pos_y = int(screen.res['y'] * 0.38)
-        screen.blit_text((lines[-1] if lines else '…')[:90], 0, pos_y, screen.res['x'], line, screen.colorset['menu-text-white'])
-        seconds = int(time.monotonic() - started)
-        screen.blit_text(f"{seconds // 60}:{seconds % 60:02d}", 0, pos_y + int(line * 1.5), screen.res['x'], int(line * 0.8),
-                         screen.colorset['menu-text-white'])
-        screen.display_button(True, 'back', special='escape')
-        screen.update_screen()
-        key = screen.rpi.listen_inputs(['arrows', 'fx'], ['escape', 'enter', 'space', 'single-click', 'PLAYERBUTTON'], timeout=1500)
-        if key in ESCAPE_KEYS or key in ENTER_KEYS or key in ('escape', 'single-click'):
-            screen.message([translate(screen, 'autodarts-install-continues')], 3000, None, 'middle', 'big')
-            return False
-    if not cautodarts.install_succeeded():
-        screen.logs.error(f"Autodarts : installation failed (see {cautodarts.INSTALL_LOG})")
-        screen.message([translate(screen, 'autodarts-install-error')], 5000, screen.colorset['menu-ko'], 'middle', 'big')
-        return False
-    screen.logs.info("Autodarts : installed from the game")
-    screen.message([translate(screen, 'autodarts-starting')], 0, None, 'middle', 'big')
-    running = cautodarts.install_service(screen.logs)
-    settings = dict(reader.settings, enabled=True, host='127.0.0.1')
-    cautodarts.save(settings)
-    reader.configure(settings)
-    screen.message([translate(screen, 'autodarts-install-done' if running else 'autodarts-start-failed')], 5000,
-                   screen.colorset['menu-ok' if running else 'menu-ko'], 'middle', 'big')
-    return True
-
-
 def autodarts_menu(screen):
     '''
     The screen of Autodarts : its QR code and its state on the left, its settings, its commands
     '''
-    if cautodarts.installing() and install_progress(screen, cautodarts.shared(screen.logs)) is False:
-        return
     from include import cmenueditor    # pylint: disable=import-outside-toplevel
     from include.cscreen import DOWN_KEYS, ENTER_KEYS, ESCAPE_KEYS, UP_KEYS    # pylint: disable=import-outside-toplevel
     import qrcode    # pylint: disable=import-outside-toplevel
     reader = cautodarts.shared(screen.logs)
     settings = cautodarts.load()
-    info = cautodarts.machine()
-    reason = cautodarts.capable(info)
     unit_x, unit_y = screen.res['x'] / 16, screen.res['y'] / 16
     selected = 0
     codes = {}
@@ -284,24 +198,15 @@ def autodarts_menu(screen):
         reader.configure(dict(settings), interior is True or str(interior) == 'True')
 
     while True:
-        local = cautodarts.is_local(settings)
-        here = cautodarts.installed()
-        # Autodarts on this Raspberry : installed, or it can be (a Pi 4 or 5, 64 bits)
-        local_ok = here or not reason
-        # Its address : none while it is this Raspberry and Autodarts cannot run here
-        address_set = local_ok or not local
+        # Its address : the machine of Autodarts (none yet : the try and its page greyed)
+        address_set = not cautodarts.is_local(settings)
         yes_no = lambda value: translate(screen, 'yes' if value else 'no')    # pylint: disable=unnecessary-lambda-assignment
         entries = [('setting', 'enabled', 'autodarts-enabled', yes_no(settings.get('enabled'))),
                    ('setting', 'address', 'autodarts-address',
-                    str(settings.get('host')) if not local
-                    else translate(screen, 'autodarts-address-local' if local_ok else 'autodarts-address-none')),
+                    str(settings.get('host')) if address_set else translate(screen, 'autodarts-address-none')),
                    ('setting', 'counting', 'autodarts-counting', translate(screen, f"autodarts-counting-{settings.get('counting')}")),
                    ('setting', 'takeout', 'autodarts-takeout-next', yes_no(settings.get('takeout_next', True))),
                    ('command', 'try', 'autodarts-test', None if address_set else 'greyed')]
-        if here:
-            entries.append(('command', 'restart', 'autodarts-restart', None))
-        else:
-            entries.append(('command', 'install', 'autodarts-install', 'greyed' if reason else None))
         entries += [('command', 'page', 'autodarts-page', None if address_set else 'greyed'),
                     ('command', 'account', 'autodarts-account', None),
                     ('back', 'back', 'back', None)]
@@ -334,10 +239,11 @@ def autodarts_menu(screen):
             state, color = translate(screen, 'autodarts-state-off'), screen.colorset['menu-text-white']
         cmenueditor.paragraph(screen, state, pygame.Rect(left.x, text_y + int(unit_y * 0.2), left.width, int(1.6 * unit_y)), color)
         text_y += int(1.9 * unit_y)
-        if not local_ok:
+        if not address_set:
+            # Where Autodarts runs : another machine, its address to give
             warning = screen.colorset.get('menu-warning', screen.colorset['menu-ko'])
-            cmenueditor.paragraph(screen, why_not(screen, reason), pygame.Rect(left.x, text_y, left.width, int(14 * unit_y) - text_y),
-                                  warning)
+            cmenueditor.paragraph(screen, translate(screen, 'autodarts-elsewhere'),
+                                  pygame.Rect(left.x, text_y, left.width, int(14 * unit_y) - text_y), warning)
 
         zones = {}
         rows = {'setting': 0, 'command': 0}
@@ -400,7 +306,7 @@ def autodarts_menu(screen):
                 settings['enabled'] = not settings.get('enabled')
                 changed()
             elif ident == 'address':
-                if choose_address(screen, settings, local_ok):
+                if choose_address(screen, settings):
                     changed()
             elif ident == 'counting':
                 if choose_counting(screen, settings):
@@ -410,14 +316,6 @@ def autodarts_menu(screen):
                 changed()
             elif ident == 'try':
                 try_reading(screen, reader)
-            elif ident == 'restart':
-                screen.message([translate(screen, 'autodarts-starting')], 0, None, 'middle', 'big')
-                running = cautodarts.restart_service(screen.logs)
-                screen.message([translate(screen, 'autodarts-started' if running else 'autodarts-start-failed')], 3000,
-                               screen.colorset['menu-ok' if running else 'menu-ko'], 'middle', 'big')
-            elif ident == 'install':
-                install(screen, reader)
-                settings = cautodarts.load()
             elif ident == 'page':
                 show_qr(screen, translate(screen, 'autodarts-page'), page_url(settings), translate(screen, 'autodarts-page-help'))
             elif ident == 'account':
