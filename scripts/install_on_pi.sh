@@ -86,6 +86,12 @@ requests smbus tkinter"
 OMX_RELEASE=installation-trixie
 OMX_ASSET=raspydarts-omxplayer-trixie-armhf.tar.gz
 OMX_URL="https://github.com/rmdelcelier/RaspyDarts/releases/download/$OMX_RELEASE/$OMX_ASSET"
+# Sur un systeme 64 bits, omxplayer (32 bits) tourne avec ces bibliotheques 32 bits, installees
+# a cote des 64 bits (multiarch) ; le noyau 64 bits passe ses appels au processeur video.
+# pipewire-alsa : le son des videos du jeu (omxplayer -o alsa) va a PipeWire par un module ALSA,
+# que le libasound 32 bits ne peut charger qu'en 32 bits (sans lui, omxplayer reste bloque)
+OMX_ARMHF_LIBS="libc6:armhf libstdc++6:armhf libgcc-s1:armhf libfreetype6:armhf libasound2t64:armhf
+libdbus-1-3:armhf zlib1g:armhf libbz2-1.0:armhf pipewire-alsa:armhf"
 
 DEFAULT_LOCALE=fr_FR.UTF-8
 DEFAULT_TIMEZONE=Europe/Paris
@@ -860,34 +866,55 @@ ok "Langue $DEFAULT_LOCALE, fuseau $DEFAULT_TIMEZONE, clavier $DEFAULT_KEYBOARD"
 # est installe, sinon l'affichage KMS et VLC sont conserves (videos dans des fenetres)
 BUSTER_MODE=0
 PI_MODEL="$(tr -d '\0' < /proc/device-tree/model 2>/dev/null)"
-case "$PI_MODEL" in
+# omxplayer et les bibliotheques du firmware n'existent qu'en 32 bits (armhf) : sur un systeme
+# 64 bits, ils tournent avec les bibliotheques 32 bits de Debian (OMX_ARMHF_LIBS)
+SYSTEM_ARCH="$(dpkg --print-architecture)"
+
+# Installe omxplayer (archive copiee avec ce script par install_raspydarts.ps1, sinon celle de la
+# release) ; BUSTER_MODE=1 s'il demarre
+install_omxplayer() {
+    if [ "$SYSTEM_ARCH" = "arm64" ]; then
+        dpkg --add-architecture armhf
+        if apt-get update >/dev/null 2>&1 && apt-get install -y --no-install-recommends $OMX_ARMHF_LIBS >/dev/null 2>&1; then
+            ok 'Bibliotheques 32 bits pour omxplayer installees (systeme 64 bits)'
+        else
+            warn 'Bibliotheques 32 bits pour omxplayer non installees : videos par VLC'
+            return
+        fi
+    fi
+    OMX_ARCHIVE="/tmp/$OMX_ASSET"
+    OMX_LOCAL="$(dirname "$(readlink -f "$0")")/$OMX_ASSET"
+    if [ -s "$OMX_LOCAL" ]; then
+        mv -f "$OMX_LOCAL" "$OMX_ARCHIVE"
+        ok "omxplayer : archive copiee avec le script"
+    else
+        curl -fsSL --retry 3 -o "$OMX_ARCHIVE" "$OMX_URL"
+    fi
+    if [ -s "$OMX_ARCHIVE" ] && tar -tzf "$OMX_ARCHIVE" ./usr/bin/omxplayer.bin >/dev/null 2>&1; then
+        tar -xzf "$OMX_ARCHIVE" -C / --no-overwrite-dir
+        rm -f "$OMX_ARCHIVE"
+        ldconfig
+        if omxplayer --version >/dev/null 2>&1; then
+            BUSTER_MODE=1
+            ok 'omxplayer installe (videos au-dessus de tout, comme sous Buster)'
+        else
+            warn 'omxplayer installe mais ne demarre pas : videos par VLC'
+        fi
+    else
+        rm -f "$OMX_ARCHIVE"
+        warn "omxplayer non telecharge ($OMX_URL) : videos par VLC"
+    fi
+}
+
+case "$SYSTEM_ARCH:$PI_MODEL" in
     *"Raspberry Pi 5"*|*"Compute Module 5"*|*"Raspberry Pi 500"*)
         warn "$PI_MODEL : pas d'affichage gere par le firmware, videos par VLC"
         ;;
+    armhf:*|arm64:*)
+        install_omxplayer
+        ;;
     *)
-        OMX_ARCHIVE="/tmp/$OMX_ASSET"
-        # Archive copiee avec ce script (install_raspydarts.ps1), sinon celle de la release
-        OMX_LOCAL="$(dirname "$(readlink -f "$0")")/$OMX_ASSET"
-        if [ -s "$OMX_LOCAL" ]; then
-            mv -f "$OMX_LOCAL" "$OMX_ARCHIVE"
-            ok "omxplayer : archive copiee avec le script"
-        else
-            curl -fsSL --retry 3 -o "$OMX_ARCHIVE" "$OMX_URL"
-        fi
-        if [ -s "$OMX_ARCHIVE" ] && tar -tzf "$OMX_ARCHIVE" ./usr/bin/omxplayer.bin >/dev/null 2>&1; then
-            tar -xzf "$OMX_ARCHIVE" -C / --no-overwrite-dir
-            rm -f "$OMX_ARCHIVE"
-            ldconfig
-            if omxplayer --version >/dev/null 2>&1; then
-                BUSTER_MODE=1
-                ok 'omxplayer installe (videos au-dessus de tout, comme sous Buster)'
-            else
-                warn 'omxplayer installe mais ne demarre pas : videos par VLC'
-            fi
-        else
-            rm -f "$OMX_ARCHIVE"
-            warn "omxplayer non telecharge ($OMX_URL) : videos par VLC"
-        fi
+        warn "Systeme $SYSTEM_ARCH : affichage KMS, videos par VLC"
         ;;
 esac
 
