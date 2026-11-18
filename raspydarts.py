@@ -2400,6 +2400,10 @@ try:
                         dmd.send_miss(player_launch, Lang.translate('Missed !'))
                         if light_segment:
                             dispatcher.publish('miss', dart_stroke.upper(), limit=['TARGET', 'STRIP', 'OTHER'])
+                        # A dart really missed (not the ones left when Joueur suivant is pressed) :
+                        # the video MISS of the theme if there is one, instead of the sound
+                        if dart_stroke == 'MISS' and not competition_mode and video_player.play_event('MISS'):
+                            display.muted_sounds = ('miss', 'penality')
 
                         try:
                             players[actual_player].count_dart()
@@ -2433,6 +2437,8 @@ try:
                             report_error("Fléchette ratée")
                             # Show message on screen
                             display.message([Lang.translate('Missed !')], None, None, 'middle', 'big')
+                        finally:
+                            display.muted_sounds = ()
                     else:
                         # Go to next_player
                         player_launch = game.nb_darts
@@ -2695,6 +2701,9 @@ try:
                         dmd.send_text(txtwinner)
                         dispatcher.publish('winner', limit=['TARGET', 'STRIP', 'OTHER', 'LIGHT', 'STROBE'])
                         rpi.light_toys(['LIGHT_CELEBRATION'], delay=int(config_advanced['victory-celebration-delay']))
+                        # The video WINNER of the theme if there is one, to its end, then the winner said
+                        if not competition_mode:
+                            video_player.play_event('WINNER', wait=True)
                         if type(set_winner) is str and set_winner.find(',') > 0:
                             display.sound_end_game(set_winner)
                         else:

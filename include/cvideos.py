@@ -179,6 +179,30 @@ class Videos():
 
         return None
 
+    def play_event(self, name, wait=False):
+        """
+        The video of a moment of the game (WINNER : the winner of the game, MISS : a dart missed),
+        found as the ones of the darts (DB, SB...) : a folder videos/<name> of the theme, of the
+        user or of the game (a video chosen at random in it), or a file videos/<name>.<ext>.
+        The one being played stopped first. None : no video (or the videos are off)
+        """
+        if self.level < 1 or self.player is None:
+            return None
+        video = self.file.get_full_filename(file_name=name, file_type='videos')
+        if video is None:
+            return None
+        if self.played_video is not None:
+            try:
+                stop_player(self.player, self.played_video)
+            except Exception as error:    # pylint: disable=broad-except
+                self.logs.debug(f"Video not stopped : {error}")
+            self.played_video = None
+        if wait:
+            self.play_video(video, wait=True)
+            return True
+        self.played_video = self.play_video(video, wait=False)
+        return self.played_video
+
     def dart_value(self, dart, mult=False):
         """
         Extract number from dart stroke
