@@ -6158,14 +6158,17 @@ msgstr "Darts van Autodarts lezen"
 msgid "autodarts-address"
 msgstr "Adres van Autodarts"
 
-msgid "autodarts-elsewhere"
-msgstr "Autodarts draait op een andere machine in het netwerk: een pc, of een Raspberry Pi 4 of 5 met een 64-bitsysteem (zie autodarts.io). RaspyDarts draait in 32 bits: Autodarts kan niet op de kast worden geïnstalleerd. Geef daarna het adres van die machine op bij „Adres van Autodarts”."
+msgid "autodarts-address-local"
+msgstr "Deze kast"
 
 msgid "autodarts-address-none"
 msgstr "In te stellen"
 
 msgid "autodarts-state-no-address"
 msgstr "Adres van Autodarts in te stellen: dat van een andere machine in het netwerk"
+
+msgid "autodarts-address-other"
+msgstr "Een ander apparaat in het netwerk…"
 
 msgid "autodarts-address-type"
 msgstr "IP-adres of naam van het Autodarts-apparaat"
@@ -6188,6 +6191,12 @@ msgstr "Darts uitgetrokken = volgende speler"
 msgid "autodarts-test"
 msgstr "Lezen testen"
 
+msgid "autodarts-restart"
+msgstr "Autodarts starten / herstarten"
+
+msgid "autodarts-install"
+msgstr "Autodarts hier installeren"
+
 msgid "autodarts-page"
 msgstr "Pagina van Autodarts (account, camera's)"
 
@@ -6202,6 +6211,39 @@ msgstr "Autodarts antwoordt niet ({address})"
 
 msgid "autodarts-state-off"
 msgstr "Lezen van de darts uit"
+
+msgid "autodarts-why-model"
+msgstr "Deze Raspberry is te oud voor Autodarts, dat een Raspberry Pi 4 of 5 met een 64-bitsysteem vraagt. Gebruik een Autodarts op een andere machine in het netwerk (instelling Adres), of zet de kast over op een Raspberry Pi 4."
+
+msgid "autodarts-why-bits"
+msgstr "Het systeem van deze kast is 32 bits: Autodarts vraagt een 64-bitsysteem. Om het hier te installeren, installeert u de kast opnieuw met een 64-bits image van Raspberry Pi OS en daarna RaspyDarts met de opdracht: {command}. Gebruik anders een Autodarts op een andere machine in het netwerk (instelling Adres)."
+
+msgid "autodarts-install-question"
+msgstr "Autodarts op deze kast installeren? (Internet nodig, enkele minuten)"
+
+msgid "autodarts-no-internet"
+msgstr "Geen toegang tot internet"
+
+msgid "autodarts-installing"
+msgstr "Autodarts wordt geïnstalleerd"
+
+msgid "autodarts-install-continues"
+msgstr "De installatie gaat op de achtergrond verder"
+
+msgid "autodarts-install-error"
+msgstr "De installatie van Autodarts is mislukt (logboek: logs/autodarts_install.log)"
+
+msgid "autodarts-install-done"
+msgstr "Autodarts is geïnstalleerd en gestart: koppel uw account op zijn pagina (QR-code)"
+
+msgid "autodarts-starting"
+msgstr "Autodarts wordt gestart…"
+
+msgid "autodarts-started"
+msgstr "Autodarts is gestart"
+
+msgid "autodarts-start-failed"
+msgstr "Autodarts is niet gestart"
 
 msgid "autodarts-page-help"
 msgstr "Scan deze code met uw telefoon: op de pagina van Autodarts koppelt u uw account, stelt u de camera's in en doet u de kalibratie."

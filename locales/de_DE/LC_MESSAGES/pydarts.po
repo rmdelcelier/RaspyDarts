@@ -6104,14 +6104,17 @@ msgstr "Darts von Autodarts lesen"
 msgid "autodarts-address"
 msgstr "Adresse von Autodarts"
 
-msgid "autodarts-elsewhere"
-msgstr "Autodarts läuft auf einem anderen Gerät im Netzwerk: einem PC oder einem Raspberry Pi 4 oder 5 mit 64-Bit-System (siehe autodarts.io). RaspyDarts läuft mit 32 Bit: Autodarts kann nicht auf dem Gerät installiert werden. Geben Sie dann die Adresse dieses Geräts unter „Adresse von Autodarts“ an."
+msgid "autodarts-address-local"
+msgstr "Dieser Automat"
 
 msgid "autodarts-address-none"
 msgstr "Festzulegen"
 
 msgid "autodarts-state-no-address"
 msgstr "Adresse von Autodarts festlegen: die eines anderen Geräts im Netzwerk"
+
+msgid "autodarts-address-other"
+msgstr "Ein anderes Gerät im Netzwerk…"
 
 msgid "autodarts-address-type"
 msgstr "IP-Adresse oder Name des Autodarts-Geräts"
@@ -6134,6 +6137,12 @@ msgstr "Darts herausgezogen = nächster Spieler"
 msgid "autodarts-test"
 msgstr "Erkennung testen"
 
+msgid "autodarts-restart"
+msgstr "Autodarts starten / neu starten"
+
+msgid "autodarts-install"
+msgstr "Autodarts hier installieren"
+
 msgid "autodarts-page"
 msgstr "Seite von Autodarts (Konto, Kameras)"
 
@@ -6148,6 +6157,39 @@ msgstr "Autodarts antwortet nicht ({address})"
 
 msgid "autodarts-state-off"
 msgstr "Erkennung der Darts aus"
+
+msgid "autodarts-why-model"
+msgstr "Dieser Raspberry ist zu alt für Autodarts, das einen Raspberry Pi 4 oder 5 mit 64-Bit-System benötigt. Nutzen Sie ein Autodarts auf einem anderen Gerät im Netzwerk (Einstellung Adresse) oder stellen Sie das Gerät auf einen Raspberry Pi 4 um."
+
+msgid "autodarts-why-bits"
+msgstr "Das System dieses Geräts ist 32 Bit: Autodarts benötigt ein 64-Bit-System. Um es hier zu installieren, installieren Sie das Gerät neu mit einem 64-Bit-Image von Raspberry Pi OS und dann RaspyDarts mit dem Befehl: {command}. Andernfalls nutzen Sie ein Autodarts auf einem anderen Gerät im Netzwerk (Einstellung Adresse)."
+
+msgid "autodarts-install-question"
+msgstr "Autodarts auf diesem Automaten installieren? (Internet nötig, einige Minuten)"
+
+msgid "autodarts-no-internet"
+msgstr "Kein Internetzugang"
+
+msgid "autodarts-installing"
+msgstr "Autodarts wird installiert"
+
+msgid "autodarts-install-continues"
+msgstr "Die Installation läuft im Hintergrund weiter"
+
+msgid "autodarts-install-error"
+msgstr "Die Installation von Autodarts ist fehlgeschlagen (Protokoll: logs/autodarts_install.log)"
+
+msgid "autodarts-install-done"
+msgstr "Autodarts ist installiert und gestartet: verbinden Sie Ihr Konto auf seiner Seite (QR-Code)"
+
+msgid "autodarts-starting"
+msgstr "Autodarts wird gestartet…"
+
+msgid "autodarts-started"
+msgstr "Autodarts ist gestartet"
+
+msgid "autodarts-start-failed"
+msgstr "Autodarts ist nicht gestartet"
 
 msgid "autodarts-page-help"
 msgstr "Scannen Sie diesen Code mit Ihrem Telefon: auf der Seite von Autodarts verbinden Sie Ihr Konto, stellen die Kameras ein und kalibrieren."
