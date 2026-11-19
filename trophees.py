@@ -12,8 +12,8 @@ UP_KEYS = ['up', 'BTN_UP', 'S20']
 DOWN_KEYS = ['down', 'BTN_DOWN', 'S3']
 LEFT_KEYS = ['left', 'BTN_LEFT', 'S11']
 RIGHT_KEYS = ['right', 'BTN_RIGHT', 'S6']
-DELETE_KEYS = ['delete', 'BTN_MINUS', 'VOLUME-DOWN', 'BTN_VOLUME_DOWN']
-INSERT_KEYS = ['insert', 'BTN_PLUS', 'VOLUME-UP', 'BTN_VOLUME_UP']
+DELETE_KEYS = ['delete', 'BTN_MINUS', 'VOLUME-DOWN', 'BTN_VOLUME_DOWN', 's', 'S']
+INSERT_KEYS = ['insert', 'BTN_PLUS', 'VOLUME-UP', 'BTN_VOLUME_UP', 'm', 'M']
 
 # Fichiers
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -344,24 +344,27 @@ def get_base_name_from_online(online_name):
     cleaned = re.sub(r'^[0-9\s\*\-\.\_\/·\u00b7]+', '', online_name).strip()
     return cleaned if cleaned else online_name
 
-def merge_online_player_to_base(online_name):
+
+def merge_online_player_to_base(online_name, target_name=None):
     """
-    Fusionne les stats et trophées d'un joueur en ligne vers son pseudo de base
-    en recalculant correctement les moyennes PPD et MPR.
+    Fusionne les stats et trophées d'un joueur (online_name) vers un joueur cible
+    (target_name si fourni, sinon le pseudo de base extrait automatiquement).
     """
     data = load_player_data()
-    
+
     online_key = None
     for k in data.keys():
         if k.strip().lower() == online_name.strip().lower():
             online_key = k
             break
-            
+
     if not online_key or online_key == "_global_stats":
+        print(f"[MERGE] Joueur source introuvable : {online_name}")
         return False
 
-    base_name = get_base_name_from_online(online_key)
+    base_name = target_name.strip() if target_name else get_base_name_from_online(online_key)
     if not base_name:
+        print(f"[MERGE] Cible invalide pour : {online_name}")
         return False
 
     base_key = None
@@ -371,7 +374,6 @@ def merge_online_player_to_base(online_name):
             break
 
     if not base_key:
-        # Le profil de base n'existe pas encore, on renomme simplement la clé
         data[base_name] = data.pop(online_key)
         try:
             with open(DATA_FILE, "w", encoding="utf-8") as f:
@@ -393,12 +395,10 @@ def merge_online_player_to_base(online_name):
     online_stats = online_data.get("stats", {})
     base_stats = base_data.get("stats", {})
 
-    # Addition simple pour les compteurs bruts (darts, scores, parties, wins, etc.)
     for stat_key, val in online_stats.items():
-        # On traite à part les clés de moyennes pour les recalculer proprement après
-        if "moyenne_" in stat_key or "cumul_" in stat_key or "parties_ppd_" in stat_key:
+        if "moyenne_" in stat_key or "mpr_moyen_" in stat_key or "cumul_" in stat_key or "parties_ppd_" in stat_key or "parties_mpr_" in stat_key:
             continue
-            
+
         if isinstance(val, (int, float)):
             base_stats[stat_key] = base_stats.get(stat_key, 0) + val
         elif isinstance(val, dict):
@@ -408,47 +408,48 @@ def merge_online_player_to_base(online_name):
                 if isinstance(sub_v, (int, float)):
                     base_stats[stat_key][sub_k] = base_stats[stat_key].get(sub_k, 0) + sub_v
 
-    # Recalcul spécifique pour chaque type de jeu (PPD et MPR)
-    # On cherche dynamiquement tous les jeux présents dans online_stats ou base_stats
     all_stat_keys = set(list(online_stats.keys()) + list(base_stats.keys()))
-    
-    # Identifier les jeux en se basant sur les suffixes ou préfixes de moyennes
+
     for key in all_stat_keys:
         if key.startswith("moyenne_ppd_"):
             game_name = key.replace("moyenne_ppd_", "")
             cumul_key = f"cumul_ppd_{game_name}"
             parties_key = f"parties_ppd_{game_name}"
-            
+
             base_cumul = base_stats.get(cumul_key, 0.0) + online_stats.get(cumul_key, 0.0)
             base_parties = base_stats.get(parties_key, 0) + online_stats.get(parties_key, 0)
-            
-            base_stats[cumul_key] = base_cumul
+            if base_parties <= 0:
+                base_parties = base_stats.get(f"parties_jouees_{game_name}", 0)
+
+            base_stats[cumul_key] = round(base_cumul, 4)
             base_stats[parties_key] = base_parties
-            
-            if base_parties > 0:
+
+            if base_parties > 0 and base_cumul > 0:
                 base_stats[key] = round(base_cumul / base_parties, 2)
             else:
-                base_stats[key] = 0.0
-                
+                base_stats[key] = round(online_stats.get(key, base_stats.get(key, 0.0)), 2)
+
         elif key.startswith("moyenne_mpr_") or key.startswith("mpr_moyen_"):
-            # Gestion similaire pour le Cricket / Mickey
             game_name = key.replace("moyenne_mpr_", "").replace("mpr_moyen_", "")
             cumul_key = f"cumul_mpr_{game_name}"
             parties_key = f"parties_mpr_{game_name}"
-            
+
             if cumul_key in online_stats or cumul_key in base_stats:
                 base_cumul = base_stats.get(cumul_key, 0.0) + online_stats.get(cumul_key, 0.0)
                 base_parties = base_stats.get(parties_key, 0) + online_stats.get(parties_key, 0)
-                base_stats[cumul_key] = base_cumul
+                if base_parties <= 0:
+                    base_parties = base_stats.get(f"parties_jouees_{game_name}", 0)
+
+                base_stats[cumul_key] = round(base_cumul, 4)
                 base_stats[parties_key] = base_parties
-                if base_parties > 0:
+
+                if base_parties > 0 and base_cumul > 0:
                     base_stats[key] = round(base_cumul / base_parties, 2)
                 else:
-                    base_stats[key] = 0.0
+                    base_stats[key] = round(online_stats.get(key, base_stats.get(key, 0.0)), 2)
             else:
-                # Fallback si pas de cumul explicite (moyenne simple pondérée par les parties totales du jeu)
-                p_base = base_stats.get(f"parties_jouees_{game_name}", 1)
-                p_online = online_stats.get(f"parties_jouees_{game_name}", 1)
+                p_base = base_stats.get(f"parties_jouees_{game_name}", 0)
+                p_online = online_stats.get(f"parties_jouees_{game_name}", 0)
                 m_base = base_stats.get(key, 0.0)
                 m_online = online_stats.get(key, 0.0)
                 if (p_base + p_online) > 0:
@@ -457,14 +458,15 @@ def merge_online_player_to_base(online_name):
     base_data["stats"] = base_stats
     del data[online_key]
 
-    # Sauvegarde finale
     try:
         with open(DATA_FILE, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=4, ensure_ascii=False)
+        print(f"[MERGE OK] '{online_key}' fusionné dans '{base_key}'.")
         return True
     except Exception as e:
         print("[ERREUR FUSION JOUEUR] :", e)
         return False
+
 
     
 def delete_player(name):
@@ -886,7 +888,7 @@ class StatisticsScreen:
         self.screen = screen
         self.current_player = current_player
         self.rpi = rpi
-        
+
         all_data = load_player_data()
         self.global_data = all_data.get("_global_stats", {})
         player_info = {}
@@ -903,117 +905,185 @@ class StatisticsScreen:
         width, height = self.screen.get_size()
         scale = width / 1280.0
 
-        all_data_for_trophies = load_player_data()
+        # Chargement unique du JSON avant la boucle principale (évite 2 lectures disque par frame)
+        all_players_data = load_player_data()
+        global_stats_dict = all_players_data.get("_global_stats", {})
+        total_machine_parties = global_stats_dict.get('total_machine_parties', 0)
+
         player_trophies_list = []
-        for k, v in all_data_for_trophies.items():
-            if k.strip().lower() == self.current_player.strip().lower():
+        for k, v in all_players_data.items():
+            if k != "_global_stats" and k.strip().lower() == self.current_player.strip().lower():
                 player_trophies_list = v.get("trophies", [])
+                if "stats" in v:
+                    self.stats = v.get("stats", self.stats)
                 break
+
         unlocked_count = len(player_trophies_list)
         total_trophies_count = len(ALL_TROPHIES)
 
+        if self.current_player and self.current_player not in all_players_data:
+            all_players_data[self.current_player] = {"stats": self.stats}
+
         try:
             title_font = cfonts.font(int(32 * scale), bold=True)
-            text_font = cfonts.font(int(13 * scale))     
+            text_font = cfonts.font(int(13 * scale))
             bold_font = cfonts.font(int(14 * scale), bold=True)
-            hint_font = cfonts.font(int(12 * scale))     
+            hint_font = cfonts.font(int(12 * scale))
+            small_title_font = cfonts.font(int(16 * scale), bold=True)
         except Exception:
             title_font = pygame.font.Font(None, 32)
             text_font = pygame.font.Font(None, 13)
             bold_font = pygame.font.Font(None, 14)
             hint_font = pygame.font.Font(None, 12)
+            small_title_font = pygame.font.Font(None, 20)
+
+        # Pré-calcul des statistiques globales du joueur courant
+        total_parties = self.stats.get('total_parties_jouees', 0)
+        total_flechettes = self.stats.get('total_darts', self.stats.get('total_flechettes', 0))
+
+        wins = self.stats.get('wins', 0)
+        losses = self.stats.get('losses', 0)
+
+        simple_bulls = self.stats.get('sbulls_count', self.stats.get('simple_bulls_count', 0))
+        double_bulls = self.stats.get('dbulls_count', self.stats.get('total_double_bulls', 0))
+        total_bulls = simple_bulls + double_bulls
+
+        doubles = self.stats.get('doubles_count', self.stats.get('total_doubles', 0))
+        triples = self.stats.get('triples_count', self.stats.get('total_triples', 0))
+        simples = self.stats.get('singles_count', 0)
+
+        # misses = total_flechettes - doubles - triples - simples - double_bulls - simple_bulls
+        misses = self.stats.get('misses_count', self.stats.get('total_misses', 0))
+
+        p_win = (wins / total_parties * 100) if total_parties > 0 else 0
+        p_loss = (losses / total_parties * 100) if total_parties > 0 else 0
+
+        p_misses = (misses / total_flechettes * 100) if total_flechettes > 0 else 0
+        p_simple_bulls = (simple_bulls / total_flechettes * 100) if total_flechettes > 0 else 0
+        p_double_bulls = (double_bulls / total_flechettes * 100) if total_flechettes > 0 else 0
+        p_bulls = (total_bulls / total_flechettes * 100) if total_flechettes > 0 else 0
+
+        p_simples = (simples / total_flechettes * 100) if total_flechettes > 0 else 0
+        p_doubles = (doubles / total_flechettes * 100) if total_flechettes > 0 else 0
+        p_triples = (triples / total_flechettes * 100) if total_flechettes > 0 else 0
+
+        def fmt_pct(val):
+            return f"{val:.1f}".replace('.', ',')
+
+        global_stats = [
+            ("FLÉCHETTES", f"{total_flechettes}", ""),
+            ("PARTIES", f"{total_parties}", f"/{total_machine_parties}" if total_machine_parties > 0 else ""),
+            ("Victoires", f"{wins}", f"({fmt_pct(p_win)}%)" if total_parties > 0 else ""),
+            ("Défaites", f"{losses}", f"({fmt_pct(p_loss)}%)" if total_parties > 0 else ""),
+
+            ("Simples", f"{simples}", f"({fmt_pct(p_simples)}%)" if total_flechettes > 0 else ""),
+            ("Doubles", f"{doubles}", f"({fmt_pct(p_doubles)}%)" if total_flechettes > 0 else ""),
+            ("Triples", f"{triples}", f"({fmt_pct(p_triples)}%)" if total_flechettes > 0 else ""),
+            ("MISS", f"{misses}", f"({fmt_pct(p_misses)}%)" if total_flechettes > 0 else ""),
+
+            ("Bulls", f"{total_bulls}", f"({fmt_pct(p_bulls)}%)" if total_flechettes > 0 else ""),
+            ("Simple Bull", f"{simple_bulls}", f"({fmt_pct(p_simple_bulls)}%)" if total_flechettes > 0 else ""),
+            ("Double Bull", f"{double_bulls}", f"({fmt_pct(p_double_bulls)}%)" if total_flechettes > 0 else ""),
+            ("", "", "")
+        ]
+
+        game_keys = set()
+        for key in self.stats.keys():
+            if key.startswith("parties_jouees_"):
+                game_keys.add(key.replace("parties_jouees_", ""))
+            elif key.startswith("victoire_"):
+                game_keys.add(key.replace("victoire_", ""))
+            elif key.startswith("defaite_"):
+                game_keys.add(key.replace("defaite_", ""))
+
+        player_summaries = []
+        for p_name, p_content in all_players_data.items():
+            if p_name == "_global_stats":
+                continue
+            p_st = p_content.get("stats", p_content)
+            p_games = p_st.get('total_parties_jouees', 0)
+            p_w = p_st.get('wins', sum(p_st.get(f"victoire_{g}", 0) for g in game_keys))
+            p_l = p_st.get('losses', sum(p_st.get(f"defaite_{g}", 0) for g in game_keys))
+            player_summaries.append((p_name, p_games, p_w, p_l))
+
+        top_games = sorted(player_summaries, key=lambda x: x[1], reverse=True)[:3]
+        top_wins = sorted(player_summaries, key=lambda x: x[2], reverse=True)[:3]
+        top_losses = sorted(player_summaries, key=lambda x: x[3], reverse=True)[:3]
+
+        top_played_games = []
+        global_game_counts = {}
+
+        for k, v in global_stats_dict.items():
+            if k.startswith("parties_reelles_"):
+                g_key = k.replace("parties_reelles_", "")
+                global_game_counts[g_key] = v
+
+        if not global_game_counts:
+            for p_name, p_content in all_players_data.items():
+                if p_name == "_global_stats":
+                    continue
+                p_st = p_content.get("stats", p_content)
+                for k, v in p_st.items():
+                    if k.startswith("parties_jouees_"):
+                        g_key = k.replace("parties_jouees_", "")
+                        global_game_counts[g_key] = global_game_counts.get(g_key, 0) + v
+
+        sorted_global_games = sorted(global_game_counts.items(), key=lambda x: x[1], reverse=True)
+        for g_name, g_val in sorted_global_games[:3]:
+            formatted_name = g_name.lower().capitalize()
+            if len(formatted_name) > 10:
+                formatted_name = formatted_name[:9] + "."
+            top_played_games.append((formatted_name, g_val))
+
+        # Pré-calcul du meilleur joueur par jeu
+        best_player_by_game = {}
+        for game in game_keys:
+            best_player_name = "-"
+            max_vic = -1
+            for p_name, p_content in all_players_data.items():
+                if p_name == "_global_stats":
+                    continue
+                p_st = p_content.get("stats", p_content)
+                p_vics_game = p_st.get(f"victoire_{game}", 0)
+                if p_vics_game > max_vic:
+                    max_vic = p_vics_game
+                    best_player_name = p_name
+            best_player_by_game[game] = best_player_name
+
+        sorted_games = sorted(list(game_keys))
 
         running = True
         while running:
-            self.screen.fill((20, 24, 33))  
+            self.screen.fill((20, 24, 33))
 
             main_title_text = f"STATISTIQUES DE : {self.current_player.upper()}"
             sub_title_text = f"  (Trophées : {unlocked_count}/{total_trophies_count})"
 
             title_surf = title_font.render(main_title_text, True, (255, 255, 255))
-            
-            try:
-                small_title_font = cfonts.font(int(16 * scale), bold=True)
-            except Exception:
-                small_title_font = pygame.font.Font(None, 20)
-                
             sub_surf = small_title_font.render(sub_title_text, True, (180, 190, 210))
 
             start_x = int(40 * scale)
             title_y = int(15 * scale)
-            
+
             self.screen.blit(title_surf, (start_x, title_y))
             sub_y = title_y + (title_surf.get_height() - sub_surf.get_height()) // 2 + int(2 * scale)
             self.screen.blit(sub_surf, (start_x + title_surf.get_width(), sub_y))
 
             hint_surf = hint_font.render("Échap pour retour | Flèches Haut/Bas ou S20/S3 pour défiler", True, (150, 150, 170))
             self.screen.blit(hint_surf, (width - hint_surf.get_width() - int(40 * scale), int(20 * scale)))
-            
-            all_data = load_player_data()
-            global_stats_dict = all_data.get("_global_stats", {})
-            total_machine_parties = global_stats_dict.get('total_machine_parties', 0)
-
-            total_parties = self.stats.get('total_parties_jouees', 0)
-            total_flechettes = self.stats.get('total_darts', self.stats.get('total_flechettes', 0))
-            
-            wins = self.stats.get('wins', 0)
-            losses = self.stats.get('losses', 0)
-            
-            simple_bulls = self.stats.get('sbulls_count', self.stats.get('simple_bulls_count', 0))
-            double_bulls = self.stats.get('dbulls_count', self.stats.get('total_double_bulls', 0))
-            total_bulls = simple_bulls + double_bulls
-            
-            doubles = self.stats.get('doubles_count', self.stats.get('total_doubles', 0))
-            triples = self.stats.get('triples_count', self.stats.get('total_triples', 0))
-            simples = self.stats.get('singles_count', 0)
-            
-            #misses = total_flechettes - doubles - triples - simples - double_bulls - simple_bulls
-            misses = self.stats.get('misses_count', self.stats.get('total_misses', 0))
-            
-            p_win = (wins / total_parties * 100) if total_parties > 0 else 0
-            p_loss = (losses / total_parties * 100) if total_parties > 0 else 0
-            
-            p_misses = (misses / total_flechettes * 100) if total_flechettes > 0 else 0
-            p_simple_bulls = (simple_bulls / total_flechettes * 100) if total_flechettes > 0 else 0
-            p_double_bulls = (double_bulls / total_flechettes * 100) if total_flechettes > 0 else 0
-            p_bulls = (total_bulls / total_flechettes * 100) if total_flechettes > 0 else 0
-            
-            p_simples = (simples / total_flechettes * 100) if total_flechettes > 0 else 0
-            p_doubles = (doubles / total_flechettes * 100) if total_flechettes > 0 else 0
-            p_triples = (triples / total_flechettes * 100) if total_flechettes > 0 else 0
-
-            def fmt_pct(val):
-                return f"{val:.1f}".replace('.', ',')
-
-            global_stats = [
-                ("FLÉCHETTES", f"{total_flechettes}", ""),
-                ("PARTIES", f"{total_parties}", f"/{total_machine_parties}" if total_machine_parties > 0 else ""),
-                ("Victoires", f"{wins}", f"({fmt_pct(p_win)}%)" if total_parties > 0 else ""),
-                ("Défaites", f"{losses}", f"({fmt_pct(p_loss)}%)" if total_parties > 0 else ""),
-                
-                ("Simples", f"{simples}", f"({fmt_pct(p_simples)}%)" if total_flechettes > 0 else ""),
-                ("Doubles", f"{doubles}", f"({fmt_pct(p_doubles)}%)" if total_flechettes > 0 else ""),
-                ("Triples", f"{triples}", f"({fmt_pct(p_triples)}%)" if total_flechettes > 0 else ""),
-                ("MISS", f"{misses}", f"({fmt_pct(p_misses)}%)" if total_flechettes > 0 else ""),
-                
-                ("Bulls", f"{total_bulls}", f"({fmt_pct(p_bulls)}%)" if total_flechettes > 0 else ""),
-                ("Simple Bull", f"{simple_bulls}", f"({fmt_pct(p_simple_bulls)}%)" if total_flechettes > 0 else ""),
-                ("Double Bull", f"{double_bulls}", f"({fmt_pct(p_double_bulls)}%)" if total_flechettes > 0 else ""),
-                ("", "", "")
-            ]
 
             g_start_y = int(55 * scale)
-            g_cols = 4  
+            g_cols = 4
             g_start_x = int(40 * scale)
-            
+
             margin_right = int(40 * scale)
             panel_width = int(560 * scale)
             panel_x = width - margin_right - panel_width
             available_width_for_grid = (panel_x - int(20 * scale)) - g_start_x
             g_space_x = int(8 * scale)
             g_box_width = (available_width_for_grid - (g_cols - 1) * g_space_x) // g_cols
-            
-            g_box_height = int(42 * scale)  
+
+            g_box_height = int(42 * scale)
             g_space_y = int(8 * scale)
 
             for idx, item in enumerate(global_stats):
@@ -1035,72 +1105,19 @@ class StatisticsScreen:
                 self.screen.blit(lbl_surf, (bx + int(8 * scale), by + int(12 * scale)))
 
                 val_surf = bold_font.render(str(main_val), True, (0, 220, 120))
-                
+
                 if pct_val:
                     pct_surf = hint_font.render(pct_val, True, (140, 180, 160))
                     total_w = val_surf.get_width() + int(3 * scale) + pct_surf.get_width()
                     start_val_x = bx + g_box_width - total_w - int(8 * scale)
-                    
+
                     self.screen.blit(val_surf, (start_val_x, by + int(12 * scale)))
                     self.screen.blit(pct_surf, (start_val_x + val_surf.get_width() + int(3 * scale), by + int(14 * scale)))
                 else:
                     self.screen.blit(val_surf, (bx + g_box_width - val_surf.get_width() - int(8 * scale), by + int(12 * scale)))
 
-            game_keys = set()
-            for key in self.stats.keys():
-                if key.startswith("parties_jouees_"):
-                    game_keys.add(key.replace("parties_jouees_", ""))
-                elif key.startswith("victoire_"):
-                    game_keys.add(key.replace("victoire_", ""))
-                elif key.startswith("defaite_"):
-                    game_keys.add(key.replace("defaite_", ""))
+            panel_height = (3 * g_box_height) + (2 * g_space_y)
 
-            all_players_data = load_player_data()
-            if self.current_player and self.current_player not in all_players_data:
-                all_players_data[self.current_player] = {"stats": self.stats}
-
-            player_summaries = []
-            for p_name, p_content in all_players_data.items():
-                if p_name == "_global_stats":
-                    continue
-                p_st = p_content.get("stats", p_content)
-                p_games = p_st.get('total_parties_jouees', 0)
-                p_w = p_st.get('wins', sum(p_st.get(f"victoire_{g}", 0) for g in game_keys))
-                p_l = p_st.get('losses', sum(p_st.get(f"defaite_{g}", 0) for g in game_keys))
-                player_summaries.append((p_name, p_games, p_w, p_l))
-
-            top_games = sorted(player_summaries, key=lambda x: x[1], reverse=True)[:3]
-            top_wins = sorted(player_summaries, key=lambda x: x[2], reverse=True)[:3]
-            top_losses = sorted(player_summaries, key=lambda x: x[3], reverse=True)[:3]
-
-            top_played_games = []
-            global_stats_dict = all_players_data.get("_global_stats", {})
-            global_game_counts = {}
-            
-            for k, v in global_stats_dict.items():
-                if k.startswith("parties_reelles_"):
-                    g_key = k.replace("parties_reelles_", "")
-                    global_game_counts[g_key] = v
-
-            if not global_game_counts:
-                for p_name, p_content in all_players_data.items():
-                    if p_name == "_global_stats":
-                        continue
-                    p_st = p_content.get("stats", p_content)
-                    for k, v in p_st.items():
-                        if k.startswith("parties_jouees_"):
-                            g_key = k.replace("parties_jouees_", "")
-                            global_game_counts[g_key] = global_game_counts.get(g_key, 0) + v
-
-            sorted_global_games = sorted(global_game_counts.items(), key=lambda x: x[1], reverse=True)
-            for g_name, g_val in sorted_global_games[:3]:
-                formatted_name = g_name.lower().capitalize()
-                if len(formatted_name) > 10:
-                    formatted_name = formatted_name[:9] + "."
-                top_played_games.append((formatted_name, g_val))
-
-            panel_height = (3 * g_box_height) + (2 * g_space_y)  
-            
             pygame.draw.rect(self.screen, (25, 30, 40), (panel_x, g_start_y, panel_width, panel_height), border_radius=8)
             pygame.draw.rect(self.screen, (70, 90, 120), (panel_x, g_start_y, panel_width, panel_height), 1, border_radius=8)
 
@@ -1119,7 +1136,7 @@ class StatisticsScreen:
 
                 t_surf = hint_font.render(title, True, (200, 200, 220))
                 self.screen.blit(t_surf, (c_start_x + (col_w - t_surf.get_width()) // 2, g_start_y + int(28 * scale)))
-                
+
                 line_y = g_start_y + int(48 * scale)
                 pygame.draw.line(self.screen, border_color, (c_start_x + int(3 * scale), line_y), (c_start_x + col_w - int(3 * scale), line_y), 1)
 
@@ -1131,14 +1148,14 @@ class StatisticsScreen:
                         txt = f"{i+1}. {name} ({score})"
                     else:
                         txt = f"{i+1}. {name}"
-                        
+
                     podium_colors = [
                         (255, 215, 0),
                         (200, 200, 200),
                         (205, 127, 50)
                     ]
                     item_color = podium_colors[i] if i < len(podium_colors) else (150, 220, 255)
-                    
+
                     item_surf = text_font.render(txt, True, item_color)
                     self.screen.blit(item_surf, (c_start_x + left_padding, g_start_y + int(56 * scale) + int(22 * scale) * i))
 
@@ -1147,12 +1164,11 @@ class StatisticsScreen:
             draw_mini_top("+ de Défaites", top_losses, 3, 2, show_score=True)
             draw_mini_top("Top jeux", top_played_games, 1, 3, show_score=True)
 
-            sorted_games = sorted(list(game_keys))
             j_start_y = g_start_y + (3 * (g_box_height + g_space_y)) + int(15 * scale)
-            cols = 4 
+            cols = 4
             spacing_x = int(12 * scale)
             box_width = (width - int(80 * scale) - (cols - 1) * spacing_x) // cols
-            box_height = int(70 * scale)  
+            box_height = int(70 * scale)
             spacing_y = int(10 * scale)
 
             total_rows = (len(sorted_games) + cols - 1) // cols
@@ -1162,21 +1178,21 @@ class StatisticsScreen:
             for index, game in enumerate(sorted_games):
                 col = index % cols
                 row = index // cols
-                
+
                 box_x = g_start_x + col * (box_width + spacing_x)
                 box_y = j_start_y + row * (box_height + spacing_y) - self.scroll_offset
-                
+
                 if -box_height < box_y < height:
                     pygame.draw.rect(self.screen, (35, 40, 50), (box_x, box_y, box_width, box_height), border_radius=8)
                     pygame.draw.rect(self.screen, (90, 100, 130), (box_x, box_y, box_width, box_height), 2, border_radius=8)
-                    
+
                     game_title_surf = bold_font.render(game.upper(), True, (255, 200, 50))
                     self.screen.blit(game_title_surf, (box_x + int(8 * scale), box_y + int(5 * scale)))
-                    
+
                     p_jouees = self.stats.get(f"parties_jouees_{game}", 0)
                     victoires = self.stats.get(f"victoire_{game}", 0)
                     defaites = self.stats.get(f"defaite_{game}", 0)
-                    
+
                     if victoires > defaites:
                         vic_num_color = (0, 220, 120)
                     elif victoires < defaites:
@@ -1192,7 +1208,7 @@ class StatisticsScreen:
 
                     curr_x = box_x + int(8 * scale)
                     curr_y = box_y + int(26 * scale)
-                    
+
                     self.screen.blit(lbl_parties, (curr_x, curr_y))
                     curr_x += lbl_parties.get_width()
                     self.screen.blit(lbl_vic_text, (curr_x, curr_y))
@@ -1203,49 +1219,37 @@ class StatisticsScreen:
                     curr_x += lbl_sep.get_width()
                     self.screen.blit(lbl_def, (curr_x, curr_y))
 
-                    best_player_name = "-"
-                    max_vic = -1
-                    for p_name, p_content in all_players_data.items():
-                        if p_name == "_global_stats":
-                            continue
-                        p_st = p_content.get("stats", p_content)
-                        p_vics_game = p_st.get(f"victoire_{game}", 0)
-                        if p_vics_game > max_vic:
-                            max_vic = p_vics_game
-                            best_player_name = p_name
+                    best_player_name = best_player_by_game.get(game, "-")
 
                     line3_y = box_y + int(47 * scale)
                     curr_x_l3 = box_x + int(8 * scale)
 
                     has_stat = False
                     game_lower = game.lower()
-                    
+
                     if game_lower in ["cricket", "mickey"]:
                         mpr_val = self.stats.get(f"moyenne_mpr_{game}", self.stats.get(f"mpr_moyen_{game}", 0.0))
                         lbl_mpr_label = text_font.render("MPR : ", True, (210, 210, 210))
                         lbl_mpr_val = text_font.render(f"{mpr_val:.2f}", True, (0, 220, 255))
-                        
+
                         self.screen.blit(lbl_mpr_label, (curr_x_l3, line3_y))
                         curr_x_l3 += lbl_mpr_label.get_width()
                         self.screen.blit(lbl_mpr_val, (curr_x_l3, line3_y))
                         curr_x_l3 += lbl_mpr_val.get_width()
                         has_stat = True
-                        
+
                     elif game_lower in ["321_zlip", "batard", "highscore", "shoot-out", "up_and_down", "sabotage", "chaos", "low_score", "ho-one"]:
                         ppd_val = average_ppd(self.stats, game_lower)
-                        
+
                         lbl_ppd_label = text_font.render("PPD : ", True, (210, 210, 210))
                         formatted_ppd = f"{ppd_val:.2f}".replace('.', ',')
                         lbl_ppd_val = text_font.render(f"{formatted_ppd}", True, (0, 220, 255))
-                        
+
                         self.screen.blit(lbl_ppd_label, (curr_x_l3, line3_y))
                         curr_x_l3 += lbl_ppd_label.get_width()
                         self.screen.blit(lbl_ppd_val, (curr_x_l3, line3_y))
                         curr_x_l3 += lbl_ppd_val.get_width()
                         has_stat = True
-
-
-
 
                     if has_stat:
                         lbl_sep2 = text_font.render("  •  ", True, (210, 210, 210))
@@ -1306,7 +1310,7 @@ class StatisticsScreen:
                 return "BACK"
 
             clock.tick(30)
-            
+
         return "BACK"
 
 def get_player_logo(player_name, scale, game_type="ho-one", all_players_data=None):
@@ -1372,12 +1376,12 @@ def get_player_logo(player_name, scale, game_type="ho-one", all_players_data=Non
         print(f"[DEBUG LOGO] -> Erreur critique : {e}")
         return None
 
-
 class PlayerSelectionScreen:
     def __init__(self, screen, rpi=None):
         self.screen = screen
         self.rpi = rpi
         self.selected_index = 0
+        self.popup_scroll_offset = 0
 
     def run(self):
         clock = pygame.time.Clock()
@@ -1389,7 +1393,7 @@ class PlayerSelectionScreen:
             text_font = cfonts.font(int(22 * scale))
             bold_font = cfonts.font(int(22 * scale), bold=True)
             footer_font = cfonts.font(int(16 * scale))
-            small_font = cfonts.font(int(14 * scale))
+            small_font = cfonts.font(int(12 * scale))
             tiny_font = cfonts.font(int(11 * scale))
             error_font = cfonts.font(int(20 * scale))
             confirm_font = cfonts.font(int(24 * scale), bold=True)
@@ -1398,34 +1402,54 @@ class PlayerSelectionScreen:
             text_font = pygame.font.Font(None, 22)
             bold_font = pygame.font.Font(None, 22)
             footer_font = pygame.font.Font(None, 16)
+            small_font = pygame.font.Font(None, 12)
             tiny_font = pygame.font.Font(None, 11)
-            small_font = pygame.font.Font(None, 14)
+            error_font = pygame.font.Font(None, 20)
             confirm_font = pygame.font.Font(None, 24)
 
         max_visible_items = 6
         running = True
-        
+
+        # États : "NORMAL", "INFO_POPUP", "SELECT_MERGE_TARGET", "CONFIRM_MERGE", "CONFIRM_DELETE"
         screen_state = "NORMAL"
         player_target = None
         target_base_name = None
-        confirm_choice = 0  # 0 = Annuler, 1 = Confirmer
+        confirm_choice = 0
+
+        # Variables pour le choix du joueur cible lors de la fusion
+        merge_candidates = []
+        merge_target_index = 0
+        merge_target_rects = []
+
+        # Seuils PPD et MPR (30 niveaux)
+        ppd_thresholds_list = [
+            "<10.64", "<11.89", "<13.14", "<14.39", "<15.64", "<16.89", "<18.14", "<19.44", "<20.74", "<22.04",
+            "<23.34", "<24.64", "<25.94", "<27.29", "<28.64", "<29.99", "<31.34", "<32.69", "<34.04", "<35.39",
+            "<36.79", "<38.19", "<39.59", "<40.99", "<42.39", "<43.79", "<45.19", "<46.59", "<47.99", ">47.99"
+        ]
+        mpr_thresholds_list = [
+            "<1.09", "<1.19", "<1.30", "<1.45", "<1.60", "<1.75", "<1.90", "<2.05", "<2.20", "<2.35",
+            "<2.50", "<2.65", "<2.80", "<2.95", "<3.10", "<3.25", "<3.40", "<3.56", "<3.70", "<3.85",
+            "<4.06", "<4.27", "<4.48", "<4.69", "<4.95", "<5.21", "<5.47", "<5.73", "<5.99", ">5.99"
+        ]
 
         while running:
             players = load_favorite_names()
             total_players = len(players)
-            
+
             if total_players > 0:
                 self.selected_index = self.selected_index % total_players
             else:
                 self.selected_index = 0
-            
+
             self.screen.fill((20, 24, 33))
-            
+
             title_text = title_font.render("CHOISIR UN JOUEUR", True, (255, 255, 255))
             title_rect = title_text.get_rect(center=(width // 2, int(45 * scale)))
             self.screen.blit(title_text, title_rect)
-            
+
             player_rects = []
+            all_data = load_player_data()
 
             if total_players == 0:
                 err_surf = error_font.render(f"Erreur : Aucun joueur trouvé dans '{DATA_FILE}'.", True, (255, 100, 100))
@@ -1443,17 +1467,15 @@ class PlayerSelectionScreen:
                 end_offset = min(start_offset + max_visible_items, total_players)
                 visible_players = players[start_offset:end_offset]
 
-                # --- TABLEAU DE SÉLECTION (4 colonnes de scores) ---
+                # --- TABLEAU DE SÉLECTION PRINCIPAL ---
                 table_width = int(1100 * scale)
                 table_x = (width - table_width) // 2
                 start_y = int(100 * scale)
-                
-                # En-tête du tableau
+
                 header_rect = pygame.Rect(table_x, start_y, table_width, int(40 * scale))
                 pygame.draw.rect(self.screen, (45, 55, 75), header_rect, border_radius=6)
                 pygame.draw.rect(self.screen, (90, 110, 150), header_rect, 1, border_radius=6)
-                
-                # Positions X réparties pour 4 colonnes de statistiques
+
                 col_name_center = table_x + int(110 * scale)
                 col_hoone_center = table_x + int(360 * scale)
                 col_highscore_center = table_x + int(590 * scale)
@@ -1461,49 +1483,52 @@ class PlayerSelectionScreen:
                 col_mickey_center = table_x + int(1010 * scale)
 
                 headers = [
-                    ("NOM DU JOUEUR", col_name_center), 
-                    ("PPD (Ho-One)", col_hoone_center), 
+                    ("NOM DU JOUEUR", col_name_center),
+                    ("PPD (Ho-One)", col_hoone_center),
                     ("PPD (Highscore)", col_highscore_center),
                     ("MPR (Cricket)", col_cricket_center),
                     ("MPR (Mickey)", col_mickey_center)
                 ]
-                
+
                 for h_text, h_x in headers:
                     h_surf = bold_font.render(h_text, True, (255, 200, 50))
                     self.screen.blit(h_surf, (h_x - h_surf.get_width() // 2, start_y + int(10 * scale)))
 
-                all_data = load_player_data()
                 row_y = start_y + int(48 * scale)
                 row_height = int(68 * scale)
-                
+
+                blink_factor = abs((pygame.time.get_ticks() // 300) % 2)
+
                 for idx, player_name in enumerate(visible_players):
                     real_index = start_offset + idx
                     is_highlighted = (real_index == self.selected_index)
-                    
+
                     r_rect = pygame.Rect(table_x, row_y, table_width, row_height)
                     player_rects.append((r_rect, real_index))
 
-                    bg_color = (55, 70, 105) if is_highlighted else (30, 36, 48)
-                    border_color = (100, 150, 255) if is_highlighted else (50, 60, 80)
-                    border_w = int(3 * scale) if is_highlighted else 1
-                    
+                    if is_highlighted:
+                        bg_color = (65, 85, 125) if blink_factor == 1 else (45, 60, 95)
+                        border_color = (255, 220, 100) if blink_factor == 1 else (100, 150, 255)
+                        border_w = int(3 * scale)
+                    else:
+                        bg_color = (30, 36, 48)
+                        border_color = (50, 60, 80)
+                        border_w = 1
+
                     pygame.draw.rect(self.screen, bg_color, r_rect, border_radius=6)
                     pygame.draw.rect(self.screen, border_color, r_rect, border_w, border_radius=6)
-                    
-                    # 1. Nom du joueur
+
                     name_color = (255, 255, 255) if is_highlighted else (210, 215, 225)
                     name_surf = bold_font.render(player_name.upper(), True, name_color)
                     self.screen.blit(name_surf, (col_name_center - name_surf.get_width() // 2, row_y + (row_height - name_surf.get_height()) // 2))
-                    
-                    # Récupération des données du joueur
+
                     p_content = next((v for k, v in all_data.items() if k.strip().lower() == player_name.strip().lower()), {})
                     p_st = p_content.get("stats", {}) if isinstance(p_content, dict) else {}
 
-                    # --- 2. PPD (Ho-One) ---
+                    # Ho-One
                     ppd_val = average_ppd(p_st, "ho-one")
                     lvl_num = get_level_from_ppd(ppd_val)
                     rank_name = NAMES_LEVELS.get(lvl_num, "Débutant")
-                    
                     score_hoone_surf = small_font.render(f"{ppd_val:.2f}".replace('.', ','), True, (0, 220, 255))
                     level_text_surf = tiny_font.render(rank_name, True, (180, 190, 210))
                     logo_hoone = get_player_logo(player_name, scale, game_type="ho-one", all_players_data=all_data)
@@ -1519,7 +1544,6 @@ class PlayerSelectionScreen:
                         text_h = level_text_surf.get_height()
                         total_content_h = top_h + inner_spacing + text_h
                         block_y = row_y + (row_height - total_content_h) // 2
-                        
                         self.screen.blit(logo_hoone, (block_left_x, block_y))
                         score_y = block_y + (logo_hoone.get_height() - score_hoone_surf.get_height()) // 2 + int(6 * scale)
                         self.screen.blit(score_hoone_surf, (block_left_x + logo_hoone.get_width() + spacing, score_y))
@@ -1533,18 +1557,13 @@ class PlayerSelectionScreen:
                         self.screen.blit(no_logo_text, (col_hoone_center - no_logo_text.get_width() // 2, fallback_y))
                         self.screen.blit(score_hoone_surf, (col_hoone_center - score_hoone_surf.get_width() // 2, fallback_y + no_logo_text.get_height() + fallback_spacing))
 
-                    # --- 3. HIGHSCORE ---
+                    # Highscore
                     ppd_hs_val = average_ppd(p_st, "highscore")
-                    lvl_num_hs = get_level_from_ppd(ppd_hs_val)
-                    rank_name_hs = NAMES_LEVELS.get(lvl_num_hs, "Débutant")
-                    
                     score_hs_surf = small_font.render(f"{ppd_hs_val:.2f}".replace('.', ','), True, (0, 220, 255))
-                    level_text_hs_surf = tiny_font.render(rank_name_hs, True, (180, 190, 210))
-                    
+                    level_text_hs_surf = tiny_font.render(NAMES_LEVELS.get(get_level_from_ppd(ppd_hs_val), ""), True, (180, 190, 210))
                     logo_hs = get_player_logo(player_name, scale, game_type="highscore", all_players_data=all_data)
                     if ppd_hs_val == 0.0:
                         logo_hs = None
-
                     if logo_hs:
                         spacing = int(6 * scale)
                         combined_w = logo_hs.get_width() + spacing + score_hs_surf.get_width()
@@ -1554,67 +1573,59 @@ class PlayerSelectionScreen:
                         text_h = level_text_hs_surf.get_height()
                         total_content_h = top_h + inner_spacing + text_h
                         block_y = row_y + (row_height - total_content_h) // 2
-                        
                         self.screen.blit(logo_hs, (block_left_x, block_y))
                         score_y = block_y + (logo_hs.get_height() - score_hs_surf.get_height()) // 2 + int(6 * scale)
                         self.screen.blit(score_hs_surf, (block_left_x + logo_hs.get_width() + spacing, score_y))
                         text_x = block_left_x + (logo_hs.get_width() - level_text_hs_surf.get_width()) // 2
                         self.screen.blit(level_text_hs_surf, (text_x, block_y + top_h + inner_spacing))
                     else:
-                        no_logo_text = tiny_font.render("Débutant", True, (150, 150, 150))
-                        fallback_spacing = int(2 * scale)
-                        fallback_total_h = no_logo_text.get_height() + fallback_spacing + score_hs_surf.get_height()
-                        fallback_y = row_y + (row_height - fallback_total_h) // 2
-                        self.screen.blit(no_logo_text, (col_highscore_center - no_logo_text.get_width() // 2, fallback_y))
-                        self.screen.blit(score_hs_surf, (col_highscore_center - score_hs_surf.get_width() // 2, fallback_y + no_logo_text.get_height() + fallback_spacing))
-                    
-                    # --- 4. Cricket ---
+                        self.screen.blit(score_hs_surf, (col_highscore_center - score_hs_surf.get_width() // 2, row_y + (row_height - score_hs_surf.get_height()) // 2))
+
+                    # Cricket
                     mpr_val = p_st.get('moyenne_mpr_cricket', p_st.get('mpr_moyen_cricket', 0.0))
-                    lvl_num_c = get_level_from_mpr(mpr_val)
-                    rank_name_c = NAMES_LEVELS.get(lvl_num_c, "Débutant")
-                    
                     score_cricket_surf = small_font.render(f"{mpr_val:.2f}".replace('.', ','), True, (0, 220, 255))
-                    level_text_c_surf = tiny_font.render(rank_name_c, True, (180, 190, 210))
+                    level_text_c_surf = tiny_font.render(NAMES_LEVELS.get(get_level_from_mpr(mpr_val), ""), True, (180, 190, 210))
                     logo_cricket = get_player_logo(player_name, scale, game_type="cricket", all_players_data=all_data)
                     if mpr_val == 0.0:
                         logo_cricket = None
-
                     if logo_cricket:
                         spacing = int(6 * scale)
-                        total_w = logo_cricket.get_width() + spacing + score_cricket_surf.get_width()
-                        start_x = col_cricket_center - total_w // 2
-                        logo_y = row_y + (row_height - logo_cricket.get_height()) // 2 - int(5 * scale)
-                        score_y = row_y + (row_height - score_cricket_surf.get_height()) // 2 - int(5 * scale) + int(6 * scale)
-                        
-                        self.screen.blit(logo_cricket, (start_x, logo_y))
-                        self.screen.blit(score_cricket_surf, (start_x + logo_cricket.get_width() + spacing, score_y))
-                        text_x = start_x + (logo_cricket.get_width() - level_text_c_surf.get_width()) // 2
-                        self.screen.blit(level_text_c_surf, (text_x, logo_y + logo_cricket.get_height() + int(3 * scale)))
+                        combined_w = logo_cricket.get_width() + spacing + score_cricket_surf.get_width()
+                        block_left_x = col_cricket_center - combined_w // 2
+                        top_h = max(logo_cricket.get_height(), score_cricket_surf.get_height())
+                        inner_spacing = int(3 * scale)
+                        text_h = level_text_c_surf.get_height()
+                        total_content_h = top_h + inner_spacing + text_h
+                        block_y = row_y + (row_height - total_content_h) // 2
+                        self.screen.blit(logo_cricket, (block_left_x, block_y))
+                        score_y = block_y + (logo_cricket.get_height() - score_cricket_surf.get_height()) // 2 + int(6 * scale)
+                        self.screen.blit(score_cricket_surf, (block_left_x + logo_cricket.get_width() + spacing, score_y))
+                        text_x = block_left_x + (logo_cricket.get_width() - level_text_c_surf.get_width()) // 2
+                        self.screen.blit(level_text_c_surf, (text_x, block_y + top_h + inner_spacing))
                     else:
                         self.screen.blit(score_cricket_surf, (col_cricket_center - score_cricket_surf.get_width() // 2, row_y + (row_height - score_cricket_surf.get_height()) // 2))
-                    
-                    # --- 5. Mickey ---
+
+                    # Mickey
                     mpr_m_val = p_st.get('moyenne_mpr_mickey', p_st.get('mpr_moyen_mickey', 0.0))
-                    lvl_num_m = get_level_from_mpr(mpr_m_val)
-                    rank_name_m = NAMES_LEVELS.get(lvl_num_m, "Débutant")
-                    
                     score_mickey_surf = small_font.render(f"{mpr_m_val:.2f}".replace('.', ','), True, (0, 220, 255))
-                    level_text_m_surf = tiny_font.render(rank_name_m, True, (180, 190, 210))
+                    level_text_m_surf = tiny_font.render(NAMES_LEVELS.get(get_level_from_mpr(mpr_m_val), ""), True, (180, 190, 210))
                     logo_mickey = get_player_logo(player_name, scale, game_type="mickey", all_players_data=all_data)
                     if mpr_m_val == 0.0:
                         logo_mickey = None
-
                     if logo_mickey:
                         spacing = int(6 * scale)
-                        total_w = logo_mickey.get_width() + spacing + score_mickey_surf.get_width()
-                        start_x = col_mickey_center - total_w // 2
-                        logo_y = row_y + (row_height - logo_mickey.get_height()) // 2 - int(5 * scale)
-                        score_y = row_y + (row_height - score_mickey_surf.get_height()) // 2 - int(5 * scale) + int(6 * scale)
-                        
-                        self.screen.blit(logo_mickey, (start_x, logo_y))
-                        self.screen.blit(score_mickey_surf, (start_x + logo_mickey.get_width() + spacing, score_y))
-                        text_x = start_x + (logo_mickey.get_width() - level_text_m_surf.get_width()) // 2
-                        self.screen.blit(level_text_m_surf, (text_x, logo_y + logo_mickey.get_height() + int(3 * scale)))
+                        combined_w = logo_mickey.get_width() + spacing + score_mickey_surf.get_width()
+                        block_left_x = col_mickey_center - combined_w // 2
+                        top_h = max(logo_mickey.get_height(), score_mickey_surf.get_height())
+                        inner_spacing = int(3 * scale)
+                        text_h = level_text_m_surf.get_height()
+                        total_content_h = top_h + inner_spacing + text_h
+                        block_y = row_y + (row_height - total_content_h) // 2
+                        self.screen.blit(logo_mickey, (block_left_x, block_y))
+                        score_y = block_y + (logo_mickey.get_height() - score_mickey_surf.get_height()) // 2 + int(6 * scale)
+                        self.screen.blit(score_mickey_surf, (block_left_x + logo_mickey.get_width() + spacing, score_y))
+                        text_x = block_left_x + (logo_mickey.get_width() - level_text_m_surf.get_width()) // 2
+                        self.screen.blit(level_text_m_surf, (text_x, block_y + top_h + inner_spacing))
                     else:
                         self.screen.blit(score_mickey_surf, (col_mickey_center - score_mickey_surf.get_width() // 2, row_y + (row_height - score_mickey_surf.get_height()) // 2))
 
@@ -1625,12 +1636,203 @@ class PlayerSelectionScreen:
                     scroll_surf = footer_font.render(scroll_info, True, (120, 130, 150))
                     scroll_rect = scroll_surf.get_rect(center=(width // 2, height - int(75 * scale)))
                     self.screen.blit(scroll_surf, scroll_rect)
-            
+
             btn_cancel_rect = None
             btn_conf_rect = None
+            merge_target_rects = []
+
+            # --- POP-UP D'INFORMATIONS ---
+            if screen_state == "INFO_POPUP":
+                overlay = pygame.Surface((width, height), pygame.SRCALPHA)
+                overlay.fill((0, 0, 0, 190))
+                self.screen.blit(overlay, (0, 0))
+
+                box_w = int(1240 * scale)
+                box_h = int(720 * scale)
+                box_x = (width - box_w) // 2
+                box_y = (height - box_h) // 2
+                box_rect = pygame.Rect(box_x, box_y, box_w, box_h)
+
+                pygame.draw.rect(self.screen, (25, 32, 48), box_rect, border_radius=12)
+                pygame.draw.rect(self.screen, (0, 220, 255), box_rect, 3, border_radius=12)
+
+                p_content = next((v for k, v in all_data.items() if k.strip().lower() == player_target.strip().lower()), {})
+                p_st = p_content.get("stats", {}) if isinstance(p_content, dict) else {}
+
+                user_ppd_hoone = average_ppd(p_st, "ho-one")
+                user_ppd_hs = average_ppd(p_st, "highscore")
+                user_mpr_cricket = p_st.get('moyenne_mpr_cricket', p_st.get('mpr_moyen_cricket', 0.0))
+                user_mpr_mickey = p_st.get('moyenne_mpr_mickey', p_st.get('mpr_moyen_mickey', 0.0))
+
+                lvl_hoone = get_level_from_ppd(user_ppd_hoone)
+                lvl_hs = get_level_from_ppd(user_ppd_hs)
+                lvl_cricket = get_level_from_mpr(user_mpr_cricket)
+                lvl_mickey = get_level_from_mpr(user_mpr_mickey)
+
+                name_hoone = NAMES_LEVELS.get(lvl_hoone, "Débutant")
+                name_hs = NAMES_LEVELS.get(lvl_hs, "Débutant")
+                name_cricket = NAMES_LEVELS.get(lvl_cricket, "Débutant")
+                name_mickey = NAMES_LEVELS.get(lvl_mickey, "Débutant")
+
+                info_title = confirm_font.render(f"TABLEAU DES NIVEAUX - PROFIL DE {player_target.upper()}", True, (255, 220, 50))
+                self.screen.blit(info_title, info_title.get_rect(center=(box_x + box_w // 2, box_y + int(25 * scale))))
+
+                sub_title_font = cfonts.font(int(15 * scale), bold=True) if hasattr(cfonts, 'font') else pygame.font.Font(None, 18)
+
+                sub_col_w = int(270 * scale)
+                col_gap = int(10 * scale)
+                block_w = (sub_col_w * 2) + col_gap
+
+                total_content_w = (block_w * 2) + int(40 * scale)
+                start_x_blocks = box_x + (box_w - total_content_w) // 2
+
+                main_col1_x = start_x_blocks
+                main_col2_x = main_col1_x + block_w + int(40 * scale)
+
+                frame_padding = int(10 * scale)
+                frame_y = box_y + int(52 * scale)
+                frame_h = int(605 * scale)
+                frame_rect1 = pygame.Rect(main_col1_x - frame_padding, frame_y, block_w + (frame_padding * 2), frame_h)
+                frame_rect2 = pygame.Rect(main_col2_x - frame_padding, frame_y, block_w + (frame_padding * 2), frame_h)
+
+                pygame.draw.rect(self.screen, (0, 220, 255), frame_rect1, 2, border_radius=8)
+                pygame.draw.rect(self.screen, (0, 220, 255), frame_rect2, 2, border_radius=8)
+
+                head1 = sub_title_font.render("Points Par Flèche (PPD)", True, (0, 220, 255))
+                head2 = sub_title_font.render("Mark Per Round (MPR)", True, (0, 220, 255))
+
+                self.screen.blit(head1, (main_col1_x + (block_w - head1.get_width()) // 2, box_y + int(60 * scale)))
+                self.screen.blit(head2, (main_col2_x + (block_w - head2.get_width()) // 2, box_y + int(60 * scale)))
+
+                subhead_hoone = tiny_font.render(f"Ho-one - Nv {lvl_hoone} : {user_ppd_hoone:.2f} - {name_hoone}", True, (255, 200, 50))
+                subhead_hs = tiny_font.render(f"Highscore - Nv {lvl_hs} : {user_ppd_hs:.2f} - {name_hs}", True, (255, 200, 50))
+                subhead_cricket = tiny_font.render(f"Cricket - Nv {lvl_cricket} : {user_mpr_cricket:.2f} - {name_cricket}", True, (255, 200, 50))
+                subhead_mickey = tiny_font.render(f"Mickey - Nv {lvl_mickey} : {user_mpr_mickey:.2f} - {name_mickey}", True, (255, 200, 50))
+
+                col_hoone_x = main_col1_x
+                col_hs_x = main_col1_x + sub_col_w + col_gap
+                col_cricket_x = main_col2_x
+                col_mickey_x = main_col2_x + sub_col_w + col_gap
+
+                self.screen.blit(subhead_hoone, (col_hoone_x + (sub_col_w - subhead_hoone.get_width()) // 2, box_y + int(85 * scale)))
+                self.screen.blit(subhead_hs, (col_hs_x + (sub_col_w - subhead_hs.get_width()) // 2, box_y + int(85 * scale)))
+                self.screen.blit(subhead_cricket, (col_cricket_x + (sub_col_w - subhead_cricket.get_width()) // 2, box_y + int(85 * scale)))
+                self.screen.blit(subhead_mickey, (col_mickey_x + (sub_col_w - subhead_mickey.get_width()) // 2, box_y + int(85 * scale)))
+
+                list_area_y = box_y + int(115 * scale)
+                list_area_h = int(530 * scale)
+
+                old_clip = self.screen.get_clip()
+                clip_rect = pygame.Rect(box_x + int(15 * scale), list_area_y, box_w - int(30 * scale), list_area_h)
+                self.screen.set_clip(clip_rect)
+
+                is_blink = (pygame.time.get_ticks() // 300) % 2 == 0
+                row_h = int(34 * scale)
+
+                def draw_sub_column(start_x, thresholds, user_lvl):
+                    for lvl in range(1, 31):
+                        ry = list_area_y + (lvl - 1) * row_h - self.popup_scroll_offset
+                        r_box = pygame.Rect(start_x, ry, sub_col_w, row_h - int(4 * scale))
+
+                        is_current = (lvl == user_lvl)
+                        if is_current:
+                            if is_blink:
+                                row_bg = (70, 110, 160)
+                                border_col = (255, 220, 50)
+                            else:
+                                row_bg = (40, 60, 95)
+                                border_col = (0, 255, 150)
+                        else:
+                            row_bg = (32, 40, 56) if lvl % 2 == 0 else (28, 35, 48)
+                            border_col = (50, 65, 90)
+
+                        pygame.draw.rect(self.screen, row_bg, r_box, border_radius=4)
+                        pygame.draw.rect(self.screen, border_col, r_box, 1, border_radius=4)
+
+                        lvl_label = f"Niv {lvl:2d} :"
+                        seuil_str = thresholds[lvl - 1]
+                        rank_title = NAMES_LEVELS.get(lvl, "Amateur")
+
+                        line_str = f"{lvl_label} {seuil_str} {rank_title}"
+                        line_txt = small_font.render(line_str, True, (255, 255, 255) if not is_current else (255, 230, 100))
+
+                        text_y = r_box.y + (r_box.height - line_txt.get_height()) // 2
+                        self.screen.blit(line_txt, (r_box.x + int(6 * scale), text_y))
+
+                        logo_filename = f"{lvl}.png"
+                        logo_path = os.path.join(BASE_DIR, "images_trophees", "logos", logo_filename)
+                        if os.path.exists(logo_path):
+                            try:
+                                l_img = pygame.image.load(logo_path).convert_alpha()
+                                target_h = int(18 * scale)
+                                target_w = int(target_h * (136 / 52))
+                                l_img = pygame.transform.smoothscale(l_img, (target_w, target_h))
+                                text_end_x = r_box.x + int(6 * scale) + line_txt.get_width() + int(4 * scale)
+                                logo_y = r_box.y + (r_box.height - target_h) // 2
+                                self.screen.blit(l_img, (text_end_x, logo_y))
+                            except Exception:
+                                pass
+
+                draw_sub_column(col_hoone_x, ppd_thresholds_list, lvl_hoone)
+                draw_sub_column(col_hs_x, ppd_thresholds_list, lvl_hs)
+                draw_sub_column(col_cricket_x, mpr_thresholds_list, lvl_cricket)
+                draw_sub_column(col_mickey_x, mpr_thresholds_list, lvl_mickey)
+
+                self.screen.set_clip(old_clip)
+
+            # --- POP-UP DE CHOIX DU JOUEUR CIBLE POUR LA FUSION ---
+            elif screen_state == "SELECT_MERGE_TARGET":
+                overlay = pygame.Surface((width, height), pygame.SRCALPHA)
+                overlay.fill((0, 0, 0, 175))
+                self.screen.blit(overlay, (0, 0))
+
+                box_w = int(680 * scale)
+                box_h = int(520 * scale)
+                box_x = (width - box_w) // 2
+                box_y = (height - box_h) // 2
+                box_rect = pygame.Rect(box_x, box_y, box_w, box_h)
+
+                pygame.draw.rect(self.screen, (30, 38, 54), box_rect, border_radius=12)
+                pygame.draw.rect(self.screen, (0, 220, 255), box_rect, 3, border_radius=12)
+
+                m_title = confirm_font.render(f"FUSIONNER '{player_target.upper()}' AVEC :", True, (255, 220, 50))
+                self.screen.blit(m_title, m_title.get_rect(center=(box_x + box_w // 2, box_y + int(32 * scale))))
+
+                if not merge_candidates:
+                    empty_surf = text_font.render("Aucun autre joueur disponible.", True, (220, 100, 100))
+                    self.screen.blit(empty_surf, empty_surf.get_rect(center=(box_x + box_w // 2, box_y + box_h // 2)))
+                else:
+                    max_m_vis = 6
+                    m_start = 0
+                    if len(merge_candidates) > max_m_vis:
+                        m_start = max(0, min(merge_target_index - (max_m_vis // 2), len(merge_candidates) - max_m_vis))
+                    m_end = min(m_start + max_m_vis, len(merge_candidates))
+
+                    item_w = int(560 * scale)
+                    item_h = int(52 * scale)
+                    item_x = box_x + (box_w - item_w) // 2
+                    cur_y = box_y + int(75 * scale)
+
+                    for i in range(m_start, m_end):
+                        cand_name = merge_candidates[i]
+                        is_sel = (i == merge_target_index)
+                        ir = pygame.Rect(item_x, cur_y, item_w, item_h)
+                        merge_target_rects.append((ir, i))
+
+                        bg_c = (60, 90, 140) if is_sel else (40, 48, 66)
+                        bd_c = (0, 220, 255) if is_sel else (70, 85, 110)
+                        pygame.draw.rect(self.screen, bg_c, ir, border_radius=8)
+                        pygame.draw.rect(self.screen, bd_c, ir, int(2.5 * scale) if is_sel else 1, border_radius=8)
+
+                        c_surf = bold_font.render(cand_name.upper(), True, (255, 255, 255) if is_sel else (200, 210, 225))
+                        self.screen.blit(c_surf, c_surf.get_rect(center=ir.center))
+                        cur_y += item_h + int(8 * scale)
+
+                hint_m = small_font.render("HAUT/BAS : Choisir | ENTRÉE : Valider | ÉCHAP : Annuler", True, (170, 185, 210))
+                self.screen.blit(hint_m, hint_m.get_rect(center=(box_x + box_w // 2, box_y + box_h - int(25 * scale))))
 
             # --- POP-UP DE CONFIRMATION DE SUPPRESSION ---
-            if screen_state == "CONFIRM_DELETE":
+            elif screen_state == "CONFIRM_DELETE":
                 overlay = pygame.Surface((width, height), pygame.SRCALPHA)
                 overlay.fill((0, 0, 0, 160))
                 self.screen.blit(overlay, (0, 0))
@@ -1660,7 +1862,7 @@ class PlayerSelectionScreen:
                 c_border = (120, 160, 220) if confirm_choice == 0 else (70, 85, 110)
                 pygame.draw.rect(self.screen, c_bg, btn_cancel_rect, border_radius=8)
                 pygame.draw.rect(self.screen, c_border, btn_cancel_rect, 2, border_radius=8)
-                txt_cancel = bold_font.render("ANNULER (Échap)", True, (255, 255, 255))
+                txt_cancel = bold_font.render("ANNULER", True, (255, 255, 255))
                 self.screen.blit(txt_cancel, txt_cancel.get_rect(center=btn_cancel_rect.center))
 
                 btn_conf_rect = pygame.Rect(box_x + box_w - btn_w - int(50 * scale), btn_y, btn_w, btn_h)
@@ -1714,25 +1916,43 @@ class PlayerSelectionScreen:
                 txt_conf = bold_font.render("FUSIONNER", True, (255, 255, 255))
                 self.screen.blit(txt_conf, txt_conf.get_rect(center=btn_conf_rect.center))
 
-            footer_text_str = "HAUT/BAS (ou S20/S3) pour naviguer | ENTRÉE (ou Bull) pour valider | F (ou Vol +) : Fusionner Stats Joueur en ligne | S (ou Vol -) : Supprimer Stats du Joueur | Échap ( ou Escape): Quitter"
+            footer_text_str = "HAUT/BAS : Naviguer | GAUCHE/DROITE : Infos Joueur | ENTRÉE : Valider | M : Fusion | S : Supprimer | ÉCHAP : Quitter"
             if screen_state in ("CONFIRM_DELETE", "CONFIRM_MERGE"):
-                footer_text_str = "GAUCHE/DROITE (ou S11/S6) : Choisir | ENTRÉE (ou Bull) : Valider | ÉCHAP : Annuler"
+                footer_text_str = "GAUCHE/DROITE : Choisir | ENTRÉE : Valider | ÉCHAP : Annuler"
+            elif screen_state == "SELECT_MERGE_TARGET":
+                footer_text_str = "HAUT/BAS : Choisir la cible | ENTRÉE : Confirmer | ÉCHAP : Annuler"
+            elif screen_state == "INFO_POPUP":
+                footer_text_str = "HAUT/BAS : Défiler le tableau | GAUCHE/DROITE (ou ÉCHAP) : Fermer le popup"
 
             footer_text = footer_font.render(footer_text_str, True, (150, 150, 150))
             footer_rect = footer_text.get_rect(center=(width // 2, height - int(35 * scale)))
             self.screen.blit(footer_text, footer_rect)
-            
+
             pygame.display.flip()
-            
+
             action_pressed = None
             navigation = 0
             horizontal_nav = 0
             trigger_delete_popup = False
             trigger_merge_popup = False
+            toggle_info_popup = False
+            popup_scroll_change = 0
+            merge_nav = 0
+            merge_confirm_target = False
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return "QUIT", None
+                elif event.type == pygame.MOUSEWHEEL:
+                    if screen_state == "INFO_POPUP":
+                        self.popup_scroll_offset -= event.y * 30
+                        if self.popup_scroll_offset < 0:
+                            self.popup_scroll_offset = 0
+                        max_s = max(0, (30 * int(34 * scale)) - int(490 * scale))
+                        if self.popup_scroll_offset > max_s:
+                            self.popup_scroll_offset = max_s
+                    elif screen_state == "SELECT_MERGE_TARGET" and len(merge_candidates) > 0:
+                        merge_target_index = (merge_target_index - event.y) % len(merge_candidates)
                 elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     mouse_pos = event.pos
                     if screen_state == "NORMAL":
@@ -1743,6 +1963,17 @@ class PlayerSelectionScreen:
                                 else:
                                     self.selected_index = r_idx
                                 break
+                    elif screen_state == "INFO_POPUP":
+                        if btn_cancel_rect and btn_cancel_rect.collidepoint(mouse_pos):
+                            screen_state = "NORMAL"
+                    elif screen_state == "SELECT_MERGE_TARGET":
+                        for ir, m_idx in merge_target_rects:
+                            if ir.collidepoint(mouse_pos):
+                                merge_target_index = m_idx
+                                target_base_name = merge_candidates[merge_target_index]
+                                confirm_choice = 0
+                                screen_state = "CONFIRM_MERGE"
+                                break
                     elif screen_state in ("CONFIRM_DELETE", "CONFIRM_MERGE"):
                         if btn_cancel_rect and btn_cancel_rect.collidepoint(mouse_pos):
                             screen_state = "NORMAL"
@@ -1752,30 +1983,47 @@ class PlayerSelectionScreen:
                                 if self.selected_index >= len(players) - 1:
                                     self.selected_index = max(0, len(players) - 2)
                             elif screen_state == "CONFIRM_MERGE":
-                                merge_online_player_to_base(player_target)
+                                merge_online_player_to_base(player_target, target_base_name)
                             screen_state = "NORMAL"
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        if screen_state in ("CONFIRM_DELETE", "CONFIRM_MERGE"):
+                        if screen_state in ("CONFIRM_DELETE", "CONFIRM_MERGE", "INFO_POPUP", "SELECT_MERGE_TARGET"):
                             screen_state = "NORMAL"
                         else:
                             return "QUIT", None
-                    elif event.key in (pygame.K_DOWN, pygame.K_RIGHT):
+                    elif event.key == pygame.K_DOWN:
                         if screen_state == "NORMAL":
                             navigation = 1
-                        else:
-                            horizontal_nav = 1
-                    elif event.key in (pygame.K_UP, pygame.K_LEFT):
+                        elif screen_state == "INFO_POPUP":
+                            popup_scroll_change = int(170 * scale)
+                        elif screen_state == "SELECT_MERGE_TARGET":
+                            merge_nav = 1
+                    elif event.key == pygame.K_UP:
                         if screen_state == "NORMAL":
                             navigation = -1
-                        else:
-                            horizontal_nav = -1
+                        elif screen_state == "INFO_POPUP":
+                            popup_scroll_change = int(-170 * scale)
+                        elif screen_state == "SELECT_MERGE_TARGET":
+                            merge_nav = -1
+                    elif event.key in (pygame.K_RIGHT, pygame.K_LEFT):
+                        if screen_state == "NORMAL" and total_players > 0:
+                            toggle_info_popup = True
+                            self.popup_scroll_offset = 0
+                        elif screen_state == "INFO_POPUP":
+                            screen_state = "NORMAL"
+                        elif screen_state in ("CONFIRM_DELETE", "CONFIRM_MERGE"):
+                            horizontal_nav = 1 if event.key == pygame.K_RIGHT else -1
                     elif event.key == pygame.K_RETURN:
-                        action_pressed = "SELECT"
+                        if screen_state == "INFO_POPUP":
+                            screen_state = "NORMAL"
+                        elif screen_state == "SELECT_MERGE_TARGET":
+                            merge_confirm_target = True
+                        else:
+                            action_pressed = "SELECT"
                     elif event.key == pygame.K_s:
                         if screen_state == "NORMAL" and total_players > 0:
                             trigger_delete_popup = True
-                    elif event.key == pygame.K_f:
+                    elif event.key in (pygame.K_f, pygame.K_m):
                         if screen_state == "NORMAL" and total_players > 0:
                             trigger_merge_popup = True
 
@@ -1784,20 +2032,37 @@ class PlayerSelectionScreen:
                     inp = self.rpi.listen_inputs()
                     if inp:
                         key_str = str(inp).strip()
-                        if key_str in DOWN_KEYS + RIGHT_KEYS:
-                            if screen_state == "NORMAL":
-                                navigation = 1
-                            else:
-                                horizontal_nav = 1
-                        elif key_str in UP_KEYS + LEFT_KEYS:
+                        if key_str in UP_KEYS:
                             if screen_state == "NORMAL":
                                 navigation = -1
-                            else:
-                                horizontal_nav = -1
+                            elif screen_state == "INFO_POPUP":
+                                popup_scroll_change = int(-170 * scale)
+                            elif screen_state == "SELECT_MERGE_TARGET":
+                                merge_nav = -1
+                        elif key_str in DOWN_KEYS:
+                            if screen_state == "NORMAL":
+                                navigation = 1
+                            elif screen_state == "INFO_POPUP":
+                                popup_scroll_change = int(170 * scale)
+                            elif screen_state == "SELECT_MERGE_TARGET":
+                                merge_nav = 1
+                        elif key_str in RIGHT_KEYS + LEFT_KEYS:
+                            if screen_state == "NORMAL" and total_players > 0:
+                                toggle_info_popup = True
+                                self.popup_scroll_offset = 0
+                            elif screen_state == "INFO_POPUP":
+                                screen_state = "NORMAL"
+                            elif screen_state in ("CONFIRM_DELETE", "CONFIRM_MERGE"):
+                                horizontal_nav = 1
                         elif key_str in ENTER_KEYS:
-                            action_pressed = "SELECT"
+                            if screen_state == "INFO_POPUP":
+                                screen_state = "NORMAL"
+                            elif screen_state == "SELECT_MERGE_TARGET":
+                                merge_confirm_target = True
+                            else:
+                                action_pressed = "SELECT"
                         elif key_str in ESCAPE_KEYS:
-                            if screen_state in ("CONFIRM_DELETE", "CONFIRM_MERGE"):
+                            if screen_state in ("CONFIRM_DELETE", "CONFIRM_MERGE", "INFO_POPUP", "SELECT_MERGE_TARGET"):
                                 screen_state = "NORMAL"
                             else:
                                 return "QUIT", None
@@ -1810,16 +2075,31 @@ class PlayerSelectionScreen:
                 except Exception as e:
                     print("[ERREUR LISTEN_INPUTS] :", e)
 
+            if popup_scroll_change != 0 and screen_state == "INFO_POPUP":
+                self.popup_scroll_offset += popup_scroll_change
+                if self.popup_scroll_offset < 0:
+                    self.popup_scroll_offset = 0
+                max_s = max(0, (30 * int(34 * scale)) - int(490 * scale))
+                if self.popup_scroll_offset > max_s:
+                    self.popup_scroll_offset = max_s
+
+            if toggle_info_popup:
+                if screen_state == "NORMAL":
+                    screen_state = "INFO_POPUP"
+                    player_target = players[self.selected_index]
+                elif screen_state == "INFO_POPUP":
+                    screen_state = "NORMAL"
+
             if trigger_delete_popup:
                 screen_state = "CONFIRM_DELETE"
                 player_target = players[self.selected_index]
                 confirm_choice = 0
 
             if trigger_merge_popup:
-                screen_state = "CONFIRM_MERGE"
                 player_target = players[self.selected_index]
-                target_base_name = get_base_name_from_online(player_target)
-                confirm_choice = 0
+                merge_candidates = [p for p in players if p.strip().lower() != player_target.strip().lower()]
+                merge_target_index = 0
+                screen_state = "SELECT_MERGE_TARGET"
 
             if screen_state == "NORMAL":
                 if navigation != 0 and total_players > 0:
@@ -1828,6 +2108,18 @@ class PlayerSelectionScreen:
                 if action_pressed == "SELECT" and total_players > 0:
                     chosen_player = players[self.selected_index]
                     return "SELECT", chosen_player
+
+            elif screen_state == "SELECT_MERGE_TARGET":
+                if merge_nav != 0 and len(merge_candidates) > 0:
+                    merge_target_index = (merge_target_index + merge_nav) % len(merge_candidates)
+
+                if merge_confirm_target:
+                    if len(merge_candidates) > 0:
+                        target_base_name = merge_candidates[merge_target_index]
+                        confirm_choice = 0
+                        screen_state = "CONFIRM_MERGE"
+                    else:
+                        screen_state = "NORMAL"
 
             elif screen_state in ("CONFIRM_DELETE", "CONFIRM_MERGE"):
                 if horizontal_nav != 0:
@@ -1840,13 +2132,12 @@ class PlayerSelectionScreen:
                             if self.selected_index >= len(players) - 1:
                                 self.selected_index = max(0, len(players) - 2)
                         elif screen_state == "CONFIRM_MERGE":
-                            merge_online_player_to_base(player_target)
+                            merge_online_player_to_base(player_target, target_base_name)
                     screen_state = "NORMAL"
 
             clock.tick(30)
-            
-        return "QUIT", None
 
+        return "QUIT", None
         
 # --- FONCTION PRINCIPALE ---
 def main(rpi=None):

@@ -2,6 +2,7 @@
 # Game by ... laDite!
 ########
 import random
+import pygame
 from include import cplayer
 from include import cgame
 
@@ -62,9 +63,9 @@ class Game(cgame.Game):
 
         ### MINI JEUX
         if self.only3 == False :
-            self.jeux = [['onedart'], ['threedarts'], ['onebulls'], ['threebulls'], ['suite'], ['voisin'], ['lower'], ['inferieur'], ['impair'], ['onetriple'], ['onedouble'], ['onesimple'], ['fortune1'], ['fortune2'], ['score_determine'], ['under'], ['oneanimal'], ['color_blue'], ['threetriple'], ['threedouble'], ['threesimple'], ['onebombe'], ['777'], ['multiple'], ['superieur'], ['pair'], ['color_white']]
+            self.jeux = [['onedart'], ['threedarts'], ['onebulls'], ['threebulls'], ['suite'], ['voisin'], ['lower'], ['inferieur'], ['impair'], ['onetriple'], ['onedouble'], ['onesimple'], ['fortune1'], ['fortune2'], ['score_determine'], ['under'], ['oneanimal'], ['color_blue'], ['threetriple'], ['threedouble'], ['threesimple'], ['onebombe'], ['777'], ['multiple'], ['superieur'], ['pair'], ['color_white'], ['onetiming'], ['threetiming']]
         else :
-            self.jeux = [['threedarts'], ['threebulls'], ['suite'], ['voisin'], ['lower'], ['inferieur'], ['impair'], ['fortune1'], ['fortune2'], ['score_determine'], ['under'], ['color_blue'], ['threetriple'], ['threedouble'], ['threesimple'], ['777'], ['multiple'], ['superieur'], ['pair'], ['color_white']]
+            self.jeux = [['threedarts'], ['threebulls'], ['suite'], ['voisin'], ['lower'], ['inferieur'], ['impair'], ['fortune1'], ['fortune2'], ['score_determine'], ['under'], ['color_blue'], ['threetriple'], ['threedouble'], ['threesimple'], ['777'], ['multiple'], ['superieur'], ['pair'], ['color_white'], ['threetiming']]
 
 
         target_suite = [[1, 2, 3],[2, 3, 4], [3, 4, 5], [4, 5, 6], [5, 6, 7], [6, 7, 8], [7, 8, 9], [8, 9, 10], [9, 10, 11], [10, 11, 12], [11, 12, 13], [12, 13, 14], [13, 14, 15], [14, 15, 16], [15, 16, 17], [16, 17, 18], [17, 18, 19], [18, 19, 20]]
@@ -368,6 +369,96 @@ class Game(cgame.Game):
                 self.headers[1] = 'Bombe' 
                 self.headers[2] = '-'
                 self.headers[3] = '-'
+
+        elif self.jeuchoisi == ['threetiming'] :
+                text = '?'   #Timing
+                self.headers[0] = 'Timing'
+                self.headers[1] = 'Sec'
+                self.headers[2] = 'Sec'
+                self.headers[3] = 'Sec'
+                self.headers[4] = ""
+                self.headers[5] = 'Pts'
+                self.timing_start_ticks = pygame.time.get_ticks()
+                leds = '|'.join(f'S{number}#{self.colors[0]}' for number in range(1, 21))
+                
+                visible_duration = 5000 
+                
+                while True:
+                    pygame.event.pump()
+                    elapsed_ms = pygame.time.get_ticks() - self.timing_start_ticks
+                    
+                    if elapsed_ms >= visible_duration:
+                        break
+                    
+                    current_sec = 10.0 - (elapsed_ms / 1000.0)
+                    current_sec = max(5.0, current_sec)
+                    
+                    time_str = f"{current_sec:.1f}".replace('.', ',')
+                    players[actual_player].columns[0] = (time_str, 'str')
+                    
+                    self.refresh_game_screen(
+                        players, actual_round, self.max_round, 
+                        self.nb_darts - player_launch + 1, self.nb_darts, 
+                        self.logo, self.headers, actual_player
+                    )
+                    
+                    pygame.time.delay(30)
+                
+                # --- AFFICHAGE DU ? ---
+                players[actual_player].columns[0] = ("?", 'str')
+                self.refresh_game_screen(
+                    players, actual_round, self.max_round, 
+                    self.nb_darts - player_launch + 1, self.nb_darts, 
+                    self.logo, self.headers, actual_player
+                )
+                
+                # On enregistre le départ de la phase aveugle
+                self.timing_blind_start = pygame.time.get_ticks()
+                
+        elif self.jeuchoisi == ['onetiming'] :
+                text = '?'   #Timing
+                self.headers[0] = 'Timing'
+                self.headers[1] = 'Sec'
+                self.headers[2] = '-'
+                self.headers[3] = '-'
+                self.headers[4] = ""
+                self.headers[5] = 'Pts'
+                self.timing_start_ticks = pygame.time.get_ticks()
+                leds = '|'.join(f'S{number}#{self.colors[0]}' for number in range(1, 21))
+                
+                visible_duration = 5000 
+                
+                while True:
+                    pygame.event.pump()
+                    elapsed_ms = pygame.time.get_ticks() - self.timing_start_ticks
+                    
+                    if elapsed_ms >= visible_duration:
+                        break
+                    
+                    current_sec = 10.0 - (elapsed_ms / 1000.0)
+                    current_sec = max(5.0, current_sec)
+                    
+                    time_str = f"{current_sec:.1f}".replace('.', ',')
+                    players[actual_player].columns[0] = (time_str, 'str')
+                    
+                    self.refresh_game_screen(
+                        players, actual_round, self.max_round, 
+                        self.nb_darts - player_launch + 1, self.nb_darts, 
+                        self.logo, self.headers, actual_player
+                    )
+                    
+                    pygame.time.delay(30)
+                
+                # --- AFFICHAGE DU ? ---
+                players[actual_player].columns[0] = ("?", 'str')
+                self.refresh_game_screen(
+                    players, actual_round, self.max_round, 
+                    self.nb_darts - player_launch + 1, self.nb_darts, 
+                    self.logo, self.headers, actual_player
+                )
+                
+                # On enregistre le départ de la phase aveugle
+                self.timing_blind_start = pygame.time.get_ticks()
                 
         elif self.jeuchoisi == ['multiple'] :
                 if self.multiple == 3 :
@@ -1073,6 +1164,54 @@ class Game(cgame.Game):
                         
                 return_code = 0
 
+        elif self.jeuchoisi == ['threetiming'] :
+                elapsed_time = (pygame.time.get_ticks() - self.timing_blind_start) / 1000.0
+                if elapsed_time > 5.0 or not hit:
+                        score = 0
+                        players[actual_player].columns[player_launch] = ("cross-mark", 'image')
+                else:
+                        # Score par dixième : +1 point pour chaque dixième écoulé depuis le '?' (max 50 pts)
+                        score = int(round(elapsed_time * 10))
+                        score = max(1, min(50, score))
+                        
+                        remaining_time = max(0.0, 5.0 - elapsed_time)
+                        
+                        # Affiche le temps exact réalisé à la place du '?'
+                        time_str = f"{remaining_time:.1f}".replace('.', ',')
+                        #players[actual_player].columns[1] = (time_str, 'str')
+                        players[actual_player].columns[player_launch] = (time_str, 'str')
+
+                self.score2 += score
+                players[actual_player].columns[5] = (self.score2, 'int')
+               
+                return_code = 0
+               
+
+        elif self.jeuchoisi == ['onetiming'] :
+                elapsed_time = (pygame.time.get_ticks() - self.timing_blind_start) / 1000.0
+                if elapsed_time > 5.0 or not hit:
+                        score = 0
+                        players[actual_player].columns[player_launch] = ("cross-mark", 'image')
+                else:
+                        # Score par dixième : +1 point pour chaque dixième écoulé depuis le '?' (max 50 pts)
+                        score = int(round(elapsed_time * 10))
+                        score = max(1, min(50, score))
+                        
+                        remaining_time = max(0.0, 5.0 - elapsed_time)
+                        
+                        # Affiche le temps exact réalisé à la place du '?'
+                        time_str = f"{remaining_time:.1f}".replace('.', ',')
+                        #players[actual_player].columns[1] = (time_str, 'str')
+                        players[actual_player].columns[player_launch] = (time_str, 'str')
+
+                self.score2 += score
+                players[actual_player].columns[5] = (self.score2, 'int')
+                
+                #calcul (utilise pour 1 fleche uniquement)
+                self.calcul(players, actual_player)
+               
+                return 1
+
         elif self.jeuchoisi == ['multiple'] :
                 if hit :
                         score = self.score_map[hit]
@@ -1305,37 +1444,62 @@ class Game(cgame.Game):
        Set if a message is shown to indicate the segment hitted !
        """
        return False
-       
 
+    def refresh_game_screen(self, players, actual_round, max_round, RemDarts, nb_darts, logo, headers, actual_player, TxtOnlogo=False, Wait=False, OnScreenButtons=None, showScores=True, end_of_game=False, endOfSet=None, Set=None, MaxSet=None):
+        """
+        Refresh In-game screen - Timing real-time update with comma
+        """
+
+        if hasattr(self, 'jeuchoisi') and self.jeuchoisi in [['threetiming'], ['onetiming']] and hasattr(self, 'timing_start_ticks'):
+            elapsed_ms = pygame.time.get_ticks() - self.timing_start_ticks
+            if elapsed_ms < 5000:  # On met à jour uniquement pendant les 5 premières secondes
+                current_sec = 10.0 - (elapsed_ms / 1000.0)
+                current_sec = max(5.0, current_sec)
+                time_str = f"{current_sec:.1f}".replace('.', ',')
+                if players and actual_player < len(players):
+                    players[actual_player].columns[0] = (time_str, 'str')
+            else:
+                # Une fois les 5 secondes passées, on force l'affichage du '?' si rien d'autre n'a été écrit
+                if players and actual_player < len(players) and players[actual_player].columns[1][0] == '5,0':
+                    players[actual_player].columns[0] = ('?', 'str')
+
+        return super().refresh_game_screen(players, actual_round, max_round, RemDarts, nb_darts, logo, headers, actual_player, TxtOnlogo, Wait, OnScreenButtons, showScores, end_of_game, endOfSet, Set, MaxSet)
+
+
+
+    
     def calcul(self, players, actual_player) :
         print('def calcul')
-        if self.score2 == 0 :
-                players[actual_player].columns[4] = (0, 'int') 
+        
+        # Détermine quelle colonne stocke le score total selon le jeu
+        if hasattr(self, 'jeuchoisi') and self.jeuchoisi in [['threetiming'], ['onetiming']] :
+            score_col = 5
         else :
-                players[actual_player].columns[4] = (self.score2, 'int') 
+            score_col = 4
+            
+        if self.score2 == 0 :
+                players[actual_player].columns[score_col] = (0, 'int') 
+        else :
+                players[actual_player].columns[score_col] = (self.score2, 'int') 
 
         liste_score = []
-        if players[actual_player].ident == self.nb_players -1 :
+        if players[actual_player].ident == self.nb_players - 1 :
                 for player in players :
-                        ### creation de la liste des scores (recuperation du score dans la colonne 4 et de l ident du joueur)
-                        liste_score.extend([[player.columns[4][0],player.ident]]) 
+                        # Récupère le score dans la bonne colonne (5 pour Timing, 4 pour les autres)
+                        liste_score.extend([[player.columns[score_col][0], player.ident]]) 
 
-                score_trie=sorted(liste_score)
+                score_trie = sorted(liste_score)
                 print('liste des scores tries')
                 print(score_trie)
 
-                #### attribution des points
-                ## meilleur score = 2 points (si egalite, 2 points pour chaque joueur)
-                ## 2eme meilleur score = 1 point (si egalite, 1 point pour chaque joueur)
-                ## 3eme et reste = 0 points
                 if score_trie[-1][0] == 0 :
                         points = 0
                 else :
                         points = 2	
        
-                score_acquis=[]
+                score_acquis = []
                 for i in range(-1, -len(score_trie)-1, -1) :
-                        if points > 0 and i < -1  and score_trie[i][0] != score_trie[i+1][0]:
+                        if points > 0 and i < -1 and score_trie[i][0] != score_trie[i+1][0]:
                                 if score_trie[i][0] == 0 :
                                         points = 0
                                 else :
@@ -1346,7 +1510,6 @@ class Game(cgame.Game):
                 print('resultat points')
                 print(score_acquis)
 
-                ### suivant le nb de joueur, execute X fois le code pour ajouter les points au score
                 for i in range(self.nb_players) :
                         for k, v in enumerate(score_acquis):
                                 if v[1] == i :
@@ -1355,7 +1518,8 @@ class Game(cgame.Game):
                                                         player.score += v[0]    
         
         return 1
-
+    
+    
     def get_possibilitirs(self, target_score):
         '''
         Get possibilities in ordre to light leds
