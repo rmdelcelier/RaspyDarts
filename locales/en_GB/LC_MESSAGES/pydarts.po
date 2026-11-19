@@ -6298,6 +6298,66 @@ msgstr "A hunting dog comes out of the grass with the segment hit, and laughs at
 msgid "dmd-style-help-classic"
 msgstr "The usual display of the three darts, no background during the game."
 
+msgid "dmd-style-random"
+msgstr "Random each game"
+
+msgid "dmd-style-help-random"
+msgstr "An animated style drawn at random at the start of each game, for variety. Games with their own style (Balltrap) keep it."
+
+msgid "dmd-style-camera"
+msgstr "Large camera"
+
+msgid "dmd-style-help-camera"
+msgstr "Like Modern, with a large camera window: it searches, then films the segment hit in close-up. The scoreboard is on the right."
+
+msgid "dmd-style-wave"
+msgstr "The wave"
+
+msgid "dmd-style-help-wave"
+msgstr "A Japanese print wave pulls back to reveal the segment; on a miss, the sun explodes. During the game: clouds and cherry petals."
+
+msgid "dmd-style-cards"
+msgstr "The cards"
+
+msgid "dmd-style-help-cards"
+msgstr "Playing cards reveal the segment (one card per multiplier), then a large card; a card turns over on \"MISS\"."
+
+msgid "dmd-style-skater"
+msgstr "The skater"
+
+msgid "dmd-style-help-skater"
+msgstr "A skater sprays the segment on a brick wall; on a miss, he trips on a stone."
+
+msgid "dmd-style-shuriken"
+msgstr "The shuriken"
+
+msgid "dmd-style-help-shuriken"
+msgstr "Shurikens stick into planks (one per multiplier, kunais for the bull); on a miss, they bounce off."
+
+msgid "dmd-style-drum"
+msgstr "The drum"
+
+msgid "dmd-style-help-drum"
+msgstr "A stick hits the drum once per multiplier and the skin lights up; on a miss, it hits the rim."
+
+msgid "dmd-style-pipes"
+msgstr "Pipe shooting"
+
+msgid "dmd-style-help-pipes"
+msgstr "A fairground stall: pipes burst (one per multiplier, a burst of fire for the bull); on a miss, the curtain tears."
+
+msgid "dmd-style-ducks"
+msgstr "Duck shooting"
+
+msgid "dmd-style-help-ducks"
+msgstr "The same stall, with yellow ducks that tip over when hit; on a miss, the curtain tears."
+
+msgid "dmd-version-needed-1624"
+msgstr "This style: Raspy2DMD 1.6.2.4 or later"
+
+msgid "dmd-version-old-1624"
+msgstr "This style: Raspy2DMD 1.6.2.4 or later (installed: {}); Modern is used instead"
+
 
 msgid "i2c-off-question"
 msgstr "The target or the buttons use GPIO 2 and 3: the link of the extension cards (I2C) is turned off. Restart the cabinet now so that they work?"

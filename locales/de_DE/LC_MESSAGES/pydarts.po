@@ -6026,6 +6026,66 @@ msgstr "Ein Jagdhund kommt mit dem getroffenen Segment aus dem Gras und lacht ü
 msgid "dmd-style-help-classic"
 msgstr "Die übliche Anzeige der drei Darts, ohne Hintergrund während des Spiels."
 
+msgid "dmd-style-random"
+msgstr "Zufällig je Spiel"
+
+msgid "dmd-style-help-random"
+msgstr "Zu Beginn jedes Spiels wird ein animierter Stil zufällig gewählt, für Abwechslung. Spiele mit eigenem Stil (Balltrap) behalten ihn."
+
+msgid "dmd-style-camera"
+msgstr "Große Kamera"
+
+msgid "dmd-style-help-camera"
+msgstr "Wie Modern, mit großem Kamerafenster: Sie sucht und filmt das getroffene Segment in Nahaufnahme. Die Tabelle steht rechts."
+
+msgid "dmd-style-wave"
+msgstr "Die Welle"
+
+msgid "dmd-style-help-wave"
+msgstr "Eine Welle im Stil japanischer Holzschnitte zieht sich zurück und zeigt das Segment; bei einem Fehlwurf explodiert die Sonne. Während des Spiels: Wolken und Kirschblüten."
+
+msgid "dmd-style-cards"
+msgstr "Die Karten"
+
+msgid "dmd-style-help-cards"
+msgstr "Spielkarten zeigen das Segment (eine Karte pro Multiplikator), dann eine große Karte; eine Karte dreht sich auf „MISS“."
+
+msgid "dmd-style-skater"
+msgstr "Der Skater"
+
+msgid "dmd-style-help-skater"
+msgstr "Ein Skater sprüht das Segment auf eine Ziegelmauer; bei einem Fehlwurf stolpert er über einen Stein."
+
+msgid "dmd-style-shuriken"
+msgstr "Der Shuriken"
+
+msgid "dmd-style-help-shuriken"
+msgstr "Shuriken bleiben in Brettern stecken (einer pro Multiplikator, Kunais für das Bull); bei einem Fehlwurf prallen sie ab."
+
+msgid "dmd-style-drum"
+msgstr "Die Trommel"
+
+msgid "dmd-style-help-drum"
+msgstr "Ein Schlegel schlägt die Trommel einmal pro Multiplikator, das Fell leuchtet auf; bei einem Fehlwurf trifft er den Rand."
+
+msgid "dmd-style-pipes"
+msgstr "Pfeifenschießen"
+
+msgid "dmd-style-help-pipes"
+msgstr "Ein Jahrmarktstand: Pfeifen zerplatzen (eine pro Multiplikator, eine Salve für das Bull); bei einem Fehlwurf reißt der Vorhang."
+
+msgid "dmd-style-ducks"
+msgstr "Entenschießen"
+
+msgid "dmd-style-help-ducks"
+msgstr "Derselbe Stand mit gelben Enten, die umkippen, wenn sie getroffen werden; bei einem Fehlwurf reißt der Vorhang."
+
+msgid "dmd-version-needed-1624"
+msgstr "Dieser Stil: Raspy2DMD 1.6.2.4 oder neuer"
+
+msgid "dmd-version-old-1624"
+msgstr "Dieser Stil: Raspy2DMD 1.6.2.4 oder neuer (installiert: {}); stattdessen Modern"
+
 
 msgid "i2c-off-question"
 msgstr "Die Scheibe oder die Tasten nutzen GPIO 2 und 3: die Verbindung der Erweiterungskarten (I2C) ist abgeschaltet. Den Automaten jetzt neu starten, damit sie funktionieren?"

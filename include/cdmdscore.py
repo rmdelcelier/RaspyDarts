@@ -1,9 +1,13 @@
 """
-Afficheur (Raspy2DMD) : how the scores are shown on it (its styles of score, Raspy2DMD 1.6.2.3).
+Afficheur (Raspy2DMD) : how the scores are shown on it (its styles of score).
 
 - classic : score|X - X - X||R;G;B|O/N (as always)
-- modern : score2|... (a camera on the board), its background fond2|
-- duck : score1|... (the hunting dog), its background fond1|
+- modern : score2|... (a camera on the board), its background fond2| (Raspy2DMD 1.6.2.3)
+- duck : score1|... (the hunting dog), its background fond1| (Raspy2DMD 1.6.2.3)
+- from Raspy2DMD 1.6.2.4, each with its background fondN| : camera (score3, the camera in a large
+  window), wave (score4), cards (score5), skater (score6), shuriken (score7), drum (score8),
+  pipes (score9, the shooting gallery), ducks (score10, the ducks of the shooting gallery)
+- random : one of the animated styles that the Raspy2DMD knows, drawn at the start of each game
 
 The background of the style is sent at the start of a game (fondN|start|O/N : O, the attract
 mode of Raspy2DMD as always ; N, the waiting scene of the style instead) and stopped at its end
@@ -20,9 +24,16 @@ import subprocess
 
 from include import cpaths
 
-STYLES = ('modern', 'duck', 'classic')
-PREFIX = {'classic': 'score', 'modern': 'score2', 'duck': 'score1'}
-BACKGROUND = {'modern': 'fond2', 'duck': 'fond1'}
+# In the order of the list of the screen
+STYLES = ('random', 'modern', 'camera', 'duck', 'wave', 'cards', 'skater', 'shuriken', 'drum', 'pipes', 'ducks',
+          'classic')
+RANDOM = 'random'
+NUMBER = {'duck': 1, 'modern': 2, 'camera': 3, 'wave': 4, 'cards': 5, 'skater': 6, 'shuriken': 7, 'drum': 8,
+          'pipes': 9, 'ducks': 10}
+PREFIX = {'classic': 'score', **{style: f'score{number}' for style, number in NUMBER.items()}}
+BACKGROUND = {style: f'fond{number}' for style, number in NUMBER.items()}
+# The version of Raspy2DMD a style needs (score1 and score2 : 1.6.2.3 ; score3 to score10 : 1.6.2.4)
+NEEDS = {style: (1, 6, 2, 3) if number <= 2 else (1, 6, 2, 4) for style, number in NUMBER.items()}
 CATEGORIES = ('classic', 'fun', 'sport')
 KEYS = ('style', 'gif', 'wait')
 INHERIT = 'inherit'
@@ -172,6 +183,34 @@ def styles_known():
         return None
     version = local_version()
     return bool(version) and version_tuple(version) >= NEEDED
+
+
+def style_known(style):
+    '''
+    A style the Raspy2DMD can show : True, False (too old here), None (not known : on another
+    Raspberry). Classic and random : always
+    '''
+    if style in ('classic', RANDOM) or style not in NEEDS:
+        return True
+    if not local():
+        return None
+    version = local_version()
+    return bool(version) and version_tuple(version) >= NEEDS[style]
+
+
+def playable(style):
+    '''
+    The style really sent : random drawn among the animated styles known (all of them on another
+    Raspberry : its version is not known), a style too new for the Raspy2DMD replaced by the
+    newest one it knows (modern, else classic)
+    '''
+    import random    # pylint: disable=import-outside-toplevel
+    if style == RANDOM:
+        choices = [name for name in NUMBER if style_known(name) is not False]
+        return random.choice(choices) if choices else 'classic'
+    if style_known(style) is False:
+        return 'modern' if style_known('modern') else 'classic'
+    return style
 
 
 def remote_address():

@@ -6102,6 +6102,66 @@ msgstr "Un chien de chasse sort des herbes avec le segment touché, et se moque 
 msgid "dmd-style-help-classic"
 msgstr "L'affichage habituel des trois fléchettes, sans fond pendant la partie."
 
+msgid "dmd-style-random"
+msgstr "Aléatoire à chaque partie"
+
+msgid "dmd-style-help-random"
+msgstr "Un style animé tiré au hasard au début de chaque partie, pour varier l'affichage. Les jeux qui ont leur propre style (Balltrap) le gardent."
+
+msgid "dmd-style-camera"
+msgstr "Caméra grand écran"
+
+msgid "dmd-style-help-camera"
+msgstr "Comme Moderne, avec une grande fenêtre de caméra : elle cherche puis filme en gros plan le segment touché. Le tableau est à droite."
+
+msgid "dmd-style-wave"
+msgstr "La vague"
+
+msgid "dmd-style-help-wave"
+msgstr "Une vague d'estampe japonaise se retire et découvre le segment ; sur un tir manqué, le soleil explose. Pendant la partie : nuages et pétales de cerisier."
+
+msgid "dmd-style-cards"
+msgstr "Les cartes"
+
+msgid "dmd-style-help-cards"
+msgstr "Des cartes à jouer révèlent le segment (une carte par multiplicateur), puis une grande carte ; une carte se retourne sur « MISS »."
+
+msgid "dmd-style-skater"
+msgstr "Le skateur"
+
+msgid "dmd-style-help-skater"
+msgstr "Un skateur bombe le segment sur un mur de briques ; sur un tir manqué, il tombe sur un caillou."
+
+msgid "dmd-style-shuriken"
+msgstr "Le shuriken"
+
+msgid "dmd-style-help-shuriken"
+msgstr "Des shurikens se plantent dans des planches (un par multiplicateur, des kunaïs pour le bull) ; sur un tir manqué, ils rebondissent."
+
+msgid "dmd-style-drum"
+msgstr "Le tambour"
+
+msgid "dmd-style-help-drum"
+msgstr "Une baguette frappe le tambour une fois par multiplicateur, la peau s'illumine ; sur un tir manqué, elle frappe le bord."
+
+msgid "dmd-style-pipes"
+msgstr "Tir aux pipes"
+
+msgid "dmd-style-help-pipes"
+msgstr "Un stand de fête foraine : les pipes éclatent (une par multiplicateur, une rafale pour le bull) ; sur un tir manqué, le rideau se déchire."
+
+msgid "dmd-style-ducks"
+msgstr "Tir aux canards"
+
+msgid "dmd-style-help-ducks"
+msgstr "Le même stand, avec des canards jaunes qui basculent quand ils sont touchés ; sur un tir manqué, le rideau se déchire."
+
+msgid "dmd-version-needed-1624"
+msgstr "Ce style : Raspy2DMD 1.6.2.4 ou plus"
+
+msgid "dmd-version-old-1624"
+msgstr "Ce style : Raspy2DMD 1.6.2.4 ou plus (installé : {}) ; il est remplacé par Moderne"
+
 
 msgid "i2c-off-question"
 msgstr "La cible ou les boutons utilisent les GPIO 2 et 3 : la liaison des cartes d'extension (I2C) est coupée. Redémarrer la borne maintenant pour qu'ils fonctionnent ?"

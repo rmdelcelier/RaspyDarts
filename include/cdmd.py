@@ -160,10 +160,12 @@ class Cdmd():
         except Exception as error:    # pylint: disable=broad-except
             self.logs.warning(f"DMD : display of the score not read ({error})")
             settings = dict(cdmdscore.GENERAL)
-        if settings.get('style') != 'classic' and cdmdscore.styles_known() is False:
-            # Raspy2DMD of this Raspberry older than 1.6.2.3 : its styles refused
-            self.logs.debug("DMD : Raspy2DMD older than 1.6.2.3, classic score")
-            settings['style'] = 'classic'
+        # Aléatoire : a style drawn for this game ; a style too new for the Raspy2DMD of this
+        # Raspberry (refused by it) : the newest it knows
+        chosen = settings.get('style')
+        settings['style'] = cdmdscore.playable(chosen)
+        if settings['style'] != chosen:
+            self.logs.debug(f"DMD : style {chosen} -> {settings['style']} (Raspy2DMD {cdmdscore.local_version() or '?'})")
         self.score_settings = settings
         self.dart = {0: 'X', 1: 'X', 2: 'X'}
         background = cdmdscore.BACKGROUND.get(settings.get('style'))

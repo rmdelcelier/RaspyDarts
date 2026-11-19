@@ -6093,6 +6093,66 @@ msgstr "Un cane da caccia esce dall'erba con il segmento colpito e prende in gir
 msgid "dmd-style-help-classic"
 msgstr "La visualizzazione abituale delle tre freccette, senza sfondo durante la partita."
 
+msgid "dmd-style-random"
+msgstr "Casuale a ogni partita"
+
+msgid "dmd-style-help-random"
+msgstr "Uno stile animato scelto a caso all'inizio di ogni partita, per variare. I giochi con uno stile proprio (Balltrap) lo mantengono."
+
+msgid "dmd-style-camera"
+msgstr "Telecamera grande"
+
+msgid "dmd-style-help-camera"
+msgstr "Come Moderno, con una grande finestra della telecamera: cerca e riprende da vicino il segmento colpito. Il tabellone è a destra."
+
+msgid "dmd-style-wave"
+msgstr "L'onda"
+
+msgid "dmd-style-help-wave"
+msgstr "Un'onda da stampa giapponese si ritira e scopre il segmento; su un tiro mancato, il sole esplode. Durante la partita: nuvole e petali di ciliegio."
+
+msgid "dmd-style-cards"
+msgstr "Le carte"
+
+msgid "dmd-style-help-cards"
+msgstr "Delle carte rivelano il segmento (una per moltiplicatore), poi una carta grande; una carta si gira su «MISS»."
+
+msgid "dmd-style-skater"
+msgstr "Lo skater"
+
+msgid "dmd-style-help-skater"
+msgstr "Uno skater dipinge il segmento con la bomboletta su un muro di mattoni; su un tiro mancato, inciampa in un sasso."
+
+msgid "dmd-style-shuriken"
+msgstr "Lo shuriken"
+
+msgid "dmd-style-help-shuriken"
+msgstr "Gli shuriken si piantano nelle assi (uno per moltiplicatore, kunai per il bull); su un tiro mancato, rimbalzano."
+
+msgid "dmd-style-drum"
+msgstr "Il tamburo"
+
+msgid "dmd-style-help-drum"
+msgstr "Una bacchetta colpisce il tamburo una volta per moltiplicatore e la pelle si illumina; su un tiro mancato, colpisce il bordo."
+
+msgid "dmd-style-pipes"
+msgstr "Tiro alle pipe"
+
+msgid "dmd-style-help-pipes"
+msgstr "Un baraccone da fiera: le pipe esplodono (una per moltiplicatore, una raffica per il bull); su un tiro mancato, la tenda si strappa."
+
+msgid "dmd-style-ducks"
+msgstr "Tiro alle anatre"
+
+msgid "dmd-style-help-ducks"
+msgstr "Lo stesso baraccone, con anatre gialle che cadono all'indietro quando colpite; su un tiro mancato, la tenda si strappa."
+
+msgid "dmd-version-needed-1624"
+msgstr "Questo stile: Raspy2DMD 1.6.2.4 o successivo"
+
+msgid "dmd-version-old-1624"
+msgstr "Questo stile: Raspy2DMD 1.6.2.4 o successivo (installato: {}); al suo posto Moderno"
+
 
 msgid "i2c-off-question"
 msgstr "Il bersaglio o i pulsanti usano i GPIO 2 e 3: il collegamento delle schede di espansione (I2C) è disattivato. Riavviare ora la macchina perché funzionino?"

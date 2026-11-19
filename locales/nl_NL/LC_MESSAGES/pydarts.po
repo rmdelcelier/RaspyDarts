@@ -6080,6 +6080,66 @@ msgstr "Een jachthond komt uit het gras met het geraakte segment en lacht om een
 msgid "dmd-style-help-classic"
 msgstr "De gewone weergave van de drie pijlen, zonder achtergrond tijdens het spel."
 
+msgid "dmd-style-random"
+msgstr "Willekeurig per spel"
+
+msgid "dmd-style-help-random"
+msgstr "Aan het begin van elk spel wordt willekeurig een geanimeerde stijl gekozen, voor afwisseling. Spellen met een eigen stijl (Balltrap) houden die."
+
+msgid "dmd-style-camera"
+msgstr "Grote camera"
+
+msgid "dmd-style-help-camera"
+msgstr "Zoals Modern, met een groot camerabeeld: de camera zoekt en filmt het geraakte segment van dichtbij. Het scorebord staat rechts."
+
+msgid "dmd-style-wave"
+msgstr "De golf"
+
+msgid "dmd-style-help-wave"
+msgstr "Een golf in Japanse prentstijl trekt zich terug en toont het segment; bij een misser ontploft de zon. Tijdens het spel: wolken en kersenbloesem."
+
+msgid "dmd-style-cards"
+msgstr "De kaarten"
+
+msgid "dmd-style-help-cards"
+msgstr "Speelkaarten tonen het segment (één kaart per vermenigvuldiger), daarna een grote kaart; een kaart draait om op \"MISS\"."
+
+msgid "dmd-style-skater"
+msgstr "De skater"
+
+msgid "dmd-style-help-skater"
+msgstr "Een skater spuit het segment op een bakstenen muur; bij een misser struikelt hij over een steen."
+
+msgid "dmd-style-shuriken"
+msgstr "De shuriken"
+
+msgid "dmd-style-help-shuriken"
+msgstr "Shurikens blijven in planken steken (één per vermenigvuldiger, kunais voor de bull); bij een misser stuiteren ze terug."
+
+msgid "dmd-style-drum"
+msgstr "De trommel"
+
+msgid "dmd-style-help-drum"
+msgstr "Een stok slaat één keer per vermenigvuldiger op de trommel en het vel licht op; bij een misser raakt hij de rand."
+
+msgid "dmd-style-pipes"
+msgstr "Pijpjes schieten"
+
+msgid "dmd-style-help-pipes"
+msgstr "Een kermiskraam: pijpjes spatten uiteen (één per vermenigvuldiger, een salvo voor de bull); bij een misser scheurt het gordijn."
+
+msgid "dmd-style-ducks"
+msgstr "Eendjes schieten"
+
+msgid "dmd-style-help-ducks"
+msgstr "Dezelfde kraam, met gele eendjes die omkiepen als ze geraakt worden; bij een misser scheurt het gordijn."
+
+msgid "dmd-version-needed-1624"
+msgstr "Deze stijl: Raspy2DMD 1.6.2.4 of nieuwer"
+
+msgid "dmd-version-old-1624"
+msgstr "Deze stijl: Raspy2DMD 1.6.2.4 of nieuwer (geïnstalleerd: {}); in plaats daarvan Modern"
+
 
 msgid "i2c-off-question"
 msgstr "Het bord of de knoppen gebruiken GPIO 2 en 3: de verbinding van de uitbreidingskaarten (I2C) is uitgeschakeld. De kast nu herstarten zodat ze werken?"

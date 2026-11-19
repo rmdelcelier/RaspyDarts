@@ -6031,6 +6031,66 @@ msgstr "Un perro de caza sale de la hierba con el segmento acertado y se burla d
 msgid "dmd-style-help-classic"
 msgstr "La visualización habitual de los tres dardos, sin fondo durante la partida."
 
+msgid "dmd-style-random"
+msgstr "Aleatorio en cada partida"
+
+msgid "dmd-style-help-random"
+msgstr "Un estilo animado elegido al azar al empezar cada partida, para variar. Los juegos con estilo propio (Balltrap) lo conservan."
+
+msgid "dmd-style-camera"
+msgstr "Cámara grande"
+
+msgid "dmd-style-help-camera"
+msgstr "Como Moderno, con una gran ventana de cámara: busca y filma en primer plano el segmento acertado. El marcador está a la derecha."
+
+msgid "dmd-style-wave"
+msgstr "La ola"
+
+msgid "dmd-style-help-wave"
+msgstr "Una ola de estampa japonesa se retira y descubre el segmento; en un fallo, el sol explota. Durante la partida: nubes y pétalos de cerezo."
+
+msgid "dmd-style-cards"
+msgstr "Las cartas"
+
+msgid "dmd-style-help-cards"
+msgstr "Unas cartas revelan el segmento (una por multiplicador) y luego una carta grande; una carta se da la vuelta en «MISS»."
+
+msgid "dmd-style-skater"
+msgstr "El skater"
+
+msgid "dmd-style-help-skater"
+msgstr "Un skater pinta el segmento con spray en un muro de ladrillos; en un fallo, tropieza con una piedra."
+
+msgid "dmd-style-shuriken"
+msgstr "El shuriken"
+
+msgid "dmd-style-help-shuriken"
+msgstr "Los shurikens se clavan en tablas (uno por multiplicador, kunais para el bull); en un fallo, rebotan."
+
+msgid "dmd-style-drum"
+msgstr "El tambor"
+
+msgid "dmd-style-help-drum"
+msgstr "Una baqueta golpea el tambor una vez por multiplicador y el parche se ilumina; en un fallo, golpea el borde."
+
+msgid "dmd-style-pipes"
+msgstr "Tiro a las pipas"
+
+msgid "dmd-style-help-pipes"
+msgstr "Una caseta de feria: las pipas estallan (una por multiplicador, una ráfaga para el bull); en un fallo, la cortina se rasga."
+
+msgid "dmd-style-ducks"
+msgstr "Tiro a los patos"
+
+msgid "dmd-style-help-ducks"
+msgstr "La misma caseta, con patos amarillos que caen hacia atrás al acertarles; en un fallo, la cortina se rasga."
+
+msgid "dmd-version-needed-1624"
+msgstr "Este estilo: Raspy2DMD 1.6.2.4 o posterior"
+
+msgid "dmd-version-old-1624"
+msgstr "Este estilo: Raspy2DMD 1.6.2.4 o posterior (instalado: {}); se usa Moderno"
+
 
 msgid "i2c-off-question"
 msgstr "La diana o los botones usan los GPIO 2 y 3: el enlace de las tarjetas de extensión (I2C) está desactivado. ¿Reiniciar la máquina ahora para que funcionen?"

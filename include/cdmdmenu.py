@@ -69,7 +69,8 @@ def try_style(screen, settings):
     one, a segment), its background stopped ; in the background of the screen
     '''
     dmd = screen.dmd
-    style = settings.get('style', 'classic')
+    # Aléatoire : one style drawn, as at the start of a game
+    style = cdmdscore.playable(settings.get('style', 'classic'))
     background = cdmdscore.BACKGROUND.get(style)
 
     def run():
@@ -86,19 +87,25 @@ def try_style(screen, settings):
         except Exception as error:    # pylint: disable=broad-except
             screen.logs.warning(f"DMD : try of the score not sent ({error})")
     threading.Thread(target=run, daemon=True).start()
-    screen.message([translate(screen, 'dmd-score-trying')], 1500, screen.colorset['menu-ok'], 'middle', 'big')
+    text = translate(screen, 'dmd-score-trying')
+    if settings.get('style') == cdmdscore.RANDOM:
+        text = f"{text} ({style_label(screen, style)})"
+    screen.message([text], 1500, screen.colorset['menu-ok'], 'middle', 'big')
 
 
-def version_note(screen):
+def version_note(screen, style=None):
     '''
-    What the styles need, when the Raspy2DMD is too old or not known (another Raspberry)
+    What the styles need, when the Raspy2DMD is too old or not known (another Raspberry) : the
+    styles of 1.6.2.3 (Moderne, Chasse aux canards), those of 1.6.2.4 (the others)
     '''
-    known = cdmdscore.styles_known()
+    newer = style is not None and cdmdscore.NEEDS.get(style, (0,)) > cdmdscore.NEEDED
+    known = cdmdscore.style_known(style) if newer else cdmdscore.styles_known()
     if known is True:
         return None
     if known is False:
-        return translate(screen, 'dmd-version-old').format(cdmdscore.local_version() or '?')
-    return translate(screen, 'dmd-version-needed')
+        key = 'dmd-version-old-1624' if newer else 'dmd-version-old'
+        return translate(screen, key).format(cdmdscore.local_version() or '?')
+    return translate(screen, 'dmd-version-needed-1624' if newer else 'dmd-version-needed')
 
 
 def raspy2dmd_menu(screen, dispatcher):
@@ -323,7 +330,7 @@ def score_settings(screen, level, name):
         screen.new_blit_rect2(help_rect, screen.colorset['menu-buttons'], corners='All', border_radius=int(unit_y / 4))
         cmenueditor.paragraph(screen, translate(screen, f"dmd-style-help-{effective.get('style')}"),
                               help_rect.inflate(-int(unit_x / 2), -int(unit_y / 2)), screen.colorset['menu-text-white'])
-        note = version_note(screen)
+        note = version_note(screen, effective.get('style'))
         if note:
             cmenueditor.paragraph(screen, note, pygame.Rect(int(unit_x), int(11.6 * unit_y), int(14 * unit_x), int(1.2 * unit_y)),
                                   screen.colorset['menu-text-white'])
