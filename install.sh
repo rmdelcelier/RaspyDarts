@@ -1,10 +1,11 @@
 #!/bin/bash
 # ==============================================================================
-# RaspyDarts - Installation depuis GitHub sur un Raspberry Pi neuf
+# RaspyDarts - Installation depuis GitHub sur un Raspberry Pi neuf, ou un ordinateur sous Linux
 # ==============================================================================
 #
-# Sur Raspberry Pi OS 13 (Trixie) avec bureau, depuis le compte qui fera tourner
-# RaspyDarts (pas root) :
+# Sur Raspberry Pi OS 13 (Trixie) avec bureau, ou un ordinateur sous Debian / Ubuntu avec
+# bureau (pour Autodarts ou une cible USB), depuis le compte qui fera tourner RaspyDarts
+# (pas root) :
 #
 #   curl -fsSL https://raw.githubusercontent.com/rmdelcelier/RaspyDarts/main/install.sh | sudo bash
 #
@@ -16,8 +17,9 @@
 #   curl -fsSL https://raw.githubusercontent.com/rmdelcelier/RaspyDarts/main/install.sh | sudo bash -s -- --oui
 #
 # Telecharge le code (environ 1 Go) et la configuration d'exemple de la release
-# "exemple" (environ 400 Mo), puis lance scripts/install_on_pi.sh, le meme script
-# que l'installation depuis le poste de developpement (install_raspydarts.ps1).
+# "exemple" (environ 400 Mo), puis lance scripts/install_on_pi.sh sur un Raspberry Pi (le meme
+# script que l'installation depuis le poste de developpement, install_raspydarts.ps1), sinon
+# scripts/install_on_pc.sh.
 # ==============================================================================
 
 set -u
@@ -66,9 +68,16 @@ curl -fL --retry 3 -o "$CODE" "https://codeload.github.com/$REPO/tar.gz/$REF" \
     || die "Telechargement du code echoue ($REF existe-t-il ?)."
 ok "Code telecharge ($(( $(stat -c %s "$CODE") / 1048576 )) Mo)"
 
-# Le script d'installation du Pi, pris dans le code telecharge (meme version)
-tar -xzf "$CODE" -C "$WORK_DIR" --wildcards --strip-components=2 '*/scripts/install_on_pi.sh' \
-    && [ -f "$WORK_DIR/install_on_pi.sh" ] || die "scripts/install_on_pi.sh absent du code ($REF)."
+# Le script d'installation, pris dans le code telecharge (meme version) : celui du Raspberry Pi,
+# ou celui d'un autre ordinateur (rien de propre au Raspberry : broches, firmware, omxplayer)
+if grep -q 'Raspberry Pi' /proc/device-tree/model 2>/dev/null; then
+    INSTALLER=install_on_pi.sh
+else
+    INSTALLER=install_on_pc.sh
+    ok "Pas de Raspberry Pi : installation pour un ordinateur ($(uname -m))"
+fi
+tar -xzf "$CODE" -C "$WORK_DIR" --wildcards --strip-components=2 "*/scripts/$INSTALLER" \
+    && [ -f "$WORK_DIR/$INSTALLER" ] || die "scripts/$INSTALLER absent du code ($REF)."
 
 HOME_ARCHIVE="-"
 if [ "$WITH_EXAMPLE" = "1" ]; then
@@ -82,8 +91,8 @@ YES=""
 [ "$ASSUME_YES" = "1" ] && YES="--yes"
 # Les questions se lisent au clavier : l'entree de ce script est le tuyau de curl
 if [ -z "$YES" ] && [ -r /dev/tty ] && : < /dev/tty 2>/dev/null; then
-    bash "$WORK_DIR/install_on_pi.sh" "$CODE" "$HOME_ARCHIVE" < /dev/tty
+    bash "$WORK_DIR/$INSTALLER" "$CODE" "$HOME_ARCHIVE" < /dev/tty
 else
     [ -n "$YES" ] || printf '  (pas de clavier : reponses oui)\n'
-    bash "$WORK_DIR/install_on_pi.sh" "$CODE" "$HOME_ARCHIVE" --yes
+    bash "$WORK_DIR/$INSTALLER" "$CODE" "$HOME_ARCHIVE" --yes
 fi
