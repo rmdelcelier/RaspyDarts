@@ -196,6 +196,10 @@ class Craspberry():
         self.target_reader = None
         self.target_darts = queue.Queue()
         self.pending_dart = None
+        # Time of the contact of the last dart read (time.monotonic, None : unknown, a key), and
+        # of the last move of the segments to hit (games played against time, see targets_changed)
+        self.dart_time = None
+        self.targets_time = None
 
         if config.file_exists:
             # Apply configuration
@@ -345,12 +349,17 @@ class Craspberry():
 
     def receive_darts(self, process):
         """
-        Thread : darts sent by the reader, one code per line ("2610")
+        Thread : darts sent by the reader, one per line : its code and the time of its contact
+        ("2610 123456789012", time.monotonic_ns)
         """
         for line in process.stdout:
-            code = line.strip()
-            if code:
-                self.target_darts.put(code)
+            fields = line.split()
+            if fields:
+                try:
+                    contact = int(fields[1]) / 1e9
+                except (IndexError, ValueError):
+                    contact = time.monotonic()
+                self.target_darts.put((fields[0], contact))
         if self.target_reader is process:
             # The reader stopped by itself : the game scans the target again
             self.logs.error("Target reader stopped : the target is scanned by the game")
@@ -373,15 +382,18 @@ class Craspberry():
 
     def take_dart(self):
         """
-        Code of the next dart sent by the reader, None if none
+        Code of the next dart sent by the reader, None if none ; the time of its contact in
+        dart_time
         """
         if self.pending_dart is not None:
             dart, self.pending_dart = self.pending_dart, None
-            return dart
-        try:
-            return self.target_darts.get_nowait()
-        except queue.Empty:
-            return None
+        else:
+            try:
+                dart = self.target_darts.get_nowait()
+            except queue.Empty:
+                return None
+        code, self.dart_time = dart
+        return code
 
     def wait_dart(self, delay):
         """
@@ -643,7 +655,24 @@ class Craspberry():
 
                     self.scan_output(pinout, gpio.LOW)
 
+        if gpio_input is not None:
+            self.dart_time = time.monotonic()
         return gpio_input if raw else self.keys.get(gpio_input, None)
+
+    def targets_changed(self):
+        """
+        The segments to hit moved (games played against time : Balltrap...) : a dart whose
+        contact came before was thrown at the previous ones (see dart_before_targets_changed)
+        """
+        self.targets_time = time.monotonic()
+
+    def dart_before_targets_changed(self):
+        """
+        The last dart read landed before the last move of the segments to hit : it was
+        waiting while the game moved them (about 100 ms of work at each move on a Pi 3). False
+        when unknown (a key, no move)
+        """
+        return self.dart_time is not None and self.targets_time is not None and self.dart_time < self.targets_time
 
     def scan_output(self, pin, value):
         """
@@ -812,6 +841,8 @@ class Craspberry():
         A button of the music player (BTN_MUSIC_..., include/cmusic.py) is done here, in the
         menus as in a game, and the reading goes on : the screen shown never sees it
         """
+        # A key read has no time of contact : only a dart of the target sets it again
+        self.dart_time = None
         while True:
             if self.scripted:
                 item = self.scripted.pop(0)

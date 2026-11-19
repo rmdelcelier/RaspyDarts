@@ -131,7 +131,8 @@ class TargetReader:
 
     def next_dart(self, timeout=None, on_found=None):
         '''
-        Wait for a dart. on_found(code) is called as soon as its column is found, then
+        Wait for a dart. on_found(code, contact) is called as soon as its column is found
+        (contact : time of the contact, time.monotonic_ns, the clock of time.monotonic), then
         the release of the contact is waited. Returns (code, timings) once released, or
         None after timeout. code is None when the contact was open again before its
         column was found : a dart lost, or a parasite (a dart which vibrates, a segment
@@ -151,7 +152,7 @@ class TargetReader:
         searches = 1
         found = time.monotonic_ns()
         if column is not None and on_found is not None:
-            on_found(f'{line}{column}')
+            on_found(f'{line}{column}', edge.timestamp_ns)
 
         # Until the contact is open for RELEASE seconds. While the column is not found,
         # it is searched again each time the line is seen closed : contacts bounce,
@@ -166,7 +167,7 @@ class TargetReader:
                     searches += 1
                     found = time.monotonic_ns()
                     if column is not None and on_found is not None:
-                        on_found(f'{line}{column}')
+                        on_found(f'{line}{column}', edge.timestamp_ns)
                     continue
             elif opened is None:
                 opened = time.monotonic_ns()
@@ -216,8 +217,10 @@ def main():
     end = time.monotonic() + args.duration if args.duration else None
     parent = os.getppid()
 
-    def send(code):
-        print(code, flush=True)
+    def send(code, contact):
+        # The code and the time of the contact : the game knows when the dart landed (the
+        # target may have moved since, in the games played against time)
+        print(f'{code} {contact}', flush=True)
 
     try:
         if not args.test:

@@ -689,6 +689,16 @@ spectators_error = False
 # The game is loaded : show its window, hidden if the intro video was playing
 display.show()
 
+def publish_goals():
+    '''
+    The segments to hit (and to blink) set by the game, to the LED of the target and the strip
+    '''
+    if rpi.target_leds != '':
+        dispatcher.publish('goal', rpi.target_leds, limit=['TARGET', 'STRIP', 'OTHER'])
+    if rpi.target_leds_blink != '':
+        dispatcher.publish('blink', rpi.target_leds_blink, limit=['TARGET', 'STRIP', 'OTHER'])
+
+
 def report_error(context):
     '''
     A serious error caught (a game which fails) : its report, shown at the next menu
@@ -753,7 +763,9 @@ try:
                 menu = True
                 all_players = local_players
                 players_count = len(local_players)
-                choosed_game = __import__("games.{Game}", fromlist=["games"])
+                # The colours of the players, as the menus read them
+                players_favorite_color = Config.get_players_color()
+                choosed_game = __import__(f"games.{Game}", fromlist=["games"])
 
                 # Merge config file options and default game options
                 default_game_options = choosed_game.OPTIONS
@@ -1887,24 +1899,21 @@ try:
                     except:
                         pass
 
-                    # Display board
-                    ClickZones = game.refresh_game_screen(players, actual_round, game.max_round, game.nb_darts - player_launch + 1,
-                                        game.nb_darts, game.logo, game.headers, actual_player, OnScreenButtons=config_globals['onscreenbuttons'],
-                                        Set=Set, MaxSet=nb_sets
-                                        )
-
-                    # On illumine si besoin
+                    # The target lit first, then the board drawn (about 100 ms on a Pi 3) : the
+                    # segments to hit shown as soon as the game expects them
                     if light_target and game_is_ok_for_color:
                         dispatcher.publish('Background', limit=['TARGET', 'STRIP', 'OTHER'])
                     if illumination_mode:
                         dispatcher.publish('special', f'STRIP:Light, 0.3,{illumination_color}', limit=['TARGET', 'STRIP', 'OTHER'])
                     elif light_strip:
                         dispatcher.publish('special', f'STRIP:Light, 0.3,{players[actual_player].color}', limit=['TARGET', 'STRIP', 'OTHER'])
+                    publish_goals()
 
-                    if rpi.target_leds != '':
-                        dispatcher.publish('goal', rpi.target_leds, limit=['TARGET', 'STRIP', 'OTHER'])
-                    if rpi.target_leds_blink != '':
-                        dispatcher.publish('blink', rpi.target_leds_blink, limit=['TARGET', 'STRIP', 'OTHER'])
+                    # Display board
+                    ClickZones = game.refresh_game_screen(players, actual_round, game.max_round, game.nb_darts - player_launch + 1,
+                                        game.nb_darts, game.logo, game.headers, actual_player, OnScreenButtons=config_globals['onscreenbuttons'],
+                                        Set=Set, MaxSet=nb_sets
+                                        )
 
                     # The player plays !
                     if net_status is None or players[actual_player].name in local_players:
@@ -1951,19 +1960,18 @@ try:
                                 if dart_stroke is False:
                                     logs.debug(f"Timeout {game.time}")
                                     pre_dart = game.pre_dart_check(players, actual_round, actual_player, player_launch)
-                                    publish_match()
-                                    ClickZones = game.refresh_game_screen(players, actual_round, game.max_round, game.nb_darts - player_launch + 1,
-                                                game.nb_darts, game.logo, game.headers, actual_player, OnScreenButtons=config_globals['onscreenbuttons'],
-                                                Set=Set, MaxSet=nb_sets)
+                                    # The target moved : lit at once, before the board is drawn (about
+                                    # 100 ms on a Pi 3, the LED showed the old segment meanwhile)
                                     if light_target and game_is_ok_for_color:
                                         dispatcher.publish('Background', limit=['TARGET', 'STRIP', 'OTHER'])
                                     else:
                                         dispatcher.publish('off', limit=['TARGET', 'STRIP', 'OTHER'])
-
-                                    if rpi.target_leds != '':
-                                        dispatcher.publish('goal', rpi.target_leds, limit=['TARGET', 'STRIP', 'OTHER'])
-                                    if rpi.target_leds_blink != '':
-                                        dispatcher.publish('blink', rpi.target_leds_blink, limit=['TARGET', 'STRIP', 'OTHER'])
+                                    publish_goals()
+                                    rpi.targets_changed()
+                                    publish_match()
+                                    ClickZones = game.refresh_game_screen(players, actual_round, game.max_round, game.nb_darts - player_launch + 1,
+                                                game.nb_darts, game.logo, game.headers, actual_player, OnScreenButtons=config_globals['onscreenbuttons'],
+                                                Set=Set, MaxSet=nb_sets)
 
                                     continue
                             else:
