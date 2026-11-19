@@ -1109,18 +1109,10 @@ class Config:
 
         self.camera = DefaultConfig['Camera']
 
-        # Print version if requested
-        with open('/proc/device-tree/model') as f:
-            self.rpi_version = f.readlines()
-        f.close()
-
-        # Print version if requested
-        with open('/sys/firmware/devicetree/base/serial-number') as f:
-            self.rpi_serial = f.readlines()
-        f.close()
-
-        self.rpi_serial = self.rpi_serial[0].rstrip('\x00')
-        self.rpi_version = self.rpi_version[0].replace('Raspberry ', '').rstrip('\x00')
+        # The machine : the model of the Raspberry ("Pi 3 Model B Plus Rev 1.3"), else the
+        # computer ("PC x86_64 (Ubuntu 24.04)", see cplatform)
+        from include import cplatform    # pylint: disable=import-outside-toplevel
+        self.rpi_version = cplatform.description().replace('Raspberry ', '')
         self.rpi_model = rpi_versions.get(self.rpi_version.split(' Rev')[0], '0')
         self.file_exists = False
 

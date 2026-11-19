@@ -1330,7 +1330,14 @@ class Screen(pygame.Surface):
         1st execution : get configuration
         '''
         self.logs.info(f"Lauch target's setup wizard")
-
+        from include import cplatform    # pylint: disable=import-outside-toplevel
+        if not cplatform.has_gpio():
+            # A computer without the pins of a Raspberry (a PC with Linux) : no interface card,
+            # no LED strip, no button board ; the darts come from Autodarts (Paramètres >
+            # Autodarts) or a target plugged by USB, the buttons from USB pads
+            self.logs.info("No Raspberry : interface card, LED and buttons left aside")
+            self.config.write_file()
+            return True
 
         self.display_background()    # display basic screen
         self.display_ips(big=True)            # display IPs addresses

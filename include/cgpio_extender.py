@@ -20,11 +20,17 @@ import time
 # versions »). The installation puts those dependencies (python3-libgpiod, the PWM module)
 os.environ.setdefault('BLINKA_SKIP_DEPENDENCY_CHECK', '1')
 
-import board    # pylint: disable=wrong-import-position
-import busio    # pylint: disable=wrong-import-position
+from include import cplatform    # pylint: disable=wrong-import-position
+if cplatform.has_gpio():
+    import board    # pylint: disable=wrong-import-position
+    import busio    # pylint: disable=wrong-import-position
 
-from digitalio import Direction, Pull
-from adafruit_mcp230xx.mcp23017 import MCP23017
+    from digitalio import Direction, Pull
+    from adafruit_mcp230xx.mcp23017 import MCP23017
+else:
+    # Another computer (a PC with Linux) : no I2C bus of the Raspberry, no MCP23017 board
+    # (Gpio_extender is made with use_i2c False there)
+    board = busio = Direction = Pull = MCP23017 = None
 from threading import Thread
 from .ccoins import I2C_LOCK
 

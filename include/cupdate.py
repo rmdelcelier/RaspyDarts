@@ -414,6 +414,11 @@ def apply_system_settings(logs, version):
     not run for this version : in the background, the initramfs may be rebuilt (a minute).
     Also when the listening of the MQTT server is declared twice : at once, the LED need it
     """
+    from include import cplatform    # pylint: disable=import-outside-toplevel
+    if not cplatform.is_raspberry():
+        # Settings of Raspberry Pi OS (config.txt, firmware, its desktop) : nothing to do on
+        # another computer
+        return
     try:
         with open(SYSTEM_SETTINGS_STATE, encoding='utf-8') as state:
             done = state.read().strip()

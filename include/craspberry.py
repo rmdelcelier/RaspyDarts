@@ -12,8 +12,13 @@ from include import cvideos
 from include import cbuttonleds
 from include import cautodarts
 from include import cpaths
-# For GPIO Extender
-from RPi import GPIO as gpio
+from include import cplatform
+# The pins of the Raspberry ; on another computer (a PC with Linux, see cplatform) a stand-in
+# which does nothing, and no pin is configured
+if cplatform.has_gpio():
+    from RPi import GPIO as gpio
+else:
+    from include import cgpio_none as gpio
 from . import cgpio_extender
 from . import cusbpads
 from . import ccoins
@@ -201,12 +206,15 @@ class Craspberry():
         self.dart_time = None
         self.targets_time = None
 
+        # The pins of the Raspberry (target matrix, buttons on GPIO) ; none on another computer :
+        # the darts come from Autodarts or a target plugged by USB, the buttons from USB pads
+        pins_usable = cplatform.has_gpio()
         if config.file_exists:
             # Apply configuration
-            for pin_gpio in [pin for pin in self.conf_inputs.values() if pin != '']:
+            for pin_gpio in [pin for pin in self.conf_inputs.values() if pin != '' and pins_usable]:
                 self.set_inputs(pin_gpio)
 
-            for pin_gpio in [pin for pin in self.conf_outputs.values() if pin != '']:
+            for pin_gpio in [pin for pin in self.conf_outputs.values() if pin != '' and pins_usable]:
                 self.set_outputs(pin_gpio)
 
             # Compute number of leds on target
@@ -231,6 +239,8 @@ class Craspberry():
                 if config.config['SectionKeys'][segment] == '':
                     continue
                 if segment in config.GPIO_BUTTONS_CONFIG:
+                        if not pins_usable:
+                            continue
                         if 0 < int(config.config['SectionKeys'][segment]) <= MAX_GPIO:
                             self.pins[segment] = int(config.config['SectionKeys'][segment])
                         else:
@@ -240,12 +250,15 @@ class Craspberry():
                 else:
                     self.logs.error(f"Unknown {segment} configuration in [SectionKeys]")
 
-            # Before reset_gpio : the pins of the target must stay free for the reader
-            self.start_target_reader()
-            self.reset_gpio()
+            if pins_usable:
+                # Before reset_gpio : the pins of the target must stay free for the reader
+                self.start_target_reader()
+                self.reset_gpio()
 
         from include import ci2c    # pylint: disable=import-outside-toplevel
-        self.gpio = cgpio_extender.Gpio_extender(self.logs, self.buttons, use_i2c=not ci2c.pins_reserved(config))
+        # The MCP23017 boards are on the I2C bus of the Raspberry : none on another computer
+        self.gpio = cgpio_extender.Gpio_extender(self.logs, self.buttons,
+                                                 use_i2c=pins_usable and not ci2c.pins_reserved(config))
         # Pads of keys and knobs plugged in USB (Paramètres > Pavés USB)
         self.usb_pads = cusbpads.shared(self.logs)
         # Autodarts (its cameras read the darts, Paramètres > Autodarts) : its darts read as those
