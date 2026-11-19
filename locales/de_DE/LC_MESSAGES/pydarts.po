@@ -6080,6 +6080,18 @@ msgstr "Entenschießen"
 msgid "dmd-style-help-ducks"
 msgstr "Derselbe Stand mit gelben Enten, die umkippen, wenn sie getroffen werden; bei einem Fehlwurf reißt der Vorhang."
 
+msgid "dmd-style-ringgirl"
+msgstr "Ringgirl"
+
+msgid "dmd-style-ringboy"
+msgstr "Ringboy"
+
+msgid "dmd-style-help-ringgirl"
+msgstr "Ein Boxring bei Nacht: Ein Ringgirl kommt mit einem Schild, auf dem das Segment steht, dann erscheint es groß; Scheinwerfer und Konfetti für das Bull, bei einem Fehlwurf fliegt das Handtuch und das Publikum buht. Für jeden Spieler ein neues Ringgirl."
+
+msgid "dmd-style-help-ringboy"
+msgstr "Derselbe Boxring mit einem Ringboy, der das Segment zeigt; Scheinwerfer und Konfetti für das Bull, bei einem Fehlwurf fliegt das Handtuch und das Publikum buht. Für jeden Spieler ein neuer Ringboy."
+
 msgid "dmd-version-needed-1624"
 msgstr "Dieser Stil: Raspy2DMD 1.6.2.4 oder neuer"
 

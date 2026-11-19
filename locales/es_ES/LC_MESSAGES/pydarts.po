@@ -6085,6 +6085,18 @@ msgstr "Tiro a los patos"
 msgid "dmd-style-help-ducks"
 msgstr "La misma caseta, con patos amarillos que caen hacia atrás al acertarles; en un fallo, la cortina se rasga."
 
+msgid "dmd-style-ringgirl"
+msgstr "Ring girl"
+
+msgid "dmd-style-ringboy"
+msgstr "Ring boy"
+
+msgid "dmd-style-help-ringgirl"
+msgstr "Un ring de boxeo de noche: una ring girl entra con un cartel con el segmento, que luego aparece en grande; focos y confeti para el bull, se tira la toalla y el público abuchea en un fallo. Una ring girl nueva para cada jugador."
+
+msgid "dmd-style-help-ringboy"
+msgstr "El mismo ring de boxeo, con un ring boy que presenta el segmento; focos y confeti para el bull, se tira la toalla y el público abuchea en un fallo. Un ring boy nuevo para cada jugador."
+
 msgid "dmd-version-needed-1624"
 msgstr "Este estilo: Raspy2DMD 1.6.2.4 o posterior"
 

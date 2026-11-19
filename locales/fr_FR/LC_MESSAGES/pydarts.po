@@ -6156,6 +6156,18 @@ msgstr "Tir aux canards"
 msgid "dmd-style-help-ducks"
 msgstr "Le même stand, avec des canards jaunes qui basculent quand ils sont touchés ; sur un tir manqué, le rideau se déchire."
 
+msgid "dmd-style-ringgirl"
+msgstr "Ring girl"
+
+msgid "dmd-style-ringboy"
+msgstr "Ring boy"
+
+msgid "dmd-style-help-ringgirl"
+msgstr "Un ring de boxe la nuit : une ring girl entre avec un panneau où est écrit le segment, puis il s'affiche en grand ; projecteurs et confettis pour le bull, éponge jetée et huées sur un tir manqué. Une nouvelle ring girl à chaque joueur."
+
+msgid "dmd-style-help-ringboy"
+msgstr "Le même ring de boxe, avec un ring boy qui présente le segment ; projecteurs et confettis pour le bull, éponge jetée et huées sur un tir manqué. Un nouveau ring boy à chaque joueur."
+
 msgid "dmd-version-needed-1624"
 msgstr "Ce style : Raspy2DMD 1.6.2.4 ou plus"
 

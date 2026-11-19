@@ -6134,6 +6134,18 @@ msgstr "Eendjes schieten"
 msgid "dmd-style-help-ducks"
 msgstr "Dezelfde kraam, met gele eendjes die omkiepen als ze geraakt worden; bij een misser scheurt het gordijn."
 
+msgid "dmd-style-ringgirl"
+msgstr "Ringgirl"
+
+msgid "dmd-style-ringboy"
+msgstr "Ringboy"
+
+msgid "dmd-style-help-ringgirl"
+msgstr "Een boksring bij nacht: een ringgirl komt op met een bord waarop het segment staat, daarna verschijnt het groot; spots en confetti voor de bull, bij een misser wordt de handdoek gegooid en joelt het publiek. Een nieuw ringgirl voor elke speler."
+
+msgid "dmd-style-help-ringboy"
+msgstr "Dezelfde boksring, met een ringboy die het segment toont; spots en confetti voor de bull, bij een misser wordt de handdoek gegooid en joelt het publiek. Een nieuwe ringboy voor elke speler."
+
 msgid "dmd-version-needed-1624"
 msgstr "Deze stijl: Raspy2DMD 1.6.2.4 of nieuwer"
 

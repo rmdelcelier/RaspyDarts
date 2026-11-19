@@ -6,7 +6,9 @@ Afficheur (Raspy2DMD) : how the scores are shown on it (its styles of score).
 - duck : score1|... (the hunting dog), its background fond1| (Raspy2DMD 1.6.2.3)
 - from Raspy2DMD 1.6.2.4, each with its background fondN| : camera (score3, the camera in a large
   window), wave (score4), cards (score5), skater (score6), shuriken (score7), drum (score8),
-  pipes (score9, the shooting gallery), ducks (score10, the ducks of the shooting gallery)
+  pipes (score9, the shooting gallery), ducks (score10, the ducks of the shooting gallery),
+  ringgirl (score11) and ringboy (score12) : a boxing ring, a new ring girl / ring boy each volley
+  (X - X - X sent at its start, see VOLLEY_START)
 - random : one of the animated styles that the Raspy2DMD knows, drawn at the start of each game
 
 The background of the style is sent at the start of a game (fondN|start|O/N : O, the attract
@@ -26,10 +28,12 @@ from include import cpaths
 
 # In the order of the list of the screen
 STYLES = ('random', 'modern', 'camera', 'duck', 'wave', 'cards', 'skater', 'shuriken', 'drum', 'pipes', 'ducks',
-          'classic')
+          'ringgirl', 'ringboy', 'classic')
 RANDOM = 'random'
 NUMBER = {'duck': 1, 'modern': 2, 'camera': 3, 'wave': 4, 'cards': 5, 'skater': 6, 'shuriken': 7, 'drum': 8,
-          'pipes': 9, 'ducks': 10}
+          'pipes': 9, 'ducks': 10, 'ringgirl': 11, 'ringboy': 12}
+# The styles which draw something new for each volley when X - X - X is sent at its start
+VOLLEY_START = ('ringgirl', 'ringboy')
 PREFIX = {'classic': 'score', **{style: f'score{number}' for style, number in NUMBER.items()}}
 BACKGROUND = {style: f'fond{number}' for style, number in NUMBER.items()}
 # The version of Raspy2DMD a style needs (score1 and score2 : 1.6.2.3 ; score3 to score10 : 1.6.2.4)

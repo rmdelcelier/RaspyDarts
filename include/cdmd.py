@@ -208,6 +208,16 @@ class Cdmd():
         else:
             self.send_text(text)
 
+    def volley_start(self):
+        """
+        A volley starts : X - X - X sent for the styles which draw something new then (Ring girl,
+        Ring boy : a new one for each player)
+        """
+        from include import cdmdscore    # pylint: disable=import-outside-toplevel
+        if (self.score_settings or {}).get('style') in cdmdscore.VOLLEY_START:
+            self.dart = {0: 'X', 1: 'X', 2: 'X'}
+            self.send(self.score_text(['X', 'X', 'X']))
+
     def send_score(self, dart, touch):
         """
         Function used to send score to dmd : score|X - X - X||R;G;B|O/N in the style chosen

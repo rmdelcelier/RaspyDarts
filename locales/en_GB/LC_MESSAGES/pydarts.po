@@ -6352,6 +6352,18 @@ msgstr "Duck shooting"
 msgid "dmd-style-help-ducks"
 msgstr "The same stall, with yellow ducks that tip over when hit; on a miss, the curtain tears."
 
+msgid "dmd-style-ringgirl"
+msgstr "Ring girl"
+
+msgid "dmd-style-ringboy"
+msgstr "Ring boy"
+
+msgid "dmd-style-help-ringgirl"
+msgstr "A boxing ring at night: a ring girl walks in holding a card with the segment, then it is shown in large; spotlights and confetti for the bull, the towel is thrown and the crowd boos on a miss. A new ring girl for each player."
+
+msgid "dmd-style-help-ringboy"
+msgstr "The same boxing ring, with a ring boy showing the segment; spotlights and confetti for the bull, the towel is thrown and the crowd boos on a miss. A new ring boy for each player."
+
 msgid "dmd-version-needed-1624"
 msgstr "This style: Raspy2DMD 1.6.2.4 or later"
 

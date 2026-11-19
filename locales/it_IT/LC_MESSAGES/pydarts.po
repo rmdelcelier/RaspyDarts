@@ -6147,6 +6147,18 @@ msgstr "Tiro alle anatre"
 msgid "dmd-style-help-ducks"
 msgstr "Lo stesso baraccone, con anatre gialle che cadono all'indietro quando colpite; su un tiro mancato, la tenda si strappa."
 
+msgid "dmd-style-ringgirl"
+msgstr "Ring girl"
+
+msgid "dmd-style-ringboy"
+msgstr "Ring boy"
+
+msgid "dmd-style-help-ringgirl"
+msgstr "Un ring di pugilato di notte: una ring girl entra con un cartello con il segmento, che poi appare in grande; riflettori e coriandoli per il bull, su un tiro mancato si getta la spugna e il pubblico fischia. Una nuova ring girl per ogni giocatore."
+
+msgid "dmd-style-help-ringboy"
+msgstr "Lo stesso ring di pugilato, con un ring boy che presenta il segmento; riflettori e coriandoli per il bull, su un tiro mancato si getta la spugna e il pubblico fischia. Un nuovo ring boy per ogni giocatore."
+
 msgid "dmd-version-needed-1624"
 msgstr "Questo stile: Raspy2DMD 1.6.2.4 o successivo"
 

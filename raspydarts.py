@@ -1865,6 +1865,8 @@ try:
                 publish_match()
 
                 if player_launch == 1 and len(magickey) == 0 and pre_dart != 4:
+                    # Ring girl / Ring boy of Raspy2DMD : a new one for this volley, then the name
+                    dmd.volley_start()
                     dmd.send_text(players[actual_player].name)
                     logs.debug(f"Display {players[actual_player].name}")
                     if handler['announcement'] is None:
