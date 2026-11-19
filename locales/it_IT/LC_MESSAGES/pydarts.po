@@ -5438,7 +5438,7 @@ msgid "theme-plate-bob27"
 msgstr "Bob's 27"
 
 msgid "theme-plate-fighters"
-msgstr "Fighters"
+msgstr "Fighters / Punch-Out"
 
 msgid "theme-plate-shortcuts"
 msgstr "Scorciatoie e allineamento dei testi"
@@ -5611,13 +5611,13 @@ msgstr "Installazione di Raspy2DMD"
 
 
 msgid "update_ready"
-msgstr "Aggiornamento pronto"
+msgstr "Quando è disponibile un aggiornamento"
 
 msgid "update-ready-ask"
-msgstr "Chiedere"
+msgstr "Scaricare giocando"
 
 msgid "update-ready-historic"
-msgstr "Come prima"
+msgstr "Installare subito"
 
 msgid "update-ready-question"
 msgstr "L'aggiornamento {version} è pronto. Riavviare ora per installarlo?"

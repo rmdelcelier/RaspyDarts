@@ -5565,7 +5565,10 @@ class Screen(pygame.Surface):
                         elif key_press == 'video_res_width*video_res_height':
                             config_camera['video_res_width'] = tmp.split('x')[0]
                             config_camera['video_res_height'] = tmp.split('x')[1]
-                        elif key_press in ('nb_picture', 'video_duration', 'fps', 'directory_order', 'choice_of_memories'):
+                        else:
+                            # Every other list (nb_picture, video_duration, fps, directory_order,
+                            # choice_of_memories, qr_popup_s...) : kept as chosen (qr_popup_s,
+                            # missing from a list here, was never saved)
                             config_camera[key_press] = tmp
                     self.camera.init_var(config_camera, show_in_parametrage=True)
                     self.camera.camera_start()
