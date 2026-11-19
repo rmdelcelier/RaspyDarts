@@ -388,6 +388,26 @@ class Screen(pygame.Surface):
     def set_blinktime(self, value):
         self.blinktime = int(value)
 
+    @staticmethod
+    def fullscreen_mode():
+        '''
+        Size and flags of the full screen. On a Raspberry : the full screen of SDL. On another
+        computer (a PC, see cplatform) : a window without border covering the screen. Its window
+        manager keeps a full screen window above all the others while it has the keyboard : it
+        would cover the videos (mpv, above the game, include/cvideos.py)
+        '''
+        from include import cplatform    # pylint: disable=import-outside-toplevel
+        if cplatform.is_raspberry():
+            return (0, 0), pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF
+        os.environ['SDL_VIDEO_WINDOW_POS'] = '0,0'
+        sizes = pygame.display.get_desktop_sizes() if hasattr(pygame.display, 'get_desktop_sizes') else []
+        if sizes:
+            size = sizes[0]
+        else:
+            info = pygame.display.Info()
+            size = (info.current_w, info.current_h)
+        return size, pygame.NOFRAME
+
     def reset_mode(self):
         self.blinktime = int(self.config.get_value('SectionGlobals', 'blinktime'))
         self.video_player.level = int(self.config.get_value('SectionGlobals', 'videos'))
@@ -564,8 +584,8 @@ class Screen(pygame.Surface):
         hidden_flag = pygame.HIDDEN if self.hidden else 0
         # Tell pygame it is fullscreen if it is
         if self.fullscreen:
-            self.flags = pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF
-            self.screen = pygame.display.set_mode((0, 0), self.flags | hidden_flag)    # Set fullscreen with actual resolution and depth (X : 32 bits, a depth asked is not followed)
+            size, self.flags = self.fullscreen_mode()
+            self.screen = pygame.display.set_mode(size, self.flags | hidden_flag)    # Set fullscreen with actual resolution and depth (X : 32 bits, a depth asked is not followed)
         else:
             self.screen = pygame.display.set_mode((self.res['x'], self.res['y']), pygame.RESIZABLE | hidden_flag) # Start windowed with settings
 
@@ -1022,7 +1042,7 @@ class Screen(pygame.Surface):
             layer = animated is not None and animated.mode == 'layer'
             drawn = (animated.real if layer else self.screen).copy()
             if self.fullscreen:
-                self.screen = pygame.display.set_mode((0, 0), self.flags)
+                self.screen = pygame.display.set_mode(self.fullscreen_mode()[0], self.flags)
             else:
                 self.screen = pygame.display.set_mode((self.res['x'], self.res['y']), pygame.RESIZABLE)
             self.hidden = False

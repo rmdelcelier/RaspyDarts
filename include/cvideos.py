@@ -7,9 +7,66 @@ Class used to play videos
 from math import log as math_log
 import shutil
 import subprocess as subp
+import threading
+import time
 
-# Players by order of preference : omxplayer only exists on Raspbian Buster
-PLAYERS = ('omxplayer', 'cvlc')
+# Players by order of preference : omxplayer on a Raspberry Pi 3 / 4 (the layer of its firmware,
+# above everything) ; mpv elsewhere (a PC, a Pi 5) : over the game without taking its keyboard ;
+# VLC at last (a window which takes the keyboard during the videos)
+PLAYERS = ('omxplayer', 'mpv', 'cvlc')
+
+# Options of mpv known by the one installed (read once : an unknown option stops mpv at once)
+MPV_OPTIONS = []
+
+
+def mpv_has(option):
+    '''
+    The mpv installed knows this option (focus-on : from mpv 0.38)
+    '''
+    if not MPV_OPTIONS:
+        try:
+            MPV_OPTIONS.append(subp.run(['mpv', '--list-options'], capture_output=True, text=True,
+                                        timeout=10, check=False).stdout)
+        except (OSError, subp.TimeoutExpired):
+            MPV_OPTIONS.append('')
+    return f'--{option} ' in MPV_OPTIONS[0]
+
+
+def game_on_x11():
+    '''
+    The window of the game is shown by X11 (pygame's choice by default, also in a Wayland
+    session through XWayland)
+    '''
+    try:
+        import pygame    # pylint: disable=import-outside-toplevel
+        return pygame.display.get_init() and pygame.display.get_driver() == 'x11'
+    except Exception:    # pylint: disable=broad-except
+        return False
+
+
+def give_back_keyboard():
+    '''
+    An mpv without --focus-on took the keyboard when its window opened : given back to the window
+    of the game (the video stays above, --ontop). X11 (and XWayland) only, by xdotool
+    '''
+    try:
+        import pygame    # pylint: disable=import-outside-toplevel
+        window = pygame.display.get_wm_info().get('window')
+    except Exception:    # pylint: disable=broad-except
+        return
+    if not window or shutil.which('xdotool') is None:
+        return
+
+    def again():
+        # Its window opens 0.2 to 0.5 s after it starts
+        # Asked to the window manager (windowactivate) : it may refuse a focus set directly. The
+        # game is a window without border, not a full screen one (Screen.fullscreen_mode) : the
+        # video stays above it
+        for delay in (0.3, 0.4, 0.6):
+            time.sleep(delay)
+            subp.run(['xdotool', 'windowactivate', str(window)], stdout=subp.DEVNULL, stderr=subp.DEVNULL,
+                     check=False, timeout=5)
+    threading.Thread(target=again, daemon=True).start()
 
 FOUND_PLAYER = []
 
@@ -51,6 +108,27 @@ def player_command(player, video, volume=None, window=None):
             command += ['--win', f'{pos_x},{pos_y},{pos_x + width},{pos_y + height}', '--aspect-mode', 'letterbox']
         return command + ['-o', 'alsa', f'{video}']
 
+    if player == 'mpv':
+        # Over the game, without border nor text, the keys left to the game ; the volume in dB
+        # (millibels / 100) on the sound of the file
+        command = ['mpv', '--ontop', '--border=no', '--no-osc', '--osd-level=0', '--no-terminal',
+                   '--no-input-default-bindings', '--input-vo-keyboard=no', '--keep-open=no']
+        if mpv_has('focus-on'):
+            command.append('--focus-on=never')
+        if game_on_x11():
+            # Shown as the game (X11, XWayland in a Wayland session) : else mpv opens a window of
+            # Wayland, where staying above (--ontop) and the keyboard given back are not applied.
+            # The software output (x11) if the graphic acceleration fails
+            command += ['--gpu-context=x11egl', '--vo=gpu,x11']
+        if volume is not None:
+            command.append(f'--af=lavfi=[volume={volume / 100:.2f}dB]')
+        if window is not None:
+            pos_x, pos_y, width, height = window
+            command.append(f'--geometry={width}x{height}+{pos_x}+{pos_y}')
+        else:
+            command.append('--fs')
+        return command + [f'{video}']
+
     command = ['cvlc', '--play-and-exit', '--no-video-title-show', '--no-osd']
     if volume is not None:
         command += [f'--gain={min(10 ** (volume / 2000), 8):.3f}']
@@ -73,6 +151,9 @@ def stop_player(player, process):
         process.stdin.write(b'q')
         process.stdin.flush()
         process.stdin.close()
+    elif player == 'mpv':
+        # mpv closes at once when asked
+        process.terminate()
     else:
         # vlc needs more than 2 seconds to close when asked politely
         process.kill()
@@ -132,6 +213,8 @@ class Videos():
         else:
             process = subp.Popen(command, stdin=subp.PIPE, stdout=subp.DEVNULL, stderr=subp.DEVNULL)
             PLAYING.append(process)
+            if self.player == 'mpv' and not mpv_has('focus-on'):
+                give_back_keyboard()
             return process
 
     ################################################################

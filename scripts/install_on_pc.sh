@@ -12,7 +12,7 @@
 #
 # Debian 12/13, Ubuntu 24.04 ou leurs derivees (apt), avec un bureau graphique. Rien de ce qui est
 # propre au Raspberry : ni broches (matrice de la cible, cartes MCP23017, rubans de LED), ni
-# reglages du firmware, ni omxplayer (les videos passent par VLC). Le jeu le detecte de lui-meme
+# reglages du firmware, ni omxplayer (les videos passent par mpv, ou VLC). Le jeu le detecte de lui-meme
 # (include/cplatform.py).
 # ==============================================================================
 
@@ -27,7 +27,7 @@ MIN_FREE_KB=4000000
 APT_REQUIRED="python3-pip python3-dev python3-tk python3-pygame python3-numpy python3-pil python3-psutil
 python3-requests python3-yaml python3-evdev python3-usb python3-serial python3-netifaces python3-qrcode
 python3-websocket python3-googleapi python3-google-auth-oauthlib python3-google-auth-httplib2 python3-paho-mqtt
-vlc ffmpeg v4l-utils espeak mpg123 alsa-utils pulseaudio-utils xdotool scrot gettext git curl unzip
+mpv vlc ffmpeg v4l-utils espeak mpg123 alsa-utils pulseaudio-utils xdotool scrot gettext git curl unzip
 mosquitto mosquitto-clients"
 
 # Facultatifs (un echec n'arrete pas l'installation) : emojis des textes, curseur masque, voix francaise
@@ -215,7 +215,13 @@ else
 fi
 ( cd "$PYDARTS" && sudo -u "$TARGET_USER" python3 -m compileall -q games include addons raspydarts.py >/dev/null 2>&1 ) \
     && ok "Tout le code compile avec $(python3 --version)" || warn "Une partie du code ne compile pas avec $(python3 --version)"
-command -v cvlc >/dev/null && ok 'Videos par VLC' || warn 'VLC absent : pas de videos'
+if command -v mpv >/dev/null; then
+    ok "Videos par mpv ($(mpv --version | head -1 | cut -d' ' -f2)), au-dessus du jeu sans prendre le clavier"
+elif command -v cvlc >/dev/null; then
+    warn 'mpv absent : videos par VLC (une fenetre qui prend le clavier pendant les videos)'
+else
+    warn 'Ni mpv ni VLC : pas de videos'
+fi
 
 printf '\n  \033[36m========================================================\033[0m\n'
 if [ -n "$WARNINGS" ]; then

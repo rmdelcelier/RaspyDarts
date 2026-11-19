@@ -1194,7 +1194,10 @@ class Camera:
                 self.logs.warning("No video player found : recorded video is not shown")
                 return None
 
-            return subprocess.Popen(command, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            process = subprocess.Popen(command, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            if player == 'mpv' and not cvideos.mpv_has('focus-on'):
+                cvideos.give_back_keyboard()
+            return process
 
         except Exception as ex:
             self.logs.error(f"Error in ccamera show_action_video() : {ex}")
