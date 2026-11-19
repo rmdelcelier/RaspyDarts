@@ -1700,6 +1700,9 @@ try:
             # The display of the score on Raspy2DMD for this game (its style, its background)
             if game.display_dmd():
                 dmd.game_start(Game.replace(' ', '_'))
+            # The screens of the game : the background of the theme, not the one of the menu the
+            # game was launched from
+            display.backdrop_menu = None
             # Autodarts : the darts of a turn of this game ; what it read before forgotten
             rpi.darts_per_turn = game.nb_darts
             rpi.autodarts_waiting = False

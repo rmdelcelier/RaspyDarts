@@ -7980,6 +7980,9 @@ class Screen(pygame.Surface):
         A menu of the files (see menu_of_files), over the animated background (include/cbganim.py)
         '''
         shown, self.menu_shown = getattr(self, 'menu_shown', None), name
+        # The screens opened from this menu (Paramétrage > Boutons, Caméra...) take its
+        # background (Modifier les écrans), until another menu is shown or a game starts
+        self.backdrop_menu = name
         try:
             with self.bganim.scope(name):
                 while True:
@@ -12419,10 +12422,12 @@ class Screen(pygame.Surface):
                 and self.game_background is None and animated.background(rect):
             self.pristine_background = None
             return
-        if self.current_look is not None and image is None and rect is None and veil is None \
+        look = self.current_look or getattr(self, 'backdrop_menu', None)
+        if look is not None and image is None and rect is None and veil is None \
                 and self.game_background is None:
-            # Screen whose look comes from the files : their background, if they give one
-            block = self.menus().menu(self.current_look).get('background')
+            # Screen whose look comes from the files : their background, if they give one ;
+            # else a screen opened from a menu : the background chosen for that menu
+            block = self.menus().menu(look).get('background')
             if block is not None:
                 block = cmenustyle.merge({'fit': 'cover'}, block) if isinstance(block, dict) else block
                 self.screen.fill((0, 0, 0))
