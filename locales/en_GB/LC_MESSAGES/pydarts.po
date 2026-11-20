@@ -5762,7 +5762,7 @@ msgid "animated-background-state-preparing"
 msgstr "Preparing the video…"
 
 msgid "animated-background-help"
-msgstr "The animated background replaces the background of the theme on the screens before the games (the video: not on those with a background of their own; the drawn effect: on all of them, over their background). The video is prepared once, in the background, paused during the games."
+msgstr "The animated background replaces the background of the theme on the screens before the games (the video: not on those with a background of their own; the drawn effect: on all of them, over their background). The video is prepared once, in the background, paused during the games. Frame rate: set it to suit your cabinet; too many frames per second can make it lag."
 
 msgid "animated-background-choose"
 msgstr "Animated background: video or animated GIF, effect, drawn background"

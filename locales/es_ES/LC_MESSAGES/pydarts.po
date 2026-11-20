@@ -5495,7 +5495,7 @@ msgid "animated-background-state-preparing"
 msgstr "Preparando el vídeo…"
 
 msgid "animated-background-help"
-msgstr "El fondo animado sustituye al fondo del tema en las pantallas antes de las partidas (el vídeo: no en las que tienen fondo propio; el efecto dibujado: en todas, sobre su fondo). El vídeo se prepara una sola vez, en segundo plano, en pausa durante las partidas."
+msgstr "El fondo animado sustituye al fondo del tema en las pantallas antes de las partidas (el vídeo: no en las que tienen fondo propio; el efecto dibujado: en todas, sobre su fondo). El vídeo se prepara una sola vez, en segundo plano, en pausa durante las partidas. Fotogramas: ajústelos según su máquina; demasiadas imágenes por segundo pueden ralentizarla."
 
 msgid "animated-background-choose"
 msgstr "Fondo animado: vídeo o GIF animado, efecto, fondo dibujado"

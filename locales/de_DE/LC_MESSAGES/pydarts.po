@@ -5490,7 +5490,7 @@ msgid "animated-background-state-preparing"
 msgstr "Video wird vorbereitet…"
 
 msgid "animated-background-help"
-msgstr "Der animierte Hintergrund ersetzt den Hintergrund des Themas auf den Bildschirmen vor den Spielen (das Video: nicht auf denen mit eigenem Hintergrund; der gezeichnete Effekt: auf allen, über ihrem Hintergrund). Das Video wird einmal im Hintergrund vorbereitet, während der Spiele pausiert."
+msgstr "Der animierte Hintergrund ersetzt den Hintergrund des Themas auf den Bildschirmen vor den Spielen (das Video: nicht auf denen mit eigenem Hintergrund; der gezeichnete Effekt: auf allen, über ihrem Hintergrund). Das Video wird einmal im Hintergrund vorbereitet, während der Spiele pausiert. Bildrate: passend zu Ihrem Automaten einstellen; zu viele Bilder pro Sekunde können ihn ruckeln lassen."
 
 msgid "animated-background-choose"
 msgstr "Animierter Hintergrund: Video oder animiertes GIF, Effekt, gezeichneter Hintergrund"

@@ -5557,7 +5557,7 @@ msgid "animated-background-state-preparing"
 msgstr "Preparazione del video…"
 
 msgid "animated-background-help"
-msgstr "Lo sfondo animato sostituisce lo sfondo del tema nelle schermate prima delle partite (il video: non in quelle con uno sfondo proprio; l'effetto disegnato: in tutte, sopra il loro sfondo). Il video viene preparato una sola volta, in background, in pausa durante le partite."
+msgstr "Lo sfondo animato sostituisce lo sfondo del tema nelle schermate prima delle partite (il video: non in quelle con uno sfondo proprio; l'effetto disegnato: in tutte, sopra il loro sfondo). Il video viene preparato una sola volta, in background, in pausa durante le partite. Fotogrammi: regolateli secondo la vostra postazione; troppe immagini al secondo possono rallentarla."
 
 msgid "animated-background-choose"
 msgstr "Sfondo animato: video o GIF animata, effetto, sfondo disegnato"

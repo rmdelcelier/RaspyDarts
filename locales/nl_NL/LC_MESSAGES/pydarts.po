@@ -5544,7 +5544,7 @@ msgid "animated-background-state-preparing"
 msgstr "Video wordt voorbereid…"
 
 msgid "animated-background-help"
-msgstr "De geanimeerde achtergrond vervangt de achtergrond van het thema op de schermen vóór de spellen (de video: niet op schermen met een eigen achtergrond; het getekende effect: op alle, over hun achtergrond). De video wordt één keer op de achtergrond voorbereid, gepauzeerd tijdens de spellen."
+msgstr "De geanimeerde achtergrond vervangt de achtergrond van het thema op de schermen vóór de spellen (de video: niet op schermen met een eigen achtergrond; het getekende effect: op alle, over hun achtergrond). De video wordt één keer op de achtergrond voorbereid, gepauzeerd tijdens de spellen. Beeldsnelheid: stel die af op uw kast; te veel beelden per seconde kan hem laten haperen."
 
 msgid "animated-background-choose"
 msgstr "Geanimeerde achtergrond: video of geanimeerde GIF, effect, getekende achtergrond"
