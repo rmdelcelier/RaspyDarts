@@ -75,7 +75,9 @@ def choose_address(screen, settings, local_ok=True):
     else:
         picked = 'other'
     if picked == 'local':
+        # Autodarts on this Raspberry : on its own port
         settings['host'] = '127.0.0.1'
+        settings['port'] = cautodarts.DEFAULTS['port']
         return True
     if picked != 'other':
         return False
@@ -86,14 +88,16 @@ def choose_address(screen, settings, local_ok=True):
     typed = str(typed).strip()
     # An address typed with its page (http://..., :3180) : the name or the IP only
     typed = typed.split('://')[-1].split('/')[0]
+    port = None
     if ':' in typed:
         typed, port = typed.rsplit(':', 1)
-        if port.isdigit():
-            settings['port'] = int(port)
-    if not all(character.isalnum() or character in '.-' for character in typed):
+    # Its port kept only with an address right
+    if not typed or not all(character.isalnum() or character in '.-' for character in typed)             or (port is not None and not (port.isdigit() and 0 < int(port) < 65536)):
         screen.message([translate(screen, 'autodarts-address-bad')], 2500, screen.colorset['menu-ko'], 'middle', 'big')
         return False
     settings['host'] = typed
+    if port is not None:
+        settings['port'] = int(port)
     return True
 
 
@@ -248,7 +252,7 @@ def install_progress(screen, reader):
     screen.message([translate(screen, 'autodarts-starting')], 0, None, 'middle', 'big')
     running = cautodarts.install_service(screen.logs)
     settings = dict(reader.settings, enabled=True, host='127.0.0.1')
-    cautodarts.save(settings)
+    cautodarts.save(settings, screen.logs)
     reader.configure(settings)
     screen.message([translate(screen, 'autodarts-install-done' if running else 'autodarts-start-failed')], 5000,
                    screen.colorset['menu-ok' if running else 'menu-ko'], 'middle', 'big')
@@ -281,7 +285,8 @@ def autodarts_menu(screen):
         return codes[(url, side)]
 
     def changed():
-        cautodarts.save(settings)
+        if not cautodarts.save(settings, screen.logs):
+            screen.message([translate(screen, 'button-leds-not-saved')], 3000, screen.colorset['menu-ko'], 'middle', 'big')
         interior = screen.config.get_value('SectionAdvanced', 'interior', False)
         reader.configure(dict(settings), interior is True or str(interior) == 'True')
 

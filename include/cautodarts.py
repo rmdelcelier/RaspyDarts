@@ -88,12 +88,21 @@ def load():
     return settings
 
 
-def save(settings):
-    os.makedirs(os.path.dirname(SETTINGS_FILE), exist_ok=True)
+def save(settings, logs=None):
+    '''
+    Its settings written (all of them, those by default for what is missing). True : written
+    '''
     temporary = f'{SETTINGS_FILE}.tmp'
-    with open(temporary, 'w', encoding='utf-8') as file:
-        json.dump({key: settings.get(key, DEFAULTS[key]) for key in DEFAULTS}, file, indent=2)
-    os.replace(temporary, SETTINGS_FILE)
+    try:
+        os.makedirs(os.path.dirname(SETTINGS_FILE), exist_ok=True)
+        with open(temporary, 'w', encoding='utf-8') as file:
+            json.dump({key: settings.get(key, DEFAULTS[key]) for key in DEFAULTS}, file, indent=2)
+        os.replace(temporary, SETTINGS_FILE)
+        return True
+    except OSError as error:
+        if logs is not None:
+            logs.error(f"Autodarts : settings not saved in {SETTINGS_FILE} ({error})")
+        return False
 
 
 def is_local(settings):
