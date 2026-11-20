@@ -8407,6 +8407,8 @@ class Screen(pygame.Surface):
 
     # Screens with a look of the files shown over the animated background (not the wizard)
     ANIMATED_LOOKS = ('games', 'options', 'players')
+    # The screens before a game : the background of the main screen when they have none of theirs
+    FOLLOW_MAIN = ('players', 'categories', 'games', 'options')
 
     def run_with_look(self, name, method, *args, **kwargs):
         '''
@@ -12426,8 +12428,12 @@ class Screen(pygame.Surface):
         if look is not None and image is None and rect is None and veil is None \
                 and self.game_background is None:
             # Screen whose look comes from the files : their background, if they give one ;
-            # else a screen opened from a menu : the background chosen for that menu
+            # else a screen opened from a menu : the background chosen for that menu ; the
+            # screens before a game (players, categories, games, options) : else the one of the
+            # main screen
             block = self.menus().menu(look).get('background')
+            if block is None and look in self.FOLLOW_MAIN:
+                block = self.menus().menu('main').get('background')
             if block is not None:
                 block = cmenustyle.merge({'fit': 'cover'}, block) if isinstance(block, dict) else block
                 self.screen.fill((0, 0, 0))
