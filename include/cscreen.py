@@ -4468,58 +4468,10 @@ class Screen(pygame.Surface):
                 return
 
         self.dmd.send_text(self.lang.translate('news'))
-
-        # Draw bg
+        title, entries = self.changelog_entries(text)
         self.display_background()
-
-        # Titles
-        self.menu_header('news')
-        self.update_screen()
-
-        width = 14 * self.res_x_16
-        height = 12 * self.res_y_16
-        pos_x = self.res_x_16
-        pos_y = 2 * self.res_y_16
-        marge_x = int(self.res['x'] / 64)
-        marge_y = int(self.res['y'] / 64)
-
-        # New surface
-        Surface = pygame.Surface((width, height))
-        Surface.set_alpha(192)
-        Surface.fill(self.colorset['menu-item-black'])
-        self.new_blit_rect(pos_x, pos_y, width, height, self.colorset['menu-buttons'], corners='All', border_radius=50, Alpha=228)
-
-        font_file = self.defaultfontpath
-        # Add description
-        nb_lines = len(text)
-        font = self.font(font_file, 50)
-
-        index = 0
-        maxsize = 0
-        # Find correct font size
-        for line in text:
-            font_size = font.size(line)
-            if font_size[0] > maxsize:
-                maxsize = font_size[0]
-                longest = index
-            index += 1
-
-        scaled_text = self.scale_text(text[longest], width - 2 * marge_x, (height - 2 * marge_y) / nb_lines, divider=1.5, step=0.05, dafont=font_file )
-        font_size = scaled_text[0]
-        font = self.font(font_file, font_size + self.margin)
-
-        if nb_lines > 1:
-            interline = (height - nb_lines * font_size - 2 * marge_y) / (nb_lines - 1)
-        else:
-            interline = 0
-
-        index = 0
-        for line in text:
-            text = font.render(line.replace('\n', ''), True, self.colorset['menu-text-black'])
-            #self.blit(text, [pos_x + marge_x, pos_y + I * (i-1) + marge_y])
-            self.blit(text, [pos_x + marge_x, pos_y + marge_y])
-            index += 1
-            pos_y += font_size + interline
+        self.menu_header('news', title)
+        self.draw_changelog(entries, title is not None)
 
         ################
         # Update screen
@@ -4531,6 +4483,139 @@ class Screen(pygame.Surface):
             os.system(f"mv {self.config.changelogFile}.{version} {self.config.changelogFile}.{version}.read")
         elif action == 'delete':
             os.system(f"mv {self.config.changelogFile}.{version}.1 {self.config.changelogFile}.{version}.read")
+
+    @staticmethod
+    def changelog_entries(lines):
+        '''
+        The text of the news of a version : its title (its first line), then its entries
+        [kind, text] : 'item' (a line « - … », the indented lines after it are its following),
+        'section' (another line : Corrections…)
+        '''
+        title, entries = None, []
+        for raw in lines:
+            line = raw.rstrip()
+            stripped = line.strip()
+            if not stripped:
+                continue
+            if stripped[:2] in ('- ', '• ', '* '):
+                entries.append(['item', stripped[2:].strip()])
+            elif line[:1].isspace() and entries and entries[-1][0] == 'item':
+                entries[-1][1] += ' ' + stripped
+            elif title is None and not entries:
+                title = stripped
+            else:
+                entries.append(['section', stripped.rstrip(':').strip()])
+        return title, entries
+
+    @staticmethod
+    def changelog_words(text):
+        '''
+        The words of a text, « and » kept with their word (never alone at the end of a line)
+        '''
+        words = []
+        for word in text.split():
+            if words and (word in ('»', ':', ';', '!', '?') or words[-1] == '«'):
+                words[-1] += ' ' + word
+            else:
+                words.append(word)
+        return words
+
+    def draw_changelog(self, entries, subtitle):
+        '''
+        The news in a panel : each item with its bullet, its name (before « : ») in bold, its text
+        cut between words ; the font as big as everything fits, in one column or two
+        '''
+        top = (3.2 if subtitle else 2.2) * self.res_y_16
+        panel = pygame.Rect(int(self.res_x_16 * 0.6), int(top), int(self.res_x_16 * 14.8), int(self.res_y_16 * 15.4 - top))
+        self.new_blit_rect(panel.x, panel.y, panel.width, panel.height, self.colorset['menu-buttons'], corners='All',
+                           border_radius=40, Alpha=228)
+        color = self.colorset['menu-text-black']
+        # The name of an item : in a colour of the theme which stands out on the panel, else in bold
+        def luminance(rgb):
+            parts = [(value / 255) / 12.92 if value <= 10 else (((value / 255) + 0.055) / 1.055) ** 2.4 for value in rgb[:3]]
+            return 0.2126 * parts[0] + 0.7152 * parts[1] + 0.0722 * parts[2]
+
+        def contrast(first, second):
+            light, dark = sorted((luminance(first), luminance(second)), reverse=True)
+            return (light + 0.05) / (dark + 0.05)
+        panel_color = self.colorset['menu-buttons'] or (90, 90, 90)
+        accent = next((self.colorset.get(tag) for tag in ('menu-favorite', 'menu-shortcut', 'menu-selected')
+                       if isinstance(self.colorset.get(tag), (tuple, list)) and tuple(self.colorset.get(tag)[:3]) != tuple(color[:3])
+                       and contrast(self.colorset.get(tag), panel_color) >= 3), None)
+        margin_x, margin_y = int(self.res['x'] / 48), int(self.res['y'] / 40)
+        inner = panel.inflate(-2 * margin_x, -2 * margin_y)
+        gutter = int(self.res['x'] / 32)
+
+        def lay_out(size, columns):
+            '''
+            [(column, y, kind, [[(word, bold)]]), ...] or None : too high
+            '''
+            font = self.font(self.defaultfontpath, size)
+            # Fonts of their own (those of self.font are shared : made bold, all the texts would be)
+            bold = font
+            if accent is None:
+                bold = pygame.font.Font(self.defaultfontpath, size)
+                bold.set_bold(True)
+            heading = self.font(self.defaultfontpath, int(size * 1.2))
+            step, gap = font.get_linesize(), int(size * 0.45)
+            width = (inner.width - gutter * (columns - 1)) // columns
+            indent = font.size('•  ')[0]
+            column, y, placed = 0, 0, []
+            for kind, text in entries:
+                if kind == 'section':
+                    lines = [[(text, True)]]
+                    height = heading.get_linesize() + gap
+                else:
+                    name, _sep, rest = text.partition(' : ')
+                    words = [(word, True) for word in self.changelog_words(name)] + [(':', True)] +                         [(word, False) for word in self.changelog_words(rest)] if _sep else                         [(word, False) for word in self.changelog_words(text)]
+                    lines, line, used = [], [], 0
+                    for word, strong in words:
+                        word_w = (bold if strong else font).size(word)[0]
+                        space = font.size(' ')[0] if line else 0
+                        if line and used + space + word_w > width - indent:
+                            lines.append(line)
+                            line, used, space = [], 0, 0
+                        line.append((word, strong))
+                        used += space + word_w
+                    if line:
+                        lines.append(line)
+                    if any((bold if strong else font).size(word)[0] > width - indent for line in lines for word, strong in line):
+                        return None
+                    height = step * len(lines) + gap
+                if y + height - gap > inner.height and y > 0:
+                    column, y = column + 1, 0
+                    if column >= columns:
+                        return None
+                if height - gap > inner.height:
+                    return None
+                placed.append((column, y, kind, lines))
+                y += height
+            return placed, font, bold, heading, step, width, indent
+
+        layout = None
+        for size in range(int(self.res['y'] / 18), 11, -1):
+            for columns in (1, 2):
+                layout = lay_out(size, columns)
+                if layout:
+                    break
+            if layout:
+                break
+        if not layout:
+            layout = lay_out(11, 2) or ([], None, None, None, 0, inner.width, 0)
+        placed, font, bold, heading, step, width, indent = layout
+        for column, y, kind, lines in placed:
+            x = inner.x + column * (width + gutter)
+            if kind == 'section':
+                rendered = heading.render(lines[0][0][0], True, accent or color)
+                self.screen.blit(rendered, (x, inner.y + y))
+                continue
+            self.screen.blit(font.render('•', True, color), (x, inner.y + y))
+            for number, line in enumerate(lines):
+                pos_x = x + indent
+                for word, strong in line:
+                    rendered = (bold if strong else font).render(word, True, accent if strong and accent else color)
+                    self.screen.blit(rendered, (pos_x, inner.y + y + number * step))
+                    pos_x += rendered.get_width() + font.size(' ')[0]
 
     def backup_menu(self):
         '''
