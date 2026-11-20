@@ -5,18 +5,35 @@
                },
     "os_list":  [
                     {
-                        "name":  "RaspyDarts bêta v4.6.3",
-                        "description":  "Jeu de flechettes electroniques - Pi Zero 2 W / Pi 3 / Pi 4",
+                        "name":  "RaspyDarts bêta v4.6.5 (32 bits)",
+                        "description":  "Jeu de flechettes electroniques - Pi Zero 2 W / Pi 3 / Pi 4, 32 bits",
                         "icon":  "https://raw.githubusercontent.com/rmdelcelier/RaspyDarts/main/images/imager-icon.png",
-                        "url":  "https://images.raspyhub.fr/beta/Raspydarts_v4.6.3.img.xz",
-                        "extract_size":  6808068608,
-                        "extract_sha256":  "5d6733748e816f51d03b90a94eea54061b7e19065bd72886b35b0c3fa257bca2",
-                        "image_download_size":  2624676672,
-                        "release_date":  "2026-11-06",
+                        "url":  "https://images.raspyhub.fr/beta/RaspyDarts_x32_v4.6.5.img.xz",
+                        "extract_size":  6745891328,
+                        "extract_sha256":  "08e32927b7ac17a2c6288bef18f4fb94246dc817a485b4a01403d5b6f6701211",
+                        "image_download_size":  2322751192,
+                        "release_date":  "2026-11-20",
                         "init_format":  "cloudinit-rpi",
                         "devices":  [
                                         "pi4-32bit",
                                         "pi3-32bit"
+                                    ],
+                        "matching_type":  "inclusive"
+                    },
+                    {
+                        "name":  "RaspyDarts bêta v4.6.5 (64 bits)",
+                        "description":  "Jeu de flechettes electroniques - Pi Zero 2 W / Pi 3 / Pi 4 / Pi 5, 64 bits",
+                        "icon":  "https://raw.githubusercontent.com/rmdelcelier/RaspyDarts/main/images/imager-icon.png",
+                        "url":  "https://images.raspyhub.fr/beta/RaspyDarts_x64_v4.6.5.img.xz",
+                        "extract_size":  7270875648,
+                        "extract_sha256":  "8f45aa93d372086deceb4183d4c4d60149dfb44db7c219d6e1ca77058963d650",
+                        "image_download_size":  3192027048,
+                        "release_date":  "2026-11-20",
+                        "init_format":  "cloudinit-rpi",
+                        "devices":  [
+                                        "pi5-64bit",
+                                        "pi4-64bit",
+                                        "pi3-64bit"
                                     ],
                         "matching_type":  "inclusive"
                     },
