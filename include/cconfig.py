@@ -1777,7 +1777,10 @@ class Config:
             if section in DefaultConfig:       # Warn only if the requested section is part of the config
                 self.logs.warning(f"Your config file does not contain a section named {section}.")
                 self.logs.warning("Will use default section values")
-                file_options = DefaultConfig[section]
+                # Its values by default are already there (init_section) : nothing to read in the
+                # file (each option asked to the file went in the log as an error, 585 lines on a
+                # new card before its file is written)
+                file_options = []
             else:
                 self.logs.debug(f"Don't forget that you may create section named {section} to customize pyDarts")
                 self.config[section] = {} # Create empty config values even if the section does not exists
