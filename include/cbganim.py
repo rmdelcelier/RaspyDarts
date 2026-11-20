@@ -123,7 +123,8 @@ def profile(model=None, memory=None):
     '''
     What this machine can show, from the data of the maker (only the Pi 3 B+ was measured) :
     rate (frames a second, 0 : a still picture) and the memory given to the frames (MB).
-    Pi Zero 2 W (4 x A53 1 GHz, 512 MB) : still ; Pi 3 A+ (4 x A53 1.4 GHz, 512 MB) : 10 ;
+    Pi Zero 2 W (4 x A53 1 GHz, 512 MB) : still by itself, a rate chosen allowed (the memory of
+    a Pi 3 A+) ; Pi 3 A+ (4 x A53 1.4 GHz, 512 MB) : 10 ;
     Pi 3 B (4 x A53 1.2 GHz, 1 GB) : 15 ; Pi 3 B+ (4 x A53 1.4 GHz, 1 GB, measured) : 20 ;
     Pi 4 / 400 / 5 (A72 1.5-1.8 GHz, A76 2.4 GHz) : 30 ; the older ones : still
     '''
@@ -132,7 +133,8 @@ def profile(model=None, memory=None):
     if 'Raspberry' not in model:
         return {'rate': 30, 'memory': 300, 'name': model or '?'}
     if 'Zero 2' in model:
-        rate, budget = 0, 0
+        # Still by itself (not measured), but 10, 20 or 30 frames a second can be chosen
+        rate, budget = 0, 45
     elif 'Pi 3 Model A' in model:
         rate, budget = 10, 45
     elif 'Pi 3 Model B Plus' in model:
