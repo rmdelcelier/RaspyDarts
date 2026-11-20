@@ -27,7 +27,7 @@ MIN_FREE_KB=4000000
 APT_REQUIRED="python3-pip python3-dev python3-tk python3-pygame python3-numpy python3-pil python3-psutil
 python3-requests python3-yaml python3-evdev python3-usb python3-serial python3-netifaces python3-qrcode
 python3-websocket python3-googleapi python3-google-auth-oauthlib python3-google-auth-httplib2 python3-paho-mqtt
-mpv vlc ffmpeg v4l-utils espeak mpg123 alsa-utils pulseaudio-utils xdotool scrot gettext git curl unzip
+mpv vlc ffmpeg v4l-utils espeak mpg123 alsa-utils pulseaudio-utils xdotool x11-utils scrot gettext git curl unzip
 mosquitto mosquitto-clients"
 
 # Facultatifs (un echec n'arrete pas l'installation) : emojis des textes, curseur masque, voix francaise

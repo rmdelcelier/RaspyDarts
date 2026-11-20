@@ -903,6 +903,13 @@ class Craspberry():
         except OSError as error:
             self.logs.error(f"Unable to keep the mode of the screen tried ({error})")
 
+    def autodarts_takeout_next(self):
+        '''
+        Autodarts reads the darts and its darts taken out are Joueur suivant : the game waits for
+        them at the end of a turn (not the time given to take the darts out)
+        '''
+        return self.autodarts.active and bool(self.autodarts.settings.get('takeout_next', True))
+
     def read_inputs(self, k_type=['num', 'alpha', 'fx', 'arrows'], 
                       specials=['enter', 'tab', 'backspace', 'left shift', 'escape', 'space', 'double-click', 'single-click', 'resize'],
                       wait_for=None, context='menus', timeout=0, light=None, events=None, 

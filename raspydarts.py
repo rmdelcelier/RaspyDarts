@@ -2258,7 +2258,7 @@ try:
                                 break
 
                         if early_player_button != 0 and post_dart != 3:
-                            if releasedartstime == 0:
+                            if releasedartstime == 0 or rpi.autodarts_takeout_next():
                                 dart_stroke = 'PLAYERBUTTONFIRST'
                                 dart_stroke = 'PLAYERBUTTON'
 
@@ -2456,15 +2456,19 @@ try:
                         # Go to next_player
                         player_launch = game.nb_darts
 
+                    # Autodarts, its darts taken out = Joueur suivant : the game waits for them, not
+                    # the time given to take the darts out (the next player would play with the
+                    # darts of the last one still in the target)
+                    release_time = 0 if rpi.autodarts_takeout_next() else releasedartstime
                     # DISPLAY RELEASE DARTS IF SOLO ENABLED
-                    if  (releasedartstime > 0
+                    if  (release_time > 0
                             and (player_launch == game.nb_darts or (dart_stroke in ('BTN_NEXTPLAYER', 'PLAYERBUTTON') and player_launch < game.nb_darts))
                             and post_dart not in (2,3)):
                         rpi.light_toys(['LIGHT_LASER'], False)
                         dispatcher.publish('release', limit=['TARGET', 'STRIP', 'OTHER'])
-                        if releasedartstime > 0:
+                        if release_time > 0:
                             dmd.send_text(Lang.translate("release-darts"))
-                            display.message([Lang.translate('release-darts')], releasedartstime, None, 'middle', 'big')
+                            display.message([Lang.translate('release-darts')], release_time, None, 'middle', 'big')
 
                     """
                     Need a bit of clarification
@@ -2472,7 +2476,7 @@ try:
                     # WAIT For Player Button... (MISS AND PLAYERBUTTON are voluntarily absent of this list)
                     if (
                           (net_status is None or players[actual_player].name in local_players)
-                          and releasedartstime == 0
+                          and release_time == 0
                           and (player_launch == game.nb_darts or post_dart == 1 or early_player_button == 1)
                           and post_dart != 2
                           and post_dart != 3

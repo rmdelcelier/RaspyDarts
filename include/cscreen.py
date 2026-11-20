@@ -408,6 +408,41 @@ class Screen(pygame.Surface):
             size = (info.current_w, info.current_h)
         return size, pygame.NOFRAME
 
+    def log_window(self, moment):
+        '''
+        The window of the game as the system gives it (a PC, a Pi 5 : a window without border
+        which should cover the screen), in the log : what a full screen not reached comes from
+        '''
+        if shutil.which('omxplayer') is not None:
+            return
+        try:
+            sizes = pygame.display.get_desktop_sizes() if hasattr(pygame.display, 'get_desktop_sizes') else []
+            window = pygame.display.get_window_size() if hasattr(pygame.display, 'get_window_size') else None
+            self.logs.info(f"Window ({moment}) : {window} for the screens {sizes}, fullscreen={self.fullscreen}, "
+                           f"session {os.environ.get('XDG_SESSION_TYPE', '?')}, desktop {os.environ.get('XDG_CURRENT_DESKTOP', '?')}, "
+                           f"video driver {pygame.display.get_driver()}, WAYLAND_DISPLAY={os.environ.get('WAYLAND_DISPLAY', '')}, "
+                           f"DISPLAY={os.environ.get('DISPLAY', '')}")
+        except Exception as error:    # pylint: disable=broad-except
+            self.logs.debug(f"Window not described ({error})")
+            return
+        # Its real place, once the window manager has placed it (X11 : xwininfo, package x11-utils)
+        window_id = (pygame.display.get_wm_info() or {}).get('window')
+        if not window_id or not os.environ.get('DISPLAY') or shutil.which('xwininfo') is None:
+            return
+
+        def placed():
+            try:
+                lines = subprocess.run(['xwininfo', '-id', str(window_id)], capture_output=True, text=True,
+                                       timeout=5, check=False).stdout.splitlines()
+                keys = ('Absolute upper-left X', 'Absolute upper-left Y', 'Width', 'Height', 'Map State')
+                found = [line.strip() for line in lines if line.strip().startswith(keys)]
+                self.logs.info(f"Window ({moment}, 5 s later) : {' ; '.join(found)}")
+            except Exception as error:    # pylint: disable=broad-except
+                self.logs.debug(f"Window not placed ({error})")
+        timer = threading.Timer(5, placed)
+        timer.daemon = True
+        timer.start()
+
     def reset_mode(self):
         self.blinktime = int(self.config.get_value('SectionGlobals', 'blinktime'))
         self.video_player.level = int(self.config.get_value('SectionGlobals', 'videos'))
@@ -588,6 +623,7 @@ class Screen(pygame.Surface):
             self.screen = pygame.display.set_mode(size, self.flags | hidden_flag)    # Set fullscreen with actual resolution and depth (X : 32 bits, a depth asked is not followed)
         else:
             self.screen = pygame.display.set_mode((self.res['x'], self.res['y']), pygame.RESIZABLE | hidden_flag) # Start windowed with settings
+        self.log_window('hidden' if self.hidden else 'created')
 
         # If Toggling, blit the new screen
         if Toggle:
@@ -1046,6 +1082,7 @@ class Screen(pygame.Surface):
             else:
                 self.screen = pygame.display.set_mode((self.res['x'], self.res['y']), pygame.RESIZABLE)
             self.hidden = False
+            self.log_window('shown')
             # The window appears first with its normal size, then goes full screen : it is
             # drawn again until the window manager is done (longer while starting up)
             for _ in range(12):
