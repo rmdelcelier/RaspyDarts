@@ -6351,6 +6351,9 @@ msgstr "Scansionate questo codice con il telefono: sulla pagina di Autodarts col
 msgid "autodarts-account-help"
 msgstr "Create il vostro account su autodarts.io, poi collegatelo sulla pagina di Autodarts della macchina."
 
+msgid "autodarts-test-darts"
+msgstr "Freccette nel bersaglio"
+
 msgid "autodarts-test-read"
 msgstr "Letto da Autodarts"
 

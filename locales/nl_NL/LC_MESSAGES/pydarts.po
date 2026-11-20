@@ -6338,6 +6338,9 @@ msgstr "Scan deze code met uw telefoon: op de pagina van Autodarts koppelt u uw 
 msgid "autodarts-account-help"
 msgstr "Maak uw account op autodarts.io en koppel het daarna op de Autodarts-pagina van de kast."
 
+msgid "autodarts-test-darts"
+msgstr "Pijlen in het bord"
+
 msgid "autodarts-test-read"
 msgstr "Gelezen door Autodarts"
 

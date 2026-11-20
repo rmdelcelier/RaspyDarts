@@ -3,7 +3,10 @@ Autodarts (its cameras read the darts) : its settings, the reading of its darts,
 
 - Autodarts is a program of its own (https://autodarts.io) : on this Raspberry (a Pi 4 or a
   Pi 5, 64 bits) or on another machine of the network. RaspyDarts only reads what its board
-  says on its port 3180 (/api/state : numThrows, throws[].segment), 10 times a second.
+  says on its port 3180 (/api/state), 10 times a second. Two forms of its darts : Autodarts 1
+  (numThrows, throws[].segment {name, number, multiplier, bed}) and Autodarts 2 (no numThrows,
+  throws[] flat : segmentName, segmentNumber, multiplier, bed, bouncer ; no throws when the
+  target is empty).
 - Its darts come to the game as the darts of the target (Craspberry.read_inputs) : every game
   plays with them. Counted at once (live), or the three of a turn when they are taken out of
   the target (takeout), which leaves the time to correct them in Autodarts.
@@ -233,14 +236,50 @@ def restart_service(logs):
     return service_active()
 
 
+def segment_of(throw):
+    '''
+    The segment of a dart of Autodarts : {name, number, multiplier, bed, bouncer}, from its
+    segment (Autodarts 1) or from the dart itself (Autodarts 2 : segmentName, segmentNumber...).
+    None : not a dart
+    '''
+    if not isinstance(throw, dict):
+        return None
+    if isinstance(throw.get('segment'), dict):
+        segment = dict(throw['segment'])
+    elif any(key in throw for key in ('segmentName', 'segmentNumber', 'name', 'number')):
+        segment = dict(throw)
+    else:
+        return None
+    for new, old in (('segmentName', 'name'), ('segmentNumber', 'number'), ('segmentMultiplier', 'multiplier'),
+                     ('segmentBed', 'bed')):
+        if segment.get(old) is None and new in segment:
+            segment[old] = segment[new]
+    return segment
+
+
+def throws_of(data):
+    '''
+    The darts in the target : (their number, their list). Autodarts 1 gives numThrows,
+    Autodarts 2 only its list (none when the target is empty)
+    '''
+    throws = data.get('throws') if isinstance(data.get('throws'), list) else []
+    try:
+        count = int(data['numThrows']) if data.get('numThrows') is not None else len(throws)
+    except (TypeError, ValueError):
+        count = len(throws)
+    return count, throws
+
+
 def segment_code(throw, interior=False):
     '''
     A dart of Autodarts as the game names it : S20, s20 (inner single, when the target has
-    them), D20, T20, SB, DB ; MISS (out of the target) ; None : unknown
+    them), D20, T20, SB, DB ; MISS (out of the target, bounced out) ; None : unknown
     '''
-    segment = throw.get('segment') if isinstance(throw, dict) else None
-    if not isinstance(segment, dict):
+    segment = segment_of(throw)
+    if segment is None:
         return None
+    if segment.get('bouncer') is True or (isinstance(throw, dict) and throw.get('bouncer') is True):
+        return 'MISS'
     try:
         number = int(segment.get('number') or 0)
         multiplier = int(segment.get('multiplier') or 0)
@@ -248,8 +287,10 @@ def segment_code(throw, interior=False):
         number, multiplier = 0, 0
     name = str(segment.get('name') or '').upper()
     bed = str(segment.get('bed') or '')
-    if number == 25 or name in ('BULL', 'BULLSEYE', '25', '50', 'SB', 'DB'):
-        return 'DB' if multiplier == 2 or name in ('BULLSEYE', '50', 'DB') else 'SB'
+    if 'outside' in bed.lower() or 'miss' in bed.lower():
+        return 'MISS'
+    if number in (25, 50) or name in ('BULL', 'BULLSEYE', '25', '50', 'SB', 'DB'):
+        return 'DB' if multiplier == 2 or number == 50 or name in ('BULLSEYE', '50', 'DB') else 'SB'
     if multiplier <= 0 or number <= 0 or name.startswith('M'):
         return 'MISS'
     if not 1 <= number <= 20 or multiplier > 3:
@@ -359,11 +400,7 @@ class Reader:
             stop_event.wait(max(0.0, self.PERIOD - (time.monotonic() - started)))
 
     def read_state(self, data):
-        try:
-            count = int(data.get('numThrows') or 0)
-        except (TypeError, ValueError):
-            count = 0
-        throws = data.get('throws') if isinstance(data.get('throws'), list) else []
+        count, throws = throws_of(data)
         with self.lock:
             if self.last is None:
                 # The darts already in the target when the reading starts : not played

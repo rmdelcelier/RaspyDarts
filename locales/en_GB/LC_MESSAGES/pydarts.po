@@ -6556,6 +6556,9 @@ msgstr "Scan this code with your phone: on the page of Autodarts, connect your a
 msgid "autodarts-account-help"
 msgstr "Create your account on autodarts.io, then connect it on the Autodarts page of the machine."
 
+msgid "autodarts-test-darts"
+msgstr "Darts in the board"
+
 msgid "autodarts-test-read"
 msgstr "Read by Autodarts"
 

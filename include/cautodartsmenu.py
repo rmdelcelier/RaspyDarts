@@ -137,11 +137,13 @@ def try_reading(screen, reader):
                              screen.colorset['menu-ok'] if reader.connected else screen.colorset['menu-ko'])
             pos_y += int(line * 1.3)
             if reader.connected and isinstance(reader.state, dict):
-                throws = reader.state.get('throws') if isinstance(reader.state.get('throws'), list) else []
-                names = ' · '.join(str((throw.get('segment') or {}).get('name', '?')) for throw in throws if isinstance(throw, dict))
+                # The darts in the target, as the game reads them (Autodarts 1 or 2)
+                count, throws = cautodarts.throws_of(reader.state)
+                names = '  -  '.join(cautodarts.segment_code(throw, reader.interior) or
+                                     str((cautodarts.segment_of(throw) or {}).get('name') or '?') for throw in throws)
                 others = ', '.join(f"{key}={reader.state[key]}" for key in sorted(reader.state)
                                    if key not in ('throws', 'numThrows') and not isinstance(reader.state[key], (dict, list)))[:150]
-                screen.blit_text(f"numThrows = {reader.state.get('numThrows', '?')}   {names}", int(unit_x), pos_y,
+                screen.blit_text(f"{translate(screen, 'autodarts-test-darts')} : {count}   {names}", int(unit_x), pos_y,
                                  int(14 * unit_x), line, white, align='Left')
                 pos_y += line
                 if others:

@@ -6289,6 +6289,9 @@ msgstr "Escanee este código con su teléfono: en la página de Autodarts, conec
 msgid "autodarts-account-help"
 msgstr "Cree su cuenta en autodarts.io y luego conéctela en la página de Autodarts de la máquina."
 
+msgid "autodarts-test-darts"
+msgstr "Dardos en la diana"
+
 msgid "autodarts-test-read"
 msgstr "Leído por Autodarts"
 

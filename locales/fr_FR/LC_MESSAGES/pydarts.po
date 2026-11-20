@@ -6360,6 +6360,9 @@ msgstr "Scannez ce code avec votre téléphone : sur la page d'Autodarts, connec
 msgid "autodarts-account-help"
 msgstr "Créez votre compte sur autodarts.io, puis connectez-le sur la page d'Autodarts de la borne."
 
+msgid "autodarts-test-darts"
+msgstr "Fléchettes dans la cible"
+
 msgid "autodarts-test-read"
 msgstr "Lu par Autodarts"
 
