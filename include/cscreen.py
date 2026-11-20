@@ -8700,7 +8700,13 @@ class Screen(pygame.Surface):
                              tuple(info), tuple(self.screen.get_size()), getattr(self.file_class, 'theme_dir', None), self.background)
                 pristine = self.menu_backgrounds.get(cache_key)
                 if pristine is None:
-                    if menu.get('background') is not None:
+                    # The animated background drawing on its layer (a drawn effect, an animated
+                    # background drawn) : the background of this menu under it, as the one of the
+                    # theme (display_background : the layer left transparent, the menu's own
+                    # background drawn under the effect, see cbganim.make_base) ; painted here, it
+                    # covered the effect (Dimitri, 20/11 : sparks on every screen but the main one)
+                    layered = getattr(getattr(self, 'bganim', None), 'mode', None) == 'layer'
+                    if menu.get('background') is not None and not layered:
                         block = menu.get('background')
                         block = cmenustyle.merge({'fit': 'cover'}, block) if isinstance(block, dict) else block
                         self.screen.fill((0, 0, 0))
