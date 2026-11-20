@@ -21,6 +21,7 @@ import json
 import os
 import platform
 import queue
+import re
 import subprocess
 import threading
 import time
@@ -285,8 +286,23 @@ def segment_code(throw, interior=False):
         multiplier = int(segment.get('multiplier') or 0)
     except (TypeError, ValueError):
         number, multiplier = 0, 0
-    name = str(segment.get('name') or '').upper()
+    name = str(segment.get('name') or '').strip().upper()
     bed = str(segment.get('bed') or '')
+    # Its name first (S20, D20, T20, 25, Bull, M5 / Miss) : the value Autodarts gives for sure
+    found = re.fullmatch(r'([SDT])(\d{1,2})', name)
+    if found and 1 <= int(found.group(2)) <= 20:
+        if found.group(1) == 'S':
+            return f's{found.group(2)}' if interior and 'inner' in bed.lower() else f'S{found.group(2)}'
+        return f'{found.group(1)}{found.group(2)}'
+    if name in ('25', 'SB', 'S25', 'OUTER BULL'):
+        return 'SB'
+    if name in ('BULL', 'BULLSEYE', '50', 'DB', 'D25', 'INNER BULL'):
+        return 'DB'
+    if name in ('MISS', 'OUTSIDE', 'OUT') or re.fullmatch(r'M\d{0,2}', name):
+        return 'MISS'
+    # Without a name known : its number and its multiplier (a name not known and no number : unknown)
+    if name and not segment.get('number'):
+        return None
     if 'outside' in bed.lower() or 'miss' in bed.lower():
         return 'MISS'
     if number in (25, 50) or name in ('BULL', 'BULLSEYE', '25', '50', 'SB', 'DB'):
