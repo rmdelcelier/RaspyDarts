@@ -89,6 +89,21 @@ def used_images(theme_dir):
     return found
 
 
+def theme_colorset_text(theme_dir):
+    '''
+    A theme without its own colours (no Colorset.cfg) : the game draws it with those built in
+    (ColorSet['clear'], Screen.init_colorset), and its colours chosen over them. Their
+    Colorset.cfg, written in its zip so that it looks the same on another borne. None : the theme
+    has its Colorset.cfg
+    '''
+    if any(os.path.isfile(os.path.join(theme_dir, *place)) for place in (('other', 'Colorset.cfg'), ('Colorset.cfg',))):
+        return None
+    from include.ColorSets import ColorSet    # pylint: disable=import-outside-toplevel
+    lines = ['[Colorset]', '', '# The colours built in the game (the theme had no Colorset.cfg of its own)']
+    lines += [f"{key}: {value!r}" for key, value in ColorSet['clear'].items() if key != 'font']
+    return chr(10).join(lines) + chr(10)
+
+
 class Export:
     '''
     The zip of a theme written in the background : progress() (done, total in bytes) ; state :
@@ -135,6 +150,10 @@ class Export:
                 info = {'name': self.theme, 'created': time.strftime('%Y-%m-%d %H:%M'),
                         'raspydarts_version': self.version, 'with_media': self.media}
                 archive.writestr(f"{self.theme}/theme.json", json.dumps(info, indent=2, ensure_ascii=False))
+                colours = theme_colorset_text(self.theme_dir)
+                if colours is not None:
+                    archive.writestr(f"{self.theme}/other/Colorset.cfg", colours)
+                    self.logs.info(f"Theme {self.theme} : no Colorset.cfg, the colours built in the game written in its zip")
                 for path, relative in listed:
                     method = zipfile.ZIP_STORED if path.lower().endswith(STORED) else zipfile.ZIP_DEFLATED
                     archive.write(path, f"{self.theme}/{relative.replace(os.sep, '/')}", compress_type=method)
