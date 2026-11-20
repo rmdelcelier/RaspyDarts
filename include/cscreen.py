@@ -391,13 +391,13 @@ class Screen(pygame.Surface):
     @staticmethod
     def fullscreen_mode():
         '''
-        Size and flags of the full screen. On a Raspberry : the full screen of SDL. On another
-        computer (a PC, see cplatform) : a window without border covering the screen. Its window
-        manager keeps a full screen window above all the others while it has the keyboard : it
-        would cover the videos (mpv, above the game, include/cvideos.py)
+        Size and flags of the full screen. With omxplayer (Raspberry Pi 3 / 4 : its videos on a
+        layer of the firmware, above everything) : the full screen of SDL. Without it (a Pi 5, a
+        PC, see cplatform) : a window without border covering the screen. The window manager
+        keeps a full screen window above all the others while it has the keyboard : it would
+        cover the videos (mpv, above the game, include/cvideos.py)
         '''
-        from include import cplatform    # pylint: disable=import-outside-toplevel
-        if cplatform.is_raspberry():
+        if shutil.which('omxplayer') is not None:
             return (0, 0), pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF
         os.environ['SDL_VIDEO_WINDOW_POS'] = '0,0'
         sizes = pygame.display.get_desktop_sizes() if hasattr(pygame.display, 'get_desktop_sizes') else []

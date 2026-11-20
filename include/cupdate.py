@@ -499,6 +499,7 @@ def send_infos(logs, game, nb_players, options, rpi_model, event, competition_mo
     game up to 10 s at boot, the Wi-Fi not being connected yet : the desktop was seen
     after the intro)
     '''
+    from include import cplatform    # pylint: disable=import-outside-toplevel
     data = {'machine_id': machine_id(),
             'play_id': str(play_id),
             'event': event,
@@ -510,6 +511,10 @@ def send_infos(logs, game, nb_players, options, rpi_model, event, competition_mo
             'options': stats_options(options),
             'version': str(version)[:40],
             'rpi_model': str(rpi_model)[:60],
+            # The system : 32 bits (armhf) or 64 bits (arm64), a PC (amd64), and its name
+            # (fields the server may not store yet : it ignores the fields it does not know)
+            'system_arch': cplatform.system_arch()[:20],
+            'system_name': cplatform.system_name()[:60],
             'sent_at': datetime.now().astimezone().isoformat(timespec='seconds')}
     Thread(target=post_infos, args=(logs, data), daemon=True).start()
 

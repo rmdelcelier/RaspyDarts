@@ -908,7 +908,13 @@ install_omxplayer() {
 
 case "$SYSTEM_ARCH:$PI_MODEL" in
     *"Raspberry Pi 5"*|*"Compute Module 5"*|*"Raspberry Pi 500"*)
-        warn "$PI_MODEL : pas d'affichage gere par le firmware, videos par VLC"
+        # Pas de processeur video du firmware : mpv, par-dessus le jeu sans lui prendre le
+        # clavier (include/cvideos.py), VLC en secours
+        if apt-get install -y --no-install-recommends mpv >/dev/null 2>&1; then
+            ok "$PI_MODEL : pas d'affichage gere par le firmware, videos par mpv"
+        else
+            warn "$PI_MODEL : mpv non installe, videos par VLC (une fenetre qui prend le clavier)"
+        fi
         ;;
     armhf:*|arm64:*)
         install_omxplayer

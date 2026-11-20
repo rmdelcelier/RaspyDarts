@@ -420,6 +420,17 @@ fi
 chown -R "$TARGET_USER:$TARGET_USER" "$TARGET_HOME/.config"
 ok 'Bureau : barre en bas, menu RaspyDarts / Chromium / Thonny / Parametres, fichiers caches visibles'
 
+# Pi 5 : pas de processeur video du firmware ni d'omxplayer ; les videos par mpv (par-dessus le
+# jeu sans lui prendre le clavier, include/cvideos.py), ajoute aux bornes deja installees
+if grep -q -E 'Raspberry Pi 5|Compute Module 5|Raspberry Pi 500' /proc/device-tree/model 2>/dev/null \
+        && ! command -v mpv >/dev/null; then
+    if DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends mpv >/dev/null 2>&1; then
+        ok 'Pi 5 : videos par mpv'
+    else
+        warn 'Pi 5 : mpv non installe (connexion Internet ?), videos par VLC'
+    fi
+fi
+
 # Version reglee : le jeu ne relance ce script qu'a la version suivante
 mkdir -p "$(dirname "$STATE")"
 head -n 1 "$PYDARTS/VERSION" 2>/dev/null > "$STATE"

@@ -48,6 +48,20 @@ def system_name():
     return ''
 
 
+@lru_cache(maxsize=None)
+def system_arch():
+    '''
+    Architecture of the system, not of the kernel (a 32 bits system on a 64 bits kernel, as on a
+    Pi 5) : armhf (32 bits), arm64 (64 bits), amd64 (a PC)... ; '' if unknown
+    '''
+    import subprocess    # pylint: disable=import-outside-toplevel
+    try:
+        return subprocess.run(['dpkg', '--print-architecture'], capture_output=True, text=True,
+                              timeout=5, check=False).stdout.strip()
+    except (OSError, subprocess.SubprocessError):
+        return ''
+
+
 def description():
     '''
     The machine in a few words : the model of the Raspberry, else "PC x86_64 (Ubuntu 24.04)"
