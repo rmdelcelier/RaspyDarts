@@ -278,7 +278,10 @@ df -h / | sed 's/^/   /'
 du -xsh /usr /raspydarts "$USER_DIR" /var /opt /home 2>/dev/null | sort -rh | sed 's/^/   /'
 
 if [ $APPLY -eq 1 ]; then
-    step "Termine : la carte s'eteint dans 20 secondes. Ensuite : la lire en image (RaspyDarts_vX.Y.Z.img) SANS la redemarrer, et la publier"
+    # The name of the image says its system (publish_image.ps1 makes an entry for each)
+    case "$(dpkg --print-architecture)" in arm64) ARCH=x64 ;; *) ARCH=x32 ;; esac
+    VERSION_NAME=$(sed -n 's/^V\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p' "$GAME_DIR/VERSION" 2>/dev/null)
+    step "Termine : la carte s'eteint dans 20 secondes. Ensuite : la lire en image (RaspyDarts_${ARCH}_v${VERSION_NAME:-X.Y.Z}.img) SANS la redemarrer, et la publier"
     sync
     sleep 20
     poweroff
