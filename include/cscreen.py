@@ -139,6 +139,62 @@ def with_look(name):
 # then shows the window of the game (see craspberry.keyboard_mouse)
 INTRO_END_EVENT = pygame.event.custom_type() if hasattr(pygame.event, 'custom_type') else pygame.USEREVENT + 30
 
+# Games (logo name without extension) displayed with the modern score table
+MODERN_TABLE_GAMES = ('Yum_Yum',)
+
+# Games (logo name without extension) displaying the modern hit banner, the others keep the classic message
+HIT_BANNER_GAMES = ('Yum_Yum',)
+# Hit banner (value of the dart) : colour and word per multiplier, 'B' for the bulls
+HIT_COLORS = {'S': (96, 220, 255), 'D': (163, 230, 53), 'T': (255, 186, 32), 'B': (255, 72, 72)}
+HIT_WORDS = {'S': 'SIMPLE', 'D': 'DOUBLE', 'T': 'TRIPLE'}
+HIT_DARK = (5, 8, 13)
+HIT_WHITE = (245, 247, 250)
+HIT_FONT = 'Impact.ttf'
+# Text messages of the HIT_BANNER_GAMES in the same strip : colour of its edges without a colour given
+RIBBON_COLOR = (255, 186, 32)
+
+@lru_cache(maxsize=8)
+def hit_ribbon(width, height, color):
+    '''
+    Dark strip fading on both sides, with a coloured line on the top and on the bottom.
+    32 bits even on a 16 bits screen. Surfaces are cached : never draw on a returned surface.
+    '''
+    strip = pygame.Surface((width, height), pygame.SRCALPHA, 32)
+    line = max(int(height / 30), 2)
+    for column in range(width):
+        distance = abs(column - width / 2) / (width / 2)
+        alpha = int(225 * min(1.0, (1 - distance) * 2.2))
+        pygame.draw.line(strip, HIT_DARK + (alpha,), (column, 0), (column, height - 1))
+        edge = int(255 * max(0.0, 1 - distance / 0.8))
+        pygame.draw.line(strip, tuple(color) + (edge,), (column, 0), (column, line - 1))
+        pygame.draw.line(strip, tuple(color) + (edge,), (column, height - line), (column, height - 1))
+    try:
+        return strip.convert_alpha()
+    except pygame.error:
+        return strip
+
+@lru_cache(maxsize=256)
+def modern_box(width, height, radius, color):
+    '''
+    Rounded translucent box, drawn big then scaled down (smooth corners). color is (r, g, b, a).
+    Surfaces are cached : never draw on a returned surface.
+    Works with pygame 1.9 (no border_radius needed).
+    32 bits even on a 16 bits screen : smoothscale refuses 16 bits surfaces
+    '''
+    scale = 3 if width * height < 200000 else 2
+    big_w = width * scale
+    big_h = height * scale
+    big = pygame.Surface((big_w, big_h), pygame.SRCALPHA, 32)
+    big.fill((color[0], color[1], color[2], 0))    # same RGB on transparent pixels : no dark fringe
+    rad = max(min(radius, int(width / 2), int(height / 2)), 0) * scale
+    pygame.draw.rect(big, color, (rad, 0, big_w - 2 * rad, big_h))
+    pygame.draw.rect(big, color, (0, rad, big_w, big_h - 2 * rad))
+    if rad > 0:
+        for center_x in (rad, big_w - rad - 1):
+            for center_y in (rad, big_h - rad - 1):
+                pygame.draw.circle(big, color, (center_x, center_y), rad)
+    return pygame.transform.smoothscale(big, (width, height))
+
 class Screen(pygame.Surface):
     '''
     Class for display
@@ -1132,6 +1188,12 @@ class Screen(pygame.Surface):
         '''
         Main UI messaging method - can display multiple phrases, mutiple sizes, multiple places
         '''
+        # In the HIT_BANNER_GAMES : the texts in the thin strip of the hit banner
+        if getattr(self, 'ribbon_messages', False) and logo is None and isinstance(texts, (list, tuple)):
+            try:
+                return self.ribbon_message(texts, wait, color, refresh, bg_color)
+            except Exception as exception:    # pylint: disable=broad-except
+                self.logs.log("ERROR", f"Strip message unavailable : {exception}")
 
         if logo is not None:
             size = self.res['y'] / 4
@@ -1204,6 +1266,97 @@ class Screen(pygame.Surface):
                     pygame.time.wait(self.blinktime)
                 elif wait > 0:
                     pygame.time.wait(wait)    # Wait X millisecond
+
+    def ribbon_message(self, texts, wait=3000, color=None, refresh=True, bg_color=None):
+        '''
+        Texts one after the other in the thin dark strip of hit_banner, in white. Its edges : the
+        colour of the background asked, else the colour of the text, else RIBBON_COLOR
+        '''
+        accent = RIBBON_COLOR
+        for asked in (bg_color, color):
+            if isinstance(asked, tuple):
+                accent = asked[:3]
+                break
+            if isinstance(asked, str) and asked in self.colorset:
+                accent = tuple(self.colorset[asked])[:3]
+                break
+        height = int(self.res['y'] / 7)
+        pos_y = int(self.res['y'] / 2 - height / 2)
+        font = os.path.join(os.path.dirname(self.defaultfontpath), HIT_FONT)
+        if not os.path.isfile(font):
+            font = self.defaultfontpath
+        for text in texts:
+            text = self.lang.translate(str(text))
+            if refresh:
+                if self.game_background is None:
+                    self.display_background()
+                else:
+                    self.blit(self.game_background, (0, 0))
+            self.blit(hit_ribbon(self.res['x'], height, accent), (0, pos_y))
+            size = int(height * 0.6)
+            label = self.get_font_path(font, size).render(text, True, HIT_WHITE)
+            room = int(self.res['x'] * 0.9)
+            if label.get_width() > room:
+                label = self.get_font_path(font, size * room / label.get_width()).render(text, True, HIT_WHITE)
+            self.blit(label, (int((self.res['x'] - label.get_width()) / 2), int(self.res['y'] / 2 - label.get_height() / 2)))
+            if refresh:
+                self.update_screen()
+                if wait is None:
+                    pygame.time.wait(self.blinktime)
+                elif wait > 0:
+                    pygame.time.wait(wait)
+
+    def hit_banner(self, dart_stroke, logo=''):
+        '''
+        Value of a dart ('T20', 'SB'...) : thin dark strip in the middle of the screen, "TRIPLE 20" and
+        the points, coloured by multiplier. Only for HIT_BANNER_GAMES : the other games, and any other
+        text, keep the classic message.
+        '''
+        stroke = str(dart_stroke).upper()
+        kind, value = stroke[:1], stroke[1:]
+        game = str(logo).replace(' ', '_').split('.')[0]
+        if game not in HIT_BANNER_GAMES or kind not in HIT_WORDS or not (value == 'B' or value.isdigit()):
+            return self.message([dart_stroke], None, None, 'middle', 'huge')
+        try:
+            if value == 'B':
+                color = HIT_COLORS['B']
+                label = 'DOUBLE BULL' if kind == 'D' else 'BULL'
+                points = 50 if kind == 'D' else 25
+            else:
+                color = HIT_COLORS[kind]
+                label = f"{HIT_WORDS[kind]} {value}"
+                points = int(value) * {'S': 1, 'D': 2, 'T': 3}[kind]
+            height = int(self.res['y'] / 7)
+            pos_y = int(self.res['y'] / 2 - height / 2)
+            # Restore the game screen, then the strip and the texts
+            if self.game_background is None:
+                self.display_background()
+            else:
+                self.blit(self.game_background, (0, 0))
+            self.blit(hit_ribbon(self.res['x'], height, color), (0, pos_y))
+            font = os.path.join(os.path.dirname(self.defaultfontpath), HIT_FONT)
+            if not os.path.isfile(font):
+                font = self.defaultfontpath
+            title = self.get_font_path(font, int(height * 0.69)).render(label, True, HIT_WHITE)
+            score = self.get_font_path(font, int(height * 0.37)).render(f"{points} PTS", True, color)
+            gap = int(height / 3)
+            left = int((self.res['x'] - title.get_width() - gap - score.get_width()) / 2)
+            center = int(self.res['y'] / 2)
+            self.blit(title, (left, center - int(title.get_height() / 2)))
+            self.blit(score, (left + title.get_width() + gap, center - int(score.get_height() / 2) + int(height / 15)))
+            self.update_screen()
+            pygame.time.wait(self.blinktime)
+        except Exception as exception:    # pylint: disable=broad-except
+            self.logs.log("ERROR", f"Hit banner unavailable : {exception}")
+            self.message([dart_stroke], None, None, 'middle', 'huge')
+
+    @staticmethod
+    @lru_cache(maxsize=16)
+    def get_font_path(path, size):
+        '''
+        Font from a file path, kept in memory
+        '''
+        return pygame.font.Font(path, max(int(size), 8))
 
     def is_clicked(self, zones=None, click=False):
         '''
@@ -11918,6 +12071,13 @@ class Screen(pygame.Surface):
         '''
         This method display column headers
         '''
+        if getattr(self, 'modern_table', False):
+            try:
+                return self.modern_headers(headers)
+            except Exception as exception:    # pylint: disable=broad-except
+                self.logs.log("ERROR", f"Modern score table disabled : {exception}")
+                self.modern_table = False
+
         y = self.position[0] - self.line_height - self.margin
 
         for index in range(0, int(self.config.get_value('SectionGlobals', 'nbcol')) + 1):
@@ -11925,6 +12085,129 @@ class Screen(pygame.Surface):
 
             self.new_blit_rect2(rect, self.colorset['game-table'], alpha=self.alpha + 10)
             self.blit_text2(str(headers[index][:5]), rect, self.colorset['game-headers'])
+
+    ##############
+    # Modern score table (see MODERN_TABLE_GAMES)
+    ##############
+    def modern_rect(self, rect, color, radius=None):
+        '''
+        Blit a rounded translucent rectangle. color is (r, g, b, a)
+        '''
+        if rect.width <= 0 or rect.height <= 0:
+            return
+        if radius is None:
+            radius = int(rect.height / 4)
+        surface = modern_box(int(rect.width), int(rect.height), int(radius), tuple(int(c) for c in color))
+        self.blit(surface, (rect.x, rect.y))
+
+    def modern_table_rect(self):
+        '''
+        Area covered by the modern table (headers + all lines)
+        '''
+        top = self.position[0] - self.line_height - self.margin
+        bottom = self.position[-1] + self.line_height
+        return pygame.Rect(0, top, self.res_x, min(bottom, self.res_y) - top)
+
+    def modern_headers(self, headers):
+        '''
+        Column headers : small muted labels with a thin line below
+        '''
+        columns = int(self.config.get_value('SectionGlobals', 'nbcol')) + 1
+        top = self.position[0] - self.line_height - self.margin
+        label_height = int(self.line_height * 0.4)
+        label_y = top + int(self.line_height * 0.4)
+        muted = tuple(int(c * 0.78) for c in self.colorset['game-headers'])
+        for index in range(0, columns):
+            rect = pygame.Rect(self.margin + self.pn_size + self.box_width * index, label_y, self.box_width - self.margin, label_height)
+            self.blit_text(str(headers[index][:8]).upper(), rect.x, rect.y, rect.width, rect.height, color=muted, divider=1.4)
+        # Thin line under the headers
+        line_y = label_y + label_height + int(self.margin / 2)
+        self.modern_rect(pygame.Rect(self.margin + self.pn_size, line_y, self.box_width * columns - self.margin, 2), (255, 255, 255, 70), 0)
+
+    def modern_row(self, pos_y, player, active):
+        '''
+        One player line : rounded card, name block, cells, drink points badge
+        '''
+        columns = int(self.config.get_value('SectionGlobals', 'nbcol')) + 1
+        pad = self.margin
+        height = self.line_height - self.margin
+        radius = int(height / 4)
+        left = self.margin
+        right = self.res_x - self.margin
+        dark = (10, 16, 28)
+        white = (245, 247, 250)
+        accent = tuple(player.color[:3])
+        alive = player.alive
+
+        # Card
+        base = dark
+        if active and alive:
+            base = tuple(int(dark[i] + (accent[i] - dark[i]) * 0.14) for i in range(3))
+        self.modern_rect(pygame.Rect(left, pos_y, right - left, height), base + (246,), radius)
+
+        # Name block : player colour when it is his turn
+        name_rect = pygame.Rect(left + pad, pos_y + pad, self.pn_size - left - 2 * pad, height - 2 * pad)
+        if not alive:
+            block, text_color = (60, 64, 74), (150, 154, 164)
+        elif active:
+            block = accent
+            luminance = 0.299 * accent[0] + 0.587 * accent[1] + 0.114 * accent[2]
+            text_color = dark if luminance > 140 else white
+        else:
+            block, text_color = (44, 54, 74), white
+        self.modern_rect(name_rect, block + (255,), radius - pad)
+        self.blit_text(player.name, name_rect.x, name_rect.y, name_rect.width, name_rect.height, color=text_color, divider=1.7)
+
+        # Cells
+        for column, value in enumerate(player.columns):
+            cell = pygame.Rect(self.margin + self.pn_size + self.box_width * column + pad, pos_y + pad, self.box_width - self.margin - pad, height - 2 * pad)
+            self.modern_rect(cell, (255, 255, 255, 20 if active else 12), int(radius / 2))
+            kind = value[1]
+            if value[0] is None or value[0] == '':
+                continue
+            if kind == 'image':
+                self.display_leds_image(pos_y, value[0], column)
+                continue
+            if kind == 'leds':
+                self.led_box2(pos_y, int(value[0]), column, accent)
+                continue
+            text = value[0]
+            if kind == 'int':
+                try:
+                    text = str(int(value[0])) if int(value[0]) > 100 else str(value[0]).replace('.0', '')
+                except (TypeError, ValueError):
+                    text = str(value[0])
+            color = white
+            if len(value) == 3 and value[2] is not None:
+                color = self.colorset[value[2]]
+            self.blit_text(str(text), cell.x, cell.y, cell.width, cell.height, color=color, divider=1.7)
+
+        # Drink points / score badge
+        score_x = self.margin + self.pn_size + self.box_width * columns
+        score_rect = pygame.Rect(score_x + pad, pos_y + pad, right - score_x - 2 * pad, height - 2 * pad)
+        if active and alive:
+            self.modern_rect(score_rect, accent + (60,), radius - pad)
+            score_color = accent
+        else:
+            self.modern_rect(score_rect, (255, 255, 255, 14), radius - pad)
+            score_color = white if alive else (150, 154, 164)
+        self.blit_text(str(player.score).replace('.0', ''), score_rect.x, score_rect.y, score_rect.width, score_rect.height, color=score_color, divider=1.3)
+
+    def modern_scores(self, players, actual_player, refresh=True):
+        '''
+        All the player lines with the modern look
+        '''
+        if refresh:
+            self.display_background()
+        for index, player in enumerate(players):
+            if player.position is None:
+                position = self.position[index]
+            else:
+                position = self.position[player.position - 1]
+            self.modern_row(position, player, index == actual_player)
+        if refresh:
+            self.update_screen(self.modern_table_rect())
+            self.save_background()
 
 
     def headers(self, headers):
@@ -12039,6 +12322,14 @@ class Screen(pygame.Surface):
         # Get number of players
         nb_players = len(players)
 
+        # Modern score table (falls back to the classic one if anything goes wrong)
+        if getattr(self, 'modern_table', False):
+            try:
+                return self.modern_scores(players, actual_player, refresh)
+            except Exception as exception:    # pylint: disable=broad-except
+                self.logs.log("ERROR", f"Modern score table disabled : {exception}")
+                self.modern_table = False
+
         # Display headers
 
         if refresh:
@@ -12078,6 +12369,11 @@ class Screen(pygame.Surface):
         '''
         # Get number of players
         nb_players = len(players)
+
+        # Some games use the modern score table
+        self.modern_table = logo.replace(' ', '_').split('.')[0] in MODERN_TABLE_GAMES
+        # Their texts in the thin strip of the hit banner
+        self.ribbon_messages = logo.replace(' ', '_').split('.')[0] in HIT_BANNER_GAMES
 
         # Recalculate line height
         self.define_constants(nb_players)

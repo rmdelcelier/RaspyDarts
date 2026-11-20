@@ -6601,3 +6601,51 @@ msgstr "Ce thème a été fait avec RaspyDarts {version}. Le télécharger quand
 
 msgid "hub-needs-version-explain"
 msgstr "Cette borne a une version plus ancienne : certains réglages du thème peuvent ne pas s'afficher. Une mise à jour de RaspyDarts règle cela."
+
+######## YUM YUM ########
+
+msgid "Description-Yum_Yum"
+msgstr "Évitez les Drink Points !\n"
+"\n"
+"Inspiré du Yum Yum DX des bornes DARTSLIVE : chaque manche est un\n"
+"mini-jeu tiré au sort parmi 20 (Bull Challenge, Count-Up, High or Low,\n"
+"Zero Stop, One Shot...).\n"
+"\n"
+"Le gagnant est le joueur qui a le moins de Drink Points en fin de partie.\n"
+"-----\n"
+"A chaque manche, le ou les joueurs ayant le plus petit score (ou ayant\n"
+"échoué au défi) reçoivent 1 Drink Point.\n"
+"\n"
+"LAST ROUND : la dernière manche compte double.\n"
+"DEVIL MODE : s'active au hasard pour un joueur, les règles se corsent\n"
+"et la pénalité est doublée.\n"
+"\n"
+"Les cibles de chaque mini-jeu sont affichées sous le titre et allumées\n"
+"sur la cible (si leds).\n"
+"\n"
+"OPTIONS\n"
+"Nb de manches : Nombre de mini-jeux joués\n"
+"Devil mode : Active le Devil Mode\n"
+"Chance devil : Probabilité (en %) du Devil Mode pour chaque joueur et manche\n"
+"Jeux de timing : Autorise Zero Stop, Speed Challenge et Fortune Digits\n"
+"(jamais en ligne)\n"
+"Choisir les mini-jeux : A chaque manche, lancez une fléchette sur le\n"
+"numéro du mini-jeu (Bull = hasard). Jamais en ligne.\n"
+"\n"
+"SOLO : chaque mini-jeu a un objectif, vous buvez si vous ne l'atteignez pas.\n"
+" "
+
+msgid "Yum_Yum-max_round"
+msgstr "Nombre de manches"
+
+msgid "Yum_Yum-devil"
+msgstr "Devil mode"
+
+msgid "Yum_Yum-devil_chance"
+msgstr "Chance devil (%)"
+
+msgid "Yum_Yum-timing_games"
+msgstr "Jeux de timing"
+
+msgid "Yum_Yum-choose_game"
+msgstr "Choisir les mini-jeux"

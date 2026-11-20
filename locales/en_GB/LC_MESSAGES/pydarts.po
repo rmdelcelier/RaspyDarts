@@ -6797,3 +6797,84 @@ msgstr "This theme was made with RaspyDarts {version}. Download it anyway?"
 
 msgid "hub-needs-version-explain"
 msgstr "This machine has an older version: some settings of the theme may not show. Updating RaspyDarts solves it."
+
+######## YUM YUM ########
+
+msgid "Description-Yum_Yum"
+msgstr "Avoid the Drink Points!\n"
+"\n"
+"Inspired by DARTSLIVE's Yum Yum DX: each round is a mini-game drawn\n"
+"at random among 20 (Bull Challenge, Count-Up, High or Low, Zero Stop,\n"
+"One Shot...).\n"
+"\n"
+"The winner is the player with the fewest Drink Points at the end.\n"
+"-----\n"
+"Each round, the player(s) with the lowest score (or who failed the\n"
+"challenge) get 1 Drink Point.\n"
+"\n"
+"LAST ROUND: the last round counts double.\n"
+"DEVIL MODE: randomly triggered for a player, rules get harder and\n"
+"the penalty is doubled.\n"
+"\n"
+"Targets of each mini-game are displayed under the title and lit\n"
+"on the board (if leds).\n"
+"\n"
+"OPTIONS\n"
+"Rounds: Number of mini-games played\n"
+"Devil mode: Enable Devil Mode\n"
+"Devil chance: Probability (%) of Devil Mode for each player and round\n"
+"Timing games: Allow Zero Stop, Speed Challenge and Fortune Digits\n"
+"(never online)\n"
+"Choose mini-games: each round, throw a dart on the mini-game number\n"
+"(Bull = random). Never online.\n"
+"\n"
+"SOLO: each mini-game has a goal, you drink if you miss it.\n"
+" "
+
+msgid "Yum_Yum-max_round"
+msgstr "Rounds"
+
+msgid "Yum_Yum-devil"
+msgstr "Devil mode"
+
+msgid "Yum_Yum-devil_chance"
+msgstr "Devil chance (%)"
+
+msgid "Yum_Yum-timing_games"
+msgstr "Timing games"
+
+msgid "Yum_Yum-round"
+msgstr "Round"
+
+msgid "Yum_Yum-more-than"
+msgstr "more than"
+
+msgid "Yum_Yum-less-than"
+msgstr "less than"
+
+msgid "Yum_Yum-nobody-drinks"
+msgstr "Nobody drinks!"
+
+msgid "Yum_Yum-too-late"
+msgstr "TOO LATE!"
+
+msgid "Yum_Yum-choose_game"
+msgstr "Choose mini-games"
+
+msgid "Yum_Yum-choose-title"
+msgstr "Round {round}/{max}: choose the mini-game"
+
+msgid "Yum_Yum-choose-help"
+msgstr "Throw a dart on the game number (Bull = random)"
+
+msgid "Yum_Yum-random"
+msgstr "RANDOM"
+
+msgid "Yum_Yum-remove-dart"
+msgstr "Remove the dart and press Player"
+
+msgid "Yum_Yum-goal"
+msgstr "goal"
+
+msgid "Yum_Yum-back"
+msgstr "Back"

@@ -713,6 +713,8 @@ try:
         # score stopped
         dmd.player_color = None
         dmd.game_end()
+        # Out of a game : the classic messages (see Screen.ribbon_message)
+        display.ribbon_messages = False
 
         # An error to report (a crash before this start, a game which failed) : once
         error_report = cerrors.take()
@@ -1867,8 +1869,9 @@ try:
                 if player_launch == 1 and len(magickey) == 0 and pre_dart != 4:
                     # Ring girl / Ring boy of Raspy2DMD : a new one for this volley, then the name
                     dmd.volley_start()
-                    dmd.send_text(players[actual_player].name)
-                    logs.debug(f"Display {players[actual_player].name}")
+                    dmd_turn_text = game.dmd_turn_text(players, actual_round, actual_player)
+                    dmd.send_text(dmd_turn_text)
+                    logs.debug(f"Display {dmd_turn_text}")
                     if handler['announcement'] is None:
                         display.message([players[actual_player].name], 0, None, 'middle', 'big')
                     # Play sound for first dart (playername otherwise default)
@@ -2399,7 +2402,7 @@ try:
                                     if os.path.isfile('{}/{}'.format(Config.dartsStrokeDir, dart_stroke)):
                                         display.message(' ', None, None, 'middle', 'huge', f'valeurs/{dart_stroke}.png')
                                     else:
-                                        display.message([dart_stroke], None, None, 'middle', 'huge')
+                                        display.hit_banner(dart_stroke, game.logo)
 
                         if threads is not None and len(threads) > 0:
                             for thread in threads:

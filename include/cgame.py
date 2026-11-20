@@ -153,6 +153,12 @@ class Game:
         """
         return self.show_dmd
 
+    def dmd_turn_text(self, players, actual_round, actual_player):
+        """
+        Text sent to dmd before the first dart of a player
+        """
+        return players[actual_player].name
+
     def display_segment(self):
         """
         Return true if segment should be displayed on screen
