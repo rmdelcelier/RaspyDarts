@@ -23,6 +23,8 @@ PERSO_NAME = 'Colorset_perso.cfg'
 # Frame of the tag chosen
 CHOSEN = (255, 200, 0)
 ARROW = (255, 200, 0)
+# Background of a mock-up without its own colour
+MOCKUP_BACKGROUND = (40, 40, 44)
 # Palette : rows of 6
 PALETTE = [(255, 255, 255), (214, 214, 214), (160, 160, 160), (100, 100, 100), (48, 48, 48), (0, 0, 0),
            (255, 0, 0), (194, 1, 1), (128, 0, 0), (255, 128, 0), (255, 215, 0), (255, 255, 0),
@@ -715,8 +717,15 @@ class ThemeEditor:
         return pygame.Rect(int(mockup.x + mockup.width * x), int(mockup.y + mockup.height * y),
                            int(mockup.width * w), int(mockup.height * h))
 
+    def fill(self, mockup, tag=None):
+        '''
+        The background of a mock-up : the colour of its tag, a dark grey without one (or for none)
+        '''
+        color = self.color(tag) if tag else None
+        pygame.draw.rect(self.screen.screen, color if color is not None else MOCKUP_BACKGROUND, mockup)
+
     def draw_background(self, mockup):
-        pygame.draw.rect(self.screen.screen, (40, 40, 44), mockup)
+        self.fill(mockup)
 
     def draw_menus(self, mockup):
         self.draw_background(mockup)
@@ -779,8 +788,7 @@ class ThemeEditor:
 
     def draw_game(self, mockup):
         screen = self.screen
-        background = self.color('game-bg')
-        pygame.draw.rect(screen.screen, background if background is not None else (40, 40, 44), mockup)
+        self.fill(mockup, 'game-bg')
         round_header = self.part(mockup, 0.02, 0.03, 0.2, 0.08)
         self.box(round_header, 'bg-round-nb-header', 4)
         self.text('Round', round_header, 'game-headers')
@@ -828,14 +836,18 @@ class ThemeEditor:
         tags = ('game-red', 'game-green', 'game-blue', 'game-purple', 'game-grey',
                 'game-grey2', 'game-gold', 'game-silver', 'game-bronze', 'suggestion-color-allplayer')
         for index, tag in enumerate(tags):
-            swatch = self.part(mockup, 0.03 + 0.2 * (index % 5), 0.2 if index < 5 else 0.6, 0.14, 0.2)
-            if self.color(tag) is None:
-                pygame.draw.rect(self.screen.screen, (90, 90, 90), swatch, 2, border_radius=8)
-            self.box(swatch, tag, 8)
+            self.swatch(self.part(mockup, 0.03 + 0.2 * (index % 5), 0.2 if index < 5 else 0.6, 0.14, 0.2), tag)
+
+    def swatch(self, rect, tag):
+        '''
+        A colour of a game : its box, a grey outline for none
+        '''
+        if self.color(tag) is None:
+            pygame.draw.rect(self.screen.screen, (90, 90, 90), rect, 2, border_radius=8)
+        self.box(rect, tag, 8)
 
     def draw_bob27(self, mockup):
-        background = self.color('bob27-bg')
-        pygame.draw.rect(self.screen.screen, background or (40, 40, 44), mockup)
+        self.fill(mockup, 'bob27-bg')
         for index, tag in enumerate(('bob27-blue', 'bob27-green', 'bob27-red')):
             bar = self.part(mockup, 0.15, 0.18 + index * 0.25, 0.4, 0.15)
             self.box(bar, tag, 6)
@@ -869,28 +881,37 @@ class ThemeEditor:
         self.draw_background(mockup)
         scale = mockup.height / self.size[1]
         for index, label in enumerate(('Partie simple', 'Partie en réseau', 'Divers')):
-            row = self.part(mockup, 0.15, 0.2 + index * 0.18, 0.7, 0.13)
-            radius = self.radius('border-radius', row, scale)
-            chosen = index == 0
-            if chosen:
-                border = max(0, int(int(self.work.get('border-size') or 0) * scale * 2))
-                padding = max(0, int(int(self.work.get('padding') or 0) * scale * 2))
-                if self.color('menu-border') is not None and border:
-                    pygame.draw.rect(self.screen.screen, self.color('menu-border'), row, border, border_radius=radius)
-                inner = row.inflate(-2 * (border + padding), -2 * (border + padding))
-                if self.color('menu-selected') is not None:
-                    pygame.draw.rect(self.screen.screen, self.color('menu-selected'), inner,
-                                     border_radius=max(0, radius - border - padding))
-                self.text(label, inner, 'menu-text-white')
-            else:
-                if self.color('menu-buttons') is not None:
-                    pygame.draw.rect(self.screen.screen, self.color('menu-buttons'), row, border_radius=radius)
-                self.text(label, row, 'menu-text-black')
-        button = self.part(mockup, 0.62, 0.8, 0.3, 0.09)
+            self.shaped_row(self.part(mockup, 0.15, 0.2 + index * 0.18, 0.7, 0.13), label, index == 0, scale)
+        self.shaped_button(self.part(mockup, 0.62, 0.8, 0.3, 0.09), 'Sauvegarder', scale)
+
+    def shaped_row(self, row, label, chosen, scale):
+        '''
+        An item of a menu with the shapes of the moment : chosen, its border and its margin
+        '''
+        radius = self.radius('border-radius', row, scale)
+        if chosen:
+            border = max(0, int(int(self.work.get('border-size') or 0) * scale * 2))
+            padding = max(0, int(int(self.work.get('padding') or 0) * scale * 2))
+            if self.color('menu-border') is not None and border:
+                pygame.draw.rect(self.screen.screen, self.color('menu-border'), row, border, border_radius=radius)
+            inner = row.inflate(-2 * (border + padding), -2 * (border + padding))
+            if self.color('menu-selected') is not None:
+                pygame.draw.rect(self.screen.screen, self.color('menu-selected'), inner,
+                                 border_radius=max(0, radius - border - padding))
+            self.text(label, inner, 'menu-text-white')
+        else:
+            if self.color('menu-buttons') is not None:
+                pygame.draw.rect(self.screen.screen, self.color('menu-buttons'), row, border_radius=radius)
+            self.text(label, row, 'menu-text-black')
+
+    def shaped_button(self, button, label, scale):
+        '''
+        A button at the bottom with its rounding of the moment
+        '''
         if self.color('menu-buttons') is not None:
             pygame.draw.rect(self.screen.screen, self.color('menu-buttons'), button,
                              border_radius=self.radius('button-radius', button, scale * 2))
-        self.text('Sauvegarder', button, 'menu-text-black')
+        self.text(label, button, 'menu-text-black')
 
     def draw_shortcuts(self, mockup):
         self.draw_background(mockup)

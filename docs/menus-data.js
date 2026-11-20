@@ -2283,14 +2283,38 @@ const MENUS_DATA = {
    "dmd-score-whole-sport": "Tous les jeux sport",
    "dmd-server-favorites": "Serveurs favoris",
    "dmd-style": "Style du score",
+   "dmd-style-camera": "Caméra grand écran",
+   "dmd-style-cards": "Les cartes",
    "dmd-style-classic": "Classique",
+   "dmd-style-drum": "Le tambour",
    "dmd-style-duck": "Chasse aux canards",
+   "dmd-style-ducks": "Tir aux canards",
+   "dmd-style-help-camera": "Comme Moderne, avec une grande fenêtre de caméra : elle cherche puis filme en gros plan le segment touché. Le tableau est à droite.",
+   "dmd-style-help-cards": "Des cartes à jouer révèlent le segment (une carte par multiplicateur), puis une grande carte ; une carte se retourne sur « MISS ».",
    "dmd-style-help-classic": "L'affichage habituel des trois fléchettes, sans fond pendant la partie.",
+   "dmd-style-help-drum": "Une baguette frappe le tambour une fois par multiplicateur, la peau s'illumine ; sur un tir manqué, elle frappe le bord.",
    "dmd-style-help-duck": "Un chien de chasse sort des herbes avec le segment touché, et se moque d'un tir manqué. Pendant la partie, fond : ciel de nuit, arbres et herbes.",
+   "dmd-style-help-ducks": "Le même stand, avec des canards jaunes qui basculent quand ils sont touchés ; sur un tir manqué, le rideau se déchire.",
    "dmd-style-help-modern": "Une caméra filme la cible : zoom sur le segment touché, la cible explose sur un tir manqué. Pendant la partie, fond : mur de briques et cible.",
+   "dmd-style-help-pipes": "Un stand de fête foraine : les pipes éclatent (une par multiplicateur, une rafale pour le bull) ; sur un tir manqué, le rideau se déchire.",
+   "dmd-style-help-random": "Un style animé tiré au hasard au début de chaque partie, pour varier l'affichage. Les jeux qui ont leur propre style (Balltrap) le gardent.",
+   "dmd-style-help-ringboy": "Le même ring de boxe, avec un ring boy qui présente le segment ; projecteurs et confettis pour le bull, éponge jetée et huées sur un tir manqué. Un nouveau ring boy à chaque joueur.",
+   "dmd-style-help-ringgirl": "Un ring de boxe la nuit : une ring girl entre avec un panneau où est écrit le segment, puis il s'affiche en grand ; projecteurs et confettis pour le bull, éponge jetée et huées sur un tir manqué. Une nouvelle ring girl à chaque joueur.",
+   "dmd-style-help-shuriken": "Des shurikens se plantent dans des planches (un par multiplicateur, des kunaïs pour le bull) ; sur un tir manqué, ils rebondissent.",
+   "dmd-style-help-skater": "Un skateur bombe le segment sur un mur de briques ; sur un tir manqué, il tombe sur un caillou.",
+   "dmd-style-help-wave": "Une vague d'estampe japonaise se retire et découvre le segment ; sur un tir manqué, le soleil explose. Pendant la partie : nuages et pétales de cerisier.",
    "dmd-style-modern": "Moderne",
+   "dmd-style-pipes": "Tir aux pipes",
+   "dmd-style-random": "Aléatoire à chaque partie",
+   "dmd-style-ringboy": "Ring boy",
+   "dmd-style-ringgirl": "Ring girl",
+   "dmd-style-shuriken": "Le shuriken",
+   "dmd-style-skater": "Le skateur",
+   "dmd-style-wave": "La vague",
    "dmd-version-needed": "Moderne et Chasse aux canards : Raspy2DMD 1.6.2.3 ou plus",
+   "dmd-version-needed-1624": "Ce style : Raspy2DMD 1.6.2.4 ou plus",
    "dmd-version-old": "Moderne et Chasse aux canards : Raspy2DMD 1.6.2.3 ou plus (installé : {}) ; le score reste en Classique",
+   "dmd-version-old-1624": "Ce style : Raspy2DMD 1.6.2.4 ou plus (installé : {}) ; il est remplacé par Moderne",
    "dmd-wait": "En attente pendant la partie",
    "dmd-wait-N": "Scène du style",
    "dmd-wait-O": "Animation habituelle",
@@ -2492,14 +2516,38 @@ const MENUS_DATA = {
    "dmd-score-whole-sport": "All the sport games",
    "dmd-server-favorites": "Favorite servers",
    "dmd-style": "Style of the score",
+   "dmd-style-camera": "Large camera",
+   "dmd-style-cards": "The cards",
    "dmd-style-classic": "Classic",
+   "dmd-style-drum": "The drum",
    "dmd-style-duck": "Duck hunting",
+   "dmd-style-ducks": "Duck shooting",
+   "dmd-style-help-camera": "Like Modern, with a large camera window: it searches, then films the segment hit in close-up. The scoreboard is on the right.",
+   "dmd-style-help-cards": "Playing cards reveal the segment (one card per multiplier), then a large card; a card turns over on \"MISS\".",
    "dmd-style-help-classic": "The usual display of the three darts, no background during the game.",
+   "dmd-style-help-drum": "A stick hits the drum once per multiplier and the skin lights up; on a miss, it hits the rim.",
    "dmd-style-help-duck": "A hunting dog comes out of the grass with the segment hit, and laughs at a missed dart. During the game, background: night sky, trees and grass.",
+   "dmd-style-help-ducks": "The same stall, with yellow ducks that tip over when hit; on a miss, the curtain tears.",
    "dmd-style-help-modern": "A camera films the board: zoom on the segment hit, the board explodes on a missed dart. During the game, background: brick wall and board.",
+   "dmd-style-help-pipes": "A fairground stall: pipes burst (one per multiplier, a burst of fire for the bull); on a miss, the curtain tears.",
+   "dmd-style-help-random": "An animated style drawn at random at the start of each game, for variety. Games with their own style (Balltrap) keep it.",
+   "dmd-style-help-ringboy": "The same boxing ring, with a ring boy showing the segment; spotlights and confetti for the bull, the towel is thrown and the crowd boos on a miss. A new ring boy for each player.",
+   "dmd-style-help-ringgirl": "A boxing ring at night: a ring girl walks in holding a card with the segment, then it is shown in large; spotlights and confetti for the bull, the towel is thrown and the crowd boos on a miss. A new ring girl for each player.",
+   "dmd-style-help-shuriken": "Shurikens stick into planks (one per multiplier, kunais for the bull); on a miss, they bounce off.",
+   "dmd-style-help-skater": "A skater sprays the segment on a brick wall; on a miss, he trips on a stone.",
+   "dmd-style-help-wave": "A Japanese print wave pulls back to reveal the segment; on a miss, the sun explodes. During the game: clouds and cherry petals.",
    "dmd-style-modern": "Modern",
+   "dmd-style-pipes": "Pipe shooting",
+   "dmd-style-random": "Random each game",
+   "dmd-style-ringboy": "Ring boy",
+   "dmd-style-ringgirl": "Ring girl",
+   "dmd-style-shuriken": "The shuriken",
+   "dmd-style-skater": "The skater",
+   "dmd-style-wave": "The wave",
    "dmd-version-needed": "Modern and Duck hunting: Raspy2DMD 1.6.2.3 or later",
+   "dmd-version-needed-1624": "This style: Raspy2DMD 1.6.2.4 or later",
    "dmd-version-old": "Modern and Duck hunting: Raspy2DMD 1.6.2.3 or later (installed: {}); the score stays Classic",
+   "dmd-version-old-1624": "This style: Raspy2DMD 1.6.2.4 or later (installed: {}); Modern is used instead",
    "dmd-wait": "Waiting during the game",
    "dmd-wait-N": "Scene of the style",
    "dmd-wait-O": "Usual animation",
@@ -2701,14 +2749,38 @@ const MENUS_DATA = {
    "dmd-score-whole-sport": "Alle Sportspiele",
    "dmd-server-favorites": "Favorisierte Server",
    "dmd-style": "Stil der Punkte",
+   "dmd-style-camera": "Große Kamera",
+   "dmd-style-cards": "Die Karten",
    "dmd-style-classic": "Klassisch",
+   "dmd-style-drum": "Die Trommel",
    "dmd-style-duck": "Entenjagd",
+   "dmd-style-ducks": "Entenschießen",
+   "dmd-style-help-camera": "Wie Modern, mit großem Kamerafenster: Sie sucht und filmt das getroffene Segment in Nahaufnahme. Die Tabelle steht rechts.",
+   "dmd-style-help-cards": "Spielkarten zeigen das Segment (eine Karte pro Multiplikator), dann eine große Karte; eine Karte dreht sich auf „MISS“.",
    "dmd-style-help-classic": "Die übliche Anzeige der drei Darts, ohne Hintergrund während des Spiels.",
+   "dmd-style-help-drum": "Ein Schlegel schlägt die Trommel einmal pro Multiplikator, das Fell leuchtet auf; bei einem Fehlwurf trifft er den Rand.",
    "dmd-style-help-duck": "Ein Jagdhund kommt mit dem getroffenen Segment aus dem Gras und lacht über einen Fehlwurf. Während des Spiels Hintergrund: Nachthimmel, Bäume und Gras.",
+   "dmd-style-help-ducks": "Derselbe Stand mit gelben Enten, die umkippen, wenn sie getroffen werden; bei einem Fehlwurf reißt der Vorhang.",
    "dmd-style-help-modern": "Eine Kamera filmt die Scheibe: Zoom auf das getroffene Segment, die Scheibe explodiert bei einem Fehlwurf. Während des Spiels Hintergrund: Ziegelmauer und Scheibe.",
+   "dmd-style-help-pipes": "Ein Jahrmarktstand: Pfeifen zerplatzen (eine pro Multiplikator, eine Salve für das Bull); bei einem Fehlwurf reißt der Vorhang.",
+   "dmd-style-help-random": "Zu Beginn jedes Spiels wird ein animierter Stil zufällig gewählt, für Abwechslung. Spiele mit eigenem Stil (Balltrap) behalten ihn.",
+   "dmd-style-help-ringboy": "Derselbe Boxring mit einem Ringboy, der das Segment zeigt; Scheinwerfer und Konfetti für das Bull, bei einem Fehlwurf fliegt das Handtuch und das Publikum buht. Für jeden Spieler ein neuer Ringboy.",
+   "dmd-style-help-ringgirl": "Ein Boxring bei Nacht: Ein Ringgirl kommt mit einem Schild, auf dem das Segment steht, dann erscheint es groß; Scheinwerfer und Konfetti für das Bull, bei einem Fehlwurf fliegt das Handtuch und das Publikum buht. Für jeden Spieler ein neues Ringgirl.",
+   "dmd-style-help-shuriken": "Shuriken bleiben in Brettern stecken (einer pro Multiplikator, Kunais für das Bull); bei einem Fehlwurf prallen sie ab.",
+   "dmd-style-help-skater": "Ein Skater sprüht das Segment auf eine Ziegelmauer; bei einem Fehlwurf stolpert er über einen Stein.",
+   "dmd-style-help-wave": "Eine Welle im Stil japanischer Holzschnitte zieht sich zurück und zeigt das Segment; bei einem Fehlwurf explodiert die Sonne. Während des Spiels: Wolken und Kirschblüten.",
    "dmd-style-modern": "Modern",
+   "dmd-style-pipes": "Pfeifenschießen",
+   "dmd-style-random": "Zufällig je Spiel",
+   "dmd-style-ringboy": "Ringboy",
+   "dmd-style-ringgirl": "Ringgirl",
+   "dmd-style-shuriken": "Der Shuriken",
+   "dmd-style-skater": "Der Skater",
+   "dmd-style-wave": "Die Welle",
    "dmd-version-needed": "Modern und Entenjagd: Raspy2DMD 1.6.2.3 oder neuer",
+   "dmd-version-needed-1624": "Dieser Stil: Raspy2DMD 1.6.2.4 oder neuer",
    "dmd-version-old": "Modern und Entenjagd: Raspy2DMD 1.6.2.3 oder neuer (installiert: {}); die Punkte bleiben klassisch",
+   "dmd-version-old-1624": "Dieser Stil: Raspy2DMD 1.6.2.4 oder neuer (installiert: {}); stattdessen Modern",
    "dmd-wait": "Warten während des Spiels",
    "dmd-wait-N": "Szene des Stils",
    "dmd-wait-O": "Übliche Animation",
@@ -2910,14 +2982,38 @@ const MENUS_DATA = {
    "dmd-score-whole-sport": "Todos los juegos de deporte",
    "dmd-server-favorites": "Servidores favoritos",
    "dmd-style": "Estilo de la puntuación",
+   "dmd-style-camera": "Cámara grande",
+   "dmd-style-cards": "Las cartas",
    "dmd-style-classic": "Clásico",
+   "dmd-style-drum": "El tambor",
    "dmd-style-duck": "Caza de patos",
+   "dmd-style-ducks": "Tiro a los patos",
+   "dmd-style-help-camera": "Como Moderno, con una gran ventana de cámara: busca y filma en primer plano el segmento acertado. El marcador está a la derecha.",
+   "dmd-style-help-cards": "Unas cartas revelan el segmento (una por multiplicador) y luego una carta grande; una carta se da la vuelta en «MISS».",
    "dmd-style-help-classic": "La visualización habitual de los tres dardos, sin fondo durante la partida.",
+   "dmd-style-help-drum": "Una baqueta golpea el tambor una vez por multiplicador y el parche se ilumina; en un fallo, golpea el borde.",
    "dmd-style-help-duck": "Un perro de caza sale de la hierba con el segmento acertado y se burla de un tiro fallado. Durante la partida, fondo: cielo nocturno, árboles y hierba.",
+   "dmd-style-help-ducks": "La misma caseta, con patos amarillos que caen hacia atrás al acertarles; en un fallo, la cortina se rasga.",
    "dmd-style-help-modern": "Una cámara filma la diana: zoom en el segmento acertado, la diana explota con un tiro fallado. Durante la partida, fondo: muro de ladrillos y diana.",
+   "dmd-style-help-pipes": "Una caseta de feria: las pipas estallan (una por multiplicador, una ráfaga para el bull); en un fallo, la cortina se rasga.",
+   "dmd-style-help-random": "Un estilo animado elegido al azar al empezar cada partida, para variar. Los juegos con estilo propio (Balltrap) lo conservan.",
+   "dmd-style-help-ringboy": "El mismo ring de boxeo, con un ring boy que presenta el segmento; focos y confeti para el bull, se tira la toalla y el público abuchea en un fallo. Un ring boy nuevo para cada jugador.",
+   "dmd-style-help-ringgirl": "Un ring de boxeo de noche: una ring girl entra con un cartel con el segmento, que luego aparece en grande; focos y confeti para el bull, se tira la toalla y el público abuchea en un fallo. Una ring girl nueva para cada jugador.",
+   "dmd-style-help-shuriken": "Los shurikens se clavan en tablas (uno por multiplicador, kunais para el bull); en un fallo, rebotan.",
+   "dmd-style-help-skater": "Un skater pinta el segmento con spray en un muro de ladrillos; en un fallo, tropieza con una piedra.",
+   "dmd-style-help-wave": "Una ola de estampa japonesa se retira y descubre el segmento; en un fallo, el sol explota. Durante la partida: nubes y pétalos de cerezo.",
    "dmd-style-modern": "Moderno",
+   "dmd-style-pipes": "Tiro a las pipas",
+   "dmd-style-random": "Aleatorio en cada partida",
+   "dmd-style-ringboy": "Ring boy",
+   "dmd-style-ringgirl": "Ring girl",
+   "dmd-style-shuriken": "El shuriken",
+   "dmd-style-skater": "El skater",
+   "dmd-style-wave": "La ola",
    "dmd-version-needed": "Moderno y Caza de patos: Raspy2DMD 1.6.2.3 o posterior",
+   "dmd-version-needed-1624": "Este estilo: Raspy2DMD 1.6.2.4 o posterior",
    "dmd-version-old": "Moderno y Caza de patos: Raspy2DMD 1.6.2.3 o posterior (instalado: {}); la puntuación queda en Clásico",
+   "dmd-version-old-1624": "Este estilo: Raspy2DMD 1.6.2.4 o posterior (instalado: {}); se usa Moderno",
    "dmd-wait": "En espera durante la partida",
    "dmd-wait-N": "Escena del estilo",
    "dmd-wait-O": "Animación habitual",
@@ -3119,14 +3215,38 @@ const MENUS_DATA = {
    "dmd-score-whole-sport": "Tutti i giochi sport",
    "dmd-server-favorites": "Server preferiti",
    "dmd-style": "Stile del punteggio",
+   "dmd-style-camera": "Telecamera grande",
+   "dmd-style-cards": "Le carte",
    "dmd-style-classic": "Classico",
+   "dmd-style-drum": "Il tamburo",
    "dmd-style-duck": "Caccia alle anatre",
+   "dmd-style-ducks": "Tiro alle anatre",
+   "dmd-style-help-camera": "Come Moderno, con una grande finestra della telecamera: cerca e riprende da vicino il segmento colpito. Il tabellone è a destra.",
+   "dmd-style-help-cards": "Delle carte rivelano il segmento (una per moltiplicatore), poi una carta grande; una carta si gira su «MISS».",
    "dmd-style-help-classic": "La visualizzazione abituale delle tre freccette, senza sfondo durante la partita.",
+   "dmd-style-help-drum": "Una bacchetta colpisce il tamburo una volta per moltiplicatore e la pelle si illumina; su un tiro mancato, colpisce il bordo.",
    "dmd-style-help-duck": "Un cane da caccia esce dall'erba con il segmento colpito e prende in giro un tiro mancato. Durante la partita, sfondo: cielo notturno, alberi ed erba.",
+   "dmd-style-help-ducks": "Lo stesso baraccone, con anatre gialle che cadono all'indietro quando colpite; su un tiro mancato, la tenda si strappa.",
    "dmd-style-help-modern": "Una telecamera riprende il bersaglio: zoom sul segmento colpito, il bersaglio esplode su un tiro mancato. Durante la partita, sfondo: muro di mattoni e bersaglio.",
+   "dmd-style-help-pipes": "Un baraccone da fiera: le pipe esplodono (una per moltiplicatore, una raffica per il bull); su un tiro mancato, la tenda si strappa.",
+   "dmd-style-help-random": "Uno stile animato scelto a caso all'inizio di ogni partita, per variare. I giochi con uno stile proprio (Balltrap) lo mantengono.",
+   "dmd-style-help-ringboy": "Lo stesso ring di pugilato, con un ring boy che presenta il segmento; riflettori e coriandoli per il bull, su un tiro mancato si getta la spugna e il pubblico fischia. Un nuovo ring boy per ogni giocatore.",
+   "dmd-style-help-ringgirl": "Un ring di pugilato di notte: una ring girl entra con un cartello con il segmento, che poi appare in grande; riflettori e coriandoli per il bull, su un tiro mancato si getta la spugna e il pubblico fischia. Una nuova ring girl per ogni giocatore.",
+   "dmd-style-help-shuriken": "Gli shuriken si piantano nelle assi (uno per moltiplicatore, kunai per il bull); su un tiro mancato, rimbalzano.",
+   "dmd-style-help-skater": "Uno skater dipinge il segmento con la bomboletta su un muro di mattoni; su un tiro mancato, inciampa in un sasso.",
+   "dmd-style-help-wave": "Un'onda da stampa giapponese si ritira e scopre il segmento; su un tiro mancato, il sole esplode. Durante la partita: nuvole e petali di ciliegio.",
    "dmd-style-modern": "Moderno",
+   "dmd-style-pipes": "Tiro alle pipe",
+   "dmd-style-random": "Casuale a ogni partita",
+   "dmd-style-ringboy": "Ring boy",
+   "dmd-style-ringgirl": "Ring girl",
+   "dmd-style-shuriken": "Lo shuriken",
+   "dmd-style-skater": "Lo skater",
+   "dmd-style-wave": "L'onda",
    "dmd-version-needed": "Moderno e Caccia alle anatre: Raspy2DMD 1.6.2.3 o successivo",
+   "dmd-version-needed-1624": "Questo stile: Raspy2DMD 1.6.2.4 o successivo",
    "dmd-version-old": "Moderno e Caccia alle anatre: Raspy2DMD 1.6.2.3 o successivo (installato: {}); il punteggio resta Classico",
+   "dmd-version-old-1624": "Questo stile: Raspy2DMD 1.6.2.4 o successivo (installato: {}); al suo posto Moderno",
    "dmd-wait": "In attesa durante la partita",
    "dmd-wait-N": "Scena dello stile",
    "dmd-wait-O": "Animazione abituale",
@@ -3328,14 +3448,38 @@ const MENUS_DATA = {
    "dmd-score-whole-sport": "Alle sportspellen",
    "dmd-server-favorites": "Favoriete servers",
    "dmd-style": "Stijl van de score",
+   "dmd-style-camera": "Grote camera",
+   "dmd-style-cards": "De kaarten",
    "dmd-style-classic": "Klassiek",
+   "dmd-style-drum": "De trommel",
    "dmd-style-duck": "Eendenjacht",
+   "dmd-style-ducks": "Eendjes schieten",
+   "dmd-style-help-camera": "Zoals Modern, met een groot camerabeeld: de camera zoekt en filmt het geraakte segment van dichtbij. Het scorebord staat rechts.",
+   "dmd-style-help-cards": "Speelkaarten tonen het segment (één kaart per vermenigvuldiger), daarna een grote kaart; een kaart draait om op \"MISS\".",
    "dmd-style-help-classic": "De gewone weergave van de drie pijlen, zonder achtergrond tijdens het spel.",
+   "dmd-style-help-drum": "Een stok slaat één keer per vermenigvuldiger op de trommel en het vel licht op; bij een misser raakt hij de rand.",
    "dmd-style-help-duck": "Een jachthond komt uit het gras met het geraakte segment en lacht om een misser. Tijdens het spel achtergrond: nachtelijke hemel, bomen en gras.",
+   "dmd-style-help-ducks": "Dezelfde kraam, met gele eendjes die omkiepen als ze geraakt worden; bij een misser scheurt het gordijn.",
    "dmd-style-help-modern": "Een camera filmt het bord: zoom op het geraakte segment, het bord ontploft bij een misser. Tijdens het spel achtergrond: bakstenen muur en bord.",
+   "dmd-style-help-pipes": "Een kermiskraam: pijpjes spatten uiteen (één per vermenigvuldiger, een salvo voor de bull); bij een misser scheurt het gordijn.",
+   "dmd-style-help-random": "Aan het begin van elk spel wordt willekeurig een geanimeerde stijl gekozen, voor afwisseling. Spellen met een eigen stijl (Balltrap) houden die.",
+   "dmd-style-help-ringboy": "Dezelfde boksring, met een ringboy die het segment toont; spots en confetti voor de bull, bij een misser wordt de handdoek gegooid en joelt het publiek. Een nieuwe ringboy voor elke speler.",
+   "dmd-style-help-ringgirl": "Een boksring bij nacht: een ringgirl komt op met een bord waarop het segment staat, daarna verschijnt het groot; spots en confetti voor de bull, bij een misser wordt de handdoek gegooid en joelt het publiek. Een nieuw ringgirl voor elke speler.",
+   "dmd-style-help-shuriken": "Shurikens blijven in planken steken (één per vermenigvuldiger, kunais voor de bull); bij een misser stuiteren ze terug.",
+   "dmd-style-help-skater": "Een skater spuit het segment op een bakstenen muur; bij een misser struikelt hij over een steen.",
+   "dmd-style-help-wave": "Een golf in Japanse prentstijl trekt zich terug en toont het segment; bij een misser ontploft de zon. Tijdens het spel: wolken en kersenbloesem.",
    "dmd-style-modern": "Modern",
+   "dmd-style-pipes": "Pijpjes schieten",
+   "dmd-style-random": "Willekeurig per spel",
+   "dmd-style-ringboy": "Ringboy",
+   "dmd-style-ringgirl": "Ringgirl",
+   "dmd-style-shuriken": "De shuriken",
+   "dmd-style-skater": "De skater",
+   "dmd-style-wave": "De golf",
    "dmd-version-needed": "Modern en Eendenjacht: Raspy2DMD 1.6.2.3 of nieuwer",
+   "dmd-version-needed-1624": "Deze stijl: Raspy2DMD 1.6.2.4 of nieuwer",
    "dmd-version-old": "Modern en Eendenjacht: Raspy2DMD 1.6.2.3 of nieuwer (geïnstalleerd: {}); de score blijft Klassiek",
+   "dmd-version-old-1624": "Deze stijl: Raspy2DMD 1.6.2.4 of nieuwer (geïnstalleerd: {}); in plaats daarvan Modern",
    "dmd-wait": "Wachten tijdens het spel",
    "dmd-wait-N": "Scène van de stijl",
    "dmd-wait-O": "Gewone animatie",
@@ -3622,6 +3766,275 @@ const MENUS_DATA = {
      "menu-text-white",
      "menu-buttons",
      "menu-text-black"
+    ],
+    "points": [
+     [
+      "menu-header",
+      0.15,
+      0.06
+     ],
+     [
+      "menu-text",
+      0.5,
+      0.06
+     ],
+     [
+      "menu-shortcut",
+      0.24,
+      0.23
+     ],
+     [
+      "menu-border",
+      0.2,
+      0.28
+     ],
+     [
+      "menu-favorite",
+      0.55,
+      0.71
+     ],
+     [
+      "menu-inactive",
+      0.85,
+      0.87
+     ],
+     [
+      "menu-selected",
+      0.8,
+      0.23
+     ],
+     [
+      "menu-text-white",
+      0.55,
+      0.23
+     ],
+     [
+      "menu-buttons",
+      0.85,
+      0.39
+     ],
+     [
+      "menu-text-black",
+      0.6,
+      0.39
+     ]
+    ],
+    "drawing": [
+     {
+      "op": "fill"
+     },
+     {
+      "op": "box",
+      "x": 0.0,
+      "y": 0.02,
+      "w": 1.0,
+      "h": 0.08,
+      "tag": "menu-header",
+      "radius": 0.0
+     },
+     {
+      "op": "text",
+      "text": "Raspydarts",
+      "x": 0.0,
+      "y": 0.02,
+      "w": 1.0,
+      "h": 0.08,
+      "tag": "menu-text",
+      "size": 0.6,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "box",
+      "x": 0.2,
+      "y": 0.17,
+      "w": 0.7,
+      "h": 0.12,
+      "tag": "menu-selected",
+      "radius": 0.009,
+      "border": "menu-border",
+      "borderWidth": 0.0045
+     },
+     {
+      "op": "box",
+      "x": 0.2,
+      "y": 0.17,
+      "w": 0.0967,
+      "h": 0.12,
+      "tag": "menu-shortcut",
+      "radius": 0.009
+     },
+     {
+      "op": "text",
+      "text": "F1",
+      "x": 0.2,
+      "y": 0.17,
+      "w": 0.0967,
+      "h": 0.12,
+      "tag": "menu-text-white",
+      "size": 0.6,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "text",
+      "text": "Partie simple",
+      "x": 0.2967,
+      "y": 0.17,
+      "w": 0.6033,
+      "h": 0.12,
+      "tag": "menu-text-white",
+      "size": 0.6,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "box",
+      "x": 0.2,
+      "y": 0.33,
+      "w": 0.7,
+      "h": 0.12,
+      "tag": "menu-buttons",
+      "radius": 0.009
+     },
+     {
+      "op": "box",
+      "x": 0.2,
+      "y": 0.33,
+      "w": 0.0967,
+      "h": 0.12,
+      "tag": "menu-shortcut",
+      "radius": 0.009
+     },
+     {
+      "op": "text",
+      "text": "F2",
+      "x": 0.2,
+      "y": 0.33,
+      "w": 0.0967,
+      "h": 0.12,
+      "tag": "menu-text-white",
+      "size": 0.6,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "text",
+      "text": "Partie en réseau",
+      "x": 0.2967,
+      "y": 0.33,
+      "w": 0.6033,
+      "h": 0.12,
+      "tag": "menu-text-black",
+      "size": 0.6,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "box",
+      "x": 0.2,
+      "y": 0.49,
+      "w": 0.7,
+      "h": 0.12,
+      "tag": "menu-buttons",
+      "radius": 0.009
+     },
+     {
+      "op": "box",
+      "x": 0.2,
+      "y": 0.49,
+      "w": 0.0967,
+      "h": 0.12,
+      "tag": "menu-shortcut",
+      "radius": 0.009
+     },
+     {
+      "op": "text",
+      "text": "F3",
+      "x": 0.2,
+      "y": 0.49,
+      "w": 0.0967,
+      "h": 0.12,
+      "tag": "menu-text-white",
+      "size": 0.6,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "text",
+      "text": "Divers",
+      "x": 0.2967,
+      "y": 0.49,
+      "w": 0.6033,
+      "h": 0.12,
+      "tag": "menu-text-black",
+      "size": 0.6,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "box",
+      "x": 0.2,
+      "y": 0.65,
+      "w": 0.7,
+      "h": 0.12,
+      "tag": "menu-buttons",
+      "radius": 0.009
+     },
+     {
+      "op": "box",
+      "x": 0.2,
+      "y": 0.65,
+      "w": 0.0967,
+      "h": 0.12,
+      "tag": "menu-shortcut",
+      "radius": 0.009
+     },
+     {
+      "op": "text",
+      "text": "F4",
+      "x": 0.2,
+      "y": 0.65,
+      "w": 0.0967,
+      "h": 0.12,
+      "tag": "menu-text-white",
+      "size": 0.6,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "text",
+      "text": "Cricket (favori)",
+      "x": 0.2967,
+      "y": 0.65,
+      "w": 0.6033,
+      "h": 0.12,
+      "tag": "menu-favorite",
+      "size": 0.6,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "box",
+      "x": 0.2,
+      "y": 0.81,
+      "w": 0.7,
+      "h": 0.12,
+      "tag": "menu-inactive",
+      "radius": 0.009
+     },
+     {
+      "op": "text",
+      "text": "Revenir sur le bureau",
+      "x": 0.2,
+      "y": 0.81,
+      "w": 0.7,
+      "h": 0.12,
+      "tag": "menu-text-black",
+      "size": 0.6,
+      "align": "center",
+      "valign": "center"
+     }
     ]
    },
    {
@@ -3633,6 +4046,253 @@ const MENUS_DATA = {
      "menu-ok",
      "menu-warning",
      "menu-ko"
+    ],
+    "points": [
+     [
+      "menu-alternate",
+      0.2,
+      0.22
+     ],
+     [
+      "menu-item-black",
+      0.12,
+      0.62
+     ],
+     [
+      "menu-item-white",
+      0.5,
+      0.6
+     ],
+     [
+      "menu-ok",
+      0.8,
+      0.82
+     ],
+     [
+      "menu-warning",
+      0.8,
+      0.88
+     ],
+     [
+      "menu-ko",
+      0.8,
+      0.94
+     ]
+    ],
+    "drawing": [
+     {
+      "op": "fill"
+     },
+     {
+      "op": "box",
+      "x": 0.05,
+      "y": 0.12,
+      "w": 0.9,
+      "h": 0.1,
+      "tag": "menu-buttons",
+      "radius": 0.009
+     },
+     {
+      "op": "box",
+      "x": 0.05,
+      "y": 0.12,
+      "w": 0.225,
+      "h": 0.1,
+      "tag": "menu-alternate",
+      "radius": 0.009
+     },
+     {
+      "op": "text",
+      "text": "Oui",
+      "x": 0.05,
+      "y": 0.12,
+      "w": 0.225,
+      "h": 0.1,
+      "tag": "menu-text-white",
+      "size": 0.6,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "text",
+      "text": "Afficher le segment touché",
+      "x": 0.275,
+      "y": 0.12,
+      "w": 0.675,
+      "h": 0.1,
+      "tag": "menu-text-black",
+      "size": 0.6,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "box",
+      "x": 0.05,
+      "y": 0.26,
+      "w": 0.9,
+      "h": 0.1,
+      "tag": "menu-buttons",
+      "radius": 0.009
+     },
+     {
+      "op": "box",
+      "x": 0.05,
+      "y": 0.26,
+      "w": 0.225,
+      "h": 0.1,
+      "tag": "menu-alternate",
+      "radius": 0.009
+     },
+     {
+      "op": "text",
+      "text": "20",
+      "x": 0.05,
+      "y": 0.26,
+      "w": 0.225,
+      "h": 0.1,
+      "tag": "menu-text-white",
+      "size": 0.6,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "text",
+      "text": "Nombre de tours",
+      "x": 0.275,
+      "y": 0.26,
+      "w": 0.675,
+      "h": 0.1,
+      "tag": "menu-text-black",
+      "size": 0.6,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "box",
+      "x": 0.05,
+      "y": 0.4,
+      "w": 0.9,
+      "h": 0.1,
+      "tag": "menu-buttons",
+      "radius": 0.009
+     },
+     {
+      "op": "box",
+      "x": 0.05,
+      "y": 0.4,
+      "w": 0.225,
+      "h": 0.1,
+      "tag": "menu-alternate",
+      "radius": 0.009
+     },
+     {
+      "op": "text",
+      "text": "Non",
+      "x": 0.05,
+      "y": 0.4,
+      "w": 0.225,
+      "h": 0.1,
+      "tag": "menu-text-white",
+      "size": 0.6,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "text",
+      "text": "Mode compétition",
+      "x": 0.275,
+      "y": 0.4,
+      "w": 0.675,
+      "h": 0.1,
+      "tag": "menu-text-black",
+      "size": 0.6,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "box",
+      "x": 0.05,
+      "y": 0.52,
+      "w": 0.55,
+      "h": 0.22,
+      "tag": "menu-item-black",
+      "radius": 0.009
+     },
+     {
+      "op": "text",
+      "text": "Nouveautés…",
+      "x": 0.05,
+      "y": 0.52,
+      "w": 0.55,
+      "h": 0.22,
+      "tag": "menu-item-white",
+      "size": 0.3,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "box",
+      "x": 0.62,
+      "y": 0.79,
+      "w": 0.36,
+      "h": 0.055,
+      "tag": "menu-ok",
+      "radius": 0.0045
+     },
+     {
+      "op": "text",
+      "text": "Enregistré",
+      "x": 0.62,
+      "y": 0.79,
+      "w": 0.36,
+      "h": 0.055,
+      "tag": "menu-text-white",
+      "size": 0.7,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "box",
+      "x": 0.62,
+      "y": 0.855,
+      "w": 0.36,
+      "h": 0.055,
+      "tag": "menu-warning",
+      "radius": 0.0045
+     },
+     {
+      "op": "text",
+      "text": "Attention",
+      "x": 0.62,
+      "y": 0.855,
+      "w": 0.36,
+      "h": 0.055,
+      "tag": "menu-text-white",
+      "size": 0.7,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "box",
+      "x": 0.62,
+      "y": 0.92,
+      "w": 0.36,
+      "h": 0.055,
+      "tag": "menu-ko",
+      "radius": 0.0045
+     },
+     {
+      "op": "text",
+      "text": "Erreur",
+      "x": 0.62,
+      "y": 0.92,
+      "w": 0.36,
+      "h": 0.055,
+      "tag": "menu-text-white",
+      "size": 0.7,
+      "align": "center",
+      "valign": "center"
+     }
     ]
    },
    {
@@ -3641,6 +4301,382 @@ const MENUS_DATA = {
      "description-bg",
      "description-game",
      "description-text"
+    ],
+    "points": [
+     [
+      "description-bg",
+      0.62,
+      0.7
+     ],
+     [
+      "description-game",
+      0.75,
+      0.2
+     ],
+     [
+      "description-text",
+      0.75,
+      0.42
+     ]
+    ],
+    "drawing": [
+     {
+      "op": "fill"
+     },
+     {
+      "op": "circle",
+      "cx": 0.095,
+      "cy": 0.205,
+      "r": 0.055,
+      "color": [
+       180,
+       30,
+       30
+      ]
+     },
+     {
+      "op": "circle",
+      "cx": 0.095,
+      "cy": 0.205,
+      "r": 0.0275,
+      "color": [
+       240,
+       240,
+       240
+      ]
+     },
+     {
+      "op": "circle",
+      "cx": 0.225,
+      "cy": 0.205,
+      "r": 0.055,
+      "color": [
+       180,
+       30,
+       30
+      ]
+     },
+     {
+      "op": "circle",
+      "cx": 0.225,
+      "cy": 0.205,
+      "r": 0.0275,
+      "color": [
+       240,
+       240,
+       240
+      ]
+     },
+     {
+      "op": "circle",
+      "cx": 0.355,
+      "cy": 0.205,
+      "r": 0.055,
+      "color": [
+       180,
+       30,
+       30
+      ]
+     },
+     {
+      "op": "circle",
+      "cx": 0.355,
+      "cy": 0.205,
+      "r": 0.0275,
+      "color": [
+       240,
+       240,
+       240
+      ]
+     },
+     {
+      "op": "circle",
+      "cx": 0.095,
+      "cy": 0.405,
+      "r": 0.055,
+      "color": [
+       180,
+       30,
+       30
+      ]
+     },
+     {
+      "op": "circle",
+      "cx": 0.095,
+      "cy": 0.405,
+      "r": 0.0275,
+      "color": [
+       240,
+       240,
+       240
+      ]
+     },
+     {
+      "op": "circle",
+      "cx": 0.225,
+      "cy": 0.405,
+      "r": 0.055,
+      "color": [
+       180,
+       30,
+       30
+      ]
+     },
+     {
+      "op": "circle",
+      "cx": 0.225,
+      "cy": 0.405,
+      "r": 0.0275,
+      "color": [
+       240,
+       240,
+       240
+      ]
+     },
+     {
+      "op": "circle",
+      "cx": 0.355,
+      "cy": 0.405,
+      "r": 0.055,
+      "color": [
+       180,
+       30,
+       30
+      ]
+     },
+     {
+      "op": "circle",
+      "cx": 0.355,
+      "cy": 0.405,
+      "r": 0.0275,
+      "color": [
+       240,
+       240,
+       240
+      ]
+     },
+     {
+      "op": "circle",
+      "cx": 0.095,
+      "cy": 0.605,
+      "r": 0.055,
+      "color": [
+       180,
+       30,
+       30
+      ]
+     },
+     {
+      "op": "circle",
+      "cx": 0.095,
+      "cy": 0.605,
+      "r": 0.0275,
+      "color": [
+       240,
+       240,
+       240
+      ]
+     },
+     {
+      "op": "circle",
+      "cx": 0.225,
+      "cy": 0.605,
+      "r": 0.055,
+      "color": [
+       180,
+       30,
+       30
+      ]
+     },
+     {
+      "op": "circle",
+      "cx": 0.225,
+      "cy": 0.605,
+      "r": 0.0275,
+      "color": [
+       240,
+       240,
+       240
+      ]
+     },
+     {
+      "op": "circle",
+      "cx": 0.355,
+      "cy": 0.605,
+      "r": 0.055,
+      "color": [
+       180,
+       30,
+       30
+      ]
+     },
+     {
+      "op": "circle",
+      "cx": 0.355,
+      "cy": 0.605,
+      "r": 0.0275,
+      "color": [
+       240,
+       240,
+       240
+      ]
+     },
+     {
+      "op": "circle",
+      "cx": 0.095,
+      "cy": 0.805,
+      "r": 0.055,
+      "color": [
+       180,
+       30,
+       30
+      ]
+     },
+     {
+      "op": "circle",
+      "cx": 0.095,
+      "cy": 0.805,
+      "r": 0.0275,
+      "color": [
+       240,
+       240,
+       240
+      ]
+     },
+     {
+      "op": "circle",
+      "cx": 0.225,
+      "cy": 0.805,
+      "r": 0.055,
+      "color": [
+       180,
+       30,
+       30
+      ]
+     },
+     {
+      "op": "circle",
+      "cx": 0.225,
+      "cy": 0.805,
+      "r": 0.0275,
+      "color": [
+       240,
+       240,
+       240
+      ]
+     },
+     {
+      "op": "circle",
+      "cx": 0.355,
+      "cy": 0.805,
+      "r": 0.055,
+      "color": [
+       180,
+       30,
+       30
+      ]
+     },
+     {
+      "op": "circle",
+      "cx": 0.355,
+      "cy": 0.805,
+      "r": 0.0275,
+      "color": [
+       240,
+       240,
+       240
+      ]
+     },
+     {
+      "op": "box",
+      "x": 0.45,
+      "y": 0.12,
+      "w": 0.52,
+      "h": 0.12,
+      "tag": "description-bg",
+      "radius": 0.018
+     },
+     {
+      "op": "text",
+      "text": "Cricket",
+      "x": 0.45,
+      "y": 0.12,
+      "w": 0.52,
+      "h": 0.12,
+      "tag": "description-game",
+      "size": 0.6,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "box",
+      "x": 0.45,
+      "y": 0.28,
+      "w": 0.52,
+      "h": 0.62,
+      "tag": "description-bg",
+      "radius": 0.0269
+     },
+     {
+      "op": "text",
+      "text": "Fermez les chiffres de 15 à 20…",
+      "x": 0.47,
+      "y": 0.32,
+      "w": 0.48,
+      "h": 0.06,
+      "tag": "description-text",
+      "size": 0.7,
+      "align": "left",
+      "valign": "center"
+     },
+     {
+      "op": "text",
+      "text": "Fermez les chiffres de 15 à 20…",
+      "x": 0.47,
+      "y": 0.39,
+      "w": 0.48,
+      "h": 0.06,
+      "tag": "description-text",
+      "size": 0.7,
+      "align": "left",
+      "valign": "center"
+     },
+     {
+      "op": "text",
+      "text": "Fermez les chiffres de 15 à 20…",
+      "x": 0.47,
+      "y": 0.46,
+      "w": 0.48,
+      "h": 0.06,
+      "tag": "description-text",
+      "size": 0.7,
+      "align": "left",
+      "valign": "center"
+     },
+     {
+      "op": "text",
+      "text": "Fermez les chiffres de 15 à 20…",
+      "x": 0.47,
+      "y": 0.53,
+      "w": 0.48,
+      "h": 0.06,
+      "tag": "description-text",
+      "size": 0.7,
+      "align": "left",
+      "valign": "center"
+     },
+     {
+      "op": "text",
+      "text": "Fermez les chiffres de 15 à 20…",
+      "x": 0.47,
+      "y": 0.6,
+      "w": 0.48,
+      "h": 0.06,
+      "tag": "description-text",
+      "size": 0.7,
+      "align": "left",
+      "valign": "center"
+     }
     ]
    },
    {
@@ -3648,6 +4684,44 @@ const MENUS_DATA = {
     "tags": [
      "message-bg",
      "message-text"
+    ],
+    "points": [
+     [
+      "message-bg",
+      0.2,
+      0.5
+     ],
+     [
+      "message-text",
+      0.6,
+      0.5
+     ]
+    ],
+    "drawing": [
+     {
+      "op": "fill"
+     },
+     {
+      "op": "box",
+      "x": 0.0,
+      "y": 0.42,
+      "w": 1.0,
+      "h": 0.16,
+      "tag": "message-bg",
+      "radius": 0.0
+     },
+     {
+      "op": "text",
+      "text": "Retirez les fléchettes et appuyez sur « Joueur suivant »",
+      "x": 0.0,
+      "y": 0.42,
+      "w": 1.0,
+      "h": 0.16,
+      "tag": "message-text",
+      "size": 0.45,
+      "align": "center",
+      "valign": "center"
+     }
     ]
    },
    {
@@ -3673,6 +4747,411 @@ const MENUS_DATA = {
      "game-text",
      "game-title1",
      "game-title2"
+    ],
+    "points": [
+     [
+      "game-bg",
+      0.05,
+      0.5
+     ],
+     [
+      "bg-round-nb-header",
+      0.12,
+      0.08
+     ],
+     [
+      "bg-round-nb",
+      0.12,
+      0.2
+     ],
+     [
+      "game-round",
+      0.12,
+      0.2
+     ],
+     [
+      "bg-darts-nb-header",
+      0.12,
+      0.36
+     ],
+     [
+      "bg-darts-nb",
+      0.12,
+      0.47
+     ],
+     [
+      "game-darts",
+      0.12,
+      0.47
+     ],
+     [
+      "game-type",
+      0.12,
+      0.66
+     ],
+     [
+      "game-option",
+      0.12,
+      0.74
+     ],
+     [
+      "game-headers",
+      0.6,
+      0.06
+     ],
+     [
+      "game-alt-headers",
+      0.85,
+      0.06
+     ],
+     [
+      "game-player",
+      0.85,
+      0.2
+     ],
+     [
+      "game-player-name",
+      0.5,
+      0.2
+     ],
+     [
+      "game-score",
+      0.95,
+      0.2
+     ],
+     [
+      "game-inactive",
+      0.85,
+      0.34
+     ],
+     [
+      "game-dead",
+      0.85,
+      0.48
+     ],
+     [
+      "game-table",
+      0.6,
+      0.66
+     ],
+     [
+      "game-text",
+      0.75,
+      0.8
+     ],
+     [
+      "game-title1",
+      0.6,
+      0.93
+     ],
+     [
+      "game-title2",
+      0.6,
+      0.93
+     ]
+    ],
+    "drawing": [
+     {
+      "op": "fill",
+      "tag": "game-bg"
+     },
+     {
+      "op": "box",
+      "x": 0.02,
+      "y": 0.03,
+      "w": 0.2,
+      "h": 0.08,
+      "tag": "bg-round-nb-header",
+      "radius": 0.006
+     },
+     {
+      "op": "text",
+      "text": "Round",
+      "x": 0.02,
+      "y": 0.03,
+      "w": 0.2,
+      "h": 0.08,
+      "tag": "game-headers",
+      "size": 0.6,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "box",
+      "x": 0.02,
+      "y": 0.12,
+      "w": 0.2,
+      "h": 0.16,
+      "tag": "bg-round-nb",
+      "radius": 0.006
+     },
+     {
+      "op": "text",
+      "text": "1 / 20",
+      "x": 0.02,
+      "y": 0.12,
+      "w": 0.2,
+      "h": 0.16,
+      "tag": "game-round",
+      "size": 0.6,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "box",
+      "x": 0.02,
+      "y": 0.32,
+      "w": 0.2,
+      "h": 0.08,
+      "tag": "bg-darts-nb-header",
+      "radius": 0.006
+     },
+     {
+      "op": "text",
+      "text": "Darts",
+      "x": 0.02,
+      "y": 0.32,
+      "w": 0.2,
+      "h": 0.08,
+      "tag": "game-headers",
+      "size": 0.6,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "box",
+      "x": 0.02,
+      "y": 0.41,
+      "w": 0.2,
+      "h": 0.12,
+      "tag": "bg-darts-nb",
+      "radius": 0.006
+     },
+     {
+      "op": "text",
+      "text": "3",
+      "x": 0.02,
+      "y": 0.41,
+      "w": 0.2,
+      "h": 0.12,
+      "tag": "game-darts",
+      "size": 0.6,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "text",
+      "text": "Cricket",
+      "x": 0.02,
+      "y": 0.62,
+      "w": 0.2,
+      "h": 0.08,
+      "tag": "game-type",
+      "size": 0.6,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "text",
+      "text": "Paye ton coup : 200",
+      "x": 0.02,
+      "y": 0.71,
+      "w": 0.2,
+      "h": 0.06,
+      "tag": "game-option",
+      "size": 0.6,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "box",
+      "x": 0.3,
+      "y": 0.02,
+      "w": 0.68,
+      "h": 0.08,
+      "tag": "game-alt-headers",
+      "radius": 0.0
+     },
+     {
+      "op": "text",
+      "text": "Joueur          Score",
+      "x": 0.3,
+      "y": 0.02,
+      "w": 0.68,
+      "h": 0.08,
+      "tag": "game-headers",
+      "size": 0.6,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "box",
+      "x": 0.3,
+      "y": 0.13,
+      "w": 0.68,
+      "h": 0.12,
+      "tag": "game-player",
+      "radius": 0.0
+     },
+     {
+      "op": "text",
+      "text": "Joueur 1",
+      "x": 0.3,
+      "y": 0.13,
+      "w": 0.408,
+      "h": 0.12,
+      "tag": "game-player-name",
+      "size": 0.6,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "text",
+      "text": "120",
+      "x": 0.708,
+      "y": 0.13,
+      "w": 0.272,
+      "h": 0.12,
+      "tag": "game-score",
+      "size": 0.6,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "box",
+      "x": 0.3,
+      "y": 0.27,
+      "w": 0.68,
+      "h": 0.12,
+      "tag": "game-inactive",
+      "radius": 0.0
+     },
+     {
+      "op": "text",
+      "text": "Joueur 2",
+      "x": 0.3,
+      "y": 0.27,
+      "w": 0.408,
+      "h": 0.12,
+      "tag": "game-text",
+      "size": 0.6,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "text",
+      "text": "80",
+      "x": 0.708,
+      "y": 0.27,
+      "w": 0.272,
+      "h": 0.12,
+      "tag": "game-score",
+      "size": 0.6,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "box",
+      "x": 0.3,
+      "y": 0.41,
+      "w": 0.68,
+      "h": 0.12,
+      "tag": "game-dead",
+      "radius": 0.0
+     },
+     {
+      "op": "text",
+      "text": "Joueur 3",
+      "x": 0.3,
+      "y": 0.41,
+      "w": 0.408,
+      "h": 0.12,
+      "tag": "game-text",
+      "size": 0.6,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "text",
+      "text": "0",
+      "x": 0.708,
+      "y": 0.41,
+      "w": 0.272,
+      "h": 0.12,
+      "tag": "game-score",
+      "size": 0.6,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "line",
+      "x1": 0.3,
+      "y1": 0.58,
+      "x2": 0.98,
+      "y2": 0.58,
+      "tag": "game-table",
+      "width": 0.003
+     },
+     {
+      "op": "line",
+      "x1": 0.3,
+      "y1": 0.64,
+      "x2": 0.98,
+      "y2": 0.64,
+      "tag": "game-table",
+      "width": 0.003
+     },
+     {
+      "op": "line",
+      "x1": 0.3,
+      "y1": 0.7,
+      "x2": 0.98,
+      "y2": 0.7,
+      "tag": "game-table",
+      "width": 0.003
+     },
+     {
+      "op": "line",
+      "x1": 0.3,
+      "y1": 0.76,
+      "x2": 0.98,
+      "y2": 0.76,
+      "tag": "game-table",
+      "width": 0.003
+     },
+     {
+      "op": "text",
+      "text": "20   19   18   17",
+      "x": 0.3,
+      "y": 0.77,
+      "w": 0.68,
+      "h": 0.06,
+      "tag": "game-text",
+      "size": 0.6,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "box",
+      "x": 0.3,
+      "y": 0.88,
+      "w": 0.68,
+      "h": 0.1,
+      "tag": "game-title1",
+      "radius": 0.0
+     },
+     {
+      "op": "text",
+      "text": "Le gagnant est…",
+      "x": 0.3,
+      "y": 0.88,
+      "w": 0.68,
+      "h": 0.1,
+      "tag": "game-title2",
+      "size": 0.6,
+      "align": "center",
+      "valign": "center"
+     }
     ]
    },
    {
@@ -3690,6 +5169,325 @@ const MENUS_DATA = {
      "player10",
      "player11",
      "player12"
+    ],
+    "points": [
+     [
+      "player1",
+      0.08,
+      0.3
+     ],
+     [
+      "player2",
+      0.25,
+      0.3
+     ],
+     [
+      "player3",
+      0.42000000000000004,
+      0.3
+     ],
+     [
+      "player4",
+      0.59,
+      0.3
+     ],
+     [
+      "player5",
+      0.76,
+      0.3
+     ],
+     [
+      "player6",
+      0.93,
+      0.3
+     ],
+     [
+      "player7",
+      0.08,
+      0.7
+     ],
+     [
+      "player8",
+      0.25,
+      0.7
+     ],
+     [
+      "player9",
+      0.42000000000000004,
+      0.7
+     ],
+     [
+      "player10",
+      0.59,
+      0.7
+     ],
+     [
+      "player11",
+      0.76,
+      0.7
+     ],
+     [
+      "player12",
+      0.93,
+      0.7
+     ]
+    ],
+    "drawing": [
+     {
+      "op": "fill"
+     },
+     {
+      "op": "box",
+      "x": 0.02,
+      "y": 0.2,
+      "w": 0.12,
+      "h": 0.2,
+      "tag": "player1",
+      "radius": 0.012
+     },
+     {
+      "op": "text",
+      "text": "1",
+      "x": 0.02,
+      "y": 0.2,
+      "w": 0.12,
+      "h": 0.2,
+      "tag": "color-black",
+      "size": 0.5,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "box",
+      "x": 0.19,
+      "y": 0.2,
+      "w": 0.12,
+      "h": 0.2,
+      "tag": "player2",
+      "radius": 0.012
+     },
+     {
+      "op": "text",
+      "text": "2",
+      "x": 0.19,
+      "y": 0.2,
+      "w": 0.12,
+      "h": 0.2,
+      "tag": "color-black",
+      "size": 0.5,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "box",
+      "x": 0.36,
+      "y": 0.2,
+      "w": 0.12,
+      "h": 0.2,
+      "tag": "player3",
+      "radius": 0.012
+     },
+     {
+      "op": "text",
+      "text": "3",
+      "x": 0.36,
+      "y": 0.2,
+      "w": 0.12,
+      "h": 0.2,
+      "tag": "color-black",
+      "size": 0.5,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "box",
+      "x": 0.53,
+      "y": 0.2,
+      "w": 0.12,
+      "h": 0.2,
+      "tag": "player4",
+      "radius": 0.012
+     },
+     {
+      "op": "text",
+      "text": "4",
+      "x": 0.53,
+      "y": 0.2,
+      "w": 0.12,
+      "h": 0.2,
+      "tag": "color-black",
+      "size": 0.5,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "box",
+      "x": 0.7,
+      "y": 0.2,
+      "w": 0.12,
+      "h": 0.2,
+      "tag": "player5",
+      "radius": 0.012
+     },
+     {
+      "op": "text",
+      "text": "5",
+      "x": 0.7,
+      "y": 0.2,
+      "w": 0.12,
+      "h": 0.2,
+      "tag": "color-black",
+      "size": 0.5,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "box",
+      "x": 0.87,
+      "y": 0.2,
+      "w": 0.12,
+      "h": 0.2,
+      "tag": "player6",
+      "radius": 0.012
+     },
+     {
+      "op": "text",
+      "text": "6",
+      "x": 0.87,
+      "y": 0.2,
+      "w": 0.12,
+      "h": 0.2,
+      "tag": "color-black",
+      "size": 0.5,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "box",
+      "x": 0.02,
+      "y": 0.6,
+      "w": 0.12,
+      "h": 0.2,
+      "tag": "player7",
+      "radius": 0.012
+     },
+     {
+      "op": "text",
+      "text": "7",
+      "x": 0.02,
+      "y": 0.6,
+      "w": 0.12,
+      "h": 0.2,
+      "tag": "color-black",
+      "size": 0.5,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "box",
+      "x": 0.19,
+      "y": 0.6,
+      "w": 0.12,
+      "h": 0.2,
+      "tag": "player8",
+      "radius": 0.012
+     },
+     {
+      "op": "text",
+      "text": "8",
+      "x": 0.19,
+      "y": 0.6,
+      "w": 0.12,
+      "h": 0.2,
+      "tag": "color-black",
+      "size": 0.5,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "box",
+      "x": 0.36,
+      "y": 0.6,
+      "w": 0.12,
+      "h": 0.2,
+      "tag": "player9",
+      "radius": 0.012
+     },
+     {
+      "op": "text",
+      "text": "9",
+      "x": 0.36,
+      "y": 0.6,
+      "w": 0.12,
+      "h": 0.2,
+      "tag": "color-black",
+      "size": 0.5,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "box",
+      "x": 0.53,
+      "y": 0.6,
+      "w": 0.12,
+      "h": 0.2,
+      "tag": "player10",
+      "radius": 0.012
+     },
+     {
+      "op": "text",
+      "text": "10",
+      "x": 0.53,
+      "y": 0.6,
+      "w": 0.12,
+      "h": 0.2,
+      "tag": "color-black",
+      "size": 0.5,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "box",
+      "x": 0.7,
+      "y": 0.6,
+      "w": 0.12,
+      "h": 0.2,
+      "tag": "player11",
+      "radius": 0.012
+     },
+     {
+      "op": "text",
+      "text": "11",
+      "x": 0.7,
+      "y": 0.6,
+      "w": 0.12,
+      "h": 0.2,
+      "tag": "color-black",
+      "size": 0.5,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "box",
+      "x": 0.87,
+      "y": 0.6,
+      "w": 0.12,
+      "h": 0.2,
+      "tag": "player12",
+      "radius": 0.012
+     },
+     {
+      "op": "text",
+      "text": "12",
+      "x": 0.87,
+      "y": 0.6,
+      "w": 0.12,
+      "h": 0.2,
+      "tag": "color-black",
+      "size": 0.5,
+      "align": "center",
+      "valign": "center"
+     }
     ]
    },
    {
@@ -3705,6 +5503,213 @@ const MENUS_DATA = {
      "game-silver",
      "game-bronze",
      "suggestion-color-allplayer"
+    ],
+    "points": [
+     [
+      "game-red",
+      0.1,
+      0.3
+     ],
+     [
+      "game-green",
+      0.3,
+      0.3
+     ],
+     [
+      "game-blue",
+      0.5,
+      0.3
+     ],
+     [
+      "game-purple",
+      0.7,
+      0.3
+     ],
+     [
+      "game-grey",
+      0.9,
+      0.3
+     ],
+     [
+      "game-grey2",
+      0.1,
+      0.7
+     ],
+     [
+      "game-gold",
+      0.3,
+      0.7
+     ],
+     [
+      "game-silver",
+      0.5,
+      0.7
+     ],
+     [
+      "game-bronze",
+      0.7,
+      0.7
+     ],
+     [
+      "suggestion-color-allplayer",
+      0.9,
+      0.7
+     ]
+    ],
+    "drawing": [
+     {
+      "op": "fill"
+     },
+     {
+      "op": "swatch",
+      "x": 0.03,
+      "y": 0.2,
+      "w": 0.14,
+      "h": 0.2,
+      "tag": "game-red",
+      "radius": 0.012,
+      "outline": [
+       90,
+       90,
+       90
+      ],
+      "outlineWidth": 0.003
+     },
+     {
+      "op": "swatch",
+      "x": 0.23,
+      "y": 0.2,
+      "w": 0.14,
+      "h": 0.2,
+      "tag": "game-green",
+      "radius": 0.012,
+      "outline": [
+       90,
+       90,
+       90
+      ],
+      "outlineWidth": 0.003
+     },
+     {
+      "op": "swatch",
+      "x": 0.43,
+      "y": 0.2,
+      "w": 0.14,
+      "h": 0.2,
+      "tag": "game-blue",
+      "radius": 0.012,
+      "outline": [
+       90,
+       90,
+       90
+      ],
+      "outlineWidth": 0.003
+     },
+     {
+      "op": "swatch",
+      "x": 0.63,
+      "y": 0.2,
+      "w": 0.14,
+      "h": 0.2,
+      "tag": "game-purple",
+      "radius": 0.012,
+      "outline": [
+       90,
+       90,
+       90
+      ],
+      "outlineWidth": 0.003
+     },
+     {
+      "op": "swatch",
+      "x": 0.83,
+      "y": 0.2,
+      "w": 0.14,
+      "h": 0.2,
+      "tag": "game-grey",
+      "radius": 0.012,
+      "outline": [
+       90,
+       90,
+       90
+      ],
+      "outlineWidth": 0.003
+     },
+     {
+      "op": "swatch",
+      "x": 0.03,
+      "y": 0.6,
+      "w": 0.14,
+      "h": 0.2,
+      "tag": "game-grey2",
+      "radius": 0.012,
+      "outline": [
+       90,
+       90,
+       90
+      ],
+      "outlineWidth": 0.003
+     },
+     {
+      "op": "swatch",
+      "x": 0.23,
+      "y": 0.6,
+      "w": 0.14,
+      "h": 0.2,
+      "tag": "game-gold",
+      "radius": 0.012,
+      "outline": [
+       90,
+       90,
+       90
+      ],
+      "outlineWidth": 0.003
+     },
+     {
+      "op": "swatch",
+      "x": 0.43,
+      "y": 0.6,
+      "w": 0.14,
+      "h": 0.2,
+      "tag": "game-silver",
+      "radius": 0.012,
+      "outline": [
+       90,
+       90,
+       90
+      ],
+      "outlineWidth": 0.003
+     },
+     {
+      "op": "swatch",
+      "x": 0.63,
+      "y": 0.6,
+      "w": 0.14,
+      "h": 0.2,
+      "tag": "game-bronze",
+      "radius": 0.012,
+      "outline": [
+       90,
+       90,
+       90
+      ],
+      "outlineWidth": 0.003
+     },
+     {
+      "op": "swatch",
+      "x": 0.83,
+      "y": 0.6,
+      "w": 0.14,
+      "h": 0.2,
+      "tag": "suggestion-color-allplayer",
+      "radius": 0.012,
+      "outline": [
+       90,
+       90,
+       90
+      ],
+      "outlineWidth": 0.003
+     }
     ]
    },
    {
@@ -3717,6 +5722,136 @@ const MENUS_DATA = {
      "bob27-hit",
      "bob27-miss",
      "bob27-text"
+    ],
+    "points": [
+     [
+      "bob27-bg",
+      0.05,
+      0.5
+     ],
+     [
+      "bob27-blue",
+      0.3,
+      0.25
+     ],
+     [
+      "bob27-green",
+      0.3,
+      0.5
+     ],
+     [
+      "bob27-red",
+      0.3,
+      0.75
+     ],
+     [
+      "bob27-hit",
+      0.7,
+      0.25
+     ],
+     [
+      "bob27-miss",
+      0.7,
+      0.5
+     ],
+     [
+      "bob27-text",
+      0.62,
+      0.75
+     ]
+    ],
+    "drawing": [
+     {
+      "op": "fill",
+      "tag": "bob27-bg"
+     },
+     {
+      "op": "box",
+      "x": 0.15,
+      "y": 0.18,
+      "w": 0.4,
+      "h": 0.15,
+      "tag": "bob27-blue",
+      "radius": 0.009
+     },
+     {
+      "op": "text",
+      "text": "D1   D2   D3",
+      "x": 0.15,
+      "y": 0.18,
+      "w": 0.4,
+      "h": 0.15,
+      "tag": "bob27-text",
+      "size": 0.5,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "box",
+      "x": 0.15,
+      "y": 0.43,
+      "w": 0.4,
+      "h": 0.15,
+      "tag": "bob27-green",
+      "radius": 0.009
+     },
+     {
+      "op": "text",
+      "text": "27 points",
+      "x": 0.15,
+      "y": 0.43,
+      "w": 0.4,
+      "h": 0.15,
+      "tag": "bob27-text",
+      "size": 0.5,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "box",
+      "x": 0.15,
+      "y": 0.68,
+      "w": 0.4,
+      "h": 0.15,
+      "tag": "bob27-red",
+      "radius": 0.009
+     },
+     {
+      "op": "text",
+      "text": "Touché / Raté",
+      "x": 0.15,
+      "y": 0.68,
+      "w": 0.4,
+      "h": 0.15,
+      "tag": "bob27-text",
+      "size": 0.5,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "text",
+      "text": "D1 : OK",
+      "x": 0.6,
+      "y": 0.18,
+      "w": 0.25,
+      "h": 0.15,
+      "tag": "bob27-hit",
+      "size": 0.6,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "text",
+      "text": "D2 : X",
+      "x": 0.6,
+      "y": 0.43,
+      "w": 0.25,
+      "h": 0.15,
+      "tag": "bob27-miss",
+      "size": 0.6,
+      "align": "center",
+      "valign": "center"
+     }
     ]
    },
    {
@@ -3730,6 +5865,149 @@ const MENUS_DATA = {
      "fighters-scores",
      "fighters-darts",
      "fighters-round"
+    ],
+    "points": [
+     [
+      "fighters-actual-player",
+      0.3,
+      0.15
+     ],
+     [
+      "fighters-alive-player",
+      0.3,
+      0.35
+     ],
+     [
+      "fighters-dead-player",
+      0.3,
+      0.55
+     ],
+     [
+      "fighters-medic",
+      0.3,
+      0.75
+     ],
+     [
+      "fighters-targets",
+      0.75,
+      0.15
+     ],
+     [
+      "fighters-scores",
+      0.75,
+      0.35
+     ],
+     [
+      "fighters-darts",
+      0.75,
+      0.55
+     ],
+     [
+      "fighters-round",
+      0.75,
+      0.75
+     ]
+    ],
+    "drawing": [
+     {
+      "op": "fill"
+     },
+     {
+      "op": "text",
+      "text": "> Joueur 1",
+      "x": 0.05,
+      "y": 0.08,
+      "w": 0.45,
+      "h": 0.15,
+      "tag": "fighters-actual-player",
+      "size": 0.55,
+      "align": "left",
+      "valign": "center"
+     },
+     {
+      "op": "text",
+      "text": "Joueur 2",
+      "x": 0.05,
+      "y": 0.28,
+      "w": 0.45,
+      "h": 0.15,
+      "tag": "fighters-alive-player",
+      "size": 0.55,
+      "align": "left",
+      "valign": "center"
+     },
+     {
+      "op": "text",
+      "text": "Joueur 3 (KO)",
+      "x": 0.05,
+      "y": 0.48,
+      "w": 0.45,
+      "h": 0.15,
+      "tag": "fighters-dead-player",
+      "size": 0.55,
+      "align": "left",
+      "valign": "center"
+     },
+     {
+      "op": "text",
+      "text": "+ Soin",
+      "x": 0.05,
+      "y": 0.68,
+      "w": 0.45,
+      "h": 0.15,
+      "tag": "fighters-medic",
+      "size": 0.55,
+      "align": "left",
+      "valign": "center"
+     },
+     {
+      "op": "text",
+      "text": "20  19  18",
+      "x": 0.55,
+      "y": 0.08,
+      "w": 0.4,
+      "h": 0.15,
+      "tag": "fighters-targets",
+      "size": 0.55,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "text",
+      "text": "120",
+      "x": 0.55,
+      "y": 0.28,
+      "w": 0.4,
+      "h": 0.15,
+      "tag": "fighters-scores",
+      "size": 0.55,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "text",
+      "text": "o  o  o",
+      "x": 0.55,
+      "y": 0.48,
+      "w": 0.4,
+      "h": 0.15,
+      "tag": "fighters-darts",
+      "size": 0.55,
+      "align": "center",
+      "valign": "center"
+     },
+     {
+      "op": "text",
+      "text": "Round 3",
+      "x": 0.55,
+      "y": 0.68,
+      "w": 0.4,
+      "h": 0.15,
+      "tag": "fighters-round",
+      "size": 0.55,
+      "align": "center",
+      "valign": "center"
+     }
     ]
    },
    {
@@ -3739,6 +6017,68 @@ const MENUS_DATA = {
      "padding",
      "border-radius",
      "button-radius"
+    ],
+    "points": [
+     [
+      "border-size",
+      0.25,
+      0.26
+     ],
+     [
+      "padding",
+      0.3,
+      0.32
+     ],
+     [
+      "border-radius",
+      0.88,
+      0.5
+     ],
+     [
+      "button-radius",
+      0.8,
+      0.84
+     ]
+    ],
+    "drawing": [
+     {
+      "op": "fill"
+     },
+     {
+      "op": "shapedRow",
+      "x": 0.15,
+      "y": 0.2,
+      "w": 0.7,
+      "h": 0.13,
+      "label": "Partie simple",
+      "chosen": true
+     },
+     {
+      "op": "shapedRow",
+      "x": 0.15,
+      "y": 0.38,
+      "w": 0.7,
+      "h": 0.13,
+      "label": "Partie en réseau",
+      "chosen": false
+     },
+     {
+      "op": "shapedRow",
+      "x": 0.15,
+      "y": 0.56,
+      "w": 0.7,
+      "h": 0.13,
+      "label": "Divers",
+      "chosen": false
+     },
+     {
+      "op": "shapedButton",
+      "x": 0.62,
+      "y": 0.8,
+      "w": 0.3,
+      "h": 0.09,
+      "label": "Sauvegarder"
+     }
     ]
    },
    {
@@ -3758,9 +6098,172 @@ const MENUS_DATA = {
      "players-menu-text-align",
      "players-menu-text-valign",
      "game-options-menu-text-align"
+    ],
+    "points": [
+     [
+      "main-sub-menu-shortcuts",
+      0.08,
+      0.15
+     ],
+     [
+      "main-sub-menu-text-position",
+      0.3,
+      0.15
+     ],
+     [
+      "parametrage-menu-shortcuts",
+      0.08,
+      0.4
+     ],
+     [
+      "parametrage-menu-text-position",
+      0.3,
+      0.4
+     ],
+     [
+      "players-menu-shortcuts",
+      0.08,
+      0.65
+     ],
+     [
+      "players-menu-text-position",
+      0.3,
+      0.65
+     ],
+     [
+      "game-options-menu-shortcuts",
+      0.08,
+      0.88
+     ],
+     [
+      "main-sub-menu-text-align",
+      0.7,
+      0.15
+     ],
+     [
+      "main-sub-menu-text-valign",
+      0.7,
+      0.2
+     ],
+     [
+      "parametrage-menu-text-align",
+      0.7,
+      0.4
+     ],
+     [
+      "parametrage-menu-text-valign",
+      0.7,
+      0.45
+     ],
+     [
+      "players-menu-text-align",
+      0.7,
+      0.65
+     ],
+     [
+      "players-menu-text-valign",
+      0.7,
+      0.7
+     ],
+     [
+      "game-options-menu-text-align",
+      0.7,
+      0.88
+     ]
+    ],
+    "drawing": [
+     {
+      "op": "fill"
+     },
+     {
+      "op": "exampleRow",
+      "x": 0.05,
+      "y": 0.08,
+      "w": 0.9,
+      "h": 0.15,
+      "prefix": "main-sub-menu",
+      "label": "Partie simple",
+      "radius": 0.009
+     },
+     {
+      "op": "exampleRow",
+      "x": 0.05,
+      "y": 0.32,
+      "w": 0.9,
+      "h": 0.15,
+      "prefix": "parametrage-menu",
+      "label": "Paramétrage",
+      "radius": 0.009
+     },
+     {
+      "op": "exampleRow",
+      "x": 0.05,
+      "y": 0.56,
+      "w": 0.9,
+      "h": 0.15,
+      "prefix": "players-menu",
+      "label": "Joueur 1",
+      "radius": 0.009
+     },
+     {
+      "op": "exampleRow",
+      "x": 0.05,
+      "y": 0.8,
+      "w": 0.9,
+      "h": 0.15,
+      "prefix": "game-options-menu",
+      "label": "Nombre de tours",
+      "radius": 0.009
+     }
     ]
    }
   ],
+  "mockup": {
+   "reference": {
+    "screen": [
+     1920,
+     1080
+    ],
+    "mockup": [
+     912,
+     668
+    ]
+   },
+   "units": "x, w, cx, x1, x2, r : parts de la largeur de la maquette ; y, h, cy, y1, y2 : parts de sa hauteur ; radius, width, borderWidth, outlineWidth : parts de sa hauteur (pixels du jeu / 668)",
+   "frame": {
+    "color": [
+     90,
+     90,
+     90
+    ],
+    "width": 0.003
+   },
+   "background": [
+    40,
+    40,
+    44
+   ],
+   "rules": {
+    "tag": "une couleur nommee (etiquette du Colorset) ; une etiquette a Aucune (None) : rien n'est dessine",
+    "fill": "fond de toute la maquette : couleur de tag ; background sans tag, ou si tag est a Aucune",
+    "box": "rectangle plein de tag (arrondi radius), puis, si border, son contour de border (epaisseur borderWidth)",
+    "swatch": "si tag est a Aucune : contour outline (epaisseur outlineWidth, arrondi radius) ; sinon box de tag",
+    "rect": "rectangle de couleur (tag ou color fixe) ; width 0 : plein, sinon contour de cette epaisseur",
+    "text": "police du jeu, taille = max(8 px, (height si donne, sinon h) x size) ; un texte plus large que w - textSqueeze est ecrase en largeur a w - textSqueeze ; centre dans le rectangle, ou align left : a x + textMargin, right : a droite - textMargin ; valign top : colle en haut, bottom : en bas",
+    "circle": "disque de couleur fixe color, centre (cx, cy), rayon r",
+    "line": "trait de tag (ou color), de (x1, y1) a (x2, y2), epaisseur width",
+    "shapedRow": "item de menu avec les formes du moment, s = referenceHeight (1080). Arrondi R : border-radius 'max' -> h / 2, sinon min(h / 2, border-radius / s) (une valeur illisible : 0). chosen : contour menu-border d'epaisseur B = 2 x border-size / s (si B > 0, arrondi R), puis l'interieur = le rectangle reduit de B + P de chaque cote (P = 2 x padding / s), plein de menu-selected, arrondi max(0, R - B - P), texte label (size 0.6) en menu-text-white dans l'interieur. Sinon : plein de menu-buttons arrondi R, texte label en menu-text-black",
+    "shapedButton": "bouton du bas : plein de menu-buttons, arrondi button-radius 'max' -> h / 2, sinon min(h / 2, 2 x button-radius / s) (une valeur illisible : 0) ; texte label (size 0.6) en menu-text-black",
+    "exampleRow": "item de menu dessine comme le theme : box menu-buttons (arrondi radius). Raccourci = valeur de <prefix>-shortcuts : '' -> 'F1', None -> pas de raccourci, sinon ce texte. Avec raccourci : a gauche un rectangle de hauteur h et de largeur shortcutRatio x h (en pixels), box menu-shortcut (arrondi radius) et le raccourci en menu-text-white (size 0.6). Le texte : le reste de l'item, moins les marges <prefix>-text-position (gauche, droite, haut, bas, en % de cette boite, chacune ramenee entre 0 et 90 ; si deux marges opposees depassent 90 a elles deux, la seconde (droite, bas) est reduite d'autant ; une valeur illisible : pas de marge) ; label en menu-text-black, size 0.55, height = la hauteur de l'item (avant les marges), align = <prefix>-text-align, valign = <prefix>-text-valign (en minuscules ; center sinon)"
+   },
+   "constants": {
+    "textSqueeze": 0.0044,
+    "textMargin": 0.0066,
+    "shortcutRatio": 1.1,
+    "referenceHeight": 1080
+   },
+   "texts": "les textes des maquettes sont ceux du jeu, en francais (le jeu ne les traduit pas)"
+  },
   "groups": [
    [
     "theme-group-menus",

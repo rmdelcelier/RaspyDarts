@@ -57,15 +57,17 @@ def theme_editor():
     missing = set(THEME_EDITOR) - set(values)
     if missing:
         raise SystemExit(f'cthemeeditor : {missing} introuvable(s)')
-    # Une planche : son nom et ses etiquettes (gauche puis droite, sans doublon)
+    # Une planche : son nom, ses etiquettes (gauche puis droite, sans doublon), leurs points et sa maquette
+    drawings = mockup_drawings()
     plates = []
     for name, _drawer, left, right in values['PLATES']:
         tags = []
         for tag, _x, _y in list(left) + list(right):
             if tag not in tags:
                 tags.append(tag)
-        plates.append({'name': name, 'tags': tags})
-    return {'plates': plates, 'groups': [[name, list(names)] for name, names in values['GROUPS']],
+        plates.append({'name': name, 'tags': tags, 'points': [[tag, x, y] for tag, x, y in list(left) + list(right)],
+                       'drawing': drawings[_drawer]})
+    return {'plates': plates, 'mockup': MOCKUP_FORMAT, 'groups': [[name, list(names)] for name, names in values['GROUPS']],
             'noneAllowed': list(values['NONE_ALLOWED']), 'shortcutTags': list(values['SHORTCUT_TAGS']),
             'shortcutChoices': [list(item) for item in values['SHORTCUT_CHOICES']],
             'alignTags': list(values['ALIGN_TAGS']), 'alignChoices': [list(item) for item in values['ALIGN_CHOICES']],
@@ -73,6 +75,186 @@ def theme_editor():
             'positionTags': list(values['POSITION_TAGS']), 'shapeTags': list(values['SHAPE_TAGS']),
             'radiusTags': list(values['RADIUS_TAGS']), 'shapeLimits': values['SHAPE_LIMITS'],
             'palette': [list(color) for color in values['PALETTE']], 'file': values['PERSO_NAME']}
+
+
+# Maquettes de Personnaliser le theme : chaque draw_* de cthemeeditor joue sur un enregistreur
+# (un faux pygame, sans fenetre). Coordonnees : parts de la maquette (x, w par sa largeur ; y, h
+# par sa hauteur) ; les longueurs en pixels du jeu (arrondis, epaisseurs) : parts de sa hauteur.
+# La maquette de reference : celle d'un ecran 1920 x 1080 (912 x 668 pixels)
+REF_SCREEN = (1920, 1080)
+REF_MOCKUP = (int(REF_SCREEN[0] * 7.6 / 16), int(REF_SCREEN[1] * 9.9 / 16))
+ZOOM = 100  # maquette enregistree 100 fois plus grande : les int() du jeu ne decalent rien
+MOCKUP_FORMAT = {
+    'reference': {'screen': list(REF_SCREEN), 'mockup': list(REF_MOCKUP)},
+    'units': "x, w, cx, x1, x2, r : parts de la largeur de la maquette ; y, h, cy, y1, y2 : parts de sa hauteur ; "
+             "radius, width, borderWidth, outlineWidth : parts de sa hauteur (pixels du jeu / 668)",
+    'frame': {'color': [90, 90, 90], 'width': round(2 / REF_MOCKUP[1], 4)},
+    'background': [40, 40, 44],
+    'rules': {
+        'tag': "une couleur nommee (etiquette du Colorset) ; une etiquette a Aucune (None) : rien n'est dessine",
+        'fill': "fond de toute la maquette : couleur de tag ; background sans tag, ou si tag est a Aucune",
+        'box': "rectangle plein de tag (arrondi radius), puis, si border, son contour de border (epaisseur borderWidth)",
+        'swatch': "si tag est a Aucune : contour outline (epaisseur outlineWidth, arrondi radius) ; sinon box de tag",
+        'rect': "rectangle de couleur (tag ou color fixe) ; width 0 : plein, sinon contour de cette epaisseur",
+        'text': "police du jeu, taille = max(8 px, (height si donne, sinon h) x size) ; un texte plus large que "
+                "w - textSqueeze est ecrase en largeur a w - textSqueeze ; centre dans le rectangle, ou align left : "
+                "a x + textMargin, right : a droite - textMargin ; valign top : colle en haut, bottom : en bas",
+        'circle': "disque de couleur fixe color, centre (cx, cy), rayon r",
+        'line': "trait de tag (ou color), de (x1, y1) a (x2, y2), epaisseur width",
+        'shapedRow': "item de menu avec les formes du moment, s = referenceHeight (1080). Arrondi R : border-radius "
+                     "'max' -> h / 2, sinon min(h / 2, border-radius / s) (une valeur illisible : 0). chosen : contour menu-border d'epaisseur "
+                     "B = 2 x border-size / s (si B > 0, arrondi R), puis l'interieur = le rectangle reduit de B + P de "
+                     "chaque cote (P = 2 x padding / s), plein de menu-selected, arrondi max(0, R - B - P), texte label "
+                     "(size 0.6) en menu-text-white dans l'interieur. Sinon : plein de menu-buttons arrondi R, texte "
+                     "label en menu-text-black",
+        'shapedButton': "bouton du bas : plein de menu-buttons, arrondi button-radius 'max' -> h / 2, sinon "
+                        "min(h / 2, 2 x button-radius / s) (une valeur illisible : 0) ; texte label (size 0.6) en menu-text-black",
+        'exampleRow': "item de menu dessine comme le theme : box menu-buttons (arrondi radius). Raccourci = valeur de "
+                      "<prefix>-shortcuts : '' -> 'F1', None -> pas de raccourci, sinon ce texte. Avec raccourci : a "
+                      "gauche un rectangle de hauteur h et de largeur shortcutRatio x h (en pixels), box menu-shortcut "
+                      "(arrondi radius) et le raccourci en menu-text-white (size 0.6). Le texte : le reste de l'item, "
+                      "moins les marges <prefix>-text-position (gauche, droite, haut, bas, en % de cette boite, "
+                      "chacune ramenee entre 0 et 90 ; si deux marges opposees depassent 90 a elles deux, la seconde "
+                      "(droite, bas) est reduite d'autant ; une valeur illisible : pas de marge) ; label en "
+                      "menu-text-black, size 0.55, height = la hauteur de l'item (avant les marges), align = "
+                      "<prefix>-text-align, valign = <prefix>-text-valign (en minuscules ; center sinon)",
+    },
+    'constants': {'textSqueeze': round(4 / REF_MOCKUP[0], 4), 'textMargin': round(6 / REF_MOCKUP[0], 4),
+                  'shortcutRatio': 1.1, 'referenceHeight': REF_SCREEN[1]},
+    'texts': "les textes des maquettes sont ceux du jeu, en francais (le jeu ne les traduit pas)",
+}
+
+
+class _Rect:
+    ''' pygame.Rect : ce que les maquettes en utilisent '''
+    def __init__(self, *args):
+        if len(args) == 1:
+            args = tuple(args[0])
+        self.x, self.y, self.width, self.height = (int(value) for value in args)
+
+    def __iter__(self):
+        return iter((self.x, self.y, self.width, self.height))
+
+    w = property(lambda self: self.width)
+    h = property(lambda self: self.height)
+    right = property(lambda self: self.x + self.width)
+    bottom = property(lambda self: self.y + self.height)
+    centerx = property(lambda self: self.x + self.width // 2)
+    centery = property(lambda self: self.y + self.height // 2)
+    center = property(lambda self: (self.centerx, self.centery))
+    topleft = property(lambda self: (self.x, self.y))
+    bottomright = property(lambda self: (self.right, self.bottom))
+
+    def inflate(self, dx, dy):
+        return _Rect(self.x - dx // 2, self.y - dy // 2, self.width + dx, self.height + dy)
+
+
+class _Tag(tuple):
+    ''' La couleur d'une etiquette : son nom, pas sa valeur '''
+    def __new__(cls, name):
+        made = super().__new__(cls, (0, 0, 0))
+        made.name = name
+        return made
+
+
+def _x(value):
+    return round(value / (REF_MOCKUP[0] * ZOOM), 4)
+
+
+def _y(value):
+    return round(value / (REF_MOCKUP[1] * ZOOM), 4)
+
+
+def _area(rect):
+    rect = _Rect(rect)
+    return {'x': _x(rect.x), 'y': _y(rect.y), 'w': _x(rect.width), 'h': _y(rect.height)}
+
+
+def _length(pixels):
+    ''' Une longueur en pixels du jeu (maquette de reference) : part de sa hauteur '''
+    return round(pixels / REF_MOCKUP[1], 4)
+
+
+def _color(color):
+    return {'tag': color.name} if isinstance(color, _Tag) else {'color': [int(part) for part in color[:3]]}
+
+
+def mockup_drawings():
+    ''' {draw_* : ses operations dans l'ordre du dessin} pour les planches de cthemeeditor '''
+    import importlib.util
+    import types
+    ops = []
+
+    def rect(_surface, color, area, width=0, border_radius=0):
+        ops.append({'op': 'rect', **_area(area), **_color(color), 'width': _length(width),
+                    'radius': _length(border_radius)})
+
+    def line(_surface, color, start, end, width=1):
+        ops.append({'op': 'line', 'x1': _x(start[0]), 'y1': _y(start[1]), 'x2': _x(end[0]), 'y2': _y(end[1]),
+                    **_color(color), 'width': _length(width)})
+
+    def circle(_surface, color, center, radius, width=0):
+        ops.append({'op': 'circle', 'cx': _x(center[0]), 'cy': _y(center[1]), 'r': _x(radius), **_color(color)})
+
+    fake = types.ModuleType('pygame')
+    fake.Rect = _Rect
+    fake.draw = types.SimpleNamespace(rect=rect, line=line, circle=circle)
+    saved = sys.modules.get('pygame')
+    sys.modules['pygame'] = fake
+    try:
+        spec = importlib.util.spec_from_file_location('cthemeeditor_maquettes',
+                                                      os.path.join(ROOT, 'include', 'cthemeeditor.py'))
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+    finally:
+        if saved is None:
+            del sys.modules['pygame']
+        else:
+            sys.modules['pygame'] = saved
+
+    class Recorder(module.ThemeEditor):
+        ''' Les appels des maquettes enregistres ; ce qui depend des valeurs du moment : en parametres '''
+        def color(self, tag):
+            return _Tag(tag)
+
+        def fill(self, mockup, tag=None):
+            ops.append({'op': 'fill', **({'tag': tag} if tag else {})})
+
+        def box(self, area, tag, radius=6, border=None):
+            op = {'op': 'box', **_area(area), 'tag': tag, 'radius': _length(radius)}
+            if border is not None:
+                op.update(border=border, borderWidth=_length(3))
+            ops.append(op)
+
+        def swatch(self, area, tag):
+            ops.append({'op': 'swatch', **_area(area), 'tag': tag, 'radius': _length(8),
+                        'outline': [90, 90, 90], 'outlineWidth': _length(2)})
+
+        def text(self, text, area, tag, size=0.6, align='center', valign='center', height=None):
+            op = {'op': 'text', 'text': text, **_area(area), 'tag': tag, 'size': size, 'align': align, 'valign': valign}
+            if height is not None:
+                op['height'] = _y(height)
+            ops.append(op)
+
+        def shaped_row(self, row, label, chosen, scale):
+            ops.append({'op': 'shapedRow', **_area(row), 'label': label, 'chosen': chosen})
+
+        def shaped_button(self, button, label, scale):
+            ops.append({'op': 'shapedButton', **_area(button), 'label': label})
+
+        def example_row(self, prefix, label, row, values=None):
+            ops.append({'op': 'exampleRow', **_area(row), 'prefix': prefix, 'label': label, 'radius': _length(6)})
+
+    recorder = Recorder.__new__(Recorder)
+    recorder.screen = types.SimpleNamespace(screen=None)
+    recorder.size = (REF_SCREEN[0] * ZOOM, REF_SCREEN[1] * ZOOM)
+    recorder.work = {}
+    drawings = {}
+    for _name, drawer, _left, _right in module.PLATES:
+        ops.clear()
+        getattr(recorder, drawer)(_Rect(0, 0, REF_MOCKUP[0] * ZOOM, REF_MOCKUP[1] * ZOOM))
+        drawings[drawer] = list(ops)
+    return drawings
 
 
 def colorset_file(path):
