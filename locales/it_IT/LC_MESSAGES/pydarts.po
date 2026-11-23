@@ -7035,3 +7035,336 @@ msgstr "Creazione artistica"
 msgid "Participation à la création artistique : partager un thème sur RaspyHub"
 msgstr "Partecipare alla creazione artistica: condividere un tema su RaspyHub"
 
+
+######## FIESTA ########
+
+msgid "Description-Fiesta"
+msgstr ""
+"Una serie di minigiochi: evita i punti!\n"
+"\n"
+"Ogni turno è un minigioco estratto a caso tra 20 (Pieno centro, Count-\n"
+"Up, Più o meno, Crono zero, Colpo unico...).\n"
+"Vince il giocatore con meno punti a fine partita.\n"
+"-----\n"
+"A ogni turno, il o i giocatori con il punteggio più basso (o che\n"
+"falliscono la sfida) ricevono 1 punto.\n"
+"Ultimo turno: conta doppio.\n"
+"Modalità Diavolo: si attiva a caso per un giocatore, le regole si fanno\n"
+"più dure e la penalità raddoppia.\n"
+"\n"
+"OPZIONI\n"
+"Turni: numero di minigiochi giocati\n"
+"Modalità Diavolo: attiva la Modalità Diavolo\n"
+"Probabilità della Modalità Diavolo: probabilità (%) per ogni giocatore e\n"
+"ogni turno\n"
+"Minigiochi a tempo: permette Crono zero, Zona lampo e Slot machine (mai\n"
+"online)\n"
+"Scegliere i minigiochi: a ogni turno, lancia una freccetta sul numero\n"
+"del minigioco (Bull = a caso). Mai online.\n"
+"Modalità da bere: punti da bere invece di punti di penalità\n"
+"SOLO: ogni minigioco ha un obiettivo, prendi un punto se non lo\n"
+"raggiungi."
+
+msgid "Fiesta-max_round"
+msgstr "Turni"
+
+msgid "Fiesta-devil"
+msgstr "Modalità Diavolo"
+
+msgid "Fiesta-devil_chance"
+msgstr "Probabilità della Modalità Diavolo (%)"
+
+msgid "Fiesta-timing_games"
+msgstr "Minigiochi a tempo"
+
+msgid "Fiesta-choose_game"
+msgstr "Scegliere i minigiochi"
+
+msgid "Fiesta-drink_mode"
+msgstr "Modalità da bere"
+
+msgid "Fiesta-round"
+msgstr "Turno"
+
+msgid "Fiesta-more-than"
+msgstr "più di"
+
+msgid "Fiesta-less-than"
+msgstr "meno di"
+
+msgid "Fiesta-goal"
+msgstr "obiettivo"
+
+msgid "Fiesta-last-round"
+msgstr "ULTIMO TURNO x2"
+
+msgid "Fiesta-nobody-drinks"
+msgstr "Nessuno beve!"
+
+msgid "Fiesta-nobody-penalty"
+msgstr "Nessuna penalità!"
+
+msgid "Fiesta-plus-drink"
+msgstr "{name}: +{points} da bere"
+
+msgid "Fiesta-plus-penalty"
+msgstr "{name}: penalità +{points}"
+
+msgid "Fiesta-card-drink"
+msgstr "DA BERE {points}"
+
+msgid "Fiesta-card-penalty"
+msgstr "PENALITÀ {points}"
+
+msgid "Fiesta-too-late"
+msgstr "TROPPO TARDI!"
+
+msgid "Fiesta-choose-title"
+msgstr "Turno {round}/{max}: scegli il minigioco"
+
+msgid "Fiesta-choose-help"
+msgstr "Lancia una freccetta sul numero del gioco (Bull = a caso)"
+
+msgid "Fiesta-random"
+msgstr "A CASO"
+
+msgid "Fiesta-remove-dart"
+msgstr "Togli la freccetta e premi Giocatore successivo"
+
+msgid "Fiesta-back"
+msgstr "Indietro"
+
+msgid "Fiesta-choice-tag"
+msgstr "MINIGIOCHI SCELTI"
+
+msgid "Fiesta-target"
+msgstr "OBIETTIVO"
+
+msgid "Fiesta-your-turn"
+msgstr "TOCCA A TE"
+
+msgid "Fiesta-time-left"
+msgstr "TEMPO RIMASTO"
+
+msgid "Fiesta-timer-hidden"
+msgstr "CRONO NASCOSTO"
+
+msgid "Fiesta-stop-at"
+msgstr "FERMA A 0.00"
+
+msgid "Fiesta-devil-tag"
+msgstr "DIAVOLO"
+
+msgid "Fiesta-devil-mode"
+msgstr "MODALITÀ DIAVOLO!"
+
+msgid "Fiesta-timing-tag"
+msgstr "A TEMPO"
+
+msgid "Penalty Points"
+msgstr "Punti di penalità"
+
+msgid "Lost Rounds"
+msgstr "Turni persi"
+
+msgid "Devil Modes"
+msgstr "Modalità Diavolo"
+
+msgid "hit-single"
+msgstr "SINGOLO"
+
+msgid "hit-double"
+msgstr "DOPPIO"
+
+msgid "hit-triple"
+msgstr "TRIPLO"
+
+msgid "hit-bull"
+msgstr "BULL"
+
+msgid "hit-double-bull"
+msgstr "DOPPIO BULL"
+
+msgid "hit-points"
+msgstr "{points} PT"
+
+msgid "Fiesta-name-PLEIN_CENTRE"
+msgstr "PIENO CENTRO"
+
+msgid "Fiesta-rule-PLEIN_CENTRE"
+msgstr "Colpisci il Bull il più possibile (DB = 2)"
+
+msgid "Fiesta-devil-PLEIN_CENTRE"
+msgstr "Conta solo il Doppio Bull"
+
+msgid "Fiesta-name-CHASSE_DOUBLES"
+msgstr "CACCIA AI DOPPI"
+
+msgid "Fiesta-rule-CHASSE_DOUBLES"
+msgstr "Colpisci i doppi accesi: {targets}"
+
+msgid "Fiesta-devil-CHASSE_DOUBLES"
+msgstr "Un solo doppio valido: {targets}"
+
+msgid "Fiesta-name-CHASSE_TRIPLES"
+msgstr "CACCIA AI TRIPLI"
+
+msgid "Fiesta-rule-CHASSE_TRIPLES"
+msgstr "Colpisci i tripli accesi: {targets}"
+
+msgid "Fiesta-devil-CHASSE_TRIPLES"
+msgstr "Un solo triplo valido: {targets}"
+
+msgid "Fiesta-name-COUNT_UP_SANS_BULL"
+msgstr "COUNT-UP SENZA BULL"
+
+msgid "Fiesta-rule-COUNT_UP_SANS_BULL"
+msgstr "Count-Up, ma il Bull cancella il tuo turno!"
+
+msgid "Fiesta-devil-COUNT_UP_SANS_BULL"
+msgstr "Il Bull cancella il turno e lo termina"
+
+msgid "Fiesta-name-CIBLE_BALADEUSE"
+msgstr "BERSAGLIO VAGANTE"
+
+msgid "Fiesta-rule-CIBLE_BALADEUSE"
+msgstr "Colpisci il {target} (S = 1, D = 2, T = 3)"
+
+msgid "Fiesta-devil-CIBLE_BALADEUSE"
+msgstr "Contano solo il doppio e il triplo del {target}"
+
+msgid "Fiesta-name-ZONE_ROUGE"
+msgstr "ZONA ROSSA"
+
+msgid "Fiesta-rule-ZONE_ROUGE"
+msgstr "Evita i {count} settori rossi, la zona cresce!"
+
+msgid "Fiesta-devil-ZONE_ROUGE"
+msgstr "Evita i {count} settori rossi, ne resterà solo uno!"
+
+msgid "Fiesta-name-COUNT_UP"
+msgstr "COUNT-UP"
+
+msgid "Fiesta-rule-COUNT_UP"
+msgstr "Fai il massimo dei punti"
+
+msgid "Fiesta-devil-COUNT_UP"
+msgstr "I singoli valgono 0"
+
+msgid "Fiesta-name-COUNT_UP_CENTRE"
+msgstr "COUNT-UP AL CENTRO"
+
+msgid "Fiesta-rule-COUNT_UP_CENTRE"
+msgstr "Vicino al centro = punti (DB 100, SB 80, T 50, S 40, D 10)"
+
+msgid "Fiesta-devil-COUNT_UP_CENTRE"
+msgstr "Contano solo i Bull"
+
+msgid "Fiesta-name-COUNT_UP_NUMERO"
+msgstr "COUNT-UP DEL {target}"
+
+msgid "Fiesta-rule-COUNT_UP_NUMERO"
+msgstr "Solo il {target} dà punti"
+
+msgid "Fiesta-devil-COUNT_UP_NUMERO"
+msgstr "Contano solo il doppio e il triplo del {target}"
+
+msgid "Fiesta-name-COUNT_UP_CHANCE"
+msgstr "COUNT-UP DELLA FORTUNA"
+
+msgid "Fiesta-rule-COUNT_UP_CHANCE"
+msgstr "Moltiplicatore di questa freccetta: x{mult}"
+
+msgid "Fiesta-devil-COUNT_UP_CHANCE"
+msgstr "Moltiplicatore (rischioso!): x{mult}"
+
+msgid "Fiesta-name-COUNT_UP_BOULE_NEIGE"
+msgstr "COUNT-UP PALLA DI NEVE"
+
+msgid "Fiesta-rule-COUNT_UP_BOULE_NEIGE"
+msgstr "Doppio, triplo o Bull raddoppiano il moltiplicatore: x{mult}"
+
+msgid "Fiesta-devil-COUNT_UP_BOULE_NEIGE"
+msgstr "Un singolo rompe la catena: x{mult}"
+
+msgid "Fiesta-name-COUNT_UP_VERT_ROUGE"
+msgstr "COUNT-UP VERDE O ROSSO"
+
+msgid "Fiesta-rule-COUNT_UP_VERT_ROUGE"
+msgstr "Verde = punti in più, rosso = punti in meno"
+
+msgid "Fiesta-devil-COUNT_UP_VERT_ROUGE"
+msgstr "Rosso = il doppio dei punti in meno"
+
+msgid "Fiesta-name-PLUS_OU_MOINS"
+msgstr "PIÙ O MENO"
+
+msgid "Fiesta-rule-PLUS_OU_MOINS"
+msgstr "Fai {sign} {target} in 3 freccette"
+
+msgid "Fiesta-devil-PLUS_OU_MOINS"
+msgstr "Obiettivo più difficile: fai {sign} {target}"
+
+msgid "Fiesta-name-CARROUSEL"
+msgstr "GIOSTRA"
+
+msgid "Fiesta-rule-CARROUSEL"
+msgstr "Oro x4: {gold} / Blu x2: {blue}"
+
+msgid "Fiesta-devil-CARROUSEL"
+msgstr "Oro x4: {gold} / Blu x2: {blue} / il resto x0"
+
+msgid "Fiesta-name-MACHINE_A_SOUS"
+msgstr "SLOT MACHINE"
+
+msgid "Fiesta-rule-MACHINE_A_SOUS"
+msgstr "Ogni freccetta blocca una cifra: unità, decine, centinaia"
+
+msgid "Fiesta-devil-MACHINE_A_SOUS"
+msgstr "I contatori girano più veloci!"
+
+msgid "Fiesta-name-CHRONO_ZERO"
+msgstr "CRONO ZERO"
+
+msgid "Fiesta-rule-CHRONO_ZERO"
+msgstr "Ferma il contatore il più vicino a 0 senza superarlo!"
+
+msgid "Fiesta-devil-CHRONO_ZERO"
+msgstr "Contatore nascosto dopo 3 s, penalità raddoppiata!"
+
+msgid "Fiesta-name-ZONE_ECLAIR"
+msgstr "ZONA LAMPO"
+
+msgid "Fiesta-rule-ZONE_ECLAIR"
+msgstr "Colpisci la zona verde il più possibile, si sposta ogni 2 s"
+
+msgid "Fiesta-devil-ZONE_ECLAIR"
+msgstr "Colpisci la zona verde il più possibile, si sposta ogni secondo"
+
+msgid "Fiesta-name-COUP_UNIQUE"
+msgstr "COLPO UNICO"
+
+msgid "Fiesta-rule-COUP_UNIQUE"
+msgstr "Una sola freccetta: colpisci il {target}"
+
+msgid "Fiesta-devil-COUP_UNIQUE"
+msgstr "Una sola freccetta: doppio o triplo {target}"
+
+msgid "Fiesta-name-COUNT_UP_UNE_FLECHE"
+msgstr "COUNT-UP CON UNA FRECCETTA"
+
+msgid "Fiesta-rule-COUNT_UP_UNE_FLECHE"
+msgstr "Una sola freccetta: il massimo dei punti"
+
+msgid "Fiesta-devil-COUNT_UP_UNE_FLECHE"
+msgstr "Una sola freccetta: i singoli valgono 0"
+
+msgid "Fiesta-name-COUNT_UP_UNE_FLECHE_CENTRE"
+msgstr "COUNT-UP CON UNA FRECCETTA AL CENTRO"
+
+msgid "Fiesta-rule-COUNT_UP_UNE_FLECHE_CENTRE"
+msgstr "Una sola freccetta, il più vicino possibile al centro"
+
+msgid "Fiesta-devil-COUNT_UP_UNE_FLECHE_CENTRE"
+msgstr "Una sola freccetta: contano solo i Bull"
+

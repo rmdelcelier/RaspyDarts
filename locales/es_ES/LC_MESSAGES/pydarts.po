@@ -6973,3 +6973,336 @@ msgstr "Creación artística"
 msgid "Participation à la création artistique : partager un thème sur RaspyHub"
 msgstr "Participar en la creación artística: compartir un tema en RaspyHub"
 
+
+######## FIESTA ########
+
+msgid "Description-Fiesta"
+msgstr ""
+"Una serie de minijuegos: ¡evite los puntos!\n"
+"\n"
+"Cada ronda es un minijuego sorteado entre 20 (En el centro, Count-Up,\n"
+"Más o menos, Crono cero, Tiro único...).\n"
+"Gana el jugador con menos puntos al final de la partida.\n"
+"-----\n"
+"En cada ronda, el o los jugadores con la puntuación más baja (o que\n"
+"fallan el reto) reciben 1 punto.\n"
+"Última ronda: cuenta doble.\n"
+"Modo Diablo: se activa al azar para un jugador, las reglas se complican\n"
+"y la penalización se duplica.\n"
+"\n"
+"OPCIONES\n"
+"Rondas: número de minijuegos jugados\n"
+"Modo Diablo: activa el Modo Diablo\n"
+"Probabilidad del Modo Diablo: probabilidad (%) para cada jugador y cada\n"
+"ronda\n"
+"Minijuegos cronometrados: permite Crono cero, Zona relámpago y\n"
+"Tragaperras (nunca en línea)\n"
+"Elegir los minijuegos: en cada ronda, lance un dardo al número del\n"
+"minijuego (Bull = al azar). Nunca en línea.\n"
+"Modo para beber: puntos para beber en lugar de puntos de penalización\n"
+"SOLO: cada minijuego tiene un objetivo, recibe un punto si no lo\n"
+"alcanza."
+
+msgid "Fiesta-max_round"
+msgstr "Rondas"
+
+msgid "Fiesta-devil"
+msgstr "Modo Diablo"
+
+msgid "Fiesta-devil_chance"
+msgstr "Probabilidad del Modo Diablo (%)"
+
+msgid "Fiesta-timing_games"
+msgstr "Minijuegos cronometrados"
+
+msgid "Fiesta-choose_game"
+msgstr "Elegir los minijuegos"
+
+msgid "Fiesta-drink_mode"
+msgstr "Modo para beber"
+
+msgid "Fiesta-round"
+msgstr "Ronda"
+
+msgid "Fiesta-more-than"
+msgstr "más de"
+
+msgid "Fiesta-less-than"
+msgstr "menos de"
+
+msgid "Fiesta-goal"
+msgstr "objetivo"
+
+msgid "Fiesta-last-round"
+msgstr "ÚLTIMA RONDA x2"
+
+msgid "Fiesta-nobody-drinks"
+msgstr "¡Nadie bebe!"
+
+msgid "Fiesta-nobody-penalty"
+msgstr "¡Ninguna penalización!"
+
+msgid "Fiesta-plus-drink"
+msgstr "{name}: +{points} para beber"
+
+msgid "Fiesta-plus-penalty"
+msgstr "{name}: penalización +{points}"
+
+msgid "Fiesta-card-drink"
+msgstr "PARA BEBER {points}"
+
+msgid "Fiesta-card-penalty"
+msgstr "PENALIZACIONES {points}"
+
+msgid "Fiesta-too-late"
+msgstr "¡DEMASIADO TARDE!"
+
+msgid "Fiesta-choose-title"
+msgstr "Ronda {round}/{max}: elija el minijuego"
+
+msgid "Fiesta-choose-help"
+msgstr "Lance un dardo al número del juego (Bull = al azar)"
+
+msgid "Fiesta-random"
+msgstr "AL AZAR"
+
+msgid "Fiesta-remove-dart"
+msgstr "Retire el dardo y pulse Siguiente jugador"
+
+msgid "Fiesta-back"
+msgstr "Volver"
+
+msgid "Fiesta-choice-tag"
+msgstr "MINIJUEGOS ELEGIDOS"
+
+msgid "Fiesta-target"
+msgstr "OBJETIVO"
+
+msgid "Fiesta-your-turn"
+msgstr "TU TURNO"
+
+msgid "Fiesta-time-left"
+msgstr "TIEMPO RESTANTE"
+
+msgid "Fiesta-timer-hidden"
+msgstr "CRONO OCULTO"
+
+msgid "Fiesta-stop-at"
+msgstr "PARE EN 0.00"
+
+msgid "Fiesta-devil-tag"
+msgstr "DIABLO"
+
+msgid "Fiesta-devil-mode"
+msgstr "¡MODO DIABLO!"
+
+msgid "Fiesta-timing-tag"
+msgstr "CRONO"
+
+msgid "Penalty Points"
+msgstr "Puntos de penalización"
+
+msgid "Lost Rounds"
+msgstr "Rondas perdidas"
+
+msgid "Devil Modes"
+msgstr "Modos Diablo"
+
+msgid "hit-single"
+msgstr "SIMPLE"
+
+msgid "hit-double"
+msgstr "DOBLE"
+
+msgid "hit-triple"
+msgstr "TRIPLE"
+
+msgid "hit-bull"
+msgstr "BULL"
+
+msgid "hit-double-bull"
+msgstr "DOBLE BULL"
+
+msgid "hit-points"
+msgstr "{points} PTS"
+
+msgid "Fiesta-name-PLEIN_CENTRE"
+msgstr "EN EL CENTRO"
+
+msgid "Fiesta-rule-PLEIN_CENTRE"
+msgstr "Acierte al Bull el máximo de veces (DB = 2)"
+
+msgid "Fiesta-devil-PLEIN_CENTRE"
+msgstr "Solo cuenta el Doble Bull"
+
+msgid "Fiesta-name-CHASSE_DOUBLES"
+msgstr "CAZA DE DOBLES"
+
+msgid "Fiesta-rule-CHASSE_DOUBLES"
+msgstr "Acierte a los dobles encendidos: {targets}"
+
+msgid "Fiesta-devil-CHASSE_DOUBLES"
+msgstr "Un solo doble válido: {targets}"
+
+msgid "Fiesta-name-CHASSE_TRIPLES"
+msgstr "CAZA DE TRIPLES"
+
+msgid "Fiesta-rule-CHASSE_TRIPLES"
+msgstr "Acierte a los triples encendidos: {targets}"
+
+msgid "Fiesta-devil-CHASSE_TRIPLES"
+msgstr "Un solo triple válido: {targets}"
+
+msgid "Fiesta-name-COUNT_UP_SANS_BULL"
+msgstr "COUNT-UP SIN BULL"
+
+msgid "Fiesta-rule-COUNT_UP_SANS_BULL"
+msgstr "Count-Up, ¡pero el Bull borra su ronda!"
+
+msgid "Fiesta-devil-COUNT_UP_SANS_BULL"
+msgstr "El Bull borra la ronda y termina el turno"
+
+msgid "Fiesta-name-CIBLE_BALADEUSE"
+msgstr "DIANA ERRANTE"
+
+msgid "Fiesta-rule-CIBLE_BALADEUSE"
+msgstr "Acierte al {target} (S = 1, D = 2, T = 3)"
+
+msgid "Fiesta-devil-CIBLE_BALADEUSE"
+msgstr "Solo cuentan el doble y el triple del {target}"
+
+msgid "Fiesta-name-ZONE_ROUGE"
+msgstr "ZONA ROJA"
+
+msgid "Fiesta-rule-ZONE_ROUGE"
+msgstr "¡Evite los {count} segmentos rojos, la zona crece!"
+
+msgid "Fiesta-devil-ZONE_ROUGE"
+msgstr "¡Evite los {count} segmentos rojos, solo quedará uno!"
+
+msgid "Fiesta-name-COUNT_UP"
+msgstr "COUNT-UP"
+
+msgid "Fiesta-rule-COUNT_UP"
+msgstr "Marque el máximo de puntos"
+
+msgid "Fiesta-devil-COUNT_UP"
+msgstr "Los simples valen 0"
+
+msgid "Fiesta-name-COUNT_UP_CENTRE"
+msgstr "COUNT-UP AL CENTRO"
+
+msgid "Fiesta-rule-COUNT_UP_CENTRE"
+msgstr "Cerca del centro = puntos (DB 100, SB 80, T 50, S 40, D 10)"
+
+msgid "Fiesta-devil-COUNT_UP_CENTRE"
+msgstr "Solo cuentan los Bulls"
+
+msgid "Fiesta-name-COUNT_UP_NUMERO"
+msgstr "COUNT-UP DEL {target}"
+
+msgid "Fiesta-rule-COUNT_UP_NUMERO"
+msgstr "Solo el {target} da puntos"
+
+msgid "Fiesta-devil-COUNT_UP_NUMERO"
+msgstr "Solo cuentan el doble y el triple del {target}"
+
+msgid "Fiesta-name-COUNT_UP_CHANCE"
+msgstr "COUNT-UP DE LA SUERTE"
+
+msgid "Fiesta-rule-COUNT_UP_CHANCE"
+msgstr "Multiplicador de este dardo: x{mult}"
+
+msgid "Fiesta-devil-COUNT_UP_CHANCE"
+msgstr "Multiplicador (¡arriesgado!): x{mult}"
+
+msgid "Fiesta-name-COUNT_UP_BOULE_NEIGE"
+msgstr "COUNT-UP BOLA DE NIEVE"
+
+msgid "Fiesta-rule-COUNT_UP_BOULE_NEIGE"
+msgstr "Doble, triple o Bull doblan el multiplicador: x{mult}"
+
+msgid "Fiesta-devil-COUNT_UP_BOULE_NEIGE"
+msgstr "Un simple rompe la cadena: x{mult}"
+
+msgid "Fiesta-name-COUNT_UP_VERT_ROUGE"
+msgstr "COUNT-UP VERDE O ROJO"
+
+msgid "Fiesta-rule-COUNT_UP_VERT_ROUGE"
+msgstr "Verde = puntos de más, rojo = puntos de menos"
+
+msgid "Fiesta-devil-COUNT_UP_VERT_ROUGE"
+msgstr "Rojo = el doble de puntos de menos"
+
+msgid "Fiesta-name-PLUS_OU_MOINS"
+msgstr "MÁS O MENOS"
+
+msgid "Fiesta-rule-PLUS_OU_MOINS"
+msgstr "Haga {sign} {target} en 3 dardos"
+
+msgid "Fiesta-devil-PLUS_OU_MOINS"
+msgstr "Objetivo más difícil: haga {sign} {target}"
+
+msgid "Fiesta-name-CARROUSEL"
+msgstr "CARRUSEL"
+
+msgid "Fiesta-rule-CARROUSEL"
+msgstr "Oro x4: {gold} / Azul x2: {blue}"
+
+msgid "Fiesta-devil-CARROUSEL"
+msgstr "Oro x4: {gold} / Azul x2: {blue} / el resto x0"
+
+msgid "Fiesta-name-MACHINE_A_SOUS"
+msgstr "TRAGAPERRAS"
+
+msgid "Fiesta-rule-MACHINE_A_SOUS"
+msgstr "Cada dardo fija una cifra: unidades, decenas, centenas"
+
+msgid "Fiesta-devil-MACHINE_A_SOUS"
+msgstr "¡Los contadores giran más rápido!"
+
+msgid "Fiesta-name-CHRONO_ZERO"
+msgstr "CRONO CERO"
+
+msgid "Fiesta-rule-CHRONO_ZERO"
+msgstr "¡Pare el contador lo más cerca de 0 sin pasarse!"
+
+msgid "Fiesta-devil-CHRONO_ZERO"
+msgstr "¡Contador oculto a los 3 s, penalización doble!"
+
+msgid "Fiesta-name-ZONE_ECLAIR"
+msgstr "ZONA RELÁMPAGO"
+
+msgid "Fiesta-rule-ZONE_ECLAIR"
+msgstr "Acierte a la zona verde el máximo de veces, se mueve cada 2 s"
+
+msgid "Fiesta-devil-ZONE_ECLAIR"
+msgstr "Acierte a la zona verde el máximo de veces, se mueve cada segundo"
+
+msgid "Fiesta-name-COUP_UNIQUE"
+msgstr "TIRO ÚNICO"
+
+msgid "Fiesta-rule-COUP_UNIQUE"
+msgstr "Un solo dardo: acierte al {target}"
+
+msgid "Fiesta-devil-COUP_UNIQUE"
+msgstr "Un solo dardo: doble o triple {target}"
+
+msgid "Fiesta-name-COUNT_UP_UNE_FLECHE"
+msgstr "COUNT-UP CON UN DARDO"
+
+msgid "Fiesta-rule-COUNT_UP_UNE_FLECHE"
+msgstr "Un solo dardo: el máximo de puntos"
+
+msgid "Fiesta-devil-COUNT_UP_UNE_FLECHE"
+msgstr "Un solo dardo: los simples valen 0"
+
+msgid "Fiesta-name-COUNT_UP_UNE_FLECHE_CENTRE"
+msgstr "COUNT-UP CON UN DARDO AL CENTRO"
+
+msgid "Fiesta-rule-COUNT_UP_UNE_FLECHE_CENTRE"
+msgstr "Un solo dardo, lo más cerca del centro"
+
+msgid "Fiesta-devil-COUNT_UP_UNE_FLECHE_CENTRE"
+msgstr "Un solo dardo: solo cuentan los Bulls"
+

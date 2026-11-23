@@ -7240,3 +7240,334 @@ msgstr "Artistic creation"
 msgid "Participation à la création artistique : partager un thème sur RaspyHub"
 msgstr "Taking part in the artistic creation: share a theme on RaspyHub"
 
+
+######## FIESTA ########
+
+msgid "Description-Fiesta"
+msgstr ""
+"A series of mini-games: avoid the points!\n"
+"\n"
+"Each round is a mini-game drawn at random among 20 (Dead centre, Count-\n"
+"Up, More or less, Zero clock, One chance...).\n"
+"The winner is the player with the fewest points at the end.\n"
+"-----\n"
+"Each round, the player(s) with the lowest score (or who failed the\n"
+"challenge) get 1 point.\n"
+"Last round: it counts double.\n"
+"Devil mode: triggered at random for a player, the rules get harder and\n"
+"the penalty is doubled.\n"
+"\n"
+"OPTIONS\n"
+"Rounds: number of mini-games played\n"
+"Devil mode: turns Devil mode on\n"
+"Devil mode chance: probability (%) for each player and each round\n"
+"Timed mini-games: allows Zero clock, Flash zone and Slot machine (never\n"
+"online)\n"
+"Choose the mini-games: each round, throw a dart on the mini-game number\n"
+"(Bull = random). Never online.\n"
+"Drinking mode: points to drink instead of penalty points\n"
+"SOLO: each mini-game has a goal, you get a point if you miss it."
+
+msgid "Fiesta-max_round"
+msgstr "Rounds"
+
+msgid "Fiesta-devil"
+msgstr "Devil mode"
+
+msgid "Fiesta-devil_chance"
+msgstr "Devil mode chance (%)"
+
+msgid "Fiesta-timing_games"
+msgstr "Timed mini-games"
+
+msgid "Fiesta-choose_game"
+msgstr "Choose the mini-games"
+
+msgid "Fiesta-drink_mode"
+msgstr "Drinking mode"
+
+msgid "Fiesta-round"
+msgstr "Round"
+
+msgid "Fiesta-more-than"
+msgstr "more than"
+
+msgid "Fiesta-less-than"
+msgstr "less than"
+
+msgid "Fiesta-goal"
+msgstr "goal"
+
+msgid "Fiesta-last-round"
+msgstr "LAST ROUND x2"
+
+msgid "Fiesta-nobody-drinks"
+msgstr "Nobody drinks!"
+
+msgid "Fiesta-nobody-penalty"
+msgstr "No penalty!"
+
+msgid "Fiesta-plus-drink"
+msgstr "{name}: +{points} to drink"
+
+msgid "Fiesta-plus-penalty"
+msgstr "{name}: penalty +{points}"
+
+msgid "Fiesta-card-drink"
+msgstr "TO DRINK {points}"
+
+msgid "Fiesta-card-penalty"
+msgstr "PENALTIES {points}"
+
+msgid "Fiesta-too-late"
+msgstr "TOO LATE!"
+
+msgid "Fiesta-choose-title"
+msgstr "Round {round}/{max}: choose the mini-game"
+
+msgid "Fiesta-choose-help"
+msgstr "Throw a dart on the game number (Bull = random)"
+
+msgid "Fiesta-random"
+msgstr "RANDOM"
+
+msgid "Fiesta-remove-dart"
+msgstr "Remove the dart and press Next player"
+
+msgid "Fiesta-back"
+msgstr "Back"
+
+msgid "Fiesta-choice-tag"
+msgstr "MINI-GAMES CHOSEN"
+
+msgid "Fiesta-target"
+msgstr "TARGET"
+
+msgid "Fiesta-your-turn"
+msgstr "YOUR TURN"
+
+msgid "Fiesta-time-left"
+msgstr "TIME LEFT"
+
+msgid "Fiesta-timer-hidden"
+msgstr "TIMER HIDDEN"
+
+msgid "Fiesta-stop-at"
+msgstr "STOP AT 0.00"
+
+msgid "Fiesta-devil-tag"
+msgstr "DEVIL"
+
+msgid "Fiesta-devil-mode"
+msgstr "DEVIL MODE!"
+
+msgid "Fiesta-timing-tag"
+msgstr "TIMED"
+
+msgid "Penalty Points"
+msgstr "Penalty points"
+
+msgid "Lost Rounds"
+msgstr "Rounds lost"
+
+msgid "Devil Modes"
+msgstr "Devil modes"
+
+msgid "hit-single"
+msgstr "SINGLE"
+
+msgid "hit-double"
+msgstr "DOUBLE"
+
+msgid "hit-triple"
+msgstr "TRIPLE"
+
+msgid "hit-bull"
+msgstr "BULL"
+
+msgid "hit-double-bull"
+msgstr "DOUBLE BULL"
+
+msgid "hit-points"
+msgstr "{points} PTS"
+
+msgid "Fiesta-name-PLEIN_CENTRE"
+msgstr "DEAD CENTRE"
+
+msgid "Fiesta-rule-PLEIN_CENTRE"
+msgstr "Hit the Bull as many times as you can (DB = 2)"
+
+msgid "Fiesta-devil-PLEIN_CENTRE"
+msgstr "Only the Double Bull counts"
+
+msgid "Fiesta-name-CHASSE_DOUBLES"
+msgstr "DOUBLES HUNT"
+
+msgid "Fiesta-rule-CHASSE_DOUBLES"
+msgstr "Hit the lit doubles: {targets}"
+
+msgid "Fiesta-devil-CHASSE_DOUBLES"
+msgstr "A single valid double: {targets}"
+
+msgid "Fiesta-name-CHASSE_TRIPLES"
+msgstr "TRIPLES HUNT"
+
+msgid "Fiesta-rule-CHASSE_TRIPLES"
+msgstr "Hit the lit triples: {targets}"
+
+msgid "Fiesta-devil-CHASSE_TRIPLES"
+msgstr "A single valid triple: {targets}"
+
+msgid "Fiesta-name-COUNT_UP_SANS_BULL"
+msgstr "COUNT-UP WITHOUT BULL"
+
+msgid "Fiesta-rule-COUNT_UP_SANS_BULL"
+msgstr "Count-Up, but the Bull wipes out your round!"
+
+msgid "Fiesta-devil-COUNT_UP_SANS_BULL"
+msgstr "The Bull wipes out the round and ends the turn"
+
+msgid "Fiesta-name-CIBLE_BALADEUSE"
+msgstr "WANDERING TARGET"
+
+msgid "Fiesta-rule-CIBLE_BALADEUSE"
+msgstr "Hit the {target} (S = 1, D = 2, T = 3)"
+
+msgid "Fiesta-devil-CIBLE_BALADEUSE"
+msgstr "Only the double and the triple of {target} count"
+
+msgid "Fiesta-name-ZONE_ROUGE"
+msgstr "RED ZONE"
+
+msgid "Fiesta-rule-ZONE_ROUGE"
+msgstr "Avoid the {count} red segments, the zone grows!"
+
+msgid "Fiesta-devil-ZONE_ROUGE"
+msgstr "Avoid the {count} red segments, only one will be left!"
+
+msgid "Fiesta-name-COUNT_UP"
+msgstr "COUNT-UP"
+
+msgid "Fiesta-rule-COUNT_UP"
+msgstr "Score as many points as you can"
+
+msgid "Fiesta-devil-COUNT_UP"
+msgstr "Singles are worth 0"
+
+msgid "Fiesta-name-COUNT_UP_CENTRE"
+msgstr "COUNT-UP IN THE CENTRE"
+
+msgid "Fiesta-rule-COUNT_UP_CENTRE"
+msgstr "Close to the centre = points (DB 100, SB 80, T 50, S 40, D 10)"
+
+msgid "Fiesta-devil-COUNT_UP_CENTRE"
+msgstr "Only the Bulls count"
+
+msgid "Fiesta-name-COUNT_UP_NUMERO"
+msgstr "COUNT-UP OF {target}"
+
+msgid "Fiesta-rule-COUNT_UP_NUMERO"
+msgstr "Only the {target} scores"
+
+msgid "Fiesta-devil-COUNT_UP_NUMERO"
+msgstr "Only the double and the triple of {target} count"
+
+msgid "Fiesta-name-COUNT_UP_CHANCE"
+msgstr "LUCKY COUNT-UP"
+
+msgid "Fiesta-rule-COUNT_UP_CHANCE"
+msgstr "Multiplier of this dart: x{mult}"
+
+msgid "Fiesta-devil-COUNT_UP_CHANCE"
+msgstr "Multiplier (risky!): x{mult}"
+
+msgid "Fiesta-name-COUNT_UP_BOULE_NEIGE"
+msgstr "SNOWBALL COUNT-UP"
+
+msgid "Fiesta-rule-COUNT_UP_BOULE_NEIGE"
+msgstr "Double, triple or Bull doubles the multiplier: x{mult}"
+
+msgid "Fiesta-devil-COUNT_UP_BOULE_NEIGE"
+msgstr "A single breaks the chain: x{mult}"
+
+msgid "Fiesta-name-COUNT_UP_VERT_ROUGE"
+msgstr "GREEN OR RED COUNT-UP"
+
+msgid "Fiesta-rule-COUNT_UP_VERT_ROUGE"
+msgstr "Green = points added, red = points taken off"
+
+msgid "Fiesta-devil-COUNT_UP_VERT_ROUGE"
+msgstr "Red = twice as many points taken off"
+
+msgid "Fiesta-name-PLUS_OU_MOINS"
+msgstr "MORE OR LESS"
+
+msgid "Fiesta-rule-PLUS_OU_MOINS"
+msgstr "Score {sign} {target} with 3 darts"
+
+msgid "Fiesta-devil-PLUS_OU_MOINS"
+msgstr "Harder target: score {sign} {target}"
+
+msgid "Fiesta-name-CARROUSEL"
+msgstr "CAROUSEL"
+
+msgid "Fiesta-rule-CARROUSEL"
+msgstr "Gold x4: {gold} / Blue x2: {blue}"
+
+msgid "Fiesta-devil-CARROUSEL"
+msgstr "Gold x4: {gold} / Blue x2: {blue} / the rest x0"
+
+msgid "Fiesta-name-MACHINE_A_SOUS"
+msgstr "SLOT MACHINE"
+
+msgid "Fiesta-rule-MACHINE_A_SOUS"
+msgstr "Each dart freezes a digit: units, tens, hundreds"
+
+msgid "Fiesta-devil-MACHINE_A_SOUS"
+msgstr "The counters roll faster!"
+
+msgid "Fiesta-name-CHRONO_ZERO"
+msgstr "ZERO CLOCK"
+
+msgid "Fiesta-rule-CHRONO_ZERO"
+msgstr "Stop the counter as close to 0 as you can without going past!"
+
+msgid "Fiesta-devil-CHRONO_ZERO"
+msgstr "Counter hidden after 3 s, penalty doubled!"
+
+msgid "Fiesta-name-ZONE_ECLAIR"
+msgstr "FLASH ZONE"
+
+msgid "Fiesta-rule-ZONE_ECLAIR"
+msgstr "Hit the green zone as many times as you can, it moves every 2 s"
+
+msgid "Fiesta-devil-ZONE_ECLAIR"
+msgstr "Hit the green zone as many times as you can, it moves every second"
+
+msgid "Fiesta-name-COUP_UNIQUE"
+msgstr "ONE CHANCE"
+
+msgid "Fiesta-rule-COUP_UNIQUE"
+msgstr "A single dart: hit the {target}"
+
+msgid "Fiesta-devil-COUP_UNIQUE"
+msgstr "A single dart: double or triple {target}"
+
+msgid "Fiesta-name-COUNT_UP_UNE_FLECHE"
+msgstr "COUNT-UP WITH ONE DART"
+
+msgid "Fiesta-rule-COUNT_UP_UNE_FLECHE"
+msgstr "A single dart: as many points as you can"
+
+msgid "Fiesta-devil-COUNT_UP_UNE_FLECHE"
+msgstr "A single dart: singles are worth 0"
+
+msgid "Fiesta-name-COUNT_UP_UNE_FLECHE_CENTRE"
+msgstr "COUNT-UP WITH ONE DART IN THE CENTRE"
+
+msgid "Fiesta-rule-COUNT_UP_UNE_FLECHE_CENTRE"
+msgstr "A single dart, as close to the centre as you can"
+
+msgid "Fiesta-devil-COUNT_UP_UNE_FLECHE_CENTRE"
+msgstr "A single dart: only the Bulls count"
+

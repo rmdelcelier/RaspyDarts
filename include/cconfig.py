@@ -352,6 +352,7 @@ DefaultConfig['NbOfPlayersPerGame'] = {
     'Treasure': [2, 12, False],
     'Voleur': [1, 12, False],
     'Yahtzydarts': [1, 4, False],  
+    'Fiesta': [1, 8, False],
     
     'Balltrap': [1, 12, False],
     'Baseball': [2, 4, False],
@@ -416,6 +417,7 @@ DefaultConfig['GamePerCategory'] = {
     'Treasure': 'fun',
     'Voleur': 'fun',
     'Yahtzydarts': 'fun', 
+    'Fiesta': 'fun',
     
     'Balltrap': 'sport',
     'Baseball': 'sport',

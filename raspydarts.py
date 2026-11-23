@@ -747,6 +747,8 @@ try:
         # score stopped
         dmd.player_color = None
         dmd.game_end()
+        # Out of a game : the classic looks (see Screen.set_game_look)
+        display.set_game_look(None)
 
         # An error to report (a crash before this start, a game which failed) : once
         error_report = cerrors.take()
@@ -1721,6 +1723,8 @@ try:
             except:
                 versionGame='' # game has no version at this time
             game = choosed_game.Game(display, Game.replace(' ', '_'), players_count, game_options, Config, logs, rpi, dmd, video_player)
+            # The looks the game asks (hit banner, texts in its strip, modern score table)
+            display.set_game_look(game)
             game_is_ok_for_color = game.game_is_ok_for_color
             try:
                 playersOk = game.check_players_allowed(players_count)
@@ -1906,8 +1910,10 @@ try:
                 if player_launch == 1 and len(magickey) == 0 and pre_dart != 4:
                     # Ring girl / Ring boy of Raspy2DMD : a new one for this volley, then the name
                     dmd.volley_start()
-                    dmd.send_text(players[actual_player].name)
-                    logs.debug(f"Display {players[actual_player].name}")
+                    # Its text : the name, or what the game adds (Game.dmd_turn_text)
+                    dmd_turn_text = game.dmd_turn_text(players, actual_round, actual_player)
+                    dmd.send_text(dmd_turn_text)
+                    logs.debug(f"Display {dmd_turn_text}")
                     if handler['announcement'] is None:
                         display.message([players[actual_player].name], 0, None, 'middle', 'big')
                     # Play sound for first dart (playername otherwise default)
@@ -2438,7 +2444,8 @@ try:
                                     if os.path.isfile('{}/{}'.format(Config.dartsStrokeDir, dart_stroke)):
                                         display.message(' ', None, None, 'middle', 'huge', f'valeurs/{dart_stroke}.png')
                                     else:
-                                        display.message([dart_stroke], None, None, 'middle', 'huge')
+                                        # The thin strip of a game asking it, else the classic message
+                                        display.hit_banner(dart_stroke)
 
                         if threads is not None and len(threads) > 0:
                             for thread in threads:

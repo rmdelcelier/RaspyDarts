@@ -7022,3 +7022,334 @@ msgstr "Artistieke creatie"
 msgid "Participation à la création artistique : partager un thème sur RaspyHub"
 msgstr "Meedoen aan de artistieke creatie: een thema delen op RaspyHub"
 
+
+######## FIESTA ########
+
+msgid "Description-Fiesta"
+msgstr ""
+"Een reeks minispellen: vermijd de punten!\n"
+"\n"
+"Elke ronde is een willekeurig getrokken minispel uit 20 (Midden in de\n"
+"roos, Count-Up, Meer of minder, Nulklok, Enkele worp...).\n"
+"De winnaar is de speler met de minste punten aan het einde.\n"
+"-----\n"
+"Elke ronde krijgen de speler(s) met de laagste score (of die de\n"
+"uitdaging missen) 1 punt.\n"
+"Laatste ronde: die telt dubbel.\n"
+"Duivelsmodus: wordt willekeurig voor een speler ingeschakeld, de regels\n"
+"worden zwaarder en de straf verdubbelt.\n"
+"\n"
+"OPTIES\n"
+"Rondes: aantal gespeelde minispellen\n"
+"Duivelsmodus: zet de duivelsmodus aan\n"
+"Kans op duivelsmodus: kans (%) voor elke speler en elke ronde\n"
+"Minispellen op tijd: staat Nulklok, Bliksemzone en Gokkast toe (nooit\n"
+"online)\n"
+"Minispellen kiezen: gooi elke ronde een pijl op het nummer van het\n"
+"minispel (Bull = willekeurig). Nooit online.\n"
+"Drinkmodus: punten om te drinken in plaats van strafpunten\n"
+"SOLO: elk minispel heeft een doel, je krijgt een punt als je het mist."
+
+msgid "Fiesta-max_round"
+msgstr "Rondes"
+
+msgid "Fiesta-devil"
+msgstr "Duivelsmodus"
+
+msgid "Fiesta-devil_chance"
+msgstr "Kans op duivelsmodus (%)"
+
+msgid "Fiesta-timing_games"
+msgstr "Minispellen op tijd"
+
+msgid "Fiesta-choose_game"
+msgstr "Minispellen kiezen"
+
+msgid "Fiesta-drink_mode"
+msgstr "Drinkmodus"
+
+msgid "Fiesta-round"
+msgstr "Ronde"
+
+msgid "Fiesta-more-than"
+msgstr "meer dan"
+
+msgid "Fiesta-less-than"
+msgstr "minder dan"
+
+msgid "Fiesta-goal"
+msgstr "doel"
+
+msgid "Fiesta-last-round"
+msgstr "LAATSTE RONDE x2"
+
+msgid "Fiesta-nobody-drinks"
+msgstr "Niemand drinkt!"
+
+msgid "Fiesta-nobody-penalty"
+msgstr "Geen straf!"
+
+msgid "Fiesta-plus-drink"
+msgstr "{name}: +{points} te drinken"
+
+msgid "Fiesta-plus-penalty"
+msgstr "{name}: straf +{points}"
+
+msgid "Fiesta-card-drink"
+msgstr "TE DRINKEN {points}"
+
+msgid "Fiesta-card-penalty"
+msgstr "STRAFFEN {points}"
+
+msgid "Fiesta-too-late"
+msgstr "TE LAAT!"
+
+msgid "Fiesta-choose-title"
+msgstr "Ronde {round}/{max}: kies het minispel"
+
+msgid "Fiesta-choose-help"
+msgstr "Gooi een pijl op het nummer van het spel (Bull = willekeurig)"
+
+msgid "Fiesta-random"
+msgstr "WILLEKEURIG"
+
+msgid "Fiesta-remove-dart"
+msgstr "Haal de pijl eruit en druk op Volgende speler"
+
+msgid "Fiesta-back"
+msgstr "Terug"
+
+msgid "Fiesta-choice-tag"
+msgstr "MINISPELLEN GEKOZEN"
+
+msgid "Fiesta-target"
+msgstr "DOEL"
+
+msgid "Fiesta-your-turn"
+msgstr "JIJ BENT"
+
+msgid "Fiesta-time-left"
+msgstr "RESTERENDE TIJD"
+
+msgid "Fiesta-timer-hidden"
+msgstr "KLOK VERBORGEN"
+
+msgid "Fiesta-stop-at"
+msgstr "STOP OP 0.00"
+
+msgid "Fiesta-devil-tag"
+msgstr "DUIVEL"
+
+msgid "Fiesta-devil-mode"
+msgstr "DUIVELSMODUS!"
+
+msgid "Fiesta-timing-tag"
+msgstr "OP TIJD"
+
+msgid "Penalty Points"
+msgstr "Strafpunten"
+
+msgid "Lost Rounds"
+msgstr "Verloren rondes"
+
+msgid "Devil Modes"
+msgstr "Duivelsmodi"
+
+msgid "hit-single"
+msgstr "ENKEL"
+
+msgid "hit-double"
+msgstr "DUBBEL"
+
+msgid "hit-triple"
+msgstr "TRIPLE"
+
+msgid "hit-bull"
+msgstr "BULL"
+
+msgid "hit-double-bull"
+msgstr "DOUBLE BULL"
+
+msgid "hit-points"
+msgstr "{points} PNT"
+
+msgid "Fiesta-name-PLEIN_CENTRE"
+msgstr "MIDDEN IN DE ROOS"
+
+msgid "Fiesta-rule-PLEIN_CENTRE"
+msgstr "Raak de Bull zo vaak mogelijk (DB = 2)"
+
+msgid "Fiesta-devil-PLEIN_CENTRE"
+msgstr "Alleen de Double Bull telt"
+
+msgid "Fiesta-name-CHASSE_DOUBLES"
+msgstr "JACHT OP DUBBELS"
+
+msgid "Fiesta-rule-CHASSE_DOUBLES"
+msgstr "Raak de verlichte dubbels: {targets}"
+
+msgid "Fiesta-devil-CHASSE_DOUBLES"
+msgstr "Eén enkele geldige dubbel: {targets}"
+
+msgid "Fiesta-name-CHASSE_TRIPLES"
+msgstr "JACHT OP TRIPLES"
+
+msgid "Fiesta-rule-CHASSE_TRIPLES"
+msgstr "Raak de verlichte triples: {targets}"
+
+msgid "Fiesta-devil-CHASSE_TRIPLES"
+msgstr "Eén enkele geldige triple: {targets}"
+
+msgid "Fiesta-name-COUNT_UP_SANS_BULL"
+msgstr "COUNT-UP ZONDER BULL"
+
+msgid "Fiesta-rule-COUNT_UP_SANS_BULL"
+msgstr "Count-Up, maar de Bull wist je ronde!"
+
+msgid "Fiesta-devil-COUNT_UP_SANS_BULL"
+msgstr "De Bull wist de ronde en beëindigt de beurt"
+
+msgid "Fiesta-name-CIBLE_BALADEUSE"
+msgstr "ZWERVEND DOEL"
+
+msgid "Fiesta-rule-CIBLE_BALADEUSE"
+msgstr "Raak de {target} (S = 1, D = 2, T = 3)"
+
+msgid "Fiesta-devil-CIBLE_BALADEUSE"
+msgstr "Alleen de dubbel en de triple van {target} tellen"
+
+msgid "Fiesta-name-ZONE_ROUGE"
+msgstr "RODE ZONE"
+
+msgid "Fiesta-rule-ZONE_ROUGE"
+msgstr "Vermijd de {count} rode segmenten, de zone groeit!"
+
+msgid "Fiesta-devil-ZONE_ROUGE"
+msgstr "Vermijd de {count} rode segmenten, er blijft er maar één over!"
+
+msgid "Fiesta-name-COUNT_UP"
+msgstr "COUNT-UP"
+
+msgid "Fiesta-rule-COUNT_UP"
+msgstr "Scoor zoveel mogelijk punten"
+
+msgid "Fiesta-devil-COUNT_UP"
+msgstr "Enkels zijn 0 waard"
+
+msgid "Fiesta-name-COUNT_UP_CENTRE"
+msgstr "COUNT-UP IN HET MIDDEN"
+
+msgid "Fiesta-rule-COUNT_UP_CENTRE"
+msgstr "Dicht bij het midden = punten (DB 100, SB 80, T 50, S 40, D 10)"
+
+msgid "Fiesta-devil-COUNT_UP_CENTRE"
+msgstr "Alleen de Bulls tellen"
+
+msgid "Fiesta-name-COUNT_UP_NUMERO"
+msgstr "COUNT-UP VAN DE {target}"
+
+msgid "Fiesta-rule-COUNT_UP_NUMERO"
+msgstr "Alleen de {target} levert punten op"
+
+msgid "Fiesta-devil-COUNT_UP_NUMERO"
+msgstr "Alleen de dubbel en de triple van {target} tellen"
+
+msgid "Fiesta-name-COUNT_UP_CHANCE"
+msgstr "GELUKS-COUNT-UP"
+
+msgid "Fiesta-rule-COUNT_UP_CHANCE"
+msgstr "Vermenigvuldiger van deze pijl: x{mult}"
+
+msgid "Fiesta-devil-COUNT_UP_CHANCE"
+msgstr "Vermenigvuldiger (riskant!): x{mult}"
+
+msgid "Fiesta-name-COUNT_UP_BOULE_NEIGE"
+msgstr "SNEEUWBAL-COUNT-UP"
+
+msgid "Fiesta-rule-COUNT_UP_BOULE_NEIGE"
+msgstr "Dubbel, triple of Bull verdubbelt de vermenigvuldiger: x{mult}"
+
+msgid "Fiesta-devil-COUNT_UP_BOULE_NEIGE"
+msgstr "Een enkel breekt de ketting: x{mult}"
+
+msgid "Fiesta-name-COUNT_UP_VERT_ROUGE"
+msgstr "COUNT-UP GROEN OF ROOD"
+
+msgid "Fiesta-rule-COUNT_UP_VERT_ROUGE"
+msgstr "Groen = punten erbij, rood = punten eraf"
+
+msgid "Fiesta-devil-COUNT_UP_VERT_ROUGE"
+msgstr "Rood = twee keer zoveel punten eraf"
+
+msgid "Fiesta-name-PLUS_OU_MOINS"
+msgstr "MEER OF MINDER"
+
+msgid "Fiesta-rule-PLUS_OU_MOINS"
+msgstr "Gooi {sign} {target} met 3 pijlen"
+
+msgid "Fiesta-devil-PLUS_OU_MOINS"
+msgstr "Moeilijker doel: gooi {sign} {target}"
+
+msgid "Fiesta-name-CARROUSEL"
+msgstr "DRAAIMOLEN"
+
+msgid "Fiesta-rule-CARROUSEL"
+msgstr "Goud x4: {gold} / Blauw x2: {blue}"
+
+msgid "Fiesta-devil-CARROUSEL"
+msgstr "Goud x4: {gold} / Blauw x2: {blue} / de rest x0"
+
+msgid "Fiesta-name-MACHINE_A_SOUS"
+msgstr "GOKKAST"
+
+msgid "Fiesta-rule-MACHINE_A_SOUS"
+msgstr "Elke pijl zet een cijfer vast: eenheden, tientallen, honderdtallen"
+
+msgid "Fiesta-devil-MACHINE_A_SOUS"
+msgstr "De tellers draaien sneller!"
+
+msgid "Fiesta-name-CHRONO_ZERO"
+msgstr "NULKLOK"
+
+msgid "Fiesta-rule-CHRONO_ZERO"
+msgstr "Stop de teller zo dicht mogelijk bij 0 zonder eroverheen te gaan!"
+
+msgid "Fiesta-devil-CHRONO_ZERO"
+msgstr "Teller verborgen na 3 s, straf verdubbeld!"
+
+msgid "Fiesta-name-ZONE_ECLAIR"
+msgstr "BLIKSEMZONE"
+
+msgid "Fiesta-rule-ZONE_ECLAIR"
+msgstr "Raak de groene zone zo vaak mogelijk, hij verplaatst elke 2 s"
+
+msgid "Fiesta-devil-ZONE_ECLAIR"
+msgstr "Raak de groene zone zo vaak mogelijk, hij verplaatst elke seconde"
+
+msgid "Fiesta-name-COUP_UNIQUE"
+msgstr "ENKELE WORP"
+
+msgid "Fiesta-rule-COUP_UNIQUE"
+msgstr "Eén enkele pijl: raak de {target}"
+
+msgid "Fiesta-devil-COUP_UNIQUE"
+msgstr "Eén enkele pijl: dubbel of triple {target}"
+
+msgid "Fiesta-name-COUNT_UP_UNE_FLECHE"
+msgstr "COUNT-UP MET ÉÉN PIJL"
+
+msgid "Fiesta-rule-COUNT_UP_UNE_FLECHE"
+msgstr "Eén enkele pijl: zoveel mogelijk punten"
+
+msgid "Fiesta-devil-COUNT_UP_UNE_FLECHE"
+msgstr "Eén enkele pijl: enkels zijn 0 waard"
+
+msgid "Fiesta-name-COUNT_UP_UNE_FLECHE_CENTRE"
+msgstr "COUNT-UP MET ÉÉN PIJL IN HET MIDDEN"
+
+msgid "Fiesta-rule-COUNT_UP_UNE_FLECHE_CENTRE"
+msgstr "Eén enkele pijl, zo dicht mogelijk bij het midden"
+
+msgid "Fiesta-devil-COUNT_UP_UNE_FLECHE_CENTRE"
+msgstr "Eén enkele pijl: alleen de Bulls tellen"
+

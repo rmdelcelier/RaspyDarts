@@ -6968,3 +6968,336 @@ msgstr "Künstlerisches Schaffen"
 msgid "Participation à la création artistique : partager un thème sur RaspyHub"
 msgstr "Teilnahme am künstlerischen Schaffen: ein Thema auf RaspyHub teilen"
 
+
+######## FIESTA ########
+
+msgid "Description-Fiesta"
+msgstr ""
+"Eine Reihe von Mini-Spielen: Vermeiden Sie die Punkte!\n"
+"\n"
+"Jede Runde ist ein zufällig gezogenes Mini-Spiel aus 20 (Volltreffer,\n"
+"Count-Up, Mehr oder weniger, Null-Uhr, Einziger Wurf...).\n"
+"Gewinner ist der Spieler mit den wenigsten Punkten am Ende.\n"
+"-----\n"
+"In jeder Runde erhalten der oder die Spieler mit dem niedrigsten\n"
+"Ergebnis (oder die die Aufgabe nicht schaffen) 1 Punkt.\n"
+"Letzte Runde: Sie zählt doppelt.\n"
+"Teufelsmodus: Er wird zufällig für einen Spieler aktiviert, die Regeln\n"
+"werden härter und die Strafe verdoppelt.\n"
+"\n"
+"OPTIONEN\n"
+"Runden: Anzahl der gespielten Mini-Spiele\n"
+"Teufelsmodus: schaltet den Teufelsmodus ein\n"
+"Chance auf Teufelsmodus: Wahrscheinlichkeit (%) für jeden Spieler und\n"
+"jede Runde\n"
+"Mini-Spiele auf Zeit: erlaubt Null-Uhr, Blitzzone und Spielautomat (nie\n"
+"online)\n"
+"Mini-Spiele wählen: In jeder Runde werfen Sie einen Pfeil auf die Nummer\n"
+"des Mini-Spiels (Bull = Zufall). Nie online.\n"
+"Trinkmodus: Punkte zum Trinken statt Strafpunkten\n"
+"SOLO: Jedes Mini-Spiel hat ein Ziel, Sie erhalten einen Punkt, wenn Sie\n"
+"es verfehlen."
+
+msgid "Fiesta-max_round"
+msgstr "Runden"
+
+msgid "Fiesta-devil"
+msgstr "Teufelsmodus"
+
+msgid "Fiesta-devil_chance"
+msgstr "Chance auf Teufelsmodus (%)"
+
+msgid "Fiesta-timing_games"
+msgstr "Mini-Spiele auf Zeit"
+
+msgid "Fiesta-choose_game"
+msgstr "Mini-Spiele wählen"
+
+msgid "Fiesta-drink_mode"
+msgstr "Trinkmodus"
+
+msgid "Fiesta-round"
+msgstr "Runde"
+
+msgid "Fiesta-more-than"
+msgstr "mehr als"
+
+msgid "Fiesta-less-than"
+msgstr "weniger als"
+
+msgid "Fiesta-goal"
+msgstr "Ziel"
+
+msgid "Fiesta-last-round"
+msgstr "LETZTE RUNDE x2"
+
+msgid "Fiesta-nobody-drinks"
+msgstr "Niemand trinkt!"
+
+msgid "Fiesta-nobody-penalty"
+msgstr "Keine Strafe!"
+
+msgid "Fiesta-plus-drink"
+msgstr "{name}: +{points} zu trinken"
+
+msgid "Fiesta-plus-penalty"
+msgstr "{name}: Strafe +{points}"
+
+msgid "Fiesta-card-drink"
+msgstr "ZU TRINKEN {points}"
+
+msgid "Fiesta-card-penalty"
+msgstr "STRAFEN {points}"
+
+msgid "Fiesta-too-late"
+msgstr "ZU SPÄT!"
+
+msgid "Fiesta-choose-title"
+msgstr "Runde {round}/{max}: wählen Sie das Mini-Spiel"
+
+msgid "Fiesta-choose-help"
+msgstr "Werfen Sie einen Pfeil auf die Nummer des Spiels (Bull = Zufall)"
+
+msgid "Fiesta-random"
+msgstr "ZUFALL"
+
+msgid "Fiesta-remove-dart"
+msgstr "Ziehen Sie den Pfeil heraus und drücken Sie Nächster Spieler"
+
+msgid "Fiesta-back"
+msgstr "Zurück"
+
+msgid "Fiesta-choice-tag"
+msgstr "MINI-SPIELE GEWÄHLT"
+
+msgid "Fiesta-target"
+msgstr "ZIEL"
+
+msgid "Fiesta-your-turn"
+msgstr "DU BIST DRAN"
+
+msgid "Fiesta-time-left"
+msgstr "RESTZEIT"
+
+msgid "Fiesta-timer-hidden"
+msgstr "UHR VERBORGEN"
+
+msgid "Fiesta-stop-at"
+msgstr "STOPP BEI 0.00"
+
+msgid "Fiesta-devil-tag"
+msgstr "TEUFEL"
+
+msgid "Fiesta-devil-mode"
+msgstr "TEUFELSMODUS!"
+
+msgid "Fiesta-timing-tag"
+msgstr "AUF ZEIT"
+
+msgid "Penalty Points"
+msgstr "Strafpunkte"
+
+msgid "Lost Rounds"
+msgstr "Verlorene Runden"
+
+msgid "Devil Modes"
+msgstr "Teufelsmodi"
+
+msgid "hit-single"
+msgstr "EINFACH"
+
+msgid "hit-double"
+msgstr "DOPPEL"
+
+msgid "hit-triple"
+msgstr "TRIPLE"
+
+msgid "hit-bull"
+msgstr "BULL"
+
+msgid "hit-double-bull"
+msgstr "DOUBLE BULL"
+
+msgid "hit-points"
+msgstr "{points} PKT"
+
+msgid "Fiesta-name-PLEIN_CENTRE"
+msgstr "VOLLTREFFER"
+
+msgid "Fiesta-rule-PLEIN_CENTRE"
+msgstr "Treffen Sie das Bull so oft wie möglich (DB = 2)"
+
+msgid "Fiesta-devil-PLEIN_CENTRE"
+msgstr "Nur das Double Bull zählt"
+
+msgid "Fiesta-name-CHASSE_DOUBLES"
+msgstr "DOPPELJAGD"
+
+msgid "Fiesta-rule-CHASSE_DOUBLES"
+msgstr "Treffen Sie die beleuchteten Doppel: {targets}"
+
+msgid "Fiesta-devil-CHASSE_DOUBLES"
+msgstr "Ein einziges gültiges Doppel: {targets}"
+
+msgid "Fiesta-name-CHASSE_TRIPLES"
+msgstr "TRIPLEJAGD"
+
+msgid "Fiesta-rule-CHASSE_TRIPLES"
+msgstr "Treffen Sie die beleuchteten Triple: {targets}"
+
+msgid "Fiesta-devil-CHASSE_TRIPLES"
+msgstr "Ein einziges gültiges Triple: {targets}"
+
+msgid "Fiesta-name-COUNT_UP_SANS_BULL"
+msgstr "COUNT-UP OHNE BULL"
+
+msgid "Fiesta-rule-COUNT_UP_SANS_BULL"
+msgstr "Count-Up, aber das Bull löscht Ihre Runde!"
+
+msgid "Fiesta-devil-COUNT_UP_SANS_BULL"
+msgstr "Das Bull löscht die Runde und beendet den Zug"
+
+msgid "Fiesta-name-CIBLE_BALADEUSE"
+msgstr "WANDERNDES ZIEL"
+
+msgid "Fiesta-rule-CIBLE_BALADEUSE"
+msgstr "Treffen Sie die {target} (S = 1, D = 2, T = 3)"
+
+msgid "Fiesta-devil-CIBLE_BALADEUSE"
+msgstr "Nur Doppel und Triple der {target} zählen"
+
+msgid "Fiesta-name-ZONE_ROUGE"
+msgstr "ROTE ZONE"
+
+msgid "Fiesta-rule-ZONE_ROUGE"
+msgstr "Meiden Sie die {count} roten Segmente, die Zone wächst!"
+
+msgid "Fiesta-devil-ZONE_ROUGE"
+msgstr "Meiden Sie die {count} roten Segmente, nur eines bleibt übrig!"
+
+msgid "Fiesta-name-COUNT_UP"
+msgstr "COUNT-UP"
+
+msgid "Fiesta-rule-COUNT_UP"
+msgstr "Erzielen Sie so viele Punkte wie möglich"
+
+msgid "Fiesta-devil-COUNT_UP"
+msgstr "Einfache zählen 0"
+
+msgid "Fiesta-name-COUNT_UP_CENTRE"
+msgstr "COUNT-UP IN DER MITTE"
+
+msgid "Fiesta-rule-COUNT_UP_CENTRE"
+msgstr "Nah an der Mitte = Punkte (DB 100, SB 80, T 50, S 40, D 10)"
+
+msgid "Fiesta-devil-COUNT_UP_CENTRE"
+msgstr "Nur die Bulls zählen"
+
+msgid "Fiesta-name-COUNT_UP_NUMERO"
+msgstr "COUNT-UP DER {target}"
+
+msgid "Fiesta-rule-COUNT_UP_NUMERO"
+msgstr "Nur die {target} bringt Punkte"
+
+msgid "Fiesta-devil-COUNT_UP_NUMERO"
+msgstr "Nur Doppel und Triple der {target} zählen"
+
+msgid "Fiesta-name-COUNT_UP_CHANCE"
+msgstr "GLÜCKS-COUNT-UP"
+
+msgid "Fiesta-rule-COUNT_UP_CHANCE"
+msgstr "Multiplikator dieses Pfeils: x{mult}"
+
+msgid "Fiesta-devil-COUNT_UP_CHANCE"
+msgstr "Multiplikator (riskant!): x{mult}"
+
+msgid "Fiesta-name-COUNT_UP_BOULE_NEIGE"
+msgstr "SCHNEEBALL-COUNT-UP"
+
+msgid "Fiesta-rule-COUNT_UP_BOULE_NEIGE"
+msgstr "Doppel, Triple oder Bull verdoppeln den Multiplikator: x{mult}"
+
+msgid "Fiesta-devil-COUNT_UP_BOULE_NEIGE"
+msgstr "Ein Einfaches bricht die Kette: x{mult}"
+
+msgid "Fiesta-name-COUNT_UP_VERT_ROUGE"
+msgstr "COUNT-UP GRÜN ODER ROT"
+
+msgid "Fiesta-rule-COUNT_UP_VERT_ROUGE"
+msgstr "Grün = Punkte dazu, Rot = Punkte weg"
+
+msgid "Fiesta-devil-COUNT_UP_VERT_ROUGE"
+msgstr "Rot = doppelt so viele Punkte weg"
+
+msgid "Fiesta-name-PLUS_OU_MOINS"
+msgstr "MEHR ODER WENIGER"
+
+msgid "Fiesta-rule-PLUS_OU_MOINS"
+msgstr "Erzielen Sie {sign} {target} mit 3 Pfeilen"
+
+msgid "Fiesta-devil-PLUS_OU_MOINS"
+msgstr "Schwereres Ziel: erzielen Sie {sign} {target}"
+
+msgid "Fiesta-name-CARROUSEL"
+msgstr "KARUSSELL"
+
+msgid "Fiesta-rule-CARROUSEL"
+msgstr "Gold x4: {gold} / Blau x2: {blue}"
+
+msgid "Fiesta-devil-CARROUSEL"
+msgstr "Gold x4: {gold} / Blau x2: {blue} / der Rest x0"
+
+msgid "Fiesta-name-MACHINE_A_SOUS"
+msgstr "SPIELAUTOMAT"
+
+msgid "Fiesta-rule-MACHINE_A_SOUS"
+msgstr "Jeder Pfeil hält eine Ziffer an: Einer, Zehner, Hunderter"
+
+msgid "Fiesta-devil-MACHINE_A_SOUS"
+msgstr "Die Zähler laufen schneller!"
+
+msgid "Fiesta-name-CHRONO_ZERO"
+msgstr "NULL-UHR"
+
+msgid "Fiesta-rule-CHRONO_ZERO"
+msgstr "Halten Sie den Zähler so nah wie möglich an 0 an, ohne darüber hinaus!"
+
+msgid "Fiesta-devil-CHRONO_ZERO"
+msgstr "Zähler ab 3 s verborgen, Strafe verdoppelt!"
+
+msgid "Fiesta-name-ZONE_ECLAIR"
+msgstr "BLITZZONE"
+
+msgid "Fiesta-rule-ZONE_ECLAIR"
+msgstr "Treffen Sie die grüne Zone so oft wie möglich, sie bewegt sich alle 2 s"
+
+msgid "Fiesta-devil-ZONE_ECLAIR"
+msgstr "Treffen Sie die grüne Zone so oft wie möglich, sie bewegt sich jede Sekunde"
+
+msgid "Fiesta-name-COUP_UNIQUE"
+msgstr "EINZIGER WURF"
+
+msgid "Fiesta-rule-COUP_UNIQUE"
+msgstr "Ein einziger Pfeil: treffen Sie die {target}"
+
+msgid "Fiesta-devil-COUP_UNIQUE"
+msgstr "Ein einziger Pfeil: Doppel oder Triple {target}"
+
+msgid "Fiesta-name-COUNT_UP_UNE_FLECHE"
+msgstr "COUNT-UP MIT EINEM PFEIL"
+
+msgid "Fiesta-rule-COUNT_UP_UNE_FLECHE"
+msgstr "Ein einziger Pfeil: so viele Punkte wie möglich"
+
+msgid "Fiesta-devil-COUNT_UP_UNE_FLECHE"
+msgstr "Ein einziger Pfeil: Einfache zählen 0"
+
+msgid "Fiesta-name-COUNT_UP_UNE_FLECHE_CENTRE"
+msgstr "COUNT-UP MIT EINEM PFEIL IN DIE MITTE"
+
+msgid "Fiesta-rule-COUNT_UP_UNE_FLECHE_CENTRE"
+msgstr "Ein einziger Pfeil, so nah wie möglich an der Mitte"
+
+msgid "Fiesta-devil-COUNT_UP_UNE_FLECHE_CENTRE"
+msgstr "Ein einziger Pfeil: nur die Bulls zählen"
+
