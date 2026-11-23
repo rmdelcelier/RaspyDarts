@@ -286,13 +286,19 @@ def status(screen, theme, here):
 
 def own_mark(screen, theme, own, short=False):
     '''
-    A theme sent from this borne : said (short : in the list, its state only when it is not online)
+    A theme sent from this borne : said (short : in the list, its state only). Its last version
+    waiting or refused while an older one is online : that version said (the theme is online)
     '''
     sent = own.get(theme.get('id'))
     if sent is None:
         return ''
     state = sent.get('state')
-    said = translate(screen, f'hub-state-{state}') if state in ('pending', 'refused') else ''
+    said = ''
+    if state in ('pending', 'refused'):
+        if sent.get('published_version'):
+            said = translate(screen, f'hub-state-{state}-version').replace('{version}', str(sent.get('version')))
+        else:
+            said = translate(screen, f'hub-state-{state}')
     if short:
         return said
     text = translate(screen, 'hub-mine')

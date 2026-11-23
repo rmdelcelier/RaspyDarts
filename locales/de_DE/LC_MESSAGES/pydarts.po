@@ -6526,6 +6526,12 @@ msgstr "wartet auf Freigabe"
 msgid "hub-state-refused"
 msgstr "abgelehnt"
 
+msgid "hub-state-pending-version"
+msgstr "Version {version} wartet auf Freigabe"
+
+msgid "hub-state-refused-version"
+msgstr "Version {version} abgelehnt"
+
 msgid "hub-not-online"
 msgstr "Noch nicht im Katalog: nur hier sichtbar, von diesem Automaten aus"
 

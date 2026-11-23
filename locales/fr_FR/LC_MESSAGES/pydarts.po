@@ -6602,6 +6602,12 @@ msgstr "en attente de validation"
 msgid "hub-state-refused"
 msgstr "refusé"
 
+msgid "hub-state-pending-version"
+msgstr "version {version} en attente de validation"
+
+msgid "hub-state-refused-version"
+msgstr "version {version} refusée"
+
 msgid "hub-not-online"
 msgstr "Pas encore au catalogue : visible ici seulement, depuis cette borne"
 

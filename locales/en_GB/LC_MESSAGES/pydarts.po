@@ -6798,6 +6798,12 @@ msgstr "awaiting approval"
 msgid "hub-state-refused"
 msgstr "refused"
 
+msgid "hub-state-pending-version"
+msgstr "version {version} awaiting approval"
+
+msgid "hub-state-refused-version"
+msgstr "version {version} refused"
+
 msgid "hub-not-online"
 msgstr "Not in the catalogue yet: only seen here, from this cabinet"
 

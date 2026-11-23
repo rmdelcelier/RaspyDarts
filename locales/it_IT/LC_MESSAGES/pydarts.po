@@ -6593,6 +6593,12 @@ msgstr "in attesa di convalida"
 msgid "hub-state-refused"
 msgstr "rifiutato"
 
+msgid "hub-state-pending-version"
+msgstr "versione {version} in attesa di convalida"
+
+msgid "hub-state-refused-version"
+msgstr "versione {version} rifiutata"
+
 msgid "hub-not-online"
 msgstr "Non ancora nel catalogo: visibile solo qui, da questa postazione"
 

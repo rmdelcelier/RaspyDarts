@@ -6580,6 +6580,12 @@ msgstr "wacht op goedkeuring"
 msgid "hub-state-refused"
 msgstr "geweigerd"
 
+msgid "hub-state-pending-version"
+msgstr "versie {version} wacht op goedkeuring"
+
+msgid "hub-state-refused-version"
+msgstr "versie {version} geweigerd"
+
 msgid "hub-not-online"
 msgstr "Nog niet in de catalogus: alleen hier zichtbaar, vanaf deze kast"
 
