@@ -7,10 +7,10 @@ import pygame
 path = None
 
 
-def font(size, bold=False):
+def font(size, bold=False):    # pylint: disable=unused-argument
     '''
-    The font of the game at this size
+    The font of the game at this size. bold : kept for the callers, not applied : the bold made by
+    pygame (set_bold) thickens the strokes of the font of the theme until it is not recognised
+    (CompactaBT, condensed : Trophées et progression looked written in another font)
     '''
-    chosen = pygame.font.Font(path, int(size))
-    chosen.set_bold(bold)
-    return chosen
+    return pygame.font.Font(path, int(size))
