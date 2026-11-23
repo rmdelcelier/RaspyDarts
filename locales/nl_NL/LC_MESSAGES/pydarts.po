@@ -6571,6 +6571,45 @@ msgstr "Nog geen thema's op RaspyHub"
 msgid "hub-catalog-count"
 msgstr "{count} thema('s)"
 
+msgid "hub-mine"
+msgstr "Verzonden vanaf deze kast"
+
+msgid "hub-state-pending"
+msgstr "wacht op goedkeuring"
+
+msgid "hub-state-refused"
+msgstr "geweigerd"
+
+msgid "hub-not-online"
+msgstr "Nog niet in de catalogus: alleen hier zichtbaar, vanaf deze kast"
+
+msgid "hub-remove-button"
+msgstr "Verwijderen van RaspyHub"
+
+msgid "hub-remove-question"
+msgstr "{name} verwijderen van RaspyHub?"
+
+msgid "hub-remove-explain"
+msgstr "Het thema en al zijn versies worden definitief van de site gewist; het op de kast geïnstalleerde blijft"
+
+msgid "hub-removing"
+msgstr "Verwijderen van RaspyHub…"
+
+msgid "hub-remove-done"
+msgstr "{name} verwijderd van RaspyHub"
+
+msgid "hub-remove-failed"
+msgstr "{name} kon niet van RaspyHub worden verwijderd ({error})"
+
+msgid "hub-news-published"
+msgstr "Je thema {name} is geaccepteerd: het staat bij Downloaden van RaspyHub"
+
+msgid "hub-news-refused"
+msgstr "Je thema {name} is geweigerd op RaspyHub"
+
+msgid "hub-news-refused-reason"
+msgstr "Je thema {name} is geweigerd op RaspyHub: {reason}"
+
 msgid "hub-catalog-help"
 msgstr "Draaiknop of Omhoog / Omlaag: thema, Terug, Downloaden - Links / Rechts: schermafbeelding - Bevestigen: kiezen"
 

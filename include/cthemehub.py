@@ -641,3 +641,152 @@ def choose_captures(screen, draft):
                     pass
                 draft.data['chosen'] = [item for item in chosen if item != name]
                 draft.save()
+
+
+# ---------------------------------------------------------------------- the themes of this borne
+# The decisions on its themes already said (accepted, refused) : {"<id>:<version>": state}
+NEWS_FILE = os.path.join(cpaths.user_dir(), 'raspyhub', 'notified.json')
+
+
+def has_sent():
+    '''
+    A theme was sent from this borne (draft.json of an export with « sent ») : only then the
+    server is asked about its themes
+    '''
+    folder = os.path.join(cpaths.user_dir(), 'raspyhub', 'export')
+    try:
+        names = os.listdir(folder)
+    except OSError:
+        return False
+    for name in names:
+        try:
+            with open(os.path.join(folder, name, 'draft.json'), encoding='utf-8') as source:
+                if json.load(source).get('sent'):
+                    return True
+        except (OSError, ValueError, AttributeError):
+            continue
+    return False
+
+
+def mine(logs):
+    '''
+    The themes sent from this borne, as the server knows them (GET .../mine) : [{id, name,
+    version, state (pending, published, refused, removed), reason, published_version, sent_at,
+    decided_at}] ; None : not read
+    '''
+    try:
+        import requests    # pylint: disable=import-outside-toplevel
+        from include import cupdate    # pylint: disable=import-outside-toplevel
+        machine = cupdate.machine_id()
+        if not machine:
+            return None
+        answer = requests.get(f"{API}/mine", params={'machine_id': machine}, headers={'X-API-Key': API_KEY}, timeout=8)
+        answer.raise_for_status()
+        themes = answer.json().get('themes')
+        return [theme for theme in themes if isinstance(theme, dict) and theme.get('id') is not None]
+    except Exception as error:    # pylint: disable=broad-except
+        logs.warning(f"RaspyHub : themes of this borne not read ({error})")
+        return None
+
+
+def delete_hub(logs, theme_id):
+    '''
+    A theme of this borne deleted from RaspyHub (DELETE .../<id>) : for good, all its versions.
+    (True, '') when done ; (False, the error : not_owner, not_found, the message...)
+    '''
+    try:
+        import requests    # pylint: disable=import-outside-toplevel
+        from include import cupdate    # pylint: disable=import-outside-toplevel
+        answer = requests.delete(f"{API}/{int(theme_id)}", json={'machine_id': cupdate.machine_id()},
+                                 headers={'X-API-Key': API_KEY}, timeout=15)
+        if answer.status_code == 200:
+            logs.info(f"RaspyHub : theme {theme_id} deleted")
+            return True, ''
+        try:
+            code = answer.json().get('error') or str(answer.status_code)
+        except ValueError:
+            code = str(answer.status_code)
+        logs.error(f"RaspyHub : theme {theme_id} not deleted (HTTP {answer.status_code}, {code})")
+        return False, code
+    except Exception as error:    # pylint: disable=broad-except
+        logs.error(f"RaspyHub : theme {theme_id} not deleted ({error})")
+        return False, str(error)
+
+
+def news(themes):
+    '''
+    The decisions not said yet on the themes of this borne : [(name, state, reason, key)], state
+    published or refused, once by version (see said)
+    '''
+    try:
+        with open(NEWS_FILE, encoding='utf-8') as source:
+            known = json.load(source)
+    except (OSError, ValueError):
+        known = {}
+    found = []
+    for theme in themes or []:
+        state = theme.get('state')
+        if state not in ('published', 'refused') or not theme.get('decided_at'):
+            continue
+        key = f"{theme.get('id')}:{theme.get('version')}"
+        if known.get(key) == state:
+            continue
+        found.append((str(theme.get('name') or '?'), state, theme.get('reason'), key))
+    return found
+
+
+def said(items):
+    '''
+    These decisions said : not again
+    '''
+    try:
+        with open(NEWS_FILE, encoding='utf-8') as source:
+            known = json.load(source)
+    except (OSError, ValueError):
+        known = {}
+    for _name, state, _reason, key in items:
+        known[key] = state
+    try:
+        os.makedirs(os.path.dirname(NEWS_FILE), exist_ok=True)
+        with open(NEWS_FILE + '.tmp', 'w', encoding='utf-8') as target:
+            json.dump(known, target, indent=1)
+        os.replace(NEWS_FILE + '.tmp', NEWS_FILE)
+    except OSError:
+        pass
+
+
+def news_text(screen, item):
+    '''
+    The window of a decision : accepted (in Télécharger depuis RaspyHub), refused (its reason)
+    '''
+    name, state, reason, _key = item
+    if state == 'published':
+        return translate(screen, 'hub-news-published').replace('{name}', name)
+    if reason:
+        return translate(screen, 'hub-news-refused-reason').replace('{name}', name).replace('{reason}', str(reason))
+    return translate(screen, 'hub-news-refused').replace('{name}', name)
+
+
+def show_news(screen, items):
+    '''
+    The decisions shown one after the other, then marked as said
+    '''
+    for item in items:
+        screen.message([news_text(screen, item)], 5000, 'menu-ok' if item[1] == 'published' else 'menu-ko', 'middle', 'big')
+    said(items)
+
+
+def check_news(screen):
+    '''
+    At the start : the themes of this borne asked in the background (only when it sent one) ;
+    their decisions shown by the menus (Screen.idle_turn, screen.hub_news)
+    '''
+    if not has_sent():
+        return
+
+    def ask():
+        themes = mine(screen.logs)
+        found = news(themes)
+        if found:
+            screen.hub_news = found
+    threading.Thread(target=ask, daemon=True).start()

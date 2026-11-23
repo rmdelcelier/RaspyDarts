@@ -6593,6 +6593,45 @@ msgstr "Aucun thème sur RaspyHub pour l'instant"
 msgid "hub-catalog-count"
 msgstr "{count} thème(s)"
 
+msgid "hub-mine"
+msgstr "Envoyé depuis cette borne"
+
+msgid "hub-state-pending"
+msgstr "en attente de validation"
+
+msgid "hub-state-refused"
+msgstr "refusé"
+
+msgid "hub-not-online"
+msgstr "Pas encore au catalogue : visible ici seulement, depuis cette borne"
+
+msgid "hub-remove-button"
+msgstr "Supprimer de RaspyHub"
+
+msgid "hub-remove-question"
+msgstr "Supprimer {name} de RaspyHub ?"
+
+msgid "hub-remove-explain"
+msgstr "Le thème et toutes ses versions sont effacés du site, définitivement ; celui installé sur la borne reste"
+
+msgid "hub-removing"
+msgstr "Suppression sur RaspyHub…"
+
+msgid "hub-remove-done"
+msgstr "{name} supprimé de RaspyHub"
+
+msgid "hub-remove-failed"
+msgstr "{name} n'a pas pu être supprimé de RaspyHub ({error})"
+
+msgid "hub-news-published"
+msgstr "Votre thème {name} a été accepté : il est dans Télécharger depuis RaspyHub"
+
+msgid "hub-news-refused"
+msgstr "Votre thème {name} a été refusé sur RaspyHub"
+
+msgid "hub-news-refused-reason"
+msgstr "Votre thème {name} a été refusé sur RaspyHub : {reason}"
+
 msgid "hub-catalog-help"
 msgstr "Molette ou Haut / Bas : thème, Retour, Télécharger - Gauche / Droite : capture - Valider : choisir"
 

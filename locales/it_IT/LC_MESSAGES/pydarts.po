@@ -6584,6 +6584,45 @@ msgstr "Ancora nessun tema su RaspyHub"
 msgid "hub-catalog-count"
 msgstr "{count} tema/i"
 
+msgid "hub-mine"
+msgstr "Inviato da questa postazione"
+
+msgid "hub-state-pending"
+msgstr "in attesa di convalida"
+
+msgid "hub-state-refused"
+msgstr "rifiutato"
+
+msgid "hub-not-online"
+msgstr "Non ancora nel catalogo: visibile solo qui, da questa postazione"
+
+msgid "hub-remove-button"
+msgstr "Elimina da RaspyHub"
+
+msgid "hub-remove-question"
+msgstr "Eliminare {name} da RaspyHub?"
+
+msgid "hub-remove-explain"
+msgstr "Il tema e tutte le sue versioni vengono cancellati dal sito definitivamente; quello installato sulla postazione resta"
+
+msgid "hub-removing"
+msgstr "Eliminazione da RaspyHub…"
+
+msgid "hub-remove-done"
+msgstr "{name} eliminato da RaspyHub"
+
+msgid "hub-remove-failed"
+msgstr "Impossibile eliminare {name} da RaspyHub ({error})"
+
+msgid "hub-news-published"
+msgstr "Il tuo tema {name} è stato accettato: è in Scarica da RaspyHub"
+
+msgid "hub-news-refused"
+msgstr "Il tuo tema {name} è stato rifiutato su RaspyHub"
+
+msgid "hub-news-refused-reason"
+msgstr "Il tuo tema {name} è stato rifiutato su RaspyHub: {reason}"
+
 msgid "hub-catalog-help"
 msgstr "Manopola o Su / Giù: tema, Indietro, Scaricare - Sinistra / Destra: schermata - Convalida: scegliere"
 

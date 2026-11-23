@@ -6517,6 +6517,45 @@ msgstr "Noch kein Thema auf RaspyHub"
 msgid "hub-catalog-count"
 msgstr "{count} Thema(s)"
 
+msgid "hub-mine"
+msgstr "Von diesem Automaten gesendet"
+
+msgid "hub-state-pending"
+msgstr "wartet auf Freigabe"
+
+msgid "hub-state-refused"
+msgstr "abgelehnt"
+
+msgid "hub-not-online"
+msgstr "Noch nicht im Katalog: nur hier sichtbar, von diesem Automaten aus"
+
+msgid "hub-remove-button"
+msgstr "Von RaspyHub löschen"
+
+msgid "hub-remove-question"
+msgstr "{name} von RaspyHub löschen?"
+
+msgid "hub-remove-explain"
+msgstr "Das Thema und alle seine Versionen werden endgültig von der Website gelöscht; das auf dem Automaten installierte bleibt"
+
+msgid "hub-removing"
+msgstr "Wird von RaspyHub gelöscht…"
+
+msgid "hub-remove-done"
+msgstr "{name} von RaspyHub gelöscht"
+
+msgid "hub-remove-failed"
+msgstr "{name} konnte nicht von RaspyHub gelöscht werden ({error})"
+
+msgid "hub-news-published"
+msgstr "Ihr Thema {name} wurde angenommen: es ist unter Von RaspyHub herunterladen"
+
+msgid "hub-news-refused"
+msgstr "Ihr Thema {name} wurde auf RaspyHub abgelehnt"
+
+msgid "hub-news-refused-reason"
+msgstr "Ihr Thema {name} wurde auf RaspyHub abgelehnt: {reason}"
+
 msgid "hub-catalog-help"
 msgstr "Drehknopf oder Hoch / Runter: Thema, Zurück, Herunterladen - Links / Rechts: Bildschirmfoto - Bestätigen: wählen"
 

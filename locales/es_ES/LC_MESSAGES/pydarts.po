@@ -6522,6 +6522,45 @@ msgstr "Todavía no hay temas en RaspyHub"
 msgid "hub-catalog-count"
 msgstr "{count} tema(s)"
 
+msgid "hub-mine"
+msgstr "Enviado desde esta máquina"
+
+msgid "hub-state-pending"
+msgstr "pendiente de validación"
+
+msgid "hub-state-refused"
+msgstr "rechazado"
+
+msgid "hub-not-online"
+msgstr "Todavía no está en el catálogo: solo se ve aquí, desde esta máquina"
+
+msgid "hub-remove-button"
+msgstr "Borrar de RaspyHub"
+
+msgid "hub-remove-question"
+msgstr "¿Borrar {name} de RaspyHub?"
+
+msgid "hub-remove-explain"
+msgstr "El tema y todas sus versiones se borran del sitio definitivamente; el instalado en la máquina se queda"
+
+msgid "hub-removing"
+msgstr "Borrando de RaspyHub…"
+
+msgid "hub-remove-done"
+msgstr "{name} borrado de RaspyHub"
+
+msgid "hub-remove-failed"
+msgstr "No se ha podido borrar {name} de RaspyHub ({error})"
+
+msgid "hub-news-published"
+msgstr "Tu tema {name} ha sido aceptado: está en Descargar desde RaspyHub"
+
+msgid "hub-news-refused"
+msgstr "Tu tema {name} ha sido rechazado en RaspyHub"
+
+msgid "hub-news-refused-reason"
+msgstr "Tu tema {name} ha sido rechazado en RaspyHub: {reason}"
+
 msgid "hub-catalog-help"
 msgstr "Rueda o Arriba / Abajo: tema, Volver, Descargar - Izquierda / Derecha: captura - Validar: elegir"
 

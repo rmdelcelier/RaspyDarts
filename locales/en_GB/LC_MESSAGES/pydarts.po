@@ -6789,6 +6789,45 @@ msgstr "No theme on RaspyHub yet"
 msgid "hub-catalog-count"
 msgstr "{count} theme(s)"
 
+msgid "hub-mine"
+msgstr "Sent from this cabinet"
+
+msgid "hub-state-pending"
+msgstr "awaiting approval"
+
+msgid "hub-state-refused"
+msgstr "refused"
+
+msgid "hub-not-online"
+msgstr "Not in the catalogue yet: only seen here, from this cabinet"
+
+msgid "hub-remove-button"
+msgstr "Delete from RaspyHub"
+
+msgid "hub-remove-question"
+msgstr "Delete {name} from RaspyHub?"
+
+msgid "hub-remove-explain"
+msgstr "The theme and all its versions are erased from the site for good; the one installed on the cabinet stays"
+
+msgid "hub-removing"
+msgstr "Deleting from RaspyHub…"
+
+msgid "hub-remove-done"
+msgstr "{name} deleted from RaspyHub"
+
+msgid "hub-remove-failed"
+msgstr "{name} could not be deleted from RaspyHub ({error})"
+
+msgid "hub-news-published"
+msgstr "Your theme {name} has been accepted: it is in Download from RaspyHub"
+
+msgid "hub-news-refused"
+msgstr "Your theme {name} has been refused on RaspyHub"
+
+msgid "hub-news-refused-reason"
+msgstr "Your theme {name} has been refused on RaspyHub: {reason}"
+
 msgid "hub-catalog-help"
 msgstr "Knob or Up / Down: theme, Back, Download - Left / Right: capture - Validate: choose"
 

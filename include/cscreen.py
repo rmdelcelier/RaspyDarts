@@ -306,6 +306,17 @@ class Screen(pygame.Surface):
         self.activities.tick()
         # The mode capture ended (Exporter le thème vers RaspyHub) : back to the screen of the
         # export, from a menu (drawn again after it)
+        # The themes sent from this borne : asked once in the background when the menus are first
+        # shown, their decisions (accepted, refused) then shown by a menu (include/cthemehub.py)
+        if getattr(self, 'menu_shown', None) and not getattr(self, 'hub_news_asked', False):
+            self.hub_news_asked = True
+            from include import cthemehub    # pylint: disable=import-outside-toplevel
+            cthemehub.check_news(self)
+        if can_redraw and getattr(self, 'hub_news', None) and getattr(self, 'menu_shown', None)                 and getattr(self.rpi, 'capture', None) is None:
+            items, self.hub_news = self.hub_news, None
+            from include import cthemehub    # pylint: disable=import-outside-toplevel
+            cthemehub.show_news(self, items)
+            return True
         if can_redraw and getattr(self, 'hub_return', None) and getattr(self, 'menu_shown', None)                 and getattr(self.rpi, 'capture', None) is None:
             self.hub_return = None
             from include import cthemehub    # pylint: disable=import-outside-toplevel

@@ -261,6 +261,9 @@ def details(screen, theme, here):
     '''
     What is known of a theme : its author, its date, its size, its media ; installed here or not
     '''
+    if theme.get('own_only'):
+        # A theme of this borne waiting or refused : not in the catalogue, seen here only
+        return translate(screen, 'hub-not-online'), status(screen, theme, here)
     date = str(theme.get('updated_at') or theme.get('created_at') or '')[:10]
     if re.fullmatch(r'\d{4}-\d{2}-\d{2}', date):
         date = '/'.join(reversed(date.split('-')))
@@ -281,6 +284,40 @@ def status(screen, theme, here):
     return translate(screen, 'hub-update-available' if int(theme.get('version') or 0) > version else 'hub-installed')
 
 
+def own_mark(screen, theme, own, short=False):
+    '''
+    A theme sent from this borne : said (short : in the list, its state only when it is not online)
+    '''
+    sent = own.get(theme.get('id'))
+    if sent is None:
+        return ''
+    state = sent.get('state')
+    said = translate(screen, f'hub-state-{state}') if state in ('pending', 'refused') else ''
+    if short:
+        return said
+    text = translate(screen, 'hub-mine')
+    return f"{text} ({said})" if said else text
+
+
+def remove(screen, theme):
+    '''
+    Supprimer de RaspyHub : a theme of this borne deleted from the site for good, after a question
+    (the theme installed on the borne stays). True : deleted
+    '''
+    name = str(theme.get('name') or '?')
+    if not screen.ask_yes_no(translate(screen, 'hub-remove-question').replace('{name}', name),
+                             translate(screen, 'hub-remove-explain')):
+        return False
+    screen.message([translate(screen, 'hub-removing')], 0, None, 'middle', 'big')
+    done, error = cthemehub.delete_hub(screen.logs, theme.get('id'))
+    if done:
+        screen.message([translate(screen, 'hub-remove-done').replace('{name}', name)], 2500, 'menu-ok', 'middle', 'big')
+        return True
+    screen.message([translate(screen, 'hub-remove-failed').replace('{name}', name).replace('{error}', error)],
+                   4000, 'menu-ko', 'middle', 'big')
+    return False
+
+
 def catalog_screen(screen):
     '''
     Télécharger depuis RaspyHub : the list of the themes, their captures, Télécharger
@@ -293,6 +330,15 @@ def catalog_screen(screen):
     if themes is None:
         screen.message([translate(screen, 'hub-catalog-failed')], 3500, 'menu-ko', 'middle', 'big')
         return
+    # The themes sent from this borne : their decisions not said yet, then those not in the
+    # catalogue (waiting, refused) added to it
+    own = {}
+    if cthemehub.has_sent():
+        sent = cthemehub.mine(screen.logs) or []
+        cthemehub.show_news(screen, cthemehub.news(sent))
+        own = {theme['id']: theme for theme in sent if theme.get('state') != 'removed'}
+        listed = {theme.get('id') for theme in themes}
+        themes = themes + [dict(theme, own_only=True) for theme_id, theme in own.items() if theme_id not in listed]
     if not themes:
         screen.message([translate(screen, 'hub-catalog-empty')], 3500, None, 'middle', 'big')
         return
@@ -305,6 +351,8 @@ def catalog_screen(screen):
     rows_shown = 8
     while True:
         theme = themes[selected]
+        if focus == 'delete' and theme.get('id') not in own:
+            focus = 'download'
         count = max(1, int(theme.get('captures') or len(theme.get('capture_urls') or []) or 1))
         number = max(1, min(number, count))
         screen.display_background()
@@ -316,7 +364,7 @@ def catalog_screen(screen):
         for row, index in enumerate(range(first, min(len(themes), first + rows_shown))):
             rect = pygame.Rect(int(0.5 * unit_x), int((3.0 + row * 1.25) * unit_y), int(5.0 * unit_x), int(1.05 * unit_y))
             label = str(themes[index].get('name') or '?')
-            mark = status(screen, themes[index], here)
+            mark = status(screen, themes[index], here) or own_mark(screen, themes[index], own, short=True)
             if mark:
                 label = f"{label} ({mark})"
             cautodartsmenu.button(screen, rect, label, index == selected and focus == 'list')
@@ -344,14 +392,24 @@ def catalog_screen(screen):
         zones['next'] = (area.centerx, area.y, area.width - area.width // 2, area.height)
         line = int(0.55 * unit_y)
         info, mark = details(screen, theme, here)
+        mine_mark = own_mark(screen, theme, own)
+        if mine_mark:
+            mark = f"{mark} - {mine_mark}" if mark else mine_mark
         screen.blit_text(f"< {number} / {count} >", area.x, area.bottom + int(0.1 * unit_y), area.width, line,
                          screen.colorset['menu-text-white'])
         screen.blit_text(info, area.x, area.bottom + int(0.75 * unit_y), area.width, line, screen.colorset['menu-text-white'])
         if mark:
             screen.blit_text(mark, area.x, area.bottom + int(1.35 * unit_y), area.width, line, screen.colorset['menu-ok'])
         rect = pygame.Rect(int(8.75 * unit_x), int(12.4 * unit_y), int(4.0 * unit_x), int(1.0 * unit_y))
-        cautodartsmenu.button(screen, rect, translate(screen, 'hub-download-button'), focus == 'download')
-        zones['download'] = tuple(rect)
+        # A theme of this borne not online (waiting, refused) : nothing to download
+        cautodartsmenu.button(screen, rect, translate(screen, 'hub-download-button'), focus == 'download',
+                              greyed=bool(theme.get('own_only')))
+        if not theme.get('own_only'):
+            zones['download'] = tuple(rect)
+        if theme.get('id') in own:
+            delete_rect = pygame.Rect(int(12.95 * unit_x), int(12.4 * unit_y), int(2.75 * unit_x), int(1.0 * unit_y))
+            cautodartsmenu.button(screen, delete_rect, translate(screen, 'hub-remove-button'), focus == 'delete')
+            zones['delete'] = tuple(delete_rect)
         screen.blit_text(translate(screen, 'hub-catalog-help'), 0, int(13.6 * unit_y), screen.res['x'], int(0.5 * unit_y),
                          screen.colorset['menu-text-white'])
         zones['back'] = screen.display_button(focus == 'back', 'back', special='escape')
@@ -382,6 +440,8 @@ def catalog_screen(screen):
         if key in WHEEL:
             # The wheel of a knob : the themes, then Retour, then Télécharger (and round again)
             places = [('list', index) for index in range(len(themes))] + [('back', None), ('download', None)]
+            if theme.get('id') in own:
+                places.append(('delete', None))
             here_at = places.index(('list', selected)) if focus == 'list' else places.index((focus, None))
             focus, index = places[(here_at + WHEEL[key]) % len(places)]
             if focus == 'list' and index != selected:
@@ -398,9 +458,13 @@ def catalog_screen(screen):
             elif focus == 'list':
                 focus = 'download'
             elif focus == 'download':
+                focus = 'delete' if theme.get('id') in own else 'back'
+            elif focus == 'delete':
                 focus = 'back'
         elif key in UP_KEYS:
             if focus == 'back':
+                focus = 'delete' if theme.get('id') in own else 'download'
+            elif focus == 'delete':
                 focus = 'download'
             elif focus == 'download':
                 focus = 'list'
@@ -412,6 +476,16 @@ def catalog_screen(screen):
             if focus == 'list':
                 # Valider on a theme : Télécharger chosen (one more Valider downloads it)
                 focus = 'download'
+                continue
+            if focus == 'delete':
+                if theme.get('id') in own and remove(screen, theme):
+                    own.pop(theme.get('id'), None)
+                    themes = [item for item in themes if item.get('id') != theme.get('id')]
+                    if not themes:
+                        return
+                    selected, number, focus = min(selected, len(themes) - 1), 1, 'list'
+                continue
+            if theme.get('own_only'):
                 continue
             take(screen, theme)
             here = installed(screen, themes)
