@@ -386,7 +386,9 @@ def catalog_screen(screen):
         if image is not None:
             screen.blit(image, image.get_rect(center=area.center))
         else:
-            waiting = 'hub-capture-unavailable' if captures.file(theme, number) in captures.failed else 'hub-capture-loading'
+            # No address (a theme of this borne not online) or not read : unavailable
+            unavailable = number > len(theme.get('capture_urls') or []) or captures.file(theme, number) in captures.failed
+            waiting = 'hub-capture-unavailable' if unavailable else 'hub-capture-loading'
             cmenueditor.paragraph(screen, translate(screen, waiting), area, screen.colorset['menu-text-white'])
         zones['previous'] = (area.x, area.y, area.width // 2, area.height)
         zones['next'] = (area.centerx, area.y, area.width - area.width // 2, area.height)
