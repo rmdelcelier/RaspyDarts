@@ -1965,6 +1965,8 @@ try:
                                         Set=Set, MaxSet=nb_sets
                                         )
 
+                    # The segment lit for this dart (once : see below)
+                    stroke_lit = None
                     # The player plays !
                     if net_status is None or players[actual_player].name in local_players:
                         # If its a local game or our turn to play in a net game : We read inputs.
@@ -2178,6 +2180,7 @@ try:
                             dart_stroke = 'PLAYERBUTTON'
                         elif light_segment:
                             dispatcher.publish('stroke', dart_stroke.upper(), limit=['TARGET', 'STRIP', 'OTHER', 'LIGHT', 'STROBE'])
+                            stroke_lit = dart_stroke.upper()
 
                     if dart_stroke in ['BTN_BACK', 'BACKUPBUTTON'] and back_count < 3:
                         # Simulate BTN_CANCEL or BTN_GAMEBUTTON
@@ -2326,6 +2329,11 @@ try:
                         #  3 - There is a winner (self.winner must hold winner id)
                         #  4 - The player is not allowed to play (jump to next player)
                         logs.debug(f"Key {dart_stroke} found in config file.")
+                        # The hit segment blinks as the dart lands : before the game, which may show
+                        # something and wait (the time of Chrono zéro in Fiesta...)
+                        if light_segment and stroke_lit is None:
+                            threads += dispatcher.publish('stroke', dart_stroke.upper(), limit=['TARGET', 'STRIP', 'OTHER', 'STROBE', 'LIGHT'])
+                            stroke_lit = dart_stroke.upper()
                         #handler = {'return_code': 0, 'message': None, 'show': None, 'sound': None, 'lights': None,
                         #           'strobe': None, 'speech': None, 'speech_speed': None, 'announcement': None, 'take_shot': None}
                         handler = game.post_dart_check(dart_stroke.upper(), players, actual_round, actual_player, player_launch)
@@ -2371,7 +2379,8 @@ try:
                             if handler['show'] is not None:
                                 if all(x == 'T20' for x in handler['show'][0]):
                                     dartStroke = '180'
-                            if post_dart in [0, 1, 2] and light_segment:
+                            # Already lit before the game (see above) : only a 180 has its own lights
+                            if post_dart in [0, 1, 2] and light_segment and dartStroke != stroke_lit:
                                 threads += dispatcher.publish('stroke', dartStroke, limit=['TARGET', 'STRIP', 'OTHER', 'STROBE', 'LIGHT'])
 
                         ### AJOUT TROPHEES
