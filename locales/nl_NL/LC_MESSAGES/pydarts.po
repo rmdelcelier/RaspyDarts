@@ -5776,7 +5776,7 @@ msgid "theme-create-failed"
 msgstr "Het thema kon niet worden gemaakt of verwijderd (zie het logboek)"
 
 msgid "theme-delete-none"
-msgstr "Geen thema om te verwijderen (het gebruikte thema, clear en sombre blijven)"
+msgstr "Geen thema om te verwijderen (het gebruikte thema blijft)"
 
 msgid "theme-delete-question"
 msgstr "Het thema {name} verwijderen?"

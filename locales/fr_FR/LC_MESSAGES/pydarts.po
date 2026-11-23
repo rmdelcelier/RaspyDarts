@@ -5798,7 +5798,7 @@ msgid "theme-create-failed"
 msgstr "Le thème n'a pas pu être créé ou supprimé (voir le journal)"
 
 msgid "theme-delete-none"
-msgstr "Aucun thème à supprimer (le thème utilisé, clear et sombre restent)"
+msgstr "Aucun thème à supprimer (le thème utilisé reste)"
 
 msgid "theme-delete-question"
 msgstr "Supprimer le thème {name} ?"

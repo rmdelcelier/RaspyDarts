@@ -5994,7 +5994,7 @@ msgid "theme-create-failed"
 msgstr "The theme could not be created or deleted (see the log)"
 
 msgid "theme-delete-none"
-msgstr "No theme to delete (the theme in use, clear and sombre stay)"
+msgstr "No theme to delete (the theme in use stays)"
 
 msgid "theme-delete-question"
 msgstr "Delete the theme {name}?"

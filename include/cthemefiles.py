@@ -357,8 +357,6 @@ def install(screen, source, origin=None, name=None):
 
 
 # ---------------------------------------------------------------------- creating, deleting
-# The themes given with RaspyDarts : never deleted (clear is the one the game falls back on)
-DELIVERED = ('clear', 'sombre')
 THEME_NAME_MOST = 40
 
 
@@ -461,13 +459,12 @@ def create_theme(screen, keys):    # pylint: disable=unused-argument
 
 def delete_theme(screen, keys):    # pylint: disable=unused-argument
     '''
-    Supprimer un thème : one of the themes of the user (not the one used, not those given with
-    RaspyDarts), after a question
+    Supprimer un thème : any theme but the one used (clear included : the game keeps its colours
+    built in, ColorSet['clear']), after a question
     '''
     translate = screen.lang.translate
     current = str(screen.config.get_value('SectionGlobals', 'colorset') or '')
-    choices = [(name, name) for name in user_themes(screen)
-               if name.casefold() != current.casefold() and name.casefold() not in DELIVERED]
+    choices = [(name, name) for name in user_themes(screen) if name.casefold() != current.casefold()]
     if not choices:
         screen.message([translate('theme-delete-none')], 3000, None, 'middle', 'big')
         return

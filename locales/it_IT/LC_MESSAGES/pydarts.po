@@ -5789,7 +5789,7 @@ msgid "theme-create-failed"
 msgstr "Impossibile creare o eliminare il tema (vedere il registro)"
 
 msgid "theme-delete-none"
-msgstr "Nessun tema da eliminare (il tema in uso, clear e sombre restano)"
+msgstr "Nessun tema da eliminare (il tema in uso resta)"
 
 msgid "theme-delete-question"
 msgstr "Eliminare il tema {name}?"

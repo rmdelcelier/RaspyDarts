@@ -5722,7 +5722,7 @@ msgid "theme-create-failed"
 msgstr "Das Thema konnte nicht erstellt oder gelöscht werden (siehe Protokoll)"
 
 msgid "theme-delete-none"
-msgstr "Kein Thema zum Löschen (das verwendete Thema, clear und sombre bleiben)"
+msgstr "Kein Thema zum Löschen (das verwendete Thema bleibt)"
 
 msgid "theme-delete-question"
 msgstr "Das Thema {name} löschen?"
