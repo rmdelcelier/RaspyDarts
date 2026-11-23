@@ -2651,12 +2651,17 @@ try:
                 if post_round is None:
                     best_scores = []
                     set_winner = ""
-                    # Find max score
-                    for player in players: best_scores.append(player.score)
-                    for player in players:
-                        if player.score == max(best_scores):
-                            set_winner += ("," if set_winner != "" else "") + str(player.name)
-                    set_done = True                    
+                    # The players tied : said by the game (Fiesta : the fewest points win), else
+                    # the best score
+                    tied = game.tied_players(players) if hasattr(game, 'tied_players') else None
+                    if tied:
+                        set_winner = ",".join(str(name) for name in tied)
+                    else:
+                        for player in players: best_scores.append(player.score)
+                        for player in players:
+                            if player.score == max(best_scores):
+                                set_winner += ("," if set_winner != "" else "") + str(player.name)
+                    set_done = True
                         
                 # Victory
                 elif post_round >= 0:

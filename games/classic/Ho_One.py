@@ -723,8 +723,10 @@ class Game(cgame.Game):
             screenshot6 = pygame.Surface((hit_w, hit_h))
             self.display.blit_screen(screenshot6, sub6, (0, 0))
     
-            self.display.blit_text(f'{score}', hit_x, hit_y, hit_w, hit_h, color=self.display.colorset['game-score'], align='Center')
-    
+            # The big score of the player : not on the screen of the end (it stayed under the winner)
+            if not end_of_game:
+                self.display.blit_text(f'{score}', hit_x, hit_y, hit_w, hit_h, color=self.display.colorset['game-score'], align='Center')
+
             if not end_of_game:
                 player_y = int(self.display.res['y'] / 16)
             else:

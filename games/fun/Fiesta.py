@@ -2049,8 +2049,19 @@ class Game(cgame.Game):
         """
         self.resolve_round(players, actual_round)
         if actual_round >= self.max_round:
-            return self.winner if self.winner not in (None, -1) else -1
+            # A tie (same points, same lost manches) : None, the players tied said by tied_players
+            if self.winner is None:
+                return None
+            return self.winner if self.winner != -1 else -1
         return -2
+
+    @staticmethod
+    def tied_players(players):
+        '''
+        A tie at the end : the players with the fewest points, then the fewest lost manches
+        '''
+        best = min((player.score, player.lost_rounds) for player in players)
+        return [player.name for player in players if (player.score, player.lost_rounds) == best]
 
     def early_player_button(self, players, actual_player, actual_round):
         """
