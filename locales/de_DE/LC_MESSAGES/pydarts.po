@@ -6570,3 +6570,350 @@ msgstr "Dieses Thema wurde mit RaspyDarts {version} erstellt. Trotzdem herunterl
 
 msgid "hub-needs-version-explain"
 msgstr "Dieses Gerät hat eine ältere Version: einige Einstellungen des Themas werden eventuell nicht angezeigt. Eine Aktualisierung von RaspyDarts behebt das."
+
+# Trophées et progression (trophees.py) : la clé est le texte français
+msgid "{player} - CHOISIR UNE CATEGORIE"
+msgstr "{player} - KATEGORIE WÄHLEN"
+
+msgid "Statistiques Générales & Par Jeu"
+msgstr "Allgemeine Statistiken & pro Spiel"
+
+msgid "Retour"
+msgstr "Zurück"
+
+msgid "HAUT / BAS (S20/S3) pour naviguer | ENTRÉE (Bull) ou toucher pour valider | ÉCHAP pour retour"
+msgstr "HOCH / RUNTER (S20/S3) zum Wählen | ENTER (Bull) oder Tippen zum Bestätigen | ESC für zurück"
+
+msgid "Page {0} / {1} (GAUCHE / DROITE ou S11 / S6)"
+msgstr "Seite {0} / {1} (LINKS / RECHTS oder S11 / S6)"
+
+msgid "< Page"
+msgstr "< Seite"
+
+msgid "Page >"
+msgstr "Seite >"
+
+msgid "ÉCHAP (ou bouton retour) pour retourner aux catégories"
+msgstr "ESC (oder Zurück-Taste) für die Kategorien"
+
+msgid "STATISTIQUES DE : {player}"
+msgstr "STATISTIKEN VON: {player}"
+
+msgid "(Trophées : {0}/{1})"
+msgstr "(Trophäen: {0}/{1})"
+
+msgid "CLASSEMENTS"
+msgstr "RANGLISTEN"
+
+msgid "Parties : {0}"
+msgstr "Spiele: {0}"
+
+msgid "Victoires : "
+msgstr "Siege: "
+
+msgid "Défaites : {0}"
+msgstr "Niederlagen: {0}"
+
+msgid "Meilleur joueur : "
+msgstr "Bester Spieler: "
+
+msgid "Échap : retour  |  Haut / Bas ou S20 / S3 : défiler  |  toucher les boutons"
+msgstr "Esc: zurück  |  Hoch / Runter oder S20 / S3: blättern  |  Tasten antippen"
+
+msgid "CHOISIR UN JOUEUR"
+msgstr "SPIELER WÄHLEN"
+
+msgid "Erreur : Aucun joueur trouvé dans '{0}'."
+msgstr "Fehler: kein Spieler in '{0}' gefunden."
+
+msgid "NOM DU JOUEUR"
+msgstr "SPIELERNAME"
+
+msgid "Débutant"
+msgstr "Anfänger"
+
+msgid "TABLEAU DES NIVEAUX - PROFIL DE {player}"
+msgstr "STUFENTABELLE - PROFIL VON {player}"
+
+msgid "Points Par Flèche (PPD)"
+msgstr "Punkte pro Dart (PPD)"
+
+msgid "Mark Per Round (MPR)"
+msgstr "Marks pro Runde (MPR)"
+
+msgid "Nv"
+msgstr "St"
+
+msgid "Niv"
+msgstr "Stufe"
+
+msgid "FUSIONNER '{player}' AVEC :"
+msgstr "'{player}' ZUSAMMENFÜHREN MIT:"
+
+msgid "Aucun autre joueur disponible."
+msgstr "Kein anderer Spieler verfügbar."
+
+msgid "HAUT/BAS : Choisir | ENTRÉE : Valider | ÉCHAP : Annuler"
+msgstr "HOCH/RUNTER: Wählen | ENTER: Bestätigen | ESC: Abbrechen"
+
+msgid "Effacer le joueur '{player}' ?"
+msgstr "Spieler '{player}' löschen?"
+
+msgid "Effacer le joueur ?"
+msgstr "Spieler löschen?"
+
+msgid "Cette action est irréversible (stats & trophées perdus)."
+msgstr "Dies kann nicht rückgängig gemacht werden (Statistiken & Trophäen gehen verloren)."
+
+msgid "ANNULER"
+msgstr "ABBRECHEN"
+
+msgid "EFFACER"
+msgstr "LÖSCHEN"
+
+msgid "pseudo : {player} va être fusionné"
+msgstr "Spitzname: {player} wird zusammengeführt"
+
+msgid "avec pseudo : {player}"
+msgstr "mit Spitzname: {player}"
+
+msgid "FUSIONNER"
+msgstr "ZUSAMMENFÜHREN"
+
+msgid "HAUT/BAS : Naviguer | GAUCHE/DROITE : Infos Joueur | ENTRÉE : Valider | M : Fusion | S : Supprimer | ÉCHAP : Quitter"
+msgstr "HOCH/RUNTER: Wählen | LINKS/RECHTS: Spielerinfo | ENTER: Bestätigen | M: Zusammenführen | S: Löschen | ESC: Beenden"
+
+msgid "GAUCHE/DROITE : Choisir | ENTRÉE : Valider | ÉCHAP : Annuler"
+msgstr "LINKS/RECHTS: Wählen | ENTER: Bestätigen | ESC: Abbrechen"
+
+msgid "HAUT/BAS : Choisir la cible | ENTRÉE : Confirmer | ÉCHAP : Annuler"
+msgstr "HOCH/RUNTER: Ziel wählen | ENTER: Bestätigen | ESC: Abbrechen"
+
+msgid "HAUT/BAS : Défiler le tableau | GAUCHE/DROITE (ou ÉCHAP) : Fermer le popup"
+msgstr "HOCH/RUNTER: Tabelle blättern | LINKS/RECHTS (oder ESC): Schließen"
+
+msgid "Supprimer"
+msgstr "Löschen"
+
+msgid "Fusionner"
+msgstr "Zusammenführen"
+
+msgid "Infos joueur"
+msgstr "Spielerinfo"
+
+msgid "Toucher 3x {0} en une volée"
+msgstr "3x {0} in einer Aufnahme treffen"
+
+msgid "Terminer en finissant par {0}"
+msgstr "Mit {0} auschecken"
+
+msgid "Terminer le {0} en {1} fléchettes"
+msgstr "{0} mit {1} Darts beenden"
+
+msgid "Terminer le {0} en {1} fléchettes (Perfect)"
+msgstr "{0} mit {1} Darts beenden (Perfect)"
+
+msgid "Valider le défi {0} de Routine"
+msgstr "Routine-Herausforderung {0} schaffen"
+
+msgid "Réaliser {0} marques au {1}"
+msgstr "{0} Marks bei {1} erzielen"
+
+msgid "Marquer {0} points"
+msgstr "{0} Punkte erzielen"
+
+msgid "Score total entre {0} et {1} points"
+msgstr "Gesamtpunktzahl zwischen {0} und {1}"
+
+msgid "Lancer {0} fléchettes"
+msgstr "{0} Darts werfen"
+
+msgid "Gagner {0} parties"
+msgstr "{0} Spiele gewinnen"
+
+msgid "Toucher le simple bull {0} fois"
+msgstr "Single Bull {0}-mal treffen"
+
+msgid "Toucher le double bull {0} fois"
+msgstr "Double Bull {0}-mal treffen"
+
+msgid "Toucher le bull {0} fois"
+msgstr "Bull {0}-mal treffen"
+
+msgid "Atteindre le bull {0} fois"
+msgstr "Bull {0}-mal erreichen"
+
+msgid "Toucher un double {0} fois"
+msgstr "{0}-mal ein Double treffen"
+
+msgid "Toucher un triple {0} fois"
+msgstr "{0}-mal ein Triple treffen"
+
+msgid "Toucher {0}, {1}, {2}"
+msgstr "{0}, {1}, {2} treffen"
+
+msgid "Toucher {0}, {1}, {2} (dans n'importe quel ordre)"
+msgstr "{0}, {1}, {2} treffen (beliebige Reihenfolge)"
+
+msgid "Ho-One - Finir par {0}"
+msgstr "Ho-One - Mit {0} auschecken"
+
+msgid "{0} - {1} fléchettes"
+msgstr "{0} - {1} Darts"
+
+msgid "Routine - Niveau {0}"
+msgstr "Routine - Stufe {0}"
+
+msgid "Flèches lancées ({0})"
+msgstr "Geworfene Darts ({0})"
+
+msgid "Statistiques"
+msgstr "Statistiken"
+
+msgid "Succès de progression"
+msgstr "Fortschrittserfolge"
+
+msgid "Combinaisons et figures"
+msgstr "Kombinationen und Figuren"
+
+msgid "Scores spécifiques"
+msgstr "Besondere Punktzahlen"
+
+msgid "Cricket / Mickey"
+msgstr "Cricket / Mickey"
+
+msgid "Ho-One"
+msgstr "Ho-One"
+
+msgid "Routine"
+msgstr "Routine"
+
+msgid "Doubles"
+msgstr "Doubles"
+
+msgid "Triples"
+msgstr "Triples"
+
+msgid "FLÉCHETTES"
+msgstr "DARTS"
+
+msgid "PARTIES"
+msgstr "SPIELE"
+
+msgid "Victoires"
+msgstr "Siege"
+
+msgid "Défaites"
+msgstr "Niederlagen"
+
+msgid "Simples"
+msgstr "Singles"
+
+msgid "MISS"
+msgstr "MISS"
+
+msgid "Bulls"
+msgstr "Bulls"
+
+msgid "Simple Bull"
+msgstr "Single Bull"
+
+msgid "Double Bull"
+msgstr "Double Bull"
+
+msgid "+ de Parties"
+msgstr "Meiste Spiele"
+
+msgid "+ de Victoires"
+msgstr "Meiste Siege"
+
+msgid "+ de Défaites"
+msgstr "Meiste Niederlagen"
+
+msgid "Top jeux"
+msgstr "Top-Spiele"
+
+msgid "MPR : "
+msgstr "MPR: "
+
+msgid "PPD : "
+msgstr "PPD: "
+
+msgid "Novice"
+msgstr "Neuling"
+
+msgid "Amateur"
+msgstr "Amateur"
+
+msgid "Régulier"
+msgstr "Stammspieler"
+
+msgid "Confirmé"
+msgstr "Erfahren"
+
+msgid "Vétéran"
+msgstr "Veteran"
+
+msgid "Expert"
+msgstr "Experte"
+
+msgid "Maître"
+msgstr "Meister"
+
+msgid "Grand Maître"
+msgstr "Großmeister"
+
+msgid "Élite"
+msgstr "Elite"
+
+msgid "Légende"
+msgstr "Legende"
+
+msgid "Champion"
+msgstr "Champion"
+
+msgid "Grand Champion"
+msgstr "Großer Champion"
+
+msgid "Ultime Légende"
+msgstr "Ultimative Legende"
+
+msgid "🏆 NOUVEAU TROPHÉE ! 🏆"
+msgstr "🏆 NEUE TROPHÄE! 🏆"
+
+msgid "La 3ème fléchette est un gros triple"
+msgstr "Der 3. Dart ist ein großes Triple"
+
+msgid "Toucher 3 Double Bull"
+msgstr "3 Double Bulls treffen"
+
+msgid "Toucher n'importe quel Bull 3x"
+msgstr "3-mal einen beliebigen Bull treffen"
+
+msgid "Toucher un T20 dans la volée"
+msgstr "Eine T20 in der Aufnahme treffen"
+
+msgid "Toucher 3 simple bull"
+msgstr "3 Single Bulls treffen"
+
+msgid "Toucher n'importe quel Triple 3x"
+msgstr "3-mal ein beliebiges Triple treffen"
+
+msgid "3 fois le même chiffre"
+msgstr "3-mal dieselbe Zahl"
+
+msgid "Toucher 3 Triples différents au Cricket ou à Mickey"
+msgstr "3 verschiedene Triples bei Cricket oder Mickey treffen"
+
+msgid "Rater ses 3 flèches (3 Miss)"
+msgstr "Alle 3 Darts verfehlen (3 Miss)"
+
+msgid "Réaliser un 180 aux fléchettes"
+msgstr "Eine 180 werfen"
+
+msgid "Création artistique"
+msgstr "Künstlerisches Schaffen"
+
+msgid "Participation à la création artistique : partager un thème sur RaspyHub"
+msgstr "Teilnahme am künstlerischen Schaffen: ein Thema auf RaspyHub teilen"
+

@@ -6624,3 +6624,350 @@ msgstr "Dit thema is gemaakt met RaspyDarts {version}. Toch downloaden?"
 
 msgid "hub-needs-version-explain"
 msgstr "Deze kast heeft een oudere versie: sommige instellingen van het thema worden misschien niet getoond. RaspyDarts bijwerken lost dat op."
+
+# Trophées et progression (trophees.py) : la clé est le texte français
+msgid "{player} - CHOISIR UNE CATEGORIE"
+msgstr "{player} - KIES EEN CATEGORIE"
+
+msgid "Statistiques Générales & Par Jeu"
+msgstr "Algemene statistieken & per spel"
+
+msgid "Retour"
+msgstr "Terug"
+
+msgid "HAUT / BAS (S20/S3) pour naviguer | ENTRÉE (Bull) ou toucher pour valider | ÉCHAP pour retour"
+msgstr "OMHOOG / OMLAAG (S20/S3) om te kiezen | ENTER (Bull) of aanraken om te bevestigen | ESC om terug te gaan"
+
+msgid "Page {0} / {1} (GAUCHE / DROITE ou S11 / S6)"
+msgstr "Pagina {0} / {1} (LINKS / RECHTS of S11 / S6)"
+
+msgid "< Page"
+msgstr "< Pagina"
+
+msgid "Page >"
+msgstr "Pagina >"
+
+msgid "ÉCHAP (ou bouton retour) pour retourner aux catégories"
+msgstr "ESC (of terugknop) om terug te gaan naar de categorieën"
+
+msgid "STATISTIQUES DE : {player}"
+msgstr "STATISTIEKEN VAN: {player}"
+
+msgid "(Trophées : {0}/{1})"
+msgstr "(Trofeeën: {0}/{1})"
+
+msgid "CLASSEMENTS"
+msgstr "RANGLIJSTEN"
+
+msgid "Parties : {0}"
+msgstr "Spellen: {0}"
+
+msgid "Victoires : "
+msgstr "Overwinningen: "
+
+msgid "Défaites : {0}"
+msgstr "Nederlagen: {0}"
+
+msgid "Meilleur joueur : "
+msgstr "Beste speler: "
+
+msgid "Échap : retour  |  Haut / Bas ou S20 / S3 : défiler  |  toucher les boutons"
+msgstr "Esc: terug  |  Omhoog / Omlaag of S20 / S3: scrollen  |  knoppen aanraken"
+
+msgid "CHOISIR UN JOUEUR"
+msgstr "KIES EEN SPELER"
+
+msgid "Erreur : Aucun joueur trouvé dans '{0}'."
+msgstr "Fout: geen speler gevonden in '{0}'."
+
+msgid "NOM DU JOUEUR"
+msgstr "SPELERSNAAM"
+
+msgid "Débutant"
+msgstr "Beginner"
+
+msgid "TABLEAU DES NIVEAUX - PROFIL DE {player}"
+msgstr "NIVEAUTABEL - PROFIEL VAN {player}"
+
+msgid "Points Par Flèche (PPD)"
+msgstr "Punten per pijl (PPD)"
+
+msgid "Mark Per Round (MPR)"
+msgstr "Marks per ronde (MPR)"
+
+msgid "Nv"
+msgstr "Nv"
+
+msgid "Niv"
+msgstr "Niv"
+
+msgid "FUSIONNER '{player}' AVEC :"
+msgstr "'{player}' SAMENVOEGEN MET:"
+
+msgid "Aucun autre joueur disponible."
+msgstr "Geen andere speler beschikbaar."
+
+msgid "HAUT/BAS : Choisir | ENTRÉE : Valider | ÉCHAP : Annuler"
+msgstr "OMHOOG/OMLAAG: Kiezen | ENTER: Bevestigen | ESC: Annuleren"
+
+msgid "Effacer le joueur '{player}' ?"
+msgstr "Speler '{player}' verwijderen?"
+
+msgid "Effacer le joueur ?"
+msgstr "Speler verwijderen?"
+
+msgid "Cette action est irréversible (stats & trophées perdus)."
+msgstr "Dit kan niet ongedaan worden gemaakt (statistieken & trofeeën verloren)."
+
+msgid "ANNULER"
+msgstr "ANNULEREN"
+
+msgid "EFFACER"
+msgstr "VERWIJDEREN"
+
+msgid "pseudo : {player} va être fusionné"
+msgstr "bijnaam: {player} wordt samengevoegd"
+
+msgid "avec pseudo : {player}"
+msgstr "met bijnaam: {player}"
+
+msgid "FUSIONNER"
+msgstr "SAMENVOEGEN"
+
+msgid "HAUT/BAS : Naviguer | GAUCHE/DROITE : Infos Joueur | ENTRÉE : Valider | M : Fusion | S : Supprimer | ÉCHAP : Quitter"
+msgstr "OMHOOG/OMLAAG: Kiezen | LINKS/RECHTS: Spelerinfo | ENTER: Bevestigen | M: Samenvoegen | S: Verwijderen | ESC: Afsluiten"
+
+msgid "GAUCHE/DROITE : Choisir | ENTRÉE : Valider | ÉCHAP : Annuler"
+msgstr "LINKS/RECHTS: Kiezen | ENTER: Bevestigen | ESC: Annuleren"
+
+msgid "HAUT/BAS : Choisir la cible | ENTRÉE : Confirmer | ÉCHAP : Annuler"
+msgstr "OMHOOG/OMLAAG: Doel kiezen | ENTER: Bevestigen | ESC: Annuleren"
+
+msgid "HAUT/BAS : Défiler le tableau | GAUCHE/DROITE (ou ÉCHAP) : Fermer le popup"
+msgstr "OMHOOG/OMLAAG: Tabel scrollen | LINKS/RECHTS (of ESC): Sluiten"
+
+msgid "Supprimer"
+msgstr "Verwijderen"
+
+msgid "Fusionner"
+msgstr "Samenvoegen"
+
+msgid "Infos joueur"
+msgstr "Spelerinfo"
+
+msgid "Toucher 3x {0} en une volée"
+msgstr "3x {0} raken in één beurt"
+
+msgid "Terminer en finissant par {0}"
+msgstr "Uitgooien op {0}"
+
+msgid "Terminer le {0} en {1} fléchettes"
+msgstr "{0} uitgooien in {1} pijlen"
+
+msgid "Terminer le {0} en {1} fléchettes (Perfect)"
+msgstr "{0} uitgooien in {1} pijlen (Perfect)"
+
+msgid "Valider le défi {0} de Routine"
+msgstr "Routine-uitdaging {0} halen"
+
+msgid "Réaliser {0} marques au {1}"
+msgstr "{0} marks scoren bij {1}"
+
+msgid "Marquer {0} points"
+msgstr "{0} punten scoren"
+
+msgid "Score total entre {0} et {1} points"
+msgstr "Totale score tussen {0} en {1} punten"
+
+msgid "Lancer {0} fléchettes"
+msgstr "{0} pijlen gooien"
+
+msgid "Gagner {0} parties"
+msgstr "{0} spellen winnen"
+
+msgid "Toucher le simple bull {0} fois"
+msgstr "De single bull {0} keer raken"
+
+msgid "Toucher le double bull {0} fois"
+msgstr "De double bull {0} keer raken"
+
+msgid "Toucher le bull {0} fois"
+msgstr "De bull {0} keer raken"
+
+msgid "Atteindre le bull {0} fois"
+msgstr "De bull {0} keer bereiken"
+
+msgid "Toucher un double {0} fois"
+msgstr "{0} keer een dubbel raken"
+
+msgid "Toucher un triple {0} fois"
+msgstr "{0} keer een triple raken"
+
+msgid "Toucher {0}, {1}, {2}"
+msgstr "{0}, {1}, {2} raken"
+
+msgid "Toucher {0}, {1}, {2} (dans n'importe quel ordre)"
+msgstr "{0}, {1}, {2} raken (in willekeurige volgorde)"
+
+msgid "Ho-One - Finir par {0}"
+msgstr "Ho-One - Uitgooien op {0}"
+
+msgid "{0} - {1} fléchettes"
+msgstr "{0} - {1} pijlen"
+
+msgid "Routine - Niveau {0}"
+msgstr "Routine - Niveau {0}"
+
+msgid "Flèches lancées ({0})"
+msgstr "Gegooide pijlen ({0})"
+
+msgid "Statistiques"
+msgstr "Statistieken"
+
+msgid "Succès de progression"
+msgstr "Voortgangsprestaties"
+
+msgid "Combinaisons et figures"
+msgstr "Combinaties en figuren"
+
+msgid "Scores spécifiques"
+msgstr "Bijzondere scores"
+
+msgid "Cricket / Mickey"
+msgstr "Cricket / Mickey"
+
+msgid "Ho-One"
+msgstr "Ho-One"
+
+msgid "Routine"
+msgstr "Routine"
+
+msgid "Doubles"
+msgstr "Dubbels"
+
+msgid "Triples"
+msgstr "Triples"
+
+msgid "FLÉCHETTES"
+msgstr "PIJLEN"
+
+msgid "PARTIES"
+msgstr "SPELLEN"
+
+msgid "Victoires"
+msgstr "Overwinningen"
+
+msgid "Défaites"
+msgstr "Nederlagen"
+
+msgid "Simples"
+msgstr "Singles"
+
+msgid "MISS"
+msgstr "MIS"
+
+msgid "Bulls"
+msgstr "Bulls"
+
+msgid "Simple Bull"
+msgstr "Single bull"
+
+msgid "Double Bull"
+msgstr "Double bull"
+
+msgid "+ de Parties"
+msgstr "Meeste spellen"
+
+msgid "+ de Victoires"
+msgstr "Meeste overwinningen"
+
+msgid "+ de Défaites"
+msgstr "Meeste nederlagen"
+
+msgid "Top jeux"
+msgstr "Topspellen"
+
+msgid "MPR : "
+msgstr "MPR: "
+
+msgid "PPD : "
+msgstr "PPD: "
+
+msgid "Novice"
+msgstr "Nieuweling"
+
+msgid "Amateur"
+msgstr "Amateur"
+
+msgid "Régulier"
+msgstr "Vaste speler"
+
+msgid "Confirmé"
+msgstr "Ervaren"
+
+msgid "Vétéran"
+msgstr "Veteraan"
+
+msgid "Expert"
+msgstr "Expert"
+
+msgid "Maître"
+msgstr "Meester"
+
+msgid "Grand Maître"
+msgstr "Grootmeester"
+
+msgid "Élite"
+msgstr "Elite"
+
+msgid "Légende"
+msgstr "Legende"
+
+msgid "Champion"
+msgstr "Kampioen"
+
+msgid "Grand Champion"
+msgstr "Grootkampioen"
+
+msgid "Ultime Légende"
+msgstr "Ultieme legende"
+
+msgid "🏆 NOUVEAU TROPHÉE ! 🏆"
+msgstr "🏆 NIEUWE TROFEE! 🏆"
+
+msgid "La 3ème fléchette est un gros triple"
+msgstr "De 3e pijl is een grote triple"
+
+msgid "Toucher 3 Double Bull"
+msgstr "3 double bulls raken"
+
+msgid "Toucher n'importe quel Bull 3x"
+msgstr "3 keer een willekeurige bull raken"
+
+msgid "Toucher un T20 dans la volée"
+msgstr "Een T20 raken in de beurt"
+
+msgid "Toucher 3 simple bull"
+msgstr "3 single bulls raken"
+
+msgid "Toucher n'importe quel Triple 3x"
+msgstr "3 keer een willekeurige triple raken"
+
+msgid "3 fois le même chiffre"
+msgstr "3 keer hetzelfde getal"
+
+msgid "Toucher 3 Triples différents au Cricket ou à Mickey"
+msgstr "3 verschillende triples raken bij Cricket of Mickey"
+
+msgid "Rater ses 3 flèches (3 Miss)"
+msgstr "Alle 3 pijlen missen (3 Miss)"
+
+msgid "Réaliser un 180 aux fléchettes"
+msgstr "Een 180 gooien"
+
+msgid "Création artistique"
+msgstr "Artistieke creatie"
+
+msgid "Participation à la création artistique : partager un thème sur RaspyHub"
+msgstr "Meedoen aan de artistieke creatie: een thema delen op RaspyHub"
+

@@ -98,11 +98,23 @@ def show_trophy_popup(trophy_id):
         font_title = cfonts.font(popup_h * 0.30)
         font_desc = cfonts.font(popup_h * 0.25, bold=True)
 
-        # Les coupes en emoji (police Noto Color Emoji ; sans elle, le titre seul, sans carre)
-        title_surf = cemoji.render(font_title, "🏆 NOUVEAU TROPHÉE ! 🏆", (255, 215, 0))
-        
-        # Nettoyage de l'ID du trophée pour un affichage plus propre
+        # Le titre et le nom du trophée dans la langue de la borne (trophees.py : traductions,
+        # noms) ; sans lui, l'identifiant du trophée
+        title_text = "🏆 NOUVEAU TROPHÉE ! 🏆"
         clean_name = str(trophy_id).replace("_", " ")
+        try:
+            import trophees    # pylint: disable=import-outside-toplevel
+            translate = getattr(getattr(_DISPLAY_INSTANCE, 'lang', None), 'translate', None)
+            if translate is not None:
+                trophees.set_translator(translate)
+            title_text = trophees.tr(title_text)
+            found = next((trophy for trophy in trophees.ALL_TROPHIES if trophy.get("id") == trophy_id), None)
+            if found is not None:
+                clean_name = trophees.trophy_text(found.get("name") or clean_name)
+        except Exception as error:    # pylint: disable=broad-except
+            print("[TROPHÉE] nom non traduit :", error)
+        # Les coupes en emoji (police Noto Color Emoji ; sans elle, le titre seul, sans carre)
+        title_surf = cemoji.render(font_title, title_text, (255, 215, 0))
         desc_surf = font_desc.render(clean_name, True, (255, 255, 255))
 
         # Centrage des textes à l'intérieur du pop-up

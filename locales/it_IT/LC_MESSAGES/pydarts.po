@@ -6637,3 +6637,350 @@ msgstr "Questo tema è stato creato con RaspyDarts {version}. Scaricarlo comunqu
 
 msgid "hub-needs-version-explain"
 msgstr "Questa macchina ha una versione più vecchia: alcune impostazioni del tema potrebbero non apparire. Aggiornare RaspyDarts risolve il problema."
+
+# Trophées et progression (trophees.py) : la clé est le texte français
+msgid "{player} - CHOISIR UNE CATEGORIE"
+msgstr "{player} - SCEGLI UNA CATEGORIA"
+
+msgid "Statistiques Générales & Par Jeu"
+msgstr "Statistiche generali e per gioco"
+
+msgid "Retour"
+msgstr "Indietro"
+
+msgid "HAUT / BAS (S20/S3) pour naviguer | ENTRÉE (Bull) ou toucher pour valider | ÉCHAP pour retour"
+msgstr "SU / GIÙ (S20/S3) per spostarsi | INVIO (Bull) o tocco per confermare | ESC per tornare"
+
+msgid "Page {0} / {1} (GAUCHE / DROITE ou S11 / S6)"
+msgstr "Pagina {0} / {1} (SINISTRA / DESTRA o S11 / S6)"
+
+msgid "< Page"
+msgstr "< Pagina"
+
+msgid "Page >"
+msgstr "Pagina >"
+
+msgid "ÉCHAP (ou bouton retour) pour retourner aux catégories"
+msgstr "ESC (o tasto indietro) per tornare alle categorie"
+
+msgid "STATISTIQUES DE : {player}"
+msgstr "STATISTICHE DI: {player}"
+
+msgid "(Trophées : {0}/{1})"
+msgstr "(Trofei: {0}/{1})"
+
+msgid "CLASSEMENTS"
+msgstr "CLASSIFICHE"
+
+msgid "Parties : {0}"
+msgstr "Partite: {0}"
+
+msgid "Victoires : "
+msgstr "Vittorie: "
+
+msgid "Défaites : {0}"
+msgstr "Sconfitte: {0}"
+
+msgid "Meilleur joueur : "
+msgstr "Miglior giocatore: "
+
+msgid "Échap : retour  |  Haut / Bas ou S20 / S3 : défiler  |  toucher les boutons"
+msgstr "Esc: indietro  |  Su / Giù o S20 / S3: scorrere  |  tocca i pulsanti"
+
+msgid "CHOISIR UN JOUEUR"
+msgstr "SCEGLI UN GIOCATORE"
+
+msgid "Erreur : Aucun joueur trouvé dans '{0}'."
+msgstr "Errore: nessun giocatore trovato in '{0}'."
+
+msgid "NOM DU JOUEUR"
+msgstr "NOME DEL GIOCATORE"
+
+msgid "Débutant"
+msgstr "Principiante"
+
+msgid "TABLEAU DES NIVEAUX - PROFIL DE {player}"
+msgstr "TABELLA DEI LIVELLI - PROFILO DI {player}"
+
+msgid "Points Par Flèche (PPD)"
+msgstr "Punti per freccetta (PPD)"
+
+msgid "Mark Per Round (MPR)"
+msgstr "Segni per round (MPR)"
+
+msgid "Nv"
+msgstr "Lv"
+
+msgid "Niv"
+msgstr "Liv"
+
+msgid "FUSIONNER '{player}' AVEC :"
+msgstr "UNISCI '{player}' CON:"
+
+msgid "Aucun autre joueur disponible."
+msgstr "Nessun altro giocatore disponibile."
+
+msgid "HAUT/BAS : Choisir | ENTRÉE : Valider | ÉCHAP : Annuler"
+msgstr "SU/GIÙ: Scegli | INVIO: Conferma | ESC: Annulla"
+
+msgid "Effacer le joueur '{player}' ?"
+msgstr "Eliminare il giocatore '{player}'?"
+
+msgid "Effacer le joueur ?"
+msgstr "Eliminare il giocatore?"
+
+msgid "Cette action est irréversible (stats & trophées perdus)."
+msgstr "Questa azione è irreversibile (statistiche e trofei persi)."
+
+msgid "ANNULER"
+msgstr "ANNULLA"
+
+msgid "EFFACER"
+msgstr "ELIMINA"
+
+msgid "pseudo : {player} va être fusionné"
+msgstr "nickname: {player} sarà unito"
+
+msgid "avec pseudo : {player}"
+msgstr "con il nickname: {player}"
+
+msgid "FUSIONNER"
+msgstr "UNISCI"
+
+msgid "HAUT/BAS : Naviguer | GAUCHE/DROITE : Infos Joueur | ENTRÉE : Valider | M : Fusion | S : Supprimer | ÉCHAP : Quitter"
+msgstr "SU/GIÙ: Spostarsi | SINISTRA/DESTRA: Info giocatore | INVIO: Conferma | M: Unisci | S: Elimina | ESC: Esci"
+
+msgid "GAUCHE/DROITE : Choisir | ENTRÉE : Valider | ÉCHAP : Annuler"
+msgstr "SINISTRA/DESTRA: Scegli | INVIO: Conferma | ESC: Annulla"
+
+msgid "HAUT/BAS : Choisir la cible | ENTRÉE : Confirmer | ÉCHAP : Annuler"
+msgstr "SU/GIÙ: Scegli la destinazione | INVIO: Conferma | ESC: Annulla"
+
+msgid "HAUT/BAS : Défiler le tableau | GAUCHE/DROITE (ou ÉCHAP) : Fermer le popup"
+msgstr "SU/GIÙ: Scorri la tabella | SINISTRA/DESTRA (o ESC): Chiudi"
+
+msgid "Supprimer"
+msgstr "Elimina"
+
+msgid "Fusionner"
+msgstr "Unisci"
+
+msgid "Infos joueur"
+msgstr "Info giocatore"
+
+msgid "Toucher 3x {0} en une volée"
+msgstr "Colpire 3 volte {0} in un turno"
+
+msgid "Terminer en finissant par {0}"
+msgstr "Chiudere con {0}"
+
+msgid "Terminer le {0} en {1} fléchettes"
+msgstr "Chiudere il {0} in {1} freccette"
+
+msgid "Terminer le {0} en {1} fléchettes (Perfect)"
+msgstr "Chiudere il {0} in {1} freccette (Perfect)"
+
+msgid "Valider le défi {0} de Routine"
+msgstr "Superare la sfida {0} di Routine"
+
+msgid "Réaliser {0} marques au {1}"
+msgstr "Fare {0} segni a {1}"
+
+msgid "Marquer {0} points"
+msgstr "Segnare {0} punti"
+
+msgid "Score total entre {0} et {1} points"
+msgstr "Punteggio totale tra {0} e {1} punti"
+
+msgid "Lancer {0} fléchettes"
+msgstr "Lanciare {0} freccette"
+
+msgid "Gagner {0} parties"
+msgstr "Vincere {0} partite"
+
+msgid "Toucher le simple bull {0} fois"
+msgstr "Colpire il bull singolo {0} volte"
+
+msgid "Toucher le double bull {0} fois"
+msgstr "Colpire il doppio bull {0} volte"
+
+msgid "Toucher le bull {0} fois"
+msgstr "Colpire il bull {0} volte"
+
+msgid "Atteindre le bull {0} fois"
+msgstr "Raggiungere il bull {0} volte"
+
+msgid "Toucher un double {0} fois"
+msgstr "Colpire un doppio {0} volte"
+
+msgid "Toucher un triple {0} fois"
+msgstr "Colpire un triplo {0} volte"
+
+msgid "Toucher {0}, {1}, {2}"
+msgstr "Colpire {0}, {1}, {2}"
+
+msgid "Toucher {0}, {1}, {2} (dans n'importe quel ordre)"
+msgstr "Colpire {0}, {1}, {2} (in qualsiasi ordine)"
+
+msgid "Ho-One - Finir par {0}"
+msgstr "Ho-One - Chiudere con {0}"
+
+msgid "{0} - {1} fléchettes"
+msgstr "{0} - {1} freccette"
+
+msgid "Routine - Niveau {0}"
+msgstr "Routine - Livello {0}"
+
+msgid "Flèches lancées ({0})"
+msgstr "Freccette lanciate ({0})"
+
+msgid "Statistiques"
+msgstr "Statistiche"
+
+msgid "Succès de progression"
+msgstr "Obiettivi di progressione"
+
+msgid "Combinaisons et figures"
+msgstr "Combinazioni e figure"
+
+msgid "Scores spécifiques"
+msgstr "Punteggi specifici"
+
+msgid "Cricket / Mickey"
+msgstr "Cricket / Mickey"
+
+msgid "Ho-One"
+msgstr "Ho-One"
+
+msgid "Routine"
+msgstr "Routine"
+
+msgid "Doubles"
+msgstr "Doppi"
+
+msgid "Triples"
+msgstr "Tripli"
+
+msgid "FLÉCHETTES"
+msgstr "FRECCETTE"
+
+msgid "PARTIES"
+msgstr "PARTITE"
+
+msgid "Victoires"
+msgstr "Vittorie"
+
+msgid "Défaites"
+msgstr "Sconfitte"
+
+msgid "Simples"
+msgstr "Singoli"
+
+msgid "MISS"
+msgstr "MANCATI"
+
+msgid "Bulls"
+msgstr "Bull"
+
+msgid "Simple Bull"
+msgstr "Bull singolo"
+
+msgid "Double Bull"
+msgstr "Doppio bull"
+
+msgid "+ de Parties"
+msgstr "Più partite"
+
+msgid "+ de Victoires"
+msgstr "Più vittorie"
+
+msgid "+ de Défaites"
+msgstr "Più sconfitte"
+
+msgid "Top jeux"
+msgstr "Giochi top"
+
+msgid "MPR : "
+msgstr "MPR: "
+
+msgid "PPD : "
+msgstr "PPD: "
+
+msgid "Novice"
+msgstr "Novizio"
+
+msgid "Amateur"
+msgstr "Dilettante"
+
+msgid "Régulier"
+msgstr "Abituale"
+
+msgid "Confirmé"
+msgstr "Esperto"
+
+msgid "Vétéran"
+msgstr "Veterano"
+
+msgid "Expert"
+msgstr "Specialista"
+
+msgid "Maître"
+msgstr "Maestro"
+
+msgid "Grand Maître"
+msgstr "Gran maestro"
+
+msgid "Élite"
+msgstr "Élite"
+
+msgid "Légende"
+msgstr "Leggenda"
+
+msgid "Champion"
+msgstr "Campione"
+
+msgid "Grand Champion"
+msgstr "Gran campione"
+
+msgid "Ultime Légende"
+msgstr "Leggenda suprema"
+
+msgid "🏆 NOUVEAU TROPHÉE ! 🏆"
+msgstr "🏆 NUOVO TROFEO! 🏆"
+
+msgid "La 3ème fléchette est un gros triple"
+msgstr "La 3ª freccetta è un triplo grande"
+
+msgid "Toucher 3 Double Bull"
+msgstr "Colpire 3 doppi bull"
+
+msgid "Toucher n'importe quel Bull 3x"
+msgstr "Colpire un bull qualsiasi 3 volte"
+
+msgid "Toucher un T20 dans la volée"
+msgstr "Colpire un T20 nel turno"
+
+msgid "Toucher 3 simple bull"
+msgstr "Colpire 3 bull singoli"
+
+msgid "Toucher n'importe quel Triple 3x"
+msgstr "Colpire un triplo qualsiasi 3 volte"
+
+msgid "3 fois le même chiffre"
+msgstr "3 volte lo stesso numero"
+
+msgid "Toucher 3 Triples différents au Cricket ou à Mickey"
+msgstr "Colpire 3 tripli diversi a Cricket o Mickey"
+
+msgid "Rater ses 3 flèches (3 Miss)"
+msgstr "Mancare le 3 freccette (3 Miss)"
+
+msgid "Réaliser un 180 aux fléchettes"
+msgstr "Fare un 180"
+
+msgid "Création artistique"
+msgstr "Creazione artistica"
+
+msgid "Participation à la création artistique : partager un thème sur RaspyHub"
+msgstr "Partecipare alla creazione artistica: condividere un tema su RaspyHub"
+

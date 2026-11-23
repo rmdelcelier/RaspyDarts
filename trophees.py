@@ -24,6 +24,86 @@ from include.ctrophies import average_ppd
 DATA_FILE = cpaths.trophies_file()
 
 
+# --- TRADUCTION : le texte français sert de clé (Lang.translate le rend tel quel sans traduction) ---
+_translate = None
+
+
+def set_translator(translate):
+    global _translate
+    _translate = translate
+
+
+def tr(text, *values, **named):
+    '''
+    Un texte des écrans dans la langue de la borne (le français sans traduction), ses valeurs
+    mises à leur place ({0}, {player}...)
+    '''
+    translated = text
+    if _translate is not None:
+        try:
+            translated = _translate(text) or text
+        except Exception:    # pylint: disable=broad-except
+            translated = text
+    if not values and not named:
+        return translated
+    try:
+        return translated.format(*values, **named)
+    except (KeyError, IndexError, ValueError):
+        return text.format(*values, **named)
+
+
+# Descriptions et noms des trophées faits sur le même modèle : traduits par leur modèle
+TROPHY_PATTERNS = [
+    (r'Toucher 3x (\S+) en une volée', 'Toucher 3x {0} en une volée'),
+    (r'Terminer en finissant par (\S+)', 'Terminer en finissant par {0}'),
+    (r'Terminer le (\d+) en (\d+) fléchettes', 'Terminer le {0} en {1} fléchettes'),
+    (r'Terminer le (\d+) en (\d+) fléchettes \(Perfect\)', 'Terminer le {0} en {1} fléchettes (Perfect)'),
+    (r'Valider le défi (\d+) de Routine', 'Valider le défi {0} de Routine'),
+    (r'Réaliser (\d+) marques au (Cricket|Mickey)', 'Réaliser {0} marques au {1}'),
+    (r'Marquer (\d+) points', 'Marquer {0} points'),
+    (r'Score total entre (\d+) et (\d+) points', 'Score total entre {0} et {1} points'),
+    (r'Lancer (\d+) fléchettes', 'Lancer {0} fléchettes'),
+    (r'Gagner (\d+) parties', 'Gagner {0} parties'),
+    (r'Toucher le simple bull (\d+) fois', 'Toucher le simple bull {0} fois'),
+    (r'Toucher le double bull (\d+) fois', 'Toucher le double bull {0} fois'),
+    (r'Toucher le bull (\d+) fois', 'Toucher le bull {0} fois'),
+    (r'Atteindre le bull (\d+) fois', 'Atteindre le bull {0} fois'),
+    (r'Toucher un double (\d+) fois', 'Toucher un double {0} fois'),
+    (r'Toucher un triple (\d+) fois', 'Toucher un triple {0} fois'),
+    (r'Toucher (\w+), (\w+), (\w+)', 'Toucher {0}, {1}, {2}'),
+    (r'Toucher (\w+), (\w+), (\w+) \(Tous ordres?\)', 'Toucher {0}, {1}, {2} (dans n\'importe quel ordre)'),
+    (r'Ho-One - Finir par (\S+)', 'Ho-One - Finir par {0}'),
+    (r'(\d+) - (\d+) fléchettes', '{0} - {1} fléchettes'),
+    (r'Routine - Niveau (\d+)', 'Routine - Niveau {0}'),
+    (r'Fl[éè]ches Lancées \((\w+)\)', 'Flèches lancées ({0})'),
+]
+
+
+def trophy_text(text):
+    '''
+    Le nom ou la description d'un trophée dans la langue de la borne : sa traduction, sinon celle
+    de son modèle, sinon le français
+    '''
+    translated = tr(text)
+    if translated != text:
+        return translated
+    for pattern, model in TROPHY_PATTERNS:
+        found = re.fullmatch(pattern, str(text))
+        if found:
+            return tr(model, *found.groups())
+    return text
+
+
+def level_text(name):
+    '''
+    Un niveau (Régulier III) dans la langue de la borne : son nom traduit, son numéro gardé
+    '''
+    found = re.fullmatch(r'(.+?) ([IVX]+)', str(name))
+    if found:
+        return f"{tr(found.group(1))} {found.group(2)}"
+    return tr(name)
+
+
 # --- SOURIS ET TACTILE : ce que les écrans partagent ---
 def ui_scale(screen):
     '''
@@ -680,7 +760,7 @@ class CategorySelectionScreen:
         while running:
             self.screen.fill((20, 24, 33))
 
-            title_text = title_font.render(f"{self.current_player} - CHOISIR UNE CATEGORIE", True, (255, 255, 255))
+            title_text = title_font.render(tr("{player} - CHOISIR UNE CATEGORIE", player=self.current_player), True, (255, 255, 255))
             title_rect = title_text.get_rect(center=(width // 2, int(50 * scale)))
             self.screen.blit(title_text, title_rect)
 
@@ -706,9 +786,9 @@ class CategorySelectionScreen:
 
                 unlocked, total = self.get_trophy_counts_for_category(cat_name)
                 if cat_name == "Statistiques":
-                    display_text = "Statistiques Générales & Par Jeu"
+                    display_text = tr("Statistiques Générales & Par Jeu")
                 else:
-                    display_text = f"{cat_name}  -  ({unlocked}/{total})"
+                    display_text = f"{tr(cat_name)}  -  ({unlocked}/{total})"
 
                 text_surface = text_font.render(display_text, True, text_color)
                 text_rect = text_surface.get_rect(center=b_rect.center)
@@ -716,8 +796,8 @@ class CategorySelectionScreen:
                 zones[idx] = b_rect
 
             back_rect = draw_button(self.screen, (int(30 * scale), height - int(62 * scale), int(180 * scale), int(44 * scale)),
-                                    "Retour", footer_font)
-            footer_text = footer_font.render("HAUT / BAS (S20/S3) pour naviguer | ENTRÉE (Bull) ou toucher pour valider | ÉCHAP pour retour", True, (150, 150, 150))
+                                    tr("Retour"), footer_font)
+            footer_text = footer_font.render(tr("HAUT / BAS (S20/S3) pour naviguer | ENTRÉE (Bull) ou toucher pour valider | ÉCHAP pour retour"), True, (150, 150, 150))
             footer_rect = footer_text.get_rect(center=(width // 2, height - int(40 * scale)))
             self.screen.blit(footer_text, footer_rect)
 
@@ -829,7 +909,7 @@ class TrophiesScreen:
             try:
                 self.screen.fill((20, 24, 33))
 
-                title_text = title_font.render(f"{self.current_player} - {self.category.upper()}", True, (255, 255, 255))
+                title_text = title_font.render(f"{self.current_player} - {tr(self.category).upper()}", True, (255, 255, 255))
                 title_rect = title_text.get_rect(center=(width // 2, int(45 * scale)))
                 self.screen.blit(title_text, title_rect)
 
@@ -889,11 +969,11 @@ class TrophiesScreen:
                     text_color = (240, 240, 240) if is_unlocked else (100, 110, 120)
                     desc_color = (170, 180, 200) if is_unlocked else (80, 85, 95)
 
-                    name_surface = text_font.render(trophy["name"], True, text_color)
+                    name_surface = text_font.render(trophy_text(trophy["name"]), True, text_color)
                     text_width = x + col_width - text_x - int(6 * scale)
                     if name_surface.get_width() > text_width:
                         name_surface = pygame.transform.smoothscale(name_surface, (max(1, text_width), name_surface.get_height()))
-                    lines = wrap_text(small_font, trophy["desc"], text_width)
+                    lines = wrap_text(small_font, trophy_text(trophy["desc"]), text_width)
                     block = name_surface.get_height() + int(4 * scale) + len(lines) * small_font.get_linesize()
                     line_y = y + max(int(4 * scale), (box_height - block) // 2)
                     self.screen.blit(name_surface, (text_x, line_y))
@@ -905,22 +985,22 @@ class TrophiesScreen:
 
                 button_h = int(44 * scale)
                 button_y = height - int(62 * scale)
-                back_rect = draw_button(self.screen, (int(30 * scale), button_y, int(180 * scale), button_h), "Retour", footer_font)
+                back_rect = draw_button(self.screen, (int(30 * scale), button_y, int(180 * scale), button_h), tr("Retour"), footer_font)
                 previous_rect = next_rect = None
                 if self.total_pages > 1:
-                    page_info = f"Page {self.current_page + 1} / {self.total_pages} (GAUCHE / DROITE ou S11 / S6)"
+                    page_info = tr("Page {0} / {1} (GAUCHE / DROITE ou S11 / S6)", self.current_page + 1, self.total_pages)
                     page_surf = footer_font.render(page_info, True, (200, 200, 100))
                     page_rect = page_surf.get_rect(center=(width // 2, button_y + button_h // 2))
                     self.screen.blit(page_surf, page_rect)
                     button_w = int(150 * scale)
                     if self.current_page > 0:
                         previous_rect = draw_button(self.screen, (page_rect.x - button_w - int(20 * scale), button_y, button_w, button_h),
-                                                    "< Page", footer_font)
+                                                    tr("< Page"), footer_font)
                     if self.current_page < self.total_pages - 1:
                         next_rect = draw_button(self.screen, (page_rect.right + int(20 * scale), button_y, button_w, button_h),
-                                                "Page >", footer_font)
+                                                tr("Page >"), footer_font)
                 else:
-                    footer_surface = footer_font.render("ÉCHAP (ou bouton retour) pour retourner aux catégories", True, (150, 150, 150))
+                    footer_surface = footer_font.render(tr("ÉCHAP (ou bouton retour) pour retourner aux catégories"), True, (150, 150, 150))
                     self.screen.blit(footer_surface, footer_surface.get_rect(center=(width // 2, button_y + button_h // 2)))
 
                 pygame.display.flip()
@@ -1164,9 +1244,9 @@ class StatisticsScreen:
             gap = int(12 * scale)
 
             # Title, its number of trophies beside it
-            title_surf = title_font.render(f"STATISTIQUES DE : {self.current_player.upper()}", True, (255, 255, 255))
+            title_surf = title_font.render(tr("STATISTIQUES DE : {player}", player=self.current_player.upper()), True, (255, 255, 255))
             self.screen.blit(title_surf, (margin, int(12 * scale)))
-            sub_surf = small_title_font.render(f"  (Trophées : {unlocked_count}/{total_trophies_count})", True, (180, 190, 210))
+            sub_surf = small_title_font.render("  " + tr("(Trophées : {0}/{1})", unlocked_count, total_trophies_count), True, (180, 190, 210))
             self.screen.blit(sub_surf, (margin + title_surf.get_width(),
                                         int(12 * scale) + (title_surf.get_height() - sub_surf.get_height()) // 2))
 
@@ -1185,7 +1265,7 @@ class StatisticsScreen:
                 by = top_y + (idx // g_cols) * (g_box_h + gap)
                 pygame.draw.rect(self.screen, (30, 35, 45), (bx, by, g_box_w, g_box_h), border_radius=8)
                 pygame.draw.rect(self.screen, (60, 70, 90), (bx, by, g_box_w, g_box_h), 1, border_radius=8)
-                lbl_surf = label_font.render(label, True, (180, 180, 180))
+                lbl_surf = label_font.render(tr(label), True, (180, 180, 180))
                 self.screen.blit(lbl_surf, (bx + int(10 * scale), by + int(8 * scale)))
                 # The number in big at the bottom right, its percentage before it
                 val_surf = value_font.render(str(main_val), True, (0, 220, 120))
@@ -1202,7 +1282,7 @@ class StatisticsScreen:
             border_color = (70, 90, 120)
             pygame.draw.rect(self.screen, (25, 30, 40), (panel_x, top_y, panel_w, top_h), border_radius=8)
             pygame.draw.rect(self.screen, border_color, (panel_x, top_y, panel_w, top_h), 1, border_radius=8)
-            panel_title = panel_title_font.render("CLASSEMENTS", True, (255, 200, 50))
+            panel_title = panel_title_font.render(tr("CLASSEMENTS"), True, (255, 200, 50))
             self.screen.blit(panel_title, (panel_x + (panel_w - panel_title.get_width()) // 2, top_y + int(6 * scale)))
             columns_y = top_y + panel_title.get_height() + int(12 * scale)
             col_w = panel_w // 4
@@ -1212,7 +1292,7 @@ class StatisticsScreen:
                 c_x = panel_x + col_index * col_w
                 pygame.draw.rect(self.screen, (32, 38, 50), (c_x, columns_y, col_w, top_y + top_h - columns_y))
                 pygame.draw.rect(self.screen, border_color, (c_x, columns_y, col_w, top_y + top_h - columns_y), 1)
-                t_surf = rank_font.render(title, True, (200, 200, 220))
+                t_surf = rank_font.render(tr(title), True, (200, 200, 220))
                 self.screen.blit(t_surf, (c_x + (col_w - t_surf.get_width()) // 2, columns_y + int(6 * scale)))
                 line_y = columns_y + t_surf.get_height() + int(12 * scale)
                 pygame.draw.line(self.screen, border_color, (c_x + 4, line_y), (c_x + col_w - 4, line_y), 1)
@@ -1258,30 +1338,30 @@ class StatisticsScreen:
                 defaites = self.stats.get(f"defaite_{game}", 0)
                 vic_color = (0, 220, 120) if victoires > defaites else ((255, 80, 80) if victoires < defaites else (210, 210, 210))
                 grey = (210, 210, 210)
-                blit_parts([(f"Parties : {p_jouees}  •  Victoires : ", grey), (str(victoires), vic_color),
-                            (f"  •  Défaites : {defaites}", grey)], text_x, line_y, game_font)
+                blit_parts([(tr("Parties : {0}", p_jouees) + "  •  " + tr("Victoires : "), grey), (str(victoires), vic_color),
+                            ("  •  " + tr("Défaites : {0}", defaites), grey)], text_x, line_y, game_font)
                 line_y += game_font.get_linesize()
 
                 parts = []
                 game_lower = game.lower()
                 if game_lower in ["cricket", "mickey"]:
                     mpr_val = self.stats.get(f"moyenne_mpr_{game}", self.stats.get(f"mpr_moyen_{game}", 0.0))
-                    parts += [("MPR : ", grey), (f"{mpr_val:.2f}".replace('.', ','), (0, 220, 255)), ("  •  ", grey)]
+                    parts += [(tr("MPR : "), grey), (f"{mpr_val:.2f}".replace('.', ','), (0, 220, 255)), ("  •  ", grey)]
                 elif game_lower in ["321_zlip", "batard", "highscore", "shoot-out", "up_and_down", "sabotage", "chaos", "low_score", "ho-one"]:
                     ppd_val = average_ppd(self.stats, game_lower)
-                    parts += [("PPD : ", grey), (f"{ppd_val:.2f}".replace('.', ','), (0, 220, 255)), ("  •  ", grey)]
-                parts += [("Meilleur joueur : ", grey), (f"{best_player_by_game.get(game, '-')}", (0, 220, 255))]
+                    parts += [(tr("PPD : "), grey), (f"{ppd_val:.2f}".replace('.', ','), (0, 220, 255)), ("  •  ", grey)]
+                parts += [(tr("Meilleur joueur : "), grey), (f"{best_player_by_game.get(game, '-')}", (0, 220, 255))]
                 blit_parts(parts, text_x, line_y, game_font)
             self.screen.set_clip(None)
 
             # --- Buttons : Retour, and the scrolling when the games go over ---
-            back_rect = draw_button(self.screen, (margin, buttons_y, int(180 * scale), buttons_h), "Retour", button_font)
+            back_rect = draw_button(self.screen, (margin, buttons_y, int(180 * scale), buttons_h), tr("Retour"), button_font)
             up_rect = down_rect = None
             if self.max_scroll > 0:
                 arrow_w = int(110 * scale)
                 down_rect = draw_button(self.screen, (width - margin - arrow_w, buttons_y, arrow_w, buttons_h), "▼", button_font)
                 up_rect = draw_button(self.screen, (down_rect.x - gap - arrow_w, buttons_y, arrow_w, buttons_h), "▲", button_font)
-            hint_surf = pct_font.render("Échap : retour  |  Haut / Bas ou S20 / S3 : défiler  |  toucher les boutons", True, (150, 150, 170))
+            hint_surf = pct_font.render(tr("Échap : retour  |  Haut / Bas ou S20 / S3 : défiler  |  toucher les boutons"), True, (150, 150, 170))
             self.screen.blit(hint_surf, hint_surf.get_rect(center=(width // 2, buttons_y + buttons_h // 2)))
 
             pygame.display.flip()
@@ -1466,7 +1546,7 @@ class PlayerSelectionScreen:
 
             self.screen.fill((20, 24, 33))
 
-            title_text = title_font.render("CHOISIR UN JOUEUR", True, (255, 255, 255))
+            title_text = title_font.render(tr("CHOISIR UN JOUEUR"), True, (255, 255, 255))
             title_rect = title_text.get_rect(center=(width // 2, int(45 * scale)))
             self.screen.blit(title_text, title_rect)
 
@@ -1474,7 +1554,7 @@ class PlayerSelectionScreen:
             all_data = load_player_data()
 
             if total_players == 0:
-                err_surf = error_font.render(f"Erreur : Aucun joueur trouvé dans '{DATA_FILE}'.", True, (255, 100, 100))
+                err_surf = error_font.render(tr("Erreur : Aucun joueur trouvé dans '{0}'.", DATA_FILE), True, (255, 100, 100))
                 err_rect = err_surf.get_rect(center=(width // 2, height // 2))
                 self.screen.blit(err_surf, err_rect)
             else:
@@ -1505,7 +1585,7 @@ class PlayerSelectionScreen:
                 col_mickey_center = table_x + int(1010 * scale)
 
                 headers = [
-                    ("NOM DU JOUEUR", col_name_center),
+                    (tr("NOM DU JOUEUR"), col_name_center),
                     ("PPD (Ho-One)", col_hoone_center),
                     ("PPD (Highscore)", col_highscore_center),
                     ("MPR (Cricket)", col_cricket_center),
@@ -1550,7 +1630,7 @@ class PlayerSelectionScreen:
                     # Ho-One
                     ppd_val = average_ppd(p_st, "ho-one")
                     lvl_num = get_level_from_ppd(ppd_val)
-                    rank_name = NAMES_LEVELS.get(lvl_num, "Débutant")
+                    rank_name = level_text(NAMES_LEVELS.get(lvl_num, "Débutant"))
                     score_hoone_surf = small_font.render(f"{ppd_val:.2f}".replace('.', ','), True, (0, 220, 255))
                     level_text_surf = tiny_font.render(rank_name, True, (180, 190, 210))
                     logo_hoone = get_player_logo(player_name, scale, game_type="ho-one", all_players_data=all_data)
@@ -1572,7 +1652,7 @@ class PlayerSelectionScreen:
                         text_x = block_left_x + (logo_hoone.get_width() - level_text_surf.get_width()) // 2
                         self.screen.blit(level_text_surf, (text_x, block_y + top_h + inner_spacing))
                     else:
-                        no_logo_text = tiny_font.render("Débutant", True, (150, 150, 150))
+                        no_logo_text = tiny_font.render(tr("Débutant"), True, (150, 150, 150))
                         fallback_spacing = int(2 * scale)
                         fallback_total_h = no_logo_text.get_height() + fallback_spacing + score_hoone_surf.get_height()
                         fallback_y = row_y + (row_height - fallback_total_h) // 2
@@ -1582,7 +1662,7 @@ class PlayerSelectionScreen:
                     # Highscore
                     ppd_hs_val = average_ppd(p_st, "highscore")
                     score_hs_surf = small_font.render(f"{ppd_hs_val:.2f}".replace('.', ','), True, (0, 220, 255))
-                    level_text_hs_surf = tiny_font.render(NAMES_LEVELS.get(get_level_from_ppd(ppd_hs_val), ""), True, (180, 190, 210))
+                    level_text_hs_surf = tiny_font.render(level_text(NAMES_LEVELS.get(get_level_from_ppd(ppd_hs_val), "")), True, (180, 190, 210))
                     logo_hs = get_player_logo(player_name, scale, game_type="highscore", all_players_data=all_data)
                     if ppd_hs_val == 0.0:
                         logo_hs = None
@@ -1606,7 +1686,7 @@ class PlayerSelectionScreen:
                     # Cricket
                     mpr_val = p_st.get('moyenne_mpr_cricket', p_st.get('mpr_moyen_cricket', 0.0))
                     score_cricket_surf = small_font.render(f"{mpr_val:.2f}".replace('.', ','), True, (0, 220, 255))
-                    level_text_c_surf = tiny_font.render(NAMES_LEVELS.get(get_level_from_mpr(mpr_val), ""), True, (180, 190, 210))
+                    level_text_c_surf = tiny_font.render(level_text(NAMES_LEVELS.get(get_level_from_mpr(mpr_val), "")), True, (180, 190, 210))
                     logo_cricket = get_player_logo(player_name, scale, game_type="cricket", all_players_data=all_data)
                     if mpr_val == 0.0:
                         logo_cricket = None
@@ -1630,7 +1710,7 @@ class PlayerSelectionScreen:
                     # Mickey
                     mpr_m_val = p_st.get('moyenne_mpr_mickey', p_st.get('mpr_moyen_mickey', 0.0))
                     score_mickey_surf = small_font.render(f"{mpr_m_val:.2f}".replace('.', ','), True, (0, 220, 255))
-                    level_text_m_surf = tiny_font.render(NAMES_LEVELS.get(get_level_from_mpr(mpr_m_val), ""), True, (180, 190, 210))
+                    level_text_m_surf = tiny_font.render(level_text(NAMES_LEVELS.get(get_level_from_mpr(mpr_m_val), "")), True, (180, 190, 210))
                     logo_mickey = get_player_logo(player_name, scale, game_type="mickey", all_players_data=all_data)
                     if mpr_m_val == 0.0:
                         logo_mickey = None
@@ -1691,12 +1771,12 @@ class PlayerSelectionScreen:
                 lvl_cricket = get_level_from_mpr(user_mpr_cricket)
                 lvl_mickey = get_level_from_mpr(user_mpr_mickey)
 
-                name_hoone = NAMES_LEVELS.get(lvl_hoone, "Débutant")
-                name_hs = NAMES_LEVELS.get(lvl_hs, "Débutant")
-                name_cricket = NAMES_LEVELS.get(lvl_cricket, "Débutant")
-                name_mickey = NAMES_LEVELS.get(lvl_mickey, "Débutant")
+                name_hoone = level_text(NAMES_LEVELS.get(lvl_hoone, "Débutant"))
+                name_hs = level_text(NAMES_LEVELS.get(lvl_hs, "Débutant"))
+                name_cricket = level_text(NAMES_LEVELS.get(lvl_cricket, "Débutant"))
+                name_mickey = level_text(NAMES_LEVELS.get(lvl_mickey, "Débutant"))
 
-                info_title = confirm_font.render(f"TABLEAU DES NIVEAUX - PROFIL DE {player_target.upper()}", True, (255, 220, 50))
+                info_title = confirm_font.render(tr("TABLEAU DES NIVEAUX - PROFIL DE {player}", player=player_target.upper()), True, (255, 220, 50))
                 self.screen.blit(info_title, info_title.get_rect(center=(box_x + box_w // 2, box_y + int(25 * scale))))
 
                 sub_title_font = cfonts.font(int(15 * scale), bold=True) if hasattr(cfonts, 'font') else pygame.font.Font(None, 18)
@@ -1720,16 +1800,16 @@ class PlayerSelectionScreen:
                 pygame.draw.rect(self.screen, (0, 220, 255), frame_rect1, 2, border_radius=8)
                 pygame.draw.rect(self.screen, (0, 220, 255), frame_rect2, 2, border_radius=8)
 
-                head1 = sub_title_font.render("Points Par Flèche (PPD)", True, (0, 220, 255))
-                head2 = sub_title_font.render("Mark Per Round (MPR)", True, (0, 220, 255))
+                head1 = sub_title_font.render(tr("Points Par Flèche (PPD)"), True, (0, 220, 255))
+                head2 = sub_title_font.render(tr("Mark Per Round (MPR)"), True, (0, 220, 255))
 
                 self.screen.blit(head1, (main_col1_x + (block_w - head1.get_width()) // 2, box_y + int(60 * scale)))
                 self.screen.blit(head2, (main_col2_x + (block_w - head2.get_width()) // 2, box_y + int(60 * scale)))
 
-                subhead_hoone = tiny_font.render(f"Ho-one - Nv {lvl_hoone} : {user_ppd_hoone:.2f} - {name_hoone}", True, (255, 200, 50))
-                subhead_hs = tiny_font.render(f"Highscore - Nv {lvl_hs} : {user_ppd_hs:.2f} - {name_hs}", True, (255, 200, 50))
-                subhead_cricket = tiny_font.render(f"Cricket - Nv {lvl_cricket} : {user_mpr_cricket:.2f} - {name_cricket}", True, (255, 200, 50))
-                subhead_mickey = tiny_font.render(f"Mickey - Nv {lvl_mickey} : {user_mpr_mickey:.2f} - {name_mickey}", True, (255, 200, 50))
+                subhead_hoone = tiny_font.render(f"Ho-one - {tr("Nv")} {lvl_hoone} : {user_ppd_hoone:.2f} - {name_hoone}", True, (255, 200, 50))
+                subhead_hs = tiny_font.render(f"Highscore - {tr("Nv")} {lvl_hs} : {user_ppd_hs:.2f} - {name_hs}", True, (255, 200, 50))
+                subhead_cricket = tiny_font.render(f"Cricket - {tr("Nv")} {lvl_cricket} : {user_mpr_cricket:.2f} - {name_cricket}", True, (255, 200, 50))
+                subhead_mickey = tiny_font.render(f"Mickey - {tr("Nv")} {lvl_mickey} : {user_mpr_mickey:.2f} - {name_mickey}", True, (255, 200, 50))
 
                 col_hoone_x = main_col1_x
                 col_hs_x = main_col1_x + sub_col_w + col_gap
@@ -1771,9 +1851,9 @@ class PlayerSelectionScreen:
                         pygame.draw.rect(self.screen, row_bg, r_box, border_radius=4)
                         pygame.draw.rect(self.screen, border_col, r_box, 1, border_radius=4)
 
-                        lvl_label = f"Niv {lvl:2d} :"
+                        lvl_label = f"{tr('Niv')} {lvl:2d} :"
                         seuil_str = thresholds[lvl - 1]
-                        rank_title = NAMES_LEVELS.get(lvl, "Amateur")
+                        rank_title = level_text(NAMES_LEVELS.get(lvl, "Amateur"))
 
                         line_str = f"{lvl_label} {seuil_str} {rank_title}"
                         line_txt = small_font.render(line_str, True, (255, 255, 255) if not is_current else (255, 230, 100))
@@ -1817,11 +1897,11 @@ class PlayerSelectionScreen:
                 pygame.draw.rect(self.screen, (30, 38, 54), box_rect, border_radius=12)
                 pygame.draw.rect(self.screen, (0, 220, 255), box_rect, 3, border_radius=12)
 
-                m_title = confirm_font.render(f"FUSIONNER '{player_target.upper()}' AVEC :", True, (255, 220, 50))
+                m_title = confirm_font.render(tr("FUSIONNER '{player}' AVEC :", player=player_target.upper()), True, (255, 220, 50))
                 self.screen.blit(m_title, m_title.get_rect(center=(box_x + box_w // 2, box_y + int(32 * scale))))
 
                 if not merge_candidates:
-                    empty_surf = text_font.render("Aucun autre joueur disponible.", True, (220, 100, 100))
+                    empty_surf = text_font.render(tr("Aucun autre joueur disponible."), True, (220, 100, 100))
                     self.screen.blit(empty_surf, empty_surf.get_rect(center=(box_x + box_w // 2, box_y + box_h // 2)))
                 else:
                     max_m_vis = 6
@@ -1850,7 +1930,7 @@ class PlayerSelectionScreen:
                         self.screen.blit(c_surf, c_surf.get_rect(center=ir.center))
                         cur_y += item_h + int(8 * scale)
 
-                hint_m = small_font.render("HAUT/BAS : Choisir | ENTRÉE : Valider | ÉCHAP : Annuler", True, (170, 185, 210))
+                hint_m = small_font.render(tr("HAUT/BAS : Choisir | ENTRÉE : Valider | ÉCHAP : Annuler"), True, (170, 185, 210))
                 self.screen.blit(hint_m, hint_m.get_rect(center=(box_x + box_w // 2, box_y + box_h - int(25 * scale))))
 
             # --- POP-UP DE CONFIRMATION DE SUPPRESSION ---
@@ -1868,11 +1948,11 @@ class PlayerSelectionScreen:
                 pygame.draw.rect(self.screen, (35, 42, 60), box_rect, border_radius=12)
                 pygame.draw.rect(self.screen, (220, 80, 80), box_rect, 3, border_radius=12)
 
-                msg_text = f"Effacer le joueur '{player_target}' ?" if player_target else "Effacer le joueur ?"
+                msg_text = tr("Effacer le joueur '{player}' ?", player=player_target) if player_target else tr("Effacer le joueur ?")
                 msg_surf = confirm_font.render(msg_text, True, (255, 255, 255))
                 self.screen.blit(msg_surf, (box_x + (box_w - msg_surf.get_width()) // 2, box_y + int(35 * scale)))
 
-                sub_msg = small_font.render("Cette action est irréversible (stats & trophées perdus).", True, (200, 180, 180))
+                sub_msg = small_font.render(tr("Cette action est irréversible (stats & trophées perdus)."), True, (200, 180, 180))
                 self.screen.blit(sub_msg, (box_x + (box_w - sub_msg.get_width()) // 2, box_y + int(75 * scale)))
 
                 btn_w = int(220 * scale)
@@ -1884,7 +1964,7 @@ class PlayerSelectionScreen:
                 c_border = (120, 160, 220) if confirm_choice == 0 else (70, 85, 110)
                 pygame.draw.rect(self.screen, c_bg, btn_cancel_rect, border_radius=8)
                 pygame.draw.rect(self.screen, c_border, btn_cancel_rect, 2, border_radius=8)
-                txt_cancel = bold_font.render("ANNULER", True, (255, 255, 255))
+                txt_cancel = bold_font.render(tr("ANNULER"), True, (255, 255, 255))
                 self.screen.blit(txt_cancel, txt_cancel.get_rect(center=btn_cancel_rect.center))
 
                 btn_conf_rect = pygame.Rect(box_x + box_w - btn_w - int(50 * scale), btn_y, btn_w, btn_h)
@@ -1892,7 +1972,7 @@ class PlayerSelectionScreen:
                 f_border = (255, 120, 120) if confirm_choice == 1 else (180, 60, 60)
                 pygame.draw.rect(self.screen, f_bg, btn_conf_rect, border_radius=8)
                 pygame.draw.rect(self.screen, f_border, btn_conf_rect, 2, border_radius=8)
-                txt_conf = bold_font.render("EFFACER", True, (255, 255, 255))
+                txt_conf = bold_font.render(tr("EFFACER"), True, (255, 255, 255))
                 self.screen.blit(txt_conf, txt_conf.get_rect(center=btn_conf_rect.center))
 
             # --- POP-UP DE CONFIRMATION DE FUSION ---
@@ -1910,11 +1990,11 @@ class PlayerSelectionScreen:
                 pygame.draw.rect(self.screen, (35, 42, 60), box_rect, border_radius=12)
                 pygame.draw.rect(self.screen, (100, 180, 255), box_rect, 3, border_radius=12)
 
-                msg_text = f"pseudo : {player_target} va etre fusionne"
+                msg_text = tr("pseudo : {player} va être fusionné", player=player_target)
                 msg_surf = confirm_font.render(msg_text, True, (255, 255, 255))
                 self.screen.blit(msg_surf, (box_x + (box_w - msg_surf.get_width()) // 2, box_y + int(30 * scale)))
 
-                msg_text2 = f"avec pseudo : {target_base_name}"
+                msg_text2 = tr("avec pseudo : {player}", player=target_base_name)
                 msg_surf2 = confirm_font.render(msg_text2, True, (0, 220, 255))
                 self.screen.blit(msg_surf2, (box_x + (box_w - msg_surf2.get_width()) // 2, box_y + int(70 * scale)))
 
@@ -1927,7 +2007,7 @@ class PlayerSelectionScreen:
                 c_border = (120, 160, 220) if confirm_choice == 0 else (70, 85, 110)
                 pygame.draw.rect(self.screen, c_bg, btn_cancel_rect, border_radius=8)
                 pygame.draw.rect(self.screen, c_border, btn_cancel_rect, 2, border_radius=8)
-                txt_cancel = bold_font.render("ANNULER", True, (255, 255, 255))
+                txt_cancel = bold_font.render(tr("ANNULER"), True, (255, 255, 255))
                 self.screen.blit(txt_cancel, txt_cancel.get_rect(center=btn_cancel_rect.center))
 
                 btn_conf_rect = pygame.Rect(box_x + box_w - btn_w - int(50 * scale), btn_y, btn_w, btn_h)
@@ -1935,16 +2015,16 @@ class PlayerSelectionScreen:
                 f_border = (120, 220, 160) if confirm_choice == 1 else (60, 140, 90)
                 pygame.draw.rect(self.screen, f_bg, btn_conf_rect, border_radius=8)
                 pygame.draw.rect(self.screen, f_border, btn_conf_rect, 2, border_radius=8)
-                txt_conf = bold_font.render("FUSIONNER", True, (255, 255, 255))
+                txt_conf = bold_font.render(tr("FUSIONNER"), True, (255, 255, 255))
                 self.screen.blit(txt_conf, txt_conf.get_rect(center=btn_conf_rect.center))
 
-            footer_text_str = "HAUT/BAS : Naviguer | GAUCHE/DROITE : Infos Joueur | ENTRÉE : Valider | M : Fusion | S : Supprimer | ÉCHAP : Quitter"
+            footer_text_str = tr("HAUT/BAS : Naviguer | GAUCHE/DROITE : Infos Joueur | ENTRÉE : Valider | M : Fusion | S : Supprimer | ÉCHAP : Quitter")
             if screen_state in ("CONFIRM_DELETE", "CONFIRM_MERGE"):
-                footer_text_str = "GAUCHE/DROITE : Choisir | ENTRÉE : Valider | ÉCHAP : Annuler"
+                footer_text_str = tr("GAUCHE/DROITE : Choisir | ENTRÉE : Valider | ÉCHAP : Annuler")
             elif screen_state == "SELECT_MERGE_TARGET":
-                footer_text_str = "HAUT/BAS : Choisir la cible | ENTRÉE : Confirmer | ÉCHAP : Annuler"
+                footer_text_str = tr("HAUT/BAS : Choisir la cible | ENTRÉE : Confirmer | ÉCHAP : Annuler")
             elif screen_state == "INFO_POPUP":
-                footer_text_str = "HAUT/BAS : Défiler le tableau | GAUCHE/DROITE (ou ÉCHAP) : Fermer le popup"
+                footer_text_str = tr("HAUT/BAS : Défiler le tableau | GAUCHE/DROITE (ou ÉCHAP) : Fermer le popup")
 
             # The commands as buttons (a mouse, a touchscreen) : Retour and, for the player
             # chosen, its information, the merge, the deletion
@@ -1952,11 +2032,11 @@ class PlayerSelectionScreen:
             buttons_h = int(44 * scale)
             buttons_y = height - buttons_h - int(14 * scale)
             if screen_state == "NORMAL":
-                action_rects['back'] = draw_button(self.screen, (int(30 * scale), buttons_y, int(170 * scale), buttons_h), "Retour", footer_font)
+                action_rects['back'] = draw_button(self.screen, (int(30 * scale), buttons_y, int(170 * scale), buttons_h), tr("Retour"), footer_font)
                 if total_players > 0:
                     button_w = int(190 * scale)
                     right = width - int(30 * scale)
-                    for name, text in (('delete', "Supprimer"), ('merge', "Fusionner"), ('info', "Infos joueur")):
+                    for name, text in (('delete', tr("Supprimer")), ('merge', tr("Fusionner")), ('info', tr("Infos joueur"))):
                         right -= button_w
                         action_rects[name] = draw_button(self.screen, (right, buttons_y, button_w, buttons_h), text, footer_font)
                         right -= int(12 * scale)
@@ -2201,7 +2281,8 @@ class PlayerSelectionScreen:
         return "QUIT", None
 
 # --- FONCTION PRINCIPALE ---
-def main(rpi=None):
+def main(rpi=None, translate=None):
+    set_translator(translate)
     screen = pygame.display.get_surface()
     if screen is None:
         screen = pygame.display.set_mode((1920, 1080), pygame.FULLSCREEN)

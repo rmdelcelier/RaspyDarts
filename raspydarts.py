@@ -862,7 +862,7 @@ try:
                         import trophees
                         
                         # On lance la fonction principale du module
-                        trophees.main(rpi)
+                        trophees.main(rpi, Lang.translate)
                         
                     except Exception as e:
                         print(f"Erreur lors du lancement des trophées : {e}")            
