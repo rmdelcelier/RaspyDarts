@@ -707,6 +707,39 @@ def report_error(context):
     cerrors.record('error', version, context=context,
                    game=globals().get('Game') or globals().get('selected_game'))
 
+
+# Joueur suivant during « Retirez vos fléchettes » : the same buttons as its wait without a time
+NEXT_PLAYER_KEYS = ('PLAYERBUTTON', 'BTN_NEXTPLAYER', 'BTN_VALIDATE')
+
+
+def wait_release(release_time, click_zones=None):
+    '''
+    « Retirez vos fléchettes » with a time : the inputs read during that time (and not a blind
+    wait, which forgot them) ; Joueur suivant ends it at once. The darts planted meanwhile are
+    not played (drop_darts after), the other buttons do nothing
+    '''
+    import time    # pylint: disable=import-outside-toplevel
+    end = time.monotonic() + release_time / 1000
+    while True:
+        left = int((end - time.monotonic()) * 1000)
+        if left <= 0:
+            return False
+        key = rpi.listen_inputs(['num', 'alpha', 'fx', 'arrows'], ['PLAYERBUTTON', 'single-click'],
+                                context='game', timeout=left)
+        if key is False:
+            return False
+        if click_zones:
+            clicked = display.is_clicked(click_zones[0], key)
+            if clicked:
+                key = clicked
+        if key in NEXT_PLAYER_KEYS:
+            logs.info(f"Retirez vos fléchettes : Joueur suivant pressed ({key}), "
+                      f"{max(0, end - time.monotonic()):.1f} s before the end")
+            return True
+        if key not in (None, ''):
+            logs.debug(f"Retirez vos fléchettes : {key} not taken")
+
+
 try:
     while game_type not in ('restart', 'quit', 'shutdown'):
 
@@ -2474,7 +2507,8 @@ try:
                         dispatcher.publish('release', limit=['TARGET', 'STRIP', 'OTHER'])
                         if release_time > 0:
                             dmd.send_text(Lang.translate("release-darts"))
-                            display.message([Lang.translate('release-darts')], release_time, None, 'middle', 'big')
+                            display.message([Lang.translate('release-darts')], 0, None, 'middle', 'big')
+                            wait_release(release_time, ClickZones)
                             # The darts touched while they are taken out : not those of the next player
                             rpi.drop_darts('while the darts were taken out')
 
