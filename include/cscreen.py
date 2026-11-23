@@ -2827,7 +2827,9 @@ class Screen(pygame.Surface):
             elif key_pressed in RIGHT_KEYS:
                 value = min(maximum, int(value + step))
             elif key_pressed in ENTER_KEYS:
-                return value
+                # A whole number written as such : validated without being moved, the value read
+                # (float) was written 1800.0, which int() refuses when the game reads it again
+                return int(value) if float(value).is_integer() else value
             elif key_pressed in ESCAPE_KEYS:
                 return 'escape'
             elif clicked and clicked.startswith('S'):
