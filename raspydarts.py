@@ -700,6 +700,20 @@ def publish_goals():
         dispatcher.publish('blink', rpi.target_leds_blink, limit=['TARGET', 'STRIP', 'OTHER'])
 
 
+def light_turn(player):
+    '''
+    The target and the strip for a dart : the background of the target, the strip, the segments
+    to hit
+    '''
+    if light_target and game_is_ok_for_color:
+        dispatcher.publish('Background', limit=['TARGET', 'STRIP', 'OTHER'])
+    if illumination_mode:
+        dispatcher.publish('special', f'STRIP:Light, 0.3,{illumination_color}', limit=['TARGET', 'STRIP', 'OTHER'])
+    elif light_strip:
+        dispatcher.publish('special', f'STRIP:Light, 0.3,{player.color}', limit=['TARGET', 'STRIP', 'OTHER'])
+    publish_goals()
+
+
 def report_error(context):
     '''
     A serious error caught (a game which fails) : its report, shown at the next menu
@@ -1907,6 +1921,8 @@ try:
                 pre_dart = game.pre_dart_check(players, actual_round, actual_player, player_launch)
                 publish_match()
 
+                # The target lit for this dart before the board (see below)
+                turn_lit = False
                 if player_launch == 1 and len(magickey) == 0 and pre_dart != 4:
                     # Ring girl / Ring boy of Raspy2DMD : a new one for this volley, then the name
                     dmd.volley_start()
@@ -1919,6 +1935,12 @@ try:
                     # Play sound for first dart (playername otherwise default)
                     display.sound_start_round(players[actual_player].name, play_firstname=play_firstname)
                     if handler['announcement'] is None:
+                        # The segments to hit lit with the name, not after the time to read it
+                        # (Practice : a new segment each turn, 1.5 s later) ; a game showing
+                        # its own lights after the name (Simon) keeps its order
+                        if player_launch <= game.nb_darts and not getattr(game, 'lights_after_announce', False):
+                            light_turn(players[actual_player])
+                            turn_lit = True
                         # Time to read the name, cut by the first dart
                         rpi.hold(1.5)
 
@@ -1950,14 +1972,10 @@ try:
                         pass
 
                     # The target lit first, then the board drawn (about 100 ms on a Pi 3) : the
-                    # segments to hit shown as soon as the game expects them
-                    if light_target and game_is_ok_for_color:
-                        dispatcher.publish('Background', limit=['TARGET', 'STRIP', 'OTHER'])
-                    if illumination_mode:
-                        dispatcher.publish('special', f'STRIP:Light, 0.3,{illumination_color}', limit=['TARGET', 'STRIP', 'OTHER'])
-                    elif light_strip:
-                        dispatcher.publish('special', f'STRIP:Light, 0.3,{players[actual_player].color}', limit=['TARGET', 'STRIP', 'OTHER'])
-                    publish_goals()
+                    # segments to hit shown as soon as the game expects them (already with the
+                    # name at the start of a turn)
+                    if not turn_lit:
+                        light_turn(players[actual_player])
 
                     # Display board
                     ClickZones = game.refresh_game_screen(players, actual_round, game.max_round, game.nb_darts - player_launch + 1,

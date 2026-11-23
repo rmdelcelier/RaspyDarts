@@ -41,6 +41,10 @@ class Game(cgame.Game):
     """
     Extend the common Game class
     """
+    # Its sequence shown on the target after the name of the player (post_pre_dart_check) : the
+    # target lit after it, not with the name (raspydarts.py)
+    lights_after_announce = True
+
     def __init__(self, display, game, nb_players, options, config, logs, rpi, dmd, video_player):
         super().__init__(display, game, nb_players, options, config, logs, rpi, dmd, video_player)
         
