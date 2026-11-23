@@ -6187,7 +6187,22 @@ class Screen(pygame.Surface):
         Buttons setup menu
         '''
 
-        if self.rpi.gpio.mcp1 is None:
+        # The inputs of the MCP boards (when one is plugged), and for the buttons the GPIO of the
+        # Raspberry still free (not the target, the LED, the I2C bus of the boards) : a button on
+        # a GPIO works without an MCP board
+        from include import cplatform    # pylint: disable=import-outside-toplevel
+        mcp = self.rpi.gpio.mcp1 is not None
+        free_gpio = []
+        if cplatform.has_gpio():
+            busy = self.rpi.busy_gpio()
+            free_gpio = [pin for pin in range(2, 28) if pin not in busy]
+            # Those already given to a button stay offered
+            for value in buttons.values():
+                pin = self.rpi.gpio_number(value)
+                if pin is not None and pin not in free_gpio:
+                    free_gpio.append(pin)
+            free_gpio.sort()
+        if not mcp and not free_gpio:
             self.message([self.lang.translate('nogpio')], 3000, None, 'middle', 'big', bg_color='menu-ko')
             return 'escape'
 
@@ -6197,15 +6212,15 @@ class Screen(pygame.Surface):
         ext2_buttons = []
         ext2_buttons_list = []
 
-        selected_buttons_list = [('', 'notattributed')]
+        if mcp:
+            for letter in ('A', 'B'):
+                for number in (0, 1, 2, 3, 4, 5, 6, 7):
+                    ext1_buttons_list.append((f'{letter}{number}', f'{letter}{number}'))
 
-        for letter in ('A', 'B'):
-            for number in (0, 1, 2, 3, 4, 5, 6, 7):
-                ext1_buttons_list.append((f'{letter}{number}', f'{letter}{number}'))
-
-        for letter in ('C', 'D'):
-            for number in (0, 1, 2, 3, 4, 5, 6, 7):
-                ext2_buttons_list.append((f'{letter}{number}', f'{letter}{number}'))
+            for letter in ('C', 'D'):
+                for number in (0, 1, 2, 3, 4, 5, 6, 7):
+                    ext2_buttons_list.append((f'{letter}{number}', f'{letter}{number}'))
+        ext1_buttons_list += [(f'GPIO{pin}', f'GPIO {pin}') for pin in free_gpio]
 
         index = 0
         for button in buttons:
@@ -6222,7 +6237,7 @@ class Screen(pygame.Surface):
             buttons = Defaults.copy()
 
         selected_buttons = ext1_buttons
-        selected_buttons_list += ext1_buttons_list
+        selected_buttons_list = [('', 'notattributed')] + ext1_buttons_list
         refresh = True
         while True:
             click_zones = {}
@@ -6254,6 +6269,8 @@ class Screen(pygame.Surface):
                     Alpha = self.alpha2
                 if buttons[button] == '':
                     val = 'notattributed'
+                elif self.rpi.gpio_number(buttons[button]) is not None:
+                    val = f'GPIO {self.rpi.gpio_number(buttons[button])}'
                 else:
                     val = buttons[button]
                 click_zones[f'F{index}'] = self.button_item((index, nb_elements, selected), val, button.replace('pin_', ''), Alpha)
@@ -6302,14 +6319,14 @@ class Screen(pygame.Surface):
             # Change tab
             if selected == -1:
                 selected_buttons = ext1_buttons
-                selected_buttons_list += ext1_buttons_list
+                selected_buttons_list = [('', 'notattributed')] + ext1_buttons_list
                 tab = -1
                 refresh = True
                 continue
             
             if selected == 0:
                 selected_buttons = ext2_buttons
-                selected_buttons_list += ext2_buttons_list
+                selected_buttons_list = [('', 'notattributed')] + ext2_buttons_list
                 tab = 0
                 refresh = True
                 continue
@@ -6318,7 +6335,9 @@ class Screen(pygame.Surface):
                 key = cursor[selected-1]
 
                 old = buttons[selected_buttons[selected-1]]
-                t = self.dropdown(self.res['x'] / 8*3, self.res['y'] / 4, selected_buttons_list, navigate = selected_buttons[selected-1])
+                # The GPIO of the Raspberry : for the buttons only (read as inputs), not the LED
+                choices = selected_buttons_list if selected_buttons[selected - 1].startswith('PIN_') else                     [choice for choice in selected_buttons_list if not choice[0].startswith('GPIO')]
+                t = self.dropdown(self.res['x'] / 8*3, self.res['y'] / 4, choices, navigate = selected_buttons[selected-1])
                 if t != 'escape':
                     for button in buttons:
                         if buttons[button] == t and t != '':

@@ -31,6 +31,7 @@ os.environ.setdefault('SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS', '0')
 os.environ.setdefault('SDL_FRAMEBUFFER_ACCELERATION', '0')
 from copy import deepcopy
 import random
+import re
 from subprocess import Popen
 
 ### ajout trophee
@@ -1176,11 +1177,16 @@ try:
                             setupbuttons = display.setup_buttons_menu(Config_rpi, buttons)
                             if setupbuttons != 'escape':
                                 Config_rpi = setupbuttons
-                                if not rpi.set_io(setupbuttons):
+                                # Inputs of an MCP board given (B0...) : the board must be there ;
+                                # buttons only on GPIO of the Raspberry : saved without it
+                                mcp_wanted = any(re.fullmatch(r'[A-D][0-7]', str(value or '').strip().upper())
+                                                 for value in setupbuttons.values())
+                                if not rpi.set_io(setupbuttons) and mcp_wanted:
                                     display.message(['config-noMCP'], None, 'red', 'middle', 'big')
                                 else:
                                     rpi.config.set_config('Raspberry', setupbuttons)
                                     Config.write_file()
+                                    rpi.apply_gpio_buttons(setupbuttons)
 
                         elif setup == 'setup-leds':
                             setupleds = ''

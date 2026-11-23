@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 import queue
+import re
 import sys
 import time
 import subprocess
@@ -251,6 +252,9 @@ class Craspberry():
                     self.logs.error(f"Unknown {segment} configuration in [SectionKeys]")
 
             if pins_usable:
+                # Buttons of [Raspberry] on a GPIO of the Raspberry rather than an input of an MCP
+                # board (Paramétrage des boutons et toys)
+                self.pins.update(self.gpio_buttons(self.buttons))
                 # Before reset_gpio : the pins of the target must stay free for the reader
                 self.start_target_reader()
                 self.reset_gpio()
@@ -407,6 +411,83 @@ class Craspberry():
                 return None
         code, self.dart_time = dart
         return code
+
+    @staticmethod
+    def gpio_number(value):
+        """
+        A button of [Raspberry] on a GPIO of the Raspberry : GPIO9 (or 9, as the old pydarts.cfg)
+        gives 9 ; None : an input of an MCP board (B0), nothing, or not a GPIO of the Raspberry
+        """
+        text = str(value or '').strip().upper()
+        if text.startswith('GPIO'):
+            text = text[4:].strip()
+        if text.isdigit() and 2 <= int(text) <= MAX_GPIO:
+            return int(text)
+        return None
+
+    def busy_gpio(self):
+        """
+        The GPIO of the Raspberry already used : the target, the LED, the buttons of [SectionKeys],
+        the I2C bus of the MCP boards (2, 3) when one is plugged
+        """
+        used = set()
+        for pin in list(self.inputs) + list(self.outputs):
+            try:
+                used.add(int(pin))
+            except (TypeError, ValueError):
+                pass
+        # The LED of the target and the strip, as the configuration gives them (its keys in capitals)
+        leds = {str(key).upper(): value for key, value in (self.config.config.get('Raspberry_Leds') or {}).items()}
+        for key in ('PIN_STRIPLED', 'PIN_TARGETLED'):
+            try:
+                pin = int(str(leds.get(key) or 0).strip() or 0)
+            except ValueError:
+                pin = 0
+            if pin:
+                used.add(pin)
+        for key, pin in self.pins.items():
+            if not str(key).startswith('PIN_'):
+                used.add(int(pin))
+        # An MCP board plugged, or inputs of one given to buttons : its I2C bus
+        mcp_inputs = any(re.fullmatch(r'[A-D][0-7]', str(value or '').strip().upper()) for value in (self.buttons or {}).values())
+        if mcp_inputs or getattr(getattr(self, 'gpio', None), 'mcp1', None) is not None:
+            used.update((2, 3))
+        return used
+
+    def gpio_buttons(self, buttons):
+        """
+        The buttons of [Raspberry] given a GPIO of the Raspberry : {PIN_NEXTPLAYER : 9} (read as
+        those of [SectionKeys], see read_buttons) ; a GPIO already used is left aside
+        """
+        found = {}
+        used = self.busy_gpio()
+        for key, value in (buttons or {}).items():
+            name = str(key).upper()
+            pin = self.gpio_number(value)
+            if not name.startswith('PIN_') or pin is None:
+                continue
+            if pin in used or pin in found.values():
+                self.logs.error(f"GPIO {pin} of the button {name} already used : left aside")
+                continue
+            found[name] = pin
+        if found:
+            self.logs.info(f"Buttons on GPIO : {', '.join(f'{name} {pin}' for name, pin in found.items())}")
+        return found
+
+    def apply_gpio_buttons(self, buttons):
+        """
+        The buttons of [Raspberry] on GPIO changed (Paramétrage des boutons et toys) : read at once
+        """
+        if not cplatform.has_gpio():
+            return
+        for key in [key for key in self.pins if str(key).startswith('PIN_')]:
+            del self.pins[key]
+        for name, pin in self.gpio_buttons(buttons).items():
+            try:
+                gpio.setup(pin, gpio.IN, pull_up_down=gpio.PUD_UP)
+                self.pins[name] = pin
+            except Exception as error: # pylint: disable=broad-except
+                self.logs.error(f"GPIO {pin} ({name}) not usable, button left aside : {error}")
 
     def drop_darts(self, reason):
         """
