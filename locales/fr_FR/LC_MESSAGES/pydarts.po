@@ -695,16 +695,16 @@ msgid "card-other"
 msgstr "Autre ou câblage non standard"
 
 msgid "config-leds_choice"
-msgstr "Choix des leds"
+msgstr "LED de la cible"
 
 msgid "config-leds_question"
-msgstr "Utilisez-vous les raspyleds ?"
+msgstr "Votre cible a-t-elle des LED à l'intérieur (carte LED de la cible) ?"
 
 msgid "config-buttons_choice"
 msgstr "Configuration des boutons"
 
 msgid "config-buttons_question"
-msgstr "Voulez-vous configurez les boutons ? Vous devez connaitre le mappage des entrées/sorties"
+msgstr "Voulez-vous configurer les boutons de vos cartes d'extension ? Il suffira d'appuyer sur chacun"
 
 msgid "config-cancel"
 msgstr "annuler la configuration"
@@ -7029,4 +7029,139 @@ msgstr "Une seule fléchette, au plus près du centre"
 
 msgid "Fiesta-devil-COUNT_UP_UNE_FLECHE_CENTRE"
 msgstr "Une seule fléchette : seuls les Bulls comptent"
+
+
+######## ASSISTANT : CARTES ET BOUTONS ########
+
+msgid "wizard-card-title"
+msgstr "Votre carte d'interface"
+
+msgid "wizard-card-sub"
+msgstr "La carte branchée entre le Raspberry et la cible"
+
+msgid "wizard-card-other"
+msgstr "Autre carte ou câblage maison"
+
+msgid "wizard-card-other-sub"
+msgstr "Vous indiquerez les broches"
+
+msgid "wizard-card-old"
+msgstr "Anciennes cartes"
+
+msgid "wizard-card-old-sub"
+msgstr "Cartes de Jimmy et de Joffrey"
+
+msgid "wizard-card-help"
+msgstr "Flèches ou toucher : choisir ; Entrée : valider ; Échap : revenir"
+
+msgid "btnwiz-press"
+msgstr "Appuyez sur un de vos boutons"
+
+msgid "btnwiz-press-sub"
+msgstr "Puis touchez sur la cible le segment de sa fonction ; SB ou DB : terminer"
+
+msgid "btnwiz-detected"
+msgstr "Bouton {pin} : touchez le segment de sa fonction"
+
+msgid "btnwiz-detected-sub"
+msgstr "Ou les flèches puis Entrée ; Échap : ignorer ce bouton"
+
+msgid "btnwiz-finish"
+msgstr "Terminer"
+
+msgid "btnwiz-cancel"
+msgstr "Annuler (Échap)"
+
+msgid "btnwiz-mcp"
+msgstr "Cartes d'extension (MCP) trouvées : {count}"
+
+
+######## ASSISTANT : LED ########
+
+msgid "ledwiz-target"
+msgstr "LED de la cible"
+
+msgid "ledwiz-strip"
+msgstr "Bandeau de LED"
+
+msgid "ledwiz-sub"
+msgstr "Touchez une sortie : un arc-en-ciel s'y allume"
+
+msgid "ledwiz-red"
+msgstr "Les LED doivent être rouges ; sinon, choisissez l'autre ordre"
+
+msgid "ledwiz-pin"
+msgstr "Sortie"
+
+msgid "ledwiz-typ"
+msgstr "Ordre des couleurs"
+
+msgid "ledwiz-bri"
+msgstr "Luminosité"
+
+msgid "ledwiz-nbr"
+msgstr "Nombre de LED"
+
+msgid "ledwiz-none"
+msgstr "Aucune"
+
+msgid "ledwiz-valid"
+msgstr "Valider"
+
+msgid "btnwiz-back"
+msgstr "Fléchette précédente"
+
+msgid "btnwiz-game"
+msgstr "Game : quitter la partie"
+
+msgid "btnwiz-gpio-question"
+msgstr "Pas de carte d'extension : configurer des boutons branchés sur les GPIO libres du Raspberry ? Il suffira d'appuyer sur chacun"
+
+msgid "btnwiz-gpio-free"
+msgstr "GPIO libres surveillés : {count}"
+
+msgid "wizard-back"
+msgstr "Retour"
+
+msgid "wizard-card-help-first"
+msgstr "Flèches ou toucher : choisir ; Entrée : valider ; Échap : quitter"
+
+msgid "wizard-quit"
+msgstr "Quitter"
+
+msgid "wizard-quit-question"
+msgstr "Quitter l'assistant ? Rien n'est enregistré : il se relancera au prochain démarrage de la borne."
+
+msgid "wizard-quit-shutdown"
+msgstr "Éteindre la borne"
+
+msgid "wizard-quit-cancel"
+msgstr "Annuler"
+
+msgid "pinwiz-out-title"
+msgstr "Fils de sortie de la cible"
+
+msgid "pinwiz-in-title"
+msgstr "Fils d'entrée de la cible"
+
+msgid "pinwiz-sub"
+msgstr "Touchez la broche du Raspberry où chaque fil est branché"
+
+msgid "pinwiz-out-item"
+msgstr "Sortie {}"
+
+msgid "pinwiz-in-item"
+msgstr "Entrée {}"
+
+msgid "pinwiz-question"
+msgstr "{} : quelle broche ?"
+
+msgid "pinwiz-all"
+msgstr "Toutes les broches sont indiquées"
+
+msgid "pinwiz-finish"
+msgstr "Terminer"
+
+msgid "pinwiz-taken"
+msgstr "GPIO {} : déjà pris par {}"
 

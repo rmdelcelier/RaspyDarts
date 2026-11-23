@@ -475,7 +475,8 @@ for pin in range(1, 17):
 
 #
 DefaultConfig['Raspberry_BoardPinsOuts'] = {}
-for pin in range(1, 11):
+# 12 at most : targets wired 12 x 12 exist
+for pin in range(1, 13):
     DefaultConfig['Raspberry_BoardPinsOuts'][f'PIN_{pin}'] = ''
 
 # Buttons connected to gpio

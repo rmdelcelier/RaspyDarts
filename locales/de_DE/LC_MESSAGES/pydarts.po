@@ -695,16 +695,16 @@ msgid "card-other"
 msgstr "Andere oder nicht standardmäßige Verkabelung"
 
 msgid "config-leds_choice"
-msgstr "LED-Auswahl"
+msgstr "LEDs der Scheibe"
 
 msgid "config-leds_question"
-msgstr "Verwenden Sie Raspyleds?"
+msgstr "Hat Ihre Scheibe LEDs im Inneren (LED-Platine der Scheibe)?"
 
 msgid "config-buttons_choice"
 msgstr "Tastenkonfiguration"
 
 msgid "config-buttons_question"
-msgstr "Möchten Sie die Tasten konfigurieren? Sie müssen die E/A-Belegung kennen"
+msgstr "Möchten Sie die Tasten Ihrer Erweiterungsplatinen einrichten? Sie drücken einfach jede"
 
 msgid "config-cancel"
 msgstr "Konfiguration abbrechen"
@@ -7300,4 +7300,139 @@ msgstr "Ein einziger Pfeil, so nah wie möglich an der Mitte"
 
 msgid "Fiesta-devil-COUNT_UP_UNE_FLECHE_CENTRE"
 msgstr "Ein einziger Pfeil: nur die Bulls zählen"
+
+
+######## ASSISTANT : CARTES ET BOUTONS ########
+
+msgid "wizard-card-title"
+msgstr "Ihre Schnittstellenplatine"
+
+msgid "wizard-card-sub"
+msgstr "Die Platine zwischen dem Raspberry und der Scheibe"
+
+msgid "wizard-card-other"
+msgstr "Andere Platine oder eigene Verkabelung"
+
+msgid "wizard-card-other-sub"
+msgstr "Sie geben die Pins an"
+
+msgid "wizard-card-old"
+msgstr "Ältere Platinen"
+
+msgid "wizard-card-old-sub"
+msgstr "Platinen von Jimmy und Joffrey"
+
+msgid "wizard-card-help"
+msgstr "Pfeile oder Berühren: wählen; Eingabe: bestätigen; Esc: zurück"
+
+msgid "btnwiz-press"
+msgstr "Drücken Sie eine Ihrer Tasten"
+
+msgid "btnwiz-press-sub"
+msgstr "Dann das Segment seiner Funktion auf der Scheibe berühren; SB oder DB: fertig"
+
+msgid "btnwiz-detected"
+msgstr "Taste {pin}: das Segment ihrer Funktion berühren"
+
+msgid "btnwiz-detected-sub"
+msgstr "Oder die Pfeile, dann Eingabe; Esc: diese Taste ignorieren"
+
+msgid "btnwiz-finish"
+msgstr "Fertig"
+
+msgid "btnwiz-cancel"
+msgstr "Abbrechen (Esc)"
+
+msgid "btnwiz-mcp"
+msgstr "Gefundene Erweiterungsplatinen (MCP): {count}"
+
+
+######## ASSISTANT : LED ########
+
+msgid "ledwiz-target"
+msgstr "LEDs der Scheibe"
+
+msgid "ledwiz-strip"
+msgstr "LED-Streifen"
+
+msgid "ledwiz-sub"
+msgstr "Einen Ausgang berühren: ein Regenbogen leuchtet darauf"
+
+msgid "ledwiz-red"
+msgstr "Die LEDs müssen rot sein; sonst die andere Reihenfolge wählen"
+
+msgid "ledwiz-pin"
+msgstr "Ausgang"
+
+msgid "ledwiz-typ"
+msgstr "Farbreihenfolge"
+
+msgid "ledwiz-bri"
+msgstr "Helligkeit"
+
+msgid "ledwiz-nbr"
+msgstr "Anzahl der LEDs"
+
+msgid "ledwiz-none"
+msgstr "Keine"
+
+msgid "ledwiz-valid"
+msgstr "Bestätigen"
+
+msgid "btnwiz-back"
+msgstr "Vorheriger Pfeil"
+
+msgid "btnwiz-game"
+msgstr "Game: Spiel verlassen"
+
+msgid "btnwiz-gpio-question"
+msgstr "Keine Erweiterungsplatine: Tasten an den freien GPIO des Raspberry einrichten? Sie drücken einfach jede"
+
+msgid "btnwiz-gpio-free"
+msgstr "Überwachte freie GPIO: {count}"
+
+msgid "wizard-back"
+msgstr "Zurück"
+
+msgid "wizard-card-help-first"
+msgstr "Pfeile oder Berühren: wählen; Eingabe: bestätigen; Esc: beenden"
+
+msgid "wizard-quit"
+msgstr "Beenden"
+
+msgid "wizard-quit-question"
+msgstr "Assistenten beenden? Es wird nichts gespeichert: Er startet beim nächsten Start des Automaten erneut."
+
+msgid "wizard-quit-shutdown"
+msgstr "Automat ausschalten"
+
+msgid "wizard-quit-cancel"
+msgstr "Abbrechen"
+
+msgid "pinwiz-out-title"
+msgstr "Ausgangsdrähte der Scheibe"
+
+msgid "pinwiz-in-title"
+msgstr "Eingangsdrähte der Scheibe"
+
+msgid "pinwiz-sub"
+msgstr "Berühren Sie den Pin des Raspberry, an dem jeder Draht angeschlossen ist"
+
+msgid "pinwiz-out-item"
+msgstr "Ausgang {}"
+
+msgid "pinwiz-in-item"
+msgstr "Eingang {}"
+
+msgid "pinwiz-question"
+msgstr "{}: welcher Pin?"
+
+msgid "pinwiz-all"
+msgstr "Alle Pins sind angegeben"
+
+msgid "pinwiz-finish"
+msgstr "Fertig"
+
+msgid "pinwiz-taken"
+msgstr "GPIO {}: schon belegt von {}"
 

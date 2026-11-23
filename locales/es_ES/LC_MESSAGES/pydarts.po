@@ -695,16 +695,16 @@ msgid "card-other"
 msgstr "Otro o cableado personalizado"
 
 msgid "config-leds_choice"
-msgstr "Selección de LEDs"
+msgstr "LED de la diana"
 
 msgid "config-leds_question"
-msgstr "¿Utiliza raspyleds?"
+msgstr "¿Su diana tiene LED en su interior (placa LED de la diana)?"
 
 msgid "config-buttons_choice"
 msgstr "Configuración de botones"
 
 msgid "config-buttons_question"
-msgstr "¿Desea configurar los botones? Debe conocer el mapeo de E/S"
+msgstr "¿Desea configurar los botones de sus placas de extensión? Bastará con pulsar cada uno"
 
 msgid "config-cancel"
 msgstr "cancelar configuración"
@@ -7305,4 +7305,139 @@ msgstr "Un solo dardo, lo más cerca del centro"
 
 msgid "Fiesta-devil-COUNT_UP_UNE_FLECHE_CENTRE"
 msgstr "Un solo dardo: solo cuentan los Bulls"
+
+
+######## ASSISTANT : CARTES ET BOUTONS ########
+
+msgid "wizard-card-title"
+msgstr "Su placa de interfaz"
+
+msgid "wizard-card-sub"
+msgstr "La placa entre la Raspberry y la diana"
+
+msgid "wizard-card-other"
+msgstr "Otra placa o cableado propio"
+
+msgid "wizard-card-other-sub"
+msgstr "Indicará los pines"
+
+msgid "wizard-card-old"
+msgstr "Placas antiguas"
+
+msgid "wizard-card-old-sub"
+msgstr "Placas de Jimmy y de Joffrey"
+
+msgid "wizard-card-help"
+msgstr "Flechas o tocar: elegir; Intro: confirmar; Esc: volver"
+
+msgid "btnwiz-press"
+msgstr "Pulse uno de sus botones"
+
+msgid "btnwiz-press-sub"
+msgstr "Luego toque en la diana el segmento de su función; SB o DB: terminar"
+
+msgid "btnwiz-detected"
+msgstr "Botón {pin}: toque el segmento de su función"
+
+msgid "btnwiz-detected-sub"
+msgstr "O las flechas y luego Intro; Esc: ignorar este botón"
+
+msgid "btnwiz-finish"
+msgstr "Terminar"
+
+msgid "btnwiz-cancel"
+msgstr "Cancelar (Esc)"
+
+msgid "btnwiz-mcp"
+msgstr "Placas de extensión (MCP) encontradas: {count}"
+
+
+######## ASSISTANT : LED ########
+
+msgid "ledwiz-target"
+msgstr "LED de la diana"
+
+msgid "ledwiz-strip"
+msgstr "Tira de LED"
+
+msgid "ledwiz-sub"
+msgstr "Toque una salida: se enciende un arcoíris"
+
+msgid "ledwiz-red"
+msgstr "Los LED deben estar en rojo; si no, elija el otro orden"
+
+msgid "ledwiz-pin"
+msgstr "Salida"
+
+msgid "ledwiz-typ"
+msgstr "Orden de los colores"
+
+msgid "ledwiz-bri"
+msgstr "Brillo"
+
+msgid "ledwiz-nbr"
+msgstr "Número de LED"
+
+msgid "ledwiz-none"
+msgstr "Ninguna"
+
+msgid "ledwiz-valid"
+msgstr "Confirmar"
+
+msgid "btnwiz-back"
+msgstr "Dardo anterior"
+
+msgid "btnwiz-game"
+msgstr "Game: salir de la partida"
+
+msgid "btnwiz-gpio-question"
+msgstr "Sin placa de extensión: ¿configurar botones conectados a los GPIO libres de la Raspberry? Bastará con pulsar cada uno"
+
+msgid "btnwiz-gpio-free"
+msgstr "GPIO libres vigilados: {count}"
+
+msgid "wizard-back"
+msgstr "Volver"
+
+msgid "wizard-card-help-first"
+msgstr "Flechas o tocar: elegir; Intro: confirmar; Esc: salir"
+
+msgid "wizard-quit"
+msgstr "Salir"
+
+msgid "wizard-quit-question"
+msgstr "¿Salir del asistente? No se guarda nada: se volverá a iniciar en el próximo arranque de la máquina."
+
+msgid "wizard-quit-shutdown"
+msgstr "Apagar la máquina"
+
+msgid "wizard-quit-cancel"
+msgstr "Cancelar"
+
+msgid "pinwiz-out-title"
+msgstr "Cables de salida de la diana"
+
+msgid "pinwiz-in-title"
+msgstr "Cables de entrada de la diana"
+
+msgid "pinwiz-sub"
+msgstr "Toque el pin de la Raspberry donde está conectado cada cable"
+
+msgid "pinwiz-out-item"
+msgstr "Salida {}"
+
+msgid "pinwiz-in-item"
+msgstr "Entrada {}"
+
+msgid "pinwiz-question"
+msgstr "{}: ¿qué pin?"
+
+msgid "pinwiz-all"
+msgstr "Todos los pines están indicados"
+
+msgid "pinwiz-finish"
+msgstr "Terminar"
+
+msgid "pinwiz-taken"
+msgstr "GPIO {}: ya ocupado por {}"
 

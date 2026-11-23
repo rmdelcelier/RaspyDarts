@@ -695,16 +695,16 @@ msgid "card-other"
 msgstr "Anders of niet-standaard bedrading"
 
 msgid "config-leds_choice"
-msgstr "Keuze van leds"
+msgstr "Led-verlichting van het bord"
 
 msgid "config-leds_question"
-msgstr "Gebruikt u raspyleds?"
+msgstr "Heeft uw bord leds aan de binnenkant (ledkaart van het bord)?"
 
 msgid "config-buttons_choice"
 msgstr "Knoppenconfiguratie"
 
 msgid "config-buttons_question"
-msgstr "Wilt u de knoppen configureren? U moet de in/uitgangsmapping kennen"
+msgstr "Wilt u de knoppen van uw uitbreidingskaarten instellen? U drukt gewoon op elke knop"
 
 msgid "config-cancel"
 msgstr "configuratie annuleren"
@@ -7352,4 +7352,139 @@ msgstr "Eén enkele pijl, zo dicht mogelijk bij het midden"
 
 msgid "Fiesta-devil-COUNT_UP_UNE_FLECHE_CENTRE"
 msgstr "Eén enkele pijl: alleen de Bulls tellen"
+
+
+######## ASSISTANT : CARTES ET BOUTONS ########
+
+msgid "wizard-card-title"
+msgstr "Uw interfacekaart"
+
+msgid "wizard-card-sub"
+msgstr "De kaart tussen de Raspberry en het bord"
+
+msgid "wizard-card-other"
+msgstr "Andere kaart of eigen bedrading"
+
+msgid "wizard-card-other-sub"
+msgstr "U geeft de pinnen op"
+
+msgid "wizard-card-old"
+msgstr "Oudere kaarten"
+
+msgid "wizard-card-old-sub"
+msgstr "Kaarten van Jimmy en Joffrey"
+
+msgid "wizard-card-help"
+msgstr "Pijlen of aanraken: kiezen; Enter: bevestigen; Esc: terug"
+
+msgid "btnwiz-press"
+msgstr "Druk op een van uw knoppen"
+
+msgid "btnwiz-press-sub"
+msgstr "Raak dan op het bord het segment van zijn functie; SB of DB: klaar"
+
+msgid "btnwiz-detected"
+msgstr "Knop {pin}: raak het segment van zijn functie"
+
+msgid "btnwiz-detected-sub"
+msgstr "Of de pijlen en dan Enter; Esc: deze knop negeren"
+
+msgid "btnwiz-finish"
+msgstr "Klaar"
+
+msgid "btnwiz-cancel"
+msgstr "Annuleren (Esc)"
+
+msgid "btnwiz-mcp"
+msgstr "Gevonden uitbreidingskaarten (MCP): {count}"
+
+
+######## ASSISTANT : LED ########
+
+msgid "ledwiz-target"
+msgstr "Led-verlichting van het bord"
+
+msgid "ledwiz-strip"
+msgstr "Ledstrip"
+
+msgid "ledwiz-sub"
+msgstr "Raak een uitgang aan: er gaat een regenboog branden"
+
+msgid "ledwiz-red"
+msgstr "De leds moeten rood zijn; zo niet, kies de andere volgorde"
+
+msgid "ledwiz-pin"
+msgstr "Uitgang"
+
+msgid "ledwiz-typ"
+msgstr "Kleurvolgorde"
+
+msgid "ledwiz-bri"
+msgstr "Helderheid"
+
+msgid "ledwiz-nbr"
+msgstr "Aantal leds"
+
+msgid "ledwiz-none"
+msgstr "Geen"
+
+msgid "ledwiz-valid"
+msgstr "Bevestigen"
+
+msgid "btnwiz-back"
+msgstr "Vorige pijl"
+
+msgid "btnwiz-game"
+msgstr "Game: spel verlaten"
+
+msgid "btnwiz-gpio-question"
+msgstr "Geen uitbreidingskaart: knoppen op de vrije GPIO van de Raspberry instellen? U drukt gewoon op elke knop"
+
+msgid "btnwiz-gpio-free"
+msgstr "Bewaakte vrije GPIO: {count}"
+
+msgid "wizard-back"
+msgstr "Terug"
+
+msgid "wizard-card-help-first"
+msgstr "Pijlen of aanraken: kiezen; Enter: bevestigen; Esc: afsluiten"
+
+msgid "wizard-quit"
+msgstr "Afsluiten"
+
+msgid "wizard-quit-question"
+msgstr "De assistent afsluiten? Er wordt niets opgeslagen: hij start opnieuw bij de volgende start van de kast."
+
+msgid "wizard-quit-shutdown"
+msgstr "De kast uitschakelen"
+
+msgid "wizard-quit-cancel"
+msgstr "Annuleren"
+
+msgid "pinwiz-out-title"
+msgstr "Uitgangsdraden van het bord"
+
+msgid "pinwiz-in-title"
+msgstr "Ingangsdraden van het bord"
+
+msgid "pinwiz-sub"
+msgstr "Raak de pin van de Raspberry aan waarop elke draad is aangesloten"
+
+msgid "pinwiz-out-item"
+msgstr "Uitgang {}"
+
+msgid "pinwiz-in-item"
+msgstr "Ingang {}"
+
+msgid "pinwiz-question"
+msgstr "{}: welke pin?"
+
+msgid "pinwiz-all"
+msgstr "Alle pinnen zijn opgegeven"
+
+msgid "pinwiz-finish"
+msgstr "Klaar"
+
+msgid "pinwiz-taken"
+msgstr "GPIO {}: al bezet door {}"
 

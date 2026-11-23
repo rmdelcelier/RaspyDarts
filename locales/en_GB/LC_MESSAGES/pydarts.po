@@ -695,16 +695,16 @@ msgid "card-other"
 msgstr "Other or custom wiring"
 
 msgid "config-leds_choice"
-msgstr "Select LEDs"
+msgstr "Target LEDs"
 
 msgid "config-leds_question"
-msgstr "Are you using raspyleds?"
+msgstr "Does your target have LEDs inside it (target LED board)?"
 
 msgid "config-buttons_choice"
 msgstr "Buttons configuration"
 
 msgid "config-buttons_question"
-msgstr "Do you want to configure buttons? You must know the I/O mapping"
+msgstr "Do you want to set up the buttons of your extension boards? You will just press each one"
 
 msgid "config-cancel"
 msgstr "cancel setup"
@@ -7570,4 +7570,139 @@ msgstr "A single dart, as close to the centre as you can"
 
 msgid "Fiesta-devil-COUNT_UP_UNE_FLECHE_CENTRE"
 msgstr "A single dart: only the Bulls count"
+
+
+######## ASSISTANT : CARTES ET BOUTONS ########
+
+msgid "wizard-card-title"
+msgstr "Your interface board"
+
+msgid "wizard-card-sub"
+msgstr "The board between the Raspberry and the target"
+
+msgid "wizard-card-other"
+msgstr "Other board or home-made wiring"
+
+msgid "wizard-card-other-sub"
+msgstr "You will give the pins"
+
+msgid "wizard-card-old"
+msgstr "Older boards"
+
+msgid "wizard-card-old-sub"
+msgstr "Jimmy's and Joffrey's boards"
+
+msgid "wizard-card-help"
+msgstr "Arrows or touch: choose; Enter: confirm; Escape: back"
+
+msgid "btnwiz-press"
+msgstr "Press one of your buttons"
+
+msgid "btnwiz-press-sub"
+msgstr "Then touch the segment of its function on the target; SB or DB: done"
+
+msgid "btnwiz-detected"
+msgstr "Button {pin}: touch the segment of its function"
+
+msgid "btnwiz-detected-sub"
+msgstr "Or the arrows then Enter; Escape: ignore this button"
+
+msgid "btnwiz-finish"
+msgstr "Done"
+
+msgid "btnwiz-cancel"
+msgstr "Cancel (Escape)"
+
+msgid "btnwiz-mcp"
+msgstr "Extension boards (MCP) found: {count}"
+
+
+######## ASSISTANT : LED ########
+
+msgid "ledwiz-target"
+msgstr "Target LEDs"
+
+msgid "ledwiz-strip"
+msgstr "LED strip"
+
+msgid "ledwiz-sub"
+msgstr "Touch an output: a rainbow lights up on it"
+
+msgid "ledwiz-red"
+msgstr "The LEDs must be red; otherwise, choose the other order"
+
+msgid "ledwiz-pin"
+msgstr "Output"
+
+msgid "ledwiz-typ"
+msgstr "Colour order"
+
+msgid "ledwiz-bri"
+msgstr "Brightness"
+
+msgid "ledwiz-nbr"
+msgstr "Number of LEDs"
+
+msgid "ledwiz-none"
+msgstr "None"
+
+msgid "ledwiz-valid"
+msgstr "Confirm"
+
+msgid "btnwiz-back"
+msgstr "Previous dart"
+
+msgid "btnwiz-game"
+msgstr "Game: leave the game"
+
+msgid "btnwiz-gpio-question"
+msgstr "No extension board: set up buttons wired on the free GPIO of the Raspberry? You will just press each one"
+
+msgid "btnwiz-gpio-free"
+msgstr "Free GPIO watched: {count}"
+
+msgid "wizard-back"
+msgstr "Back"
+
+msgid "wizard-card-help-first"
+msgstr "Arrows or touch: choose; Enter: confirm; Escape: quit"
+
+msgid "wizard-quit"
+msgstr "Quit"
+
+msgid "wizard-quit-question"
+msgstr "Quit the wizard? Nothing is saved: it will start again the next time the cabinet starts."
+
+msgid "wizard-quit-shutdown"
+msgstr "Shut down the cabinet"
+
+msgid "wizard-quit-cancel"
+msgstr "Cancel"
+
+msgid "pinwiz-out-title"
+msgstr "Target output wires"
+
+msgid "pinwiz-in-title"
+msgstr "Target input wires"
+
+msgid "pinwiz-sub"
+msgstr "Touch the Raspberry pin each wire is connected to"
+
+msgid "pinwiz-out-item"
+msgstr "Output {}"
+
+msgid "pinwiz-in-item"
+msgstr "Input {}"
+
+msgid "pinwiz-question"
+msgstr "{}: which pin?"
+
+msgid "pinwiz-all"
+msgstr "All the pins are given"
+
+msgid "pinwiz-finish"
+msgstr "Finish"
+
+msgid "pinwiz-taken"
+msgstr "GPIO {}: already taken by {}"
 

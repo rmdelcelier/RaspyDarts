@@ -1461,9 +1461,13 @@ class Screen(pygame.Surface):
 
     def get_rpi_config(self):
         '''
-        1st execution : the wizard
+        1st execution : the wizard (its background blurred, its texts easier to read)
         '''
-        return self.on_desktop(self.wizard)
+        self.blur_background = True
+        try:
+            return self.on_desktop(self.wizard)
+        finally:
+            self.blur_background = False
 
     # Names of the sections of the configuration, for the deposited file
     DEPOSIT_SECTIONS = ('SectionGlobals', 'SectionAdvanced', 'SectionKeys', 'Raspberry', 'Raspberry_Leds',
@@ -1511,7 +1515,11 @@ class Screen(pygame.Surface):
         Only the calibration of the target, the rest of the configuration being there.
         Escape on the first segment : not now (asked again at the next start)
         '''
-        calibrated = self.on_desktop(self.calibrate_target)
+        self.blur_background = True
+        try:
+            calibrated = self.on_desktop(self.calibrate_target)
+        finally:
+            self.blur_background = False
         if calibrated is None:
             return False
         keys = dict(self.config.config.get('SectionKeys', {}))
@@ -1572,336 +1580,243 @@ class Screen(pygame.Surface):
             self.config.write_file()
             return True
 
-        self.display_background()    # display basic screen
-        self.display_ips(big=True)            # display IPs addresses
-        self.menu_header("config-interface")
-        self.update_screen()
-        cards_dd = [['Ji', 'Cartes de Jimmy'], ['Jo', 'Carte de Joffrey'], ['Ch', 'La Chti Raspycard'], ['Jt', 'Carte de Julien V1'],
-                    ['Jt2', 'Carte de Julien V2'],['Mm', 'MM-Workshop DartCab'], ['MMWVdarts', 'MM-Workshop VDarts'], ['Re', 'DartBoard'], ['Au', 'card-other']]
-        card = self.dropdown(6 * self.res_x_16, 3 * self.res_y_16, cards_dd)
-        if card == 'escape':
-            return False
-
-        if card in ('Ji', 'Jo'):
-            # Menu extendarts pour choix des matrices
-
-            self.display_background()    # display basic screen
-            self.menu_header("config-interface")
-            self.update_screen()
-            if card == 'Ji':
-                cards_dd = [['Ji', 'RaspyCard'], ['Jiz', 'RaspyZcard'], ['Ji3', 'RaspYDartsCard'], ['Ji2', 'RaspyCard V4'], ['GB', 'RaspyBoard'], ['ED', 'ED900']]
-            else:
-                cards_dd = [['Jo', 'Cible ED110 7*10'], ['Jo416', 'Cible Pro 4*16'], ['Au', 'card-other'], ]
-            card = self.dropdown(6 * self.res_x_16, 3 * self.res_y_16, cards_dd)
-            if card == 'escape':
-                return False
-
-        if card in ('Jo', 'Re'):
-            self.config.set_jo_card_config()
-        elif card == 'Jo416':
-            self.config.set_jo_416_card_config()
-        elif card in ('Ji', 'Mm'):
-            self.config.set_ji_card_config()
-        elif card in ('Ji2', 'Ji3'):
-            self.config.set_ji2_card_config()
-        elif card == 'MMWVdarts':
-            self.set_mmworks_vdartscard_config()
-        elif card == 'GB':
-            self.config.set_gb_card_config()
-        elif card == 'ED':
-            self.config.set_ed900_card_config()
-        elif card == 'Jt':
-            self.config.set_jt_card_config()
-        elif card == 'Jt2':
-            self.config.set_jt2_card_config()
-        elif card == 'Jiz':
-            self.config.set_jiz_card_config()
-        elif card == 'Ch':
-            self.config.set_clk_card_config()
-
-        self.display_background()    # display basic screen
-        self.menu_header("config-leds_choice", "config-leds_question")
-        self.update_screen()
-        leds_dd = [['yes', 'yes'], ['no', 'no']]
-        leds_ji = self.dropdown(6 * self.res_x_16, 3 * self.res_y_16, leds_dd)
-        # MM-Workshop DartCab : the leds of its target by its outer ring (pneu)
-        tire = None
-        if leds_ji == 'yes' and card == 'Mm':
-            self.display_background()
-            self.menu_header("config-tire_choice", "config-tire_question")
-            self.update_screen()
-            tire = self.dropdown(6 * self.res_x_16, 3 * self.res_y_16,
-                                 [['none', 'config-tire-none'], ['before', 'config-tire-before'], ['after', 'config-tire-after']])
-            if tire == 'escape':
-                tire = 'before'
-
-        used_pins = []
-        if card == 'Au':
-            i = 0
-            total = 66
-
-            # Out pins
-            new_outputs = {}
-            totalOuts = len(self.config.outputs)
-
-            # In pins
-            new_inputs = {}
-            totalIns = len(self.config.inputs)
-
-            # Buttons conf (extended card)
-            new_buttons = {}
-            totalButtons = len(self.config.buttons)
-
-            # Target configuration
-            new_keys = {}
-
-            j = 0
-            # Parametrage des pins de sortie
-            while j < totalOuts:
-                self.display_background()    # display basic screen
-                key = list(self.config.outputs)[j]
-                txt = f"{self.lang.translate('conf-fillin')} {key}"
-                self.message([txt], 0, None, 'fullbottom', 'big', refresh=False)
-                if j == 0:
-                    esc_text = self.lang.translate('conf-esc1')
-                else:
-                    esc_text = self.lang.translate('conf-esc2')
-
-                subtxt = self.lang.translate('conf-pin1').format(txt, esc_text)
-                self.menu_header("config-pin_out", subtxt)
-                self.update_screen()
-
-                tmp = self.input_value_item('pins', '', 1, 27, align='Center')
-
-                if tmp in ('', 'space'):
-                    j = totalOuts
-                elif tmp == 'escape':
-                    j-=1
-                    if len(used_pins)>0:
-                        used_pins.pop()
-                    if j < 0:
-                        return False
-                elif tmp in used_pins:
-                    self.message(["config-already"], 2000, None, 'fullbottom', 'big')
-                else:
-                    new_outputs[key] = tmp
-                    self.rpi.set_outputs(tmp)
-                    used_pins.append(tmp)
-                    j+=1
-                    
-            self.rpi.init_gpio(new_outputs, 'OUT')
-
-            # Parametrage des pins d'entrée
-            j = 0
-            while j < totalIns:
-                self.display_background()    # display basic screen
-                key = list(self.config.inputs)[j]
-                txt = f"{self.lang.translate('conf-fillin')} {key}"
-                self.message([txt], 0, None, 'fullbottom', 'big', refresh=False)
-                if j == 0:
-                    esc_text = self.lang.translate('conf-esc1')
-                else:
-                    esc_text = self.lang.translate('conf-esc2')
-
-                subtxt = self.lang.translate('conf-pin2').format(txt, esc_text)
-
-                self.menu_header("Configuration des pins d'entrée de la cible", subtxt)
-                self.update_screen()
-
-                tmp = self.input_value_item('pins', '', 1, 27, align='Center')
-                if tmp in ('', 'space'):
-                    j = totalIns
-                elif tmp == 'escape':
-                    j-=1
-                    used_pins.pop()
-                    if j < 1:
-                        return False
-                elif tmp in used_pins:
-                    self.message(["config-already"], 2000, None, 'fullbottom', 'big')
-                else:
-                    new_inputs[key] = tmp
-                    self.rpi.set_inputs(tmp)
-                    used_pins.append(tmp)
-                    j+=1
-
-            self.rpi.init_gpio(new_inputs, 'IN')
-
-            # Parametrage des boutons
-
-            self.display_background()    # display basic screen
-            self.menu_header("Configuration des boutons")
-            self.message(["Avez-vous une carte d'extension ?"], 0, None, 'fullbottom', 'big', refresh=False)
-            self.update_screen()
-
-            new_buttons['EXTENDED_GPIO'] = self.dropdown(self.res['x'] / 8 * 3, self.res['y'] / 8 * 3, [('1', 'yes'), ('0', 'no')])
-
-            if new_buttons['EXTENDED_GPIO'] == '0':
-                j = 0
-                while j < totalButtons:
-                    if list(self.config.buttons)[j] == 'EXTENDED_GPIO':
-                        j+=1
-                        continue
-
-                    key = list(self.config.buttons)[j]
-                    txt = f"{self.lang.translate('conf-fillin')} {key}"
-                    self.message([txt], 0, None, 'fullbottom', 'big')
-                    if j == 0:
-                        subtxt = "Merci d'indiquer si vous avez une carte d'extension. Echap pour quitter, Entrée pour valider."
-                    else:
-                        subtxt = f"Merci d'indiquer sur quel pin est connecté le bouton {key.replace('PIN_', '')}.Echap pour revenir en arrière, Entrée pour valider ou passer."
-
-                    self.menu_header("Configuration du Raspberry", key)
-                    self.update_screen()
-
-                    tmp = self.input_value_item('pins', '', 1, 27, align='Center')
-                    if tmp in ('', 'space'):
-                        j = totalButtons
-                    elif tmp == 'escape':
-                        j-=1
-                        used_pins.pop()
-                        if j < 1:
-                            return False
-                    elif tmp in used_pins:
-                        self.message([self.lang.translate('config-already')], 2000, None, 'fullbottom', 'big')
-                    else:
-                        new_buttons[key] = tmp
-                        used_pins.append(tmp)
-                        j+=1
-
-            #self.rpi.init_gpio(new_inputs, 'IN')
-            #self.rpi.init_gpio(new_outputs, 'OUT')
-
-        # Leds conf
-        new_leds = {}
-        totalLeds = len(self.config.leds)
-
-        # Steps of the leds : pin, brightness, type of the target, then pin, number, brightness,
-        # type of the strip. Escape : the step shown before (its pin given again), on the first
-        # one the wizard is left. No pin : no leds of this kind, its other steps skipped.
-        # Escape on the type went on (the type « escape » kept) : Escape on the pin of the strip
-        # and on the type of the target sent from one to the other for ever
-        keys = list(self.config.leds)
+        # The steps of the wizard, each one with its Retour : the card, the pins of another card,
+        # the LED of the target (and its tire for the DartCab), the LED, the calibration of
+        # another card, the buttons. Retour : the step shown before (include/cwizard.py)
+        from include import cwizard    # pylint: disable=import-outside-toplevel
+        state = {}
         history = []
-        pin_of_step = {}
-        j = 0
-        while j < totalLeds:
-            self.display_background()    # display basic screen
-
-            key = keys[j]
-            esc_text = self.lang.translate('conf-esc1' if not history else 'conf-esc2')
-
-            if key.startswith('PIN_'):
-                subtxt = self.lang.translate('conf-pin1').format(self.lang.translate(key), esc_text)
-            else:
-                subtxt = self.lang.translate('conf-pin2').format(self.lang.translate(key), esc_text)
-
-            self.menu_header(self.lang.translate('conf-leds'))
-            self.message([f"{self.lang.translate('conf-fillin')} {self.lang.translate(key)}"], 0, None, 'fullbottom', 'big', refresh=False)
-            self.update_screen()
-
-            if key in ('PIN_STRIPLED', 'PIN_TARGETLED'):
-                tmp = self.input_value_item('pins', '', 1, 27, align='Center')
-            elif key in ('BRI_STRIPLED', 'BRI_TARGETLED'):
-                tmp = self.input_value_item('number', '', 1, 100, align='Center')
-            elif key in ('TYP_STRIPLED', 'TYP_TARGETLED'):
-                tmp = self.dropdown(self.res['x'] * 6 / 16, 3 * self.res_y_16, [['rgb','RGB'], ['grb','GRB']])
-            else:
-                tmp = self.input_value_item('number', '', 1, 1000, align='Center')
-
-            if tmp == 'escape':
-                if not history:
-                    return False
-                j = history.pop()
-                new_leds.pop(keys[j], None)
-                pin = pin_of_step.pop(j, None)
-                if pin in used_pins:
-                    used_pins.remove(pin)
+        step = 'card'
+        while step is not None:
+            result = self.wizard_step(step, state)
+            if result == cwizard.BACK:
+                step = history.pop() if history else 'card'
                 continue
-
-            if key in ('PIN_STRIPLED', 'PIN_TARGETLED'):
-                if tmp in ('', 'space'):
-                    # No leds of this kind
-                    new_leds[key] = '0'
-                    skipped = ['NBR_STRIPLED', 'BRI_STRIPLED', 'TYP_STRIPLED'] if key == 'PIN_STRIPLED' \
-                        else ['BRI_TARGETLED', 'TYP_TARGETLED']
-                    for other in skipped:
-                        new_leds[other] = 'grb' if other.startswith('TYP') else 0
-                    history.append(j)
-                    j += 1 + len(skipped)
-                    continue
-                if tmp in used_pins:
-                    self.message([self.lang.translate('config-already')], 2000, None, 'fullbottom', 'big')
-                    continue
-                used_pins.append(tmp)
-                pin_of_step[j] = tmp
-            elif tmp in ('', 'space'):
-                # A number is needed : asked again
+            if result == 'again':
                 continue
-            new_leds[key] = tmp
-            history.append(j)
-            j += 1
+            history.append(step)
+            step = self.wizard_next(step, state)
+        self.wizard_finish(state)
+        return True
 
-        self.rpi.set_leds_conf(new_leds)
+    WIZARD_STEPS = ('card', 'au_pins', 'leds_ji', 'tire', 'leds', 'calibrate', 'buttons')
 
-        if card == 'Au':
+    def wizard_next(self, step, state):
+        '''
+        The step after this one (those which do not apply skipped : the tire only for the LED of
+        the DartCab, the pins and the calibration only for another card), None : the end
+        '''
+        steps = self.WIZARD_STEPS
+        for name in steps[steps.index(step) + 1:]:
+            if name == 'tire' and not (state.get('leds_ji') == 'yes' and state.get('card') == 'Mm'):
+                continue
+            if name in ('au_pins', 'calibrate') and state.get('card') != 'Au':
+                continue
+            return name
+        return None
+
+    def wizard_step(self, step, state):
+        '''
+        A step of the wizard : 'next', cwizard.BACK, or 'again' (the same step shown again)
+        '''
+        from include import cwizard    # pylint: disable=import-outside-toplevel
+        if step == 'card':
+            card = cwizard.choose_card(self)
+            state['card'] = card
+            setters = {'Jo': 'set_jo_card_config', 'Re': 'set_jo_card_config', 'Jo416': 'set_jo_416_card_config',
+                       'Ji': 'set_ji_card_config', 'Mm': 'set_ji_card_config', 'Ji2': 'set_ji2_card_config',
+                       'Ji3': 'set_ji2_card_config', 'MMWVdarts': 'set_mmworks_vdartscard_config', 'GB': 'set_gb_card_config',
+                       'ED': 'set_ed900_card_config', 'Jt': 'set_jt_card_config', 'Jt2': 'set_jt2_card_config',
+                       'Jiz': 'set_jiz_card_config', 'Ch': 'set_clk_card_config'}
+            if card in setters:
+                getattr(self.config, setters[card])()
+                # The target read with the wiring of this card from now on (the buttons are
+                # learnt with its segments)
+                self.apply_card_target()
+            return 'next'
+        if step == 'leds_ji':
+            answer = cwizard.ask(self, 'config-leds_choice', 'config-leds_question',
+                                 [('yes', 'yes', None), ('no', 'no', None)])
+            if answer == cwizard.BACK:
+                return answer
+            state['leds_ji'] = answer
+            return 'next'
+        if step == 'tire':
+            answer = cwizard.ask(self, 'config-tire_choice', 'config-tire_question',
+                                 [(kind, f'config-tire-{kind}', cwizard.tire_drawing(kind)) for kind in ('none', 'before', 'after')])
+            if answer == cwizard.BACK:
+                return answer
+            state['tire'] = answer
+            return 'next'
+        if step == 'au_pins':
+            pins = self.wizard_au_pins()
+            if pins is None:
+                return cwizard.BACK
+            state['au'] = pins
+            return 'next'
+        if step == 'leds':
+            leds = self.wizard_leds(state)
+            if leds is None:
+                return cwizard.BACK
+            state['leds'] = leds
+            self.rpi.set_leds_conf(leds)
+            return 'next'
+        if step == 'calibrate':
             calibrated = self.calibrate_target()
             if calibrated is None:
-                self.rpi.gpio_flush()
-                sys.exit(0)
-            new_keys.update(calibrated)
-            j = 62
+                return cwizard.BACK
+            state['calibrated'] = calibrated
+            return 'next'
+        if step == 'buttons':
+            # On the extension boards (MCP) when there is one, else on the GPIO of the
+            # Raspberry still free ; learnt by pressing them
+            has_mcp = getattr(self.rpi.gpio, 'mcp1', None) is not None
+            answer = cwizard.ask(self, 'config-buttons_choice', 'config-buttons_question' if has_mcp else 'btnwiz-gpio-question',
+                                 [('yes', 'yes', None), ('no', 'no', None)])
+            if answer == cwizard.BACK:
+                return answer
+            state['buttons'] = None
+            if answer == 'yes':
+                buttons = self.setup_io_extender() if has_mcp else self.setup_gpio_buttons()
+                if buttons is None:
+                    # Retour on the buttons : their question again
+                    return 'again'
+                state['buttons'] = buttons
+            return 'next'
+        return 'next'
 
-            for l in [1, 2, 3, 4]:
-                new_keys[self.config.keys[j]] = ''
-                j+=1
+    def wizard_leds(self, state):
+        '''
+        The LED : a screen for the target, then one for the strip (Retour on the strip : the
+        target again ; on the target : None, the step before)
+        '''
+        from include import cwizard    # pylint: disable=import-outside-toplevel
+        section = self.config.config
+        taken = [str(value).strip() for name in ('Raspberry_BoardPinsIns', 'Raspberry_BoardPinsOuts')
+                 for value in dict(section.get(name, {})).values() if str(value).strip()]
+        if state.get('card') == 'Au' and state.get('au'):
+            taken += [str(pin) for pin in state['au'][3]]
+        leds_now = dict(section.get('Raspberry_Leds', {}))
+        target = {'pin': leds_now.get('PIN_TARGETLED'), 'bri': leds_now.get('BRI_TARGETLED'), 'typ': leds_now.get('TYP_TARGETLED')}
+        strip = {'pin': leds_now.get('PIN_STRIPLED'), 'bri': leds_now.get('BRI_STRIPLED'), 'typ': leds_now.get('TYP_STRIPLED'),
+                 'nbr': leds_now.get('NBR_STRIPLED')}
+        while True:
+            chosen_target = cwizard.setup_leds(self, 'target', taken, target)
+            if chosen_target is None:
+                return None
+            target = chosen_target
+            others = taken + ([target['pin']] if target['pin'] != cwizard.NO_LED else [])
+            chosen_strip = cwizard.setup_leds(self, 'strip', others, strip)
+            if chosen_strip is not None:
+                strip = chosen_strip
+                break
+        return {'PIN_TARGETLED': target['pin'], 'BRI_TARGETLED': target['bri'], 'TYP_TARGETLED': target['typ'],
+                'PIN_STRIPLED': strip['pin'], 'NBR_STRIPLED': strip['nbr'], 'BRI_STRIPLED': strip['bri'],
+                'TYP_STRIPLED': strip['typ']}
 
-            if new_buttons['EXTENDED_GPIO'] == '1':
-                from include import cgpio_extender
+    def wizard_au_pins(self):
+        '''
+        Another card : the pins of its outputs, then of its inputs, touched on the connector of the
+        Raspberry drawn (cwizard.pick_pins). Its buttons come at the step of the buttons.
+        (new_outputs, new_inputs, new_buttons, used_pins), None : Retour
+        '''
+        from include import cwizard    # pylint: disable=import-outside-toplevel
+        out_names = list(self.config.outputs)
+        in_names = list(self.config.inputs)
+        outs = []
+        while True:
+            outs = cwizard.pick_pins(self, 'pinwiz-out-title', 'pinwiz-out-item', out_names, {}, outs)
+            if outs is None:
+                return None
+            short = self.lang.translate('pinwiz-out-item').format('').strip()[:1].upper()
+            others = {pin: f'{short}{index + 1}' for index, pin in enumerate(outs)}
+            ins = cwizard.pick_pins(self, 'pinwiz-in-title', 'pinwiz-in-item', in_names, others)
+            if ins is not None:
+                break
+        # Given again from the start : the pins of a former pass forgotten
+        self.rpi.inputs.clear()
+        self.rpi.outputs.clear()
+        new_outputs = dict(zip(out_names, outs))
+        new_inputs = dict(zip(in_names, ins))
+        for pin in outs:
+            self.rpi.set_outputs(pin)
+        for pin in ins:
+            self.rpi.set_inputs(pin)
+        self.rpi.init_gpio(new_outputs, 'OUT')
+        self.rpi.init_gpio(new_inputs, 'IN')
+        return new_outputs, new_inputs, {}, outs + ins
 
-                for k in self.config.buttons:
-                    if k != 'EXTENDED_GPIO':
-                        new_buttons[k] = cgpio_extender.DEFAULTS[k]
-
+    def wizard_finish(self, state):
+        '''
+        The end of the wizard : what was chosen kept, the configuration written
+        '''
+        card = state.get('card')
+        if card == 'Au':
+            new_outputs, new_inputs, new_buttons, _used = state['au']
+            new_keys = dict(state.get('calibrated') or {})
+            for index in range(62, 66):
+                new_keys[self.config.keys[index]] = ''
+            if new_buttons.get('EXTENDED_GPIO') == '1':
+                from include import cgpio_extender    # pylint: disable=import-outside-toplevel
+                for key in self.config.buttons:
+                    if key != 'EXTENDED_GPIO':
+                        new_buttons[key] = cgpio_extender.DEFAULTS[key]
             self.rpi.set_inputs_conf(new_inputs)
             self.rpi.set_outputs_conf(new_outputs)
-            self.rpi.set_buttons_conf(new_buttons)
+            if new_buttons:
+                self.rpi.set_buttons_conf(new_buttons)
             self.rpi.set_keys_conf(new_keys)
-        else:
-            used_pins = []
-            for p in self.rpi.inputs:
-                pin = self.raspberry.inputs[p]
-                if pin != '':
-                    used_pins.append(int(pin))
-
-            for p in self.rpi.outputs:
-                pin = self.rpi.outputs[p]
-                if pin != '':
-                    used_pins.append(int(pin))
-
-        if leds_ji == 'yes':
+        if state.get('leds_ji') == 'yes':
             if card == 'MMWVdarts':
                 self.config.set_mmworks_leds_config()
-            elif tire is not None:
-                self.config.set_dartcab_leds_config(tire)
+            elif state.get('tire') is not None:
+                self.config.set_dartcab_leds_config(state['tire'])
             else:
                 self.config.set_ji_leds_config()
-
-        self.display_background()    # display basic screen
-        self.menu_header("config-buttons_choice", "config-buttons_question")
-        self.update_screen()
-        yesno_dd = [['yes', 'yes'], ['no', 'no']]
-        go_conf = self.dropdown(6 * self.res_x_16, 3 * self.res_y_16, yesno_dd)
-
-        if go_conf == 'yes':
-            extended_io = self.setup_io_extender()
-            if extended_io is not None:
-                self.config.set_config('Raspberry', extended_io)
-
-        # Write config file
+        if state.get('buttons') is not None:
+            self.config.set_config('Raspberry', state['buttons'])
         self.config.write_file()
-
         self.message([f"{self.lang.translate('config-restart')}"], 2500, None, 'middle', 'big')
-        return True
+
+    def apply_card_target(self):
+        '''
+        The wizard : the target scanned with the pins and the segments of the card chosen (they
+        were those of the default configuration until the game starts again)
+        '''
+        try:
+            section = self.config.config
+            inputs = {key: value for key, value in section.get('Raspberry_BoardPinsIns', {}).items() if str(value).strip()}
+            outputs = {key: value for key, value in section.get('Raspberry_BoardPinsOuts', {}).items() if str(value).strip()}
+            self.rpi.inputs.clear()
+            self.rpi.outputs.clear()
+            for value in inputs.values():
+                self.rpi.set_inputs(value)
+            for value in outputs.values():
+                self.rpi.set_outputs(value)
+            self.rpi.init_gpio(inputs, 'IN')
+            self.rpi.init_gpio(outputs, 'OUT')
+            self.rpi.keys = {}
+            self.rpi.set_keys_conf(dict(section.get('SectionKeys', {})))
+            self.logs.info(f"Wizard : target read with the card chosen ({len(inputs)} inputs, {len(outputs)} outputs)")
+        except Exception as error:    # pylint: disable=broad-except
+            self.logs.error(f"Wizard : wiring of the card not applied ({error})")
+
+    def setup_gpio_buttons(self):
+        '''
+        No extension board : the buttons wired on the GPIO of the Raspberry still free (not the
+        target, the LED, the I2C bus), learnt by pressing them. The section [Raspberry] (its
+        buttons given as GPIO9...), or None
+        '''
+        from include import cgpio_extender, cwizard    # pylint: disable=import-outside-toplevel
+        busy = self.rpi.busy_gpio()
+        free = [pin for pin in range(2, 28) if pin not in busy]
+        learned = cwizard.learn_buttons(self, gpio_pins=free)
+        if learned is None:
+            return None
+        config = {key: '' for key in cgpio_extender.DEFAULTS}
+        config['EXTENDED_GPIO'] = 0
+        config.update(learned)
+        return config
 
     def setup_io_extender(self):
 
@@ -1940,20 +1855,23 @@ class Screen(pygame.Surface):
                 if key.startswith(('LIGHT_', 'TOY')):
                     toys_list.append(key)
 
-            # One step per pin : the button wired on each input, then the toy on each
-            # output. Escape : the step before (its choice proposed again) ; on the first
-            # one, the card is left as it is. "Skip" : nothing on this pin. A light or a
-            # toy is not always read low : they are proposed on the inputs too, after the
-            # buttons
-            steps = [('pin', pin) for pin in gpio.all_io if pin not in outputs] + [('toy', pin) for pin in outputs]
+            # The buttons learnt by pressing them (a button pressed, then the segment of its
+            # function) ; Escape before any button : the card left as it is
+            from include import cwizard    # pylint: disable=import-outside-toplevel
+            learned = cwizard.learn_buttons(self, outputs)
+            if learned is None:
+                return None
+            buttons_conf.update(learned)
+
+            # Then the toy on each output found (lights, toys : not detected by a press).
+            # Escape : the step before (its choice proposed again) ; on the first one, no toy.
+            # "Skip" : nothing on this pin
+            steps = [('toy', pin) for pin in outputs]
             chosen = {}
             index = 0
             while index < len(steps):
                 kind, pin = steps[index]
-                if kind == 'pin':
-                    title, sub, names = 'config-pin', 'config-pin-sub', buttons_list + toys_list
-                else:
-                    title, sub, names = 'config-toy', 'config-toy-sub', toys_list
+                title, sub, names = 'config-toy', 'config-toy-sub', toys_list
                 taken = [value for step, value in chosen.items() if step != index]
                 choices = [(name, self.lang.translate(name)) for name in names if name not in taken]
                 choices.append(('None', self.lang.translate('config-skip')))
@@ -1963,7 +1881,8 @@ class Screen(pygame.Surface):
                 answer = self.dropdown(6 * self.res_x_16, 3 * self.res_y_16, choices, navigate=chosen.get(index))
                 if answer == 'escape':
                     if index == 0:
-                        return None
+                        chosen = {}
+                        break
                     chosen.pop(index, None)
                     index -= 1
                     continue
@@ -1975,10 +1894,7 @@ class Screen(pygame.Surface):
 
             for step, value in chosen.items():
                 _kind, pin = steps[step]
-                if value.startswith('PIN_'):
-                    buttons_conf[value] = pin
-                else:
-                    toys_conf[value] = pin
+                toys_conf[value] = pin
 
             config = {}
             for key in gpio.get_defaults():
@@ -12888,7 +12804,32 @@ class Screen(pygame.Surface):
 
     def display_background(self, image=None, rect=None, display_version=False, veil=None):
         '''
-        Display background, under a veil of this color if given (game screens)
+        Display background, under a veil of this color if given (game screens). In the wizard
+        (blur_background) : blurred and darkened, its texts easier to read
+        '''
+        self.paint_background(image, rect, display_version, veil)
+        if getattr(self, 'blur_background', False) and rect is None:
+            width, height = self.screen.get_size()
+            key = (image, self.current_look, self.background, width, height)
+            cached = getattr(self, 'blurred_background', None)
+            if cached is None or cached[0] != key:
+                # 32 bits copy (smoothscale refuses 16 bits), shrunk then enlarged : blurred
+                copy = pygame.Surface((width, height), 0, 32)
+                copy.blit(self.screen, (0, 0))
+                small = pygame.transform.smoothscale(copy, (max(1, width // 24), max(1, height // 24)))
+                blurred = pygame.transform.smoothscale(small, (width, height))
+                shade = pygame.Surface((width, height))
+                shade.fill((0, 0, 0))
+                shade.set_alpha(100)
+                blurred.blit(shade, (0, 0))
+                cached = (key, blurred)
+                self.blurred_background = cached
+            self.screen.blit(cached[1], (0, 0))
+            self.pristine_background = None
+
+    def paint_background(self, image=None, rect=None, display_version=False, veil=None):
+        '''
+        The background itself (see display_background)
         '''
         animated = getattr(self, 'bganim', None)
         if animated is not None and animated.mode and image is None and veil is None and not display_version \

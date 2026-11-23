@@ -695,16 +695,16 @@ msgid "card-other"
 msgstr "Altro o cablaggio non standard"
 
 msgid "config-leds_choice"
-msgstr "Selezione LED"
+msgstr "LED del bersaglio"
 
 msgid "config-leds_question"
-msgstr "Usi le Raspyleds?"
+msgstr "Il tuo bersaglio ha dei LED all'interno (scheda LED del bersaglio)?"
 
 msgid "config-buttons_choice"
 msgstr "Configurazione pulsanti"
 
 msgid "config-buttons_question"
-msgstr "Vuoi configurare i pulsanti? Devi conoscere la mappatura I/O"
+msgstr "Vuoi configurare i pulsanti delle tue schede di espansione? Basterà premere ciascuno"
 
 msgid "config-cancel"
 msgstr "annulla configurazione"
@@ -7367,4 +7367,139 @@ msgstr "Una sola freccetta, il più vicino possibile al centro"
 
 msgid "Fiesta-devil-COUNT_UP_UNE_FLECHE_CENTRE"
 msgstr "Una sola freccetta: contano solo i Bull"
+
+
+######## ASSISTANT : CARTES ET BOUTONS ########
+
+msgid "wizard-card-title"
+msgstr "La tua scheda di interfaccia"
+
+msgid "wizard-card-sub"
+msgstr "La scheda tra il Raspberry e il bersaglio"
+
+msgid "wizard-card-other"
+msgstr "Altra scheda o cablaggio fatto in casa"
+
+msgid "wizard-card-other-sub"
+msgstr "Indicherai i pin"
+
+msgid "wizard-card-old"
+msgstr "Schede precedenti"
+
+msgid "wizard-card-old-sub"
+msgstr "Schede di Jimmy e di Joffrey"
+
+msgid "wizard-card-help"
+msgstr "Frecce o tocco: scegliere; Invio: confermare; Esc: indietro"
+
+msgid "btnwiz-press"
+msgstr "Premi uno dei tuoi pulsanti"
+
+msgid "btnwiz-press-sub"
+msgstr "Poi tocca sul bersaglio il settore della sua funzione; SB o DB: fine"
+
+msgid "btnwiz-detected"
+msgstr "Pulsante {pin}: tocca il settore della sua funzione"
+
+msgid "btnwiz-detected-sub"
+msgstr "Oppure le frecce e poi Invio; Esc: ignora questo pulsante"
+
+msgid "btnwiz-finish"
+msgstr "Fine"
+
+msgid "btnwiz-cancel"
+msgstr "Annulla (Esc)"
+
+msgid "btnwiz-mcp"
+msgstr "Schede di espansione (MCP) trovate: {count}"
+
+
+######## ASSISTANT : LED ########
+
+msgid "ledwiz-target"
+msgstr "LED del bersaglio"
+
+msgid "ledwiz-strip"
+msgstr "Striscia LED"
+
+msgid "ledwiz-sub"
+msgstr "Tocca un'uscita: si accende un arcobaleno"
+
+msgid "ledwiz-red"
+msgstr "I LED devono essere rossi; altrimenti scegli l'altro ordine"
+
+msgid "ledwiz-pin"
+msgstr "Uscita"
+
+msgid "ledwiz-typ"
+msgstr "Ordine dei colori"
+
+msgid "ledwiz-bri"
+msgstr "Luminosità"
+
+msgid "ledwiz-nbr"
+msgstr "Numero di LED"
+
+msgid "ledwiz-none"
+msgstr "Nessuna"
+
+msgid "ledwiz-valid"
+msgstr "Conferma"
+
+msgid "btnwiz-back"
+msgstr "Freccetta precedente"
+
+msgid "btnwiz-game"
+msgstr "Game: lascia la partita"
+
+msgid "btnwiz-gpio-question"
+msgstr "Nessuna scheda di espansione: configurare pulsanti collegati ai GPIO liberi del Raspberry? Basterà premere ciascuno"
+
+msgid "btnwiz-gpio-free"
+msgstr "GPIO liberi sorvegliati: {count}"
+
+msgid "wizard-back"
+msgstr "Indietro"
+
+msgid "wizard-card-help-first"
+msgstr "Frecce o tocco: scegliere; Invio: confermare; Esc: uscire"
+
+msgid "wizard-quit"
+msgstr "Esci"
+
+msgid "wizard-quit-question"
+msgstr "Uscire dalla procedura guidata? Non viene salvato nulla: ripartirà al prossimo avvio del cabinato."
+
+msgid "wizard-quit-shutdown"
+msgstr "Spegnere il cabinato"
+
+msgid "wizard-quit-cancel"
+msgstr "Annulla"
+
+msgid "pinwiz-out-title"
+msgstr "Fili di uscita del bersaglio"
+
+msgid "pinwiz-in-title"
+msgstr "Fili di ingresso del bersaglio"
+
+msgid "pinwiz-sub"
+msgstr "Toccate il pin del Raspberry a cui è collegato ogni filo"
+
+msgid "pinwiz-out-item"
+msgstr "Uscita {}"
+
+msgid "pinwiz-in-item"
+msgstr "Ingresso {}"
+
+msgid "pinwiz-question"
+msgstr "{}: quale pin?"
+
+msgid "pinwiz-all"
+msgstr "Tutti i pin sono indicati"
+
+msgid "pinwiz-finish"
+msgstr "Fine"
+
+msgid "pinwiz-taken"
+msgstr "GPIO {}: già occupato da {}"
 
