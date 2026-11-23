@@ -2469,6 +2469,8 @@ try:
                         if release_time > 0:
                             dmd.send_text(Lang.translate("release-darts"))
                             display.message([Lang.translate('release-darts')], release_time, None, 'middle', 'big')
+                            # The darts touched while they are taken out : not those of the next player
+                            rpi.drop_darts('while the darts were taken out')
 
                     """
                     Need a bit of clarification

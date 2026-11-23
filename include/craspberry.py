@@ -408,6 +408,24 @@ class Craspberry():
         code, self.dart_time = dart
         return code
 
+    def drop_darts(self, reason):
+        """
+        The darts read by the reader and not taken yet : forgotten (those planted while the darts
+        are taken out, « Retirez vos fléchettes » : they went to the next player)
+        """
+        dropped = []
+        if self.pending_dart is not None:
+            dropped.append(self.pending_dart[0])
+            self.pending_dart = None
+        while True:
+            try:
+                dropped.append(self.target_darts.get_nowait()[0])
+            except queue.Empty:
+                break
+        if dropped:
+            self.logs.info(f"Target : {len(dropped)} dart(s) read {reason}, not played ({' '.join(str(code) for code in dropped)})")
+        return dropped
+
     def wait_dart(self, delay):
         """
         Wait for a dart at most delay seconds, instead of looping for nothing.
