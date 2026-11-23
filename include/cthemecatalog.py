@@ -45,9 +45,15 @@ def version_tuple(text):
     return tuple(int(part) for part in re.findall(r'\d+', str(text or '')))
 
 
-def installed(screen):
+# The author of the themes given with RaspyDarts (clear, sombre) in the catalogue
+DELIVERED_AUTHOR = 'RaspyDarts'
+
+
+def installed(screen, themes=None):
     '''
-    The themes of RaspyHub installed here : their id -> (version, folder)
+    The themes of RaspyHub installed here : their id -> (version, folder). themes (the catalogue) :
+    a theme given with RaspyDarts is installed when a folder has its name (without raspyhub.json :
+    it came with the game), at the version of the catalogue
     '''
     import json    # pylint: disable=import-outside-toplevel
     from include import cthemefiles    # pylint: disable=import-outside-toplevel
@@ -64,6 +70,13 @@ def installed(screen):
             found[origin['id']] = (int(origin.get('version') or 0), name)
         except (OSError, ValueError, KeyError, TypeError):
             continue
+    folders = {name.casefold(): name for name in names if os.path.isdir(os.path.join(folder, name))}
+    for theme in themes or []:
+        if theme.get('id') in found or str(theme.get('author') or '') != DELIVERED_AUTHOR:
+            continue
+        name = folders.get(str(theme.get('name') or '').casefold())
+        if name is not None:
+            found[theme['id']] = (int(theme.get('version') or 0), name)
     return found
 
 
@@ -284,7 +297,7 @@ def catalog_screen(screen):
         screen.message([translate(screen, 'hub-catalog-empty')], 3500, None, 'middle', 'big')
         return
     captures = Captures(screen.logs)
-    here = installed(screen)
+    here = installed(screen, themes)
     unit_x, unit_y = screen.res['x'] / 16, screen.res['y'] / 16
     selected, number, focus = 0, 1, 'list'
     turned = time.time()
@@ -401,5 +414,5 @@ def catalog_screen(screen):
                 focus = 'download'
                 continue
             take(screen, theme)
-            here = installed(screen)
+            here = installed(screen, themes)
             turned = time.time()
