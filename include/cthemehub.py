@@ -782,8 +782,9 @@ def news_short(screen, item):
     '''
     A decision in the activity indicator (a corner of the screen) : a few words
     '''
-    name, state, _reason, _key = item
-    return translate(screen, f'hub-news-{state}-short').replace('{name}', name)
+    name, state, reason, _key = item
+    text = translate(screen, f'hub-news-{state}-short').replace('{name}', name)
+    return f"{text} : {reason}" if state == 'refused' and reason else text
 
 
 def show_news_corner(screen, items):
@@ -792,9 +793,9 @@ def show_news_corner(screen, items):
     activity indicator, a while, then marked as said (a window would hide the screen)
     '''
     for item in items:
-        text = news_short(screen, item)
-        screen.activities.add(f'hub-news-{item[3]}',
-                              lambda text=text: {'text': text, 'final': True, 'final_time': NEWS_CORNER_TIME})
+        text, refused = news_short(screen, item), item[1] == 'refused'
+        screen.activities.add(f'hub-news-{item[3]}', lambda text=text, refused=refused: {
+            'text': text, 'final': True, 'final_time': NEWS_CORNER_TIME, 'failed': refused})
     said(items)
 
 

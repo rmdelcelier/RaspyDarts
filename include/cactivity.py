@@ -6,7 +6,8 @@ top right by default), over the animated background or the background of the the
 
 Each task gives a function returning its state : None (finished, the line goes away), or a
 dict : text, fraction (0 to 1 ; None : waiting, an animation instead of a bar), final (its
-end said : shown a few seconds then gone ; final_time : how many, FINAL_TIME by default). A task can be chosen (select : a function) : the
+end said : shown a few seconds then gone ; final_time : how many, FINAL_TIME by default ;
+failed : a failure, framed in red). A task can be chosen (select : a function) : the
 indicator is then a button of the menus (see Screen.run_menu), reached with the wheel of a USB
 knob, the buttons, the arrows or a touch, framed when it is selected.
 """
@@ -180,12 +181,14 @@ class Activities:
         background = (25, 25, 25)
         accent = tuple(colorset.get('menu-selected') or (200, 200, 200))[:3]
         good = tuple(colorset.get('menu-ok') or (40, 170, 60))[:3]
+        bad = tuple(colorset.get('menu-ko') or (190, 50, 50))[:3]
         radius = int(line / 5)
         for index, state in enumerate(states):
             item = pygame.Rect(rect.x, rect.y + index * line, rect.width, line - 4)
             pygame.draw.rect(surface, background, item, border_radius=radius)
             framed = self.focused and self.selectable()
-            pygame.draw.rect(surface, good if state.get('final') else accent, item, max(2, int(line * 0.08)) if framed else 2,
+            frame = (bad if state.get('failed') else good) if state.get('final') else accent
+            pygame.draw.rect(surface, frame, item, max(2, int(line * 0.08)) if framed else 2,
                              border_radius=radius)
             text = str(state.get('text') or '')
             rendered = self.font.render(text, True, (255, 255, 255))
