@@ -354,3 +354,132 @@ def install(screen, source, origin=None, name=None):
     if screen.ask_yes_no(translate('theme-import-use').replace('{theme}', name)):
         screen.apply_look(theme=name)
     return name
+
+
+# ---------------------------------------------------------------------- creating, deleting
+# The themes given with RaspyDarts : never deleted (clear is the one the game falls back on)
+DELIVERED = ('clear', 'sombre')
+THEME_NAME_MOST = 40
+
+
+class Copy:
+    '''
+    A theme copied whole in the background (Créer un thème à partir de celui-ci) : state
+    running, done, failed ; done, total in bytes
+    '''
+
+    def __init__(self, logs, source, target):
+        self.logs = logs
+        self.source = source
+        self.target = target
+        self.total = max(1, folder_size(source))
+        self.done = 0
+        self.state = 'running'
+        threading.Thread(target=self.run, daemon=True).start()
+
+    def copy_file(self, source, target, **_kwargs):
+        shutil.copy2(source, target)
+        try:
+            self.done += os.path.getsize(source)
+        except OSError:
+            pass
+        return target
+
+    def run(self):
+        try:
+            # The mark of a theme downloaded from RaspyHub stays with the theme of RaspyHub : the
+            # copy is a theme of its own
+            shutil.copytree(self.source, self.target, copy_function=self.copy_file,
+                            ignore=shutil.ignore_patterns(HUB_FILE, '*.bak', '*.tmp'))
+            # A theme without Colorset.cfg of its own : the copy keeps the colours it is drawn with
+            colours = theme_colorset_text(self.target)
+            if colours is not None:
+                os.makedirs(os.path.join(self.target, 'other'), exist_ok=True)
+                with open(os.path.join(self.target, 'other', 'Colorset.cfg'), 'w', encoding='utf-8') as file:
+                    file.write(colours)
+            self.state = 'done'
+            self.logs.info(f"Theme {os.path.basename(self.target)} created from {self.source} ({self.total // 1048576} MB)")
+        except Exception as error:    # pylint: disable=broad-except
+            self.state = 'failed'
+            self.logs.error(f"Theme {os.path.basename(self.target)} not created from {self.source} ({error})")
+            shutil.rmtree(self.target, ignore_errors=True)
+
+
+def user_themes(screen):
+    '''
+    The folders of ~/.raspydarts/themes : their names
+    '''
+    try:
+        return sorted(entry.name for entry in os.scandir(screen.config.themes_dir) if entry.is_dir())
+    except OSError:
+        return []
+
+
+def create_theme(screen, keys):    # pylint: disable=unused-argument
+    '''
+    Créer un thème à partir de celui-ci : its name asked, the theme of the moment copied whole
+    (menus, colours, colours chosen, images, sounds, videos, font), then the new one used
+    '''
+    translate = screen.lang.translate
+    theme = str(screen.config.get_value('SectionGlobals', 'colorset') or '')
+    source = getattr(screen.file_class, 'theme_dir', None)
+    if not theme or not source or not os.path.isdir(source):
+        screen.message([translate('theme-export-none')], 2500, 'menu-ko', 'middle', 'big')
+        return
+    typed = screen.input_value_item('string', '', 1, THEME_NAME_MOST,
+                                    text=translate('theme-create-name').replace('{theme}', theme))
+    if typed in (None, False, 'escape'):
+        return
+    name = ' '.join(str(typed).split())
+    if not name or len(name) > THEME_NAME_MOST or not re.fullmatch(r'[\w\- ]+', name) or name.startswith('.'):
+        screen.message([translate('theme-create-bad').replace('{most}', str(THEME_NAME_MOST))], 3000, 'menu-ko', 'middle', 'big')
+        return
+    taken = [existing.casefold() for existing in user_themes(screen)] + ['clear']
+    if name.casefold() in taken:
+        screen.message([translate('theme-create-exists')], 2500, 'menu-ko', 'middle', 'big')
+        return
+    target = os.path.join(screen.config.themes_dir, name)
+    size = folder_size(source)
+    try:
+        free = shutil.disk_usage(screen.config.themes_dir).free
+    except OSError:
+        free = size * 2
+    # Room left for the game afterwards (100 MB)
+    if size + 100 * 1048576 > free:
+        screen.message([translate('theme-create-space').replace('{size}', f"{size / 1048576:.0f}")], 3500, 'menu-ko', 'middle', 'big')
+        return
+    copy = Copy(screen.logs, source, target)
+    while copy.state == 'running':
+        screen.message([f"{translate('theme-create-copying')} {int(copy.done * 100 / copy.total)} %"], 0, None, 'middle', 'big')
+        time.sleep(0.3)
+    if copy.state != 'done':
+        screen.message([translate('theme-create-failed')], 3000, 'menu-ko', 'middle', 'big')
+        return
+    screen.apply_look(theme=name)
+    screen.message([translate('theme-create-done').replace('{name}', name).replace('{theme}', theme)], 2500, 'menu-ok', 'middle', 'big')
+
+
+def delete_theme(screen, keys):    # pylint: disable=unused-argument
+    '''
+    Supprimer un thème : one of the themes of the user (not the one used, not those given with
+    RaspyDarts), after a question
+    '''
+    translate = screen.lang.translate
+    current = str(screen.config.get_value('SectionGlobals', 'colorset') or '')
+    choices = [(name, name) for name in user_themes(screen)
+               if name.casefold() != current.casefold() and name.casefold() not in DELIVERED]
+    if not choices:
+        screen.message([translate('theme-delete-none')], 3000, None, 'middle', 'big')
+        return
+    picked = screen.dropdown(screen.res['x'] * 6 / 16, 3 * screen.res_y_16, choices, width=6 * screen.res_x_16)
+    if picked in (None, 'escape') or picked not in [name for name, _text in choices]:
+        return
+    if not screen.ask_yes_no(translate('theme-delete-question').replace('{name}', picked), translate('theme-delete-explain')):
+        return
+    try:
+        shutil.rmtree(os.path.join(screen.config.themes_dir, picked))
+        screen.logs.info(f"Theme {picked} deleted")
+        screen.message([translate('theme-delete-done').replace('{name}', picked)], 2000, 'menu-ok', 'middle', 'big')
+    except OSError as error:
+        screen.logs.error(f"Theme {picked} not deleted ({error})")
+        screen.message([translate('theme-create-failed')], 3000, 'menu-ko', 'middle', 'big')

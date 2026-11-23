@@ -5761,6 +5761,45 @@ msgstr "Pulsanti e scorciatoie"
 msgid "edit-screens-panel-theme"
 msgstr "Tema"
 
+msgid "theme-create"
+msgstr "Crea un tema…"
+
+msgid "theme-delete"
+msgstr "Elimina un tema"
+
+msgid "theme-create-name"
+msgstr "Nome del nuovo tema (copia di {theme})"
+
+msgid "theme-create-bad"
+msgstr "Nome del tema: lettere, cifre, spazi, - e _ ({most} caratteri al massimo)"
+
+msgid "theme-create-exists"
+msgstr "Questo nome è già usato da un tema della postazione"
+
+msgid "theme-create-space"
+msgstr "Spazio insufficiente sulla scheda ({size} MB da copiare)"
+
+msgid "theme-create-copying"
+msgstr "Copia del tema…"
+
+msgid "theme-create-done"
+msgstr "Tema {name} creato a partire da {theme}"
+
+msgid "theme-create-failed"
+msgstr "Impossibile creare o eliminare il tema (vedere il registro)"
+
+msgid "theme-delete-none"
+msgstr "Nessun tema da eliminare (il tema in uso, clear e sombre restano)"
+
+msgid "theme-delete-question"
+msgstr "Eliminare il tema {name}?"
+
+msgid "theme-delete-explain"
+msgstr "I suoi file (menu, colori, immagini, suoni, video) saranno cancellati dalla postazione"
+
+msgid "theme-delete-done"
+msgstr "Tema {name} eliminato"
+
 msgid "theme-export"
 msgstr "Esportare il tema"
 

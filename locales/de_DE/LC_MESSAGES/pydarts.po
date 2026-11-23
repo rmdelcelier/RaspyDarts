@@ -5694,6 +5694,45 @@ msgstr "Tasten und Kürzel"
 msgid "edit-screens-panel-theme"
 msgstr "Thema"
 
+msgid "theme-create"
+msgstr "Thema erstellen…"
+
+msgid "theme-delete"
+msgstr "Thema löschen"
+
+msgid "theme-create-name"
+msgstr "Name des neuen Themas (Kopie von {theme})"
+
+msgid "theme-create-bad"
+msgstr "Themenname: Buchstaben, Ziffern, Leerzeichen, - und _ (höchstens {most} Zeichen)"
+
+msgid "theme-create-exists"
+msgstr "Dieser Name wird schon von einem Thema des Automaten verwendet"
+
+msgid "theme-create-space"
+msgstr "Nicht genug Platz auf der Karte ({size} MB zu kopieren)"
+
+msgid "theme-create-copying"
+msgstr "Thema wird kopiert…"
+
+msgid "theme-create-done"
+msgstr "Thema {name} aus {theme} erstellt"
+
+msgid "theme-create-failed"
+msgstr "Das Thema konnte nicht erstellt oder gelöscht werden (siehe Protokoll)"
+
+msgid "theme-delete-none"
+msgstr "Kein Thema zum Löschen (das verwendete Thema, clear und sombre bleiben)"
+
+msgid "theme-delete-question"
+msgstr "Das Thema {name} löschen?"
+
+msgid "theme-delete-explain"
+msgstr "Seine Dateien (Menüs, Farben, Bilder, Töne, Videos) werden vom Automaten gelöscht"
+
+msgid "theme-delete-done"
+msgstr "Thema {name} gelöscht"
+
 msgid "theme-export"
 msgstr "Thema exportieren"
 

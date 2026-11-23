@@ -5748,6 +5748,45 @@ msgstr "Knoppen en sneltoetsen"
 msgid "edit-screens-panel-theme"
 msgstr "Thema"
 
+msgid "theme-create"
+msgstr "Thema maken…"
+
+msgid "theme-delete"
+msgstr "Thema verwijderen"
+
+msgid "theme-create-name"
+msgstr "Naam van het nieuwe thema (kopie van {theme})"
+
+msgid "theme-create-bad"
+msgstr "Themanaam: letters, cijfers, spaties, - en _ (hoogstens {most} tekens)"
+
+msgid "theme-create-exists"
+msgstr "Deze naam wordt al gebruikt door een thema van de kast"
+
+msgid "theme-create-space"
+msgstr "Niet genoeg ruimte op de kaart ({size} MB te kopiëren)"
+
+msgid "theme-create-copying"
+msgstr "Thema wordt gekopieerd…"
+
+msgid "theme-create-done"
+msgstr "Thema {name} gemaakt op basis van {theme}"
+
+msgid "theme-create-failed"
+msgstr "Het thema kon niet worden gemaakt of verwijderd (zie het logboek)"
+
+msgid "theme-delete-none"
+msgstr "Geen thema om te verwijderen (het gebruikte thema, clear en sombre blijven)"
+
+msgid "theme-delete-question"
+msgstr "Het thema {name} verwijderen?"
+
+msgid "theme-delete-explain"
+msgstr "De bestanden (menu's, kleuren, afbeeldingen, geluiden, video's) worden van de kast gewist"
+
+msgid "theme-delete-done"
+msgstr "Thema {name} verwijderd"
+
 msgid "theme-export"
 msgstr "Thema exporteren"
 

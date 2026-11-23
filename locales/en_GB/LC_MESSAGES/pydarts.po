@@ -5966,6 +5966,45 @@ msgstr "Buttons and shortcuts"
 msgid "edit-screens-panel-theme"
 msgstr "Theme"
 
+msgid "theme-create"
+msgstr "Create a theme…"
+
+msgid "theme-delete"
+msgstr "Delete a theme"
+
+msgid "theme-create-name"
+msgstr "Name of the new theme (copy of {theme})"
+
+msgid "theme-create-bad"
+msgstr "Theme name: letters, digits, spaces, - and _ ({most} characters at most)"
+
+msgid "theme-create-exists"
+msgstr "This name is already used by a theme of the cabinet"
+
+msgid "theme-create-space"
+msgstr "Not enough room on the card ({size} MB to copy)"
+
+msgid "theme-create-copying"
+msgstr "Copying the theme…"
+
+msgid "theme-create-done"
+msgstr "Theme {name} created from {theme}"
+
+msgid "theme-create-failed"
+msgstr "The theme could not be created or deleted (see the log)"
+
+msgid "theme-delete-none"
+msgstr "No theme to delete (the theme in use, clear and sombre stay)"
+
+msgid "theme-delete-question"
+msgstr "Delete the theme {name}?"
+
+msgid "theme-delete-explain"
+msgstr "Its files (menus, colours, images, sounds, videos) will be erased from the cabinet"
+
+msgid "theme-delete-done"
+msgstr "Theme {name} deleted"
+
 msgid "theme-export"
 msgstr "Export the theme"
 

@@ -5770,6 +5770,45 @@ msgstr "Boutons et raccourcis"
 msgid "edit-screens-panel-theme"
 msgstr "Thème"
 
+msgid "theme-create"
+msgstr "Créer un thème…"
+
+msgid "theme-delete"
+msgstr "Supprimer un thème"
+
+msgid "theme-create-name"
+msgstr "Nom du nouveau thème (copie de {theme})"
+
+msgid "theme-create-bad"
+msgstr "Nom de thème : lettres, chiffres, espaces, - et _ ({most} caractères au plus)"
+
+msgid "theme-create-exists"
+msgstr "Ce nom est déjà pris par un thème de la borne"
+
+msgid "theme-create-space"
+msgstr "Pas assez de place sur la carte ({size} Mo à copier)"
+
+msgid "theme-create-copying"
+msgstr "Copie du thème…"
+
+msgid "theme-create-done"
+msgstr "Thème {name} créé à partir de {theme}"
+
+msgid "theme-create-failed"
+msgstr "Le thème n'a pas pu être créé ou supprimé (voir le journal)"
+
+msgid "theme-delete-none"
+msgstr "Aucun thème à supprimer (le thème utilisé, clear et sombre restent)"
+
+msgid "theme-delete-question"
+msgstr "Supprimer le thème {name} ?"
+
+msgid "theme-delete-explain"
+msgstr "Ses fichiers (menus, couleurs, images, sons, vidéos) seront effacés de la borne"
+
+msgid "theme-delete-done"
+msgstr "Thème {name} supprimé"
+
 msgid "theme-export"
 msgstr "Exporter le thème"
 

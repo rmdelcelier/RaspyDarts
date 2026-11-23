@@ -5699,6 +5699,45 @@ msgstr "Botones y atajos"
 msgid "edit-screens-panel-theme"
 msgstr "Tema"
 
+msgid "theme-create"
+msgstr "Crear un tema…"
+
+msgid "theme-delete"
+msgstr "Eliminar un tema"
+
+msgid "theme-create-name"
+msgstr "Nombre del nuevo tema (copia de {theme})"
+
+msgid "theme-create-bad"
+msgstr "Nombre del tema: letras, cifras, espacios, - y _ ({most} caracteres como máximo)"
+
+msgid "theme-create-exists"
+msgstr "Este nombre ya lo usa un tema de la máquina"
+
+msgid "theme-create-space"
+msgstr "No hay espacio suficiente en la tarjeta ({size} MB que copiar)"
+
+msgid "theme-create-copying"
+msgstr "Copiando el tema…"
+
+msgid "theme-create-done"
+msgstr "Tema {name} creado a partir de {theme}"
+
+msgid "theme-create-failed"
+msgstr "No se ha podido crear o eliminar el tema (ver el registro)"
+
+msgid "theme-delete-none"
+msgstr "Ningún tema que eliminar (el tema en uso, clear y sombre se quedan)"
+
+msgid "theme-delete-question"
+msgstr "¿Eliminar el tema {name}?"
+
+msgid "theme-delete-explain"
+msgstr "Sus archivos (menús, colores, imágenes, sonidos, vídeos) se borrarán de la máquina"
+
+msgid "theme-delete-done"
+msgstr "Tema {name} eliminado"
+
 msgid "theme-export"
 msgstr "Exportar el tema"
 

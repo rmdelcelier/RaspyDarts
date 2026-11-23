@@ -1617,9 +1617,9 @@ class Editor:
 # A tuple : its items side by side on one line
 # Fond animé, Vidéo d'introduction and Police : in Personnaliser le thème (its panel Général)
 SCREENS_PANELS = (('edit-screens-panel-buttons', None), ('edit-screens-panel-theme',
-                  ('theme', 'theme-colors', ('theme-export', 'theme-import'))))
+                  ('theme', 'theme-colors', ('theme-create', 'theme-delete'), ('theme-export', 'theme-import'))))
 # Side by side : the one on the left, the one on the right
-PAIRS = {'theme-export': 'theme-import'}
+PAIRS = {'theme-export': 'theme-import', 'theme-create': 'theme-delete'}
 
 
 def screens_entries():
@@ -1722,6 +1722,7 @@ def look_values(screen):
     texts = {'theme': translate('colorset'), 'theme-colors': translate('theme-customize'),
              'animated-background': translate('animated-background'), 'font': translate('font'),
              'theme-export': translate('theme-export'), 'theme-import': translate('theme-import'),
+             'theme-create': translate('theme-create'), 'theme-delete': translate('theme-delete'),
              'intro-video': translate('intro-video')}
     return values, texts
 
@@ -1815,6 +1816,9 @@ def screens_choice(screen, keys, name):
     elif name in ('theme-export', 'theme-import'):
         from include import cthemefiles
         (cthemefiles.export_theme if name == 'theme-export' else cthemefiles.import_theme)(screen, keys)
+    elif name in ('theme-create', 'theme-delete'):
+        from include import cthemefiles
+        (cthemefiles.create_theme if name == 'theme-create' else cthemefiles.delete_theme)(screen, keys)
     else:
         Editor(screen, name, keys).run()
 
