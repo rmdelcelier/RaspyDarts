@@ -116,6 +116,10 @@ GROUPS = (('theme-group-menus', ('theme-plate-menus', 'theme-plate-settings', 't
                                  'theme-plate-messages', 'theme-plate-shortcuts', 'theme-plate-borders')),
           ('theme-group-games', ('theme-plate-game', 'theme-plate-players', 'theme-plate-games',
                                  'theme-plate-bob27', 'theme-plate-fighters')))
+# The third panel : what makes the look of the theme besides its colours (their screens in
+# include/cmenueditor.py, screens_choice), each with its value of the moment
+GENERAL = ('theme-group-general', ('animated-background', 'intro-video', 'font'))
+PANELS = GROUPS + (GENERAL,)
 
 
 def perso_path(screen):
@@ -427,10 +431,17 @@ class ThemeEditor:
     # ------------------------------------------------------------------ main loop
     def run(self):
         '''
-        The first page : the plates in two panels (menus, games), Quitter sans enregistrer and
+        The first page : the plates in two panels (menus, games), the animated background, the
+        video of introduction and the font in a third one (general), Quitter sans enregistrer and
         Enregistrer et quitter at the bottom ; a plate chosen, then this page again
         '''
-        entries = [name for _group, names in GROUPS for name in names] + ['quit', 'save']
+        entries = [name for _group, names in PANELS for name in names] + ['quit', 'save']
+        # The columns (the panels) : the index of their first entry and their length
+        starts, position = [], 0
+        for _group, names in PANELS:
+            starts.append((position, len(names)))
+            position += len(names)
+        plates = position
         selected = 0
         while True:
             zones = self.draw_first_page(entries, selected)
@@ -444,18 +455,20 @@ class ThemeEditor:
                 if self.changed and self.screen.ask_yes_no(self.translate('theme-save-question')):
                     self.save()
                 return
-            # Two columns (the panels) of their own lengths, then the two buttons at the bottom
-            first = len(GROUPS[0][1])
-            plates = first + len(GROUPS[1][1])
+            # The columns (the panels) of their own lengths, then the two buttons at the bottom.
             # The wheel of a knob (BTN_LEFT / BTN_RIGHT) : every entry in the order of reading
+            column = next((number for number, (start, count) in enumerate(starts) if start <= selected < start + count), None)
             if key in ('down', 'BTN_DOWN', 'BTN_RIGHT'):
                 selected = (selected + 1) % len(entries)
             elif key in ('up', 'BTN_UP', 'BTN_LEFT'):
                 selected = (selected - 1) % len(entries)
-            elif key == 'right' and selected < first:
-                selected = min(first + selected, plates - 1)
-            elif key == 'left' and first <= selected < plates:
-                selected = min(selected - first, first - 1)
+            elif key in ('right', 'left') and column is not None:
+                # The next panel (or the one before), at the same height
+                target = column + (1 if key == 'right' else -1)
+                if 0 <= target < len(starts):
+                    row = selected - starts[column][0]
+                    start, count = starts[target]
+                    selected = start + min(row, count - 1)
             elif key in ('right', 'left') and selected >= plates:
                 selected = plates + 1 if selected == plates else plates
             elif key in self.keys['enter'] + ['space']:
@@ -465,6 +478,11 @@ class ThemeEditor:
                 if entry == 'save':
                     self.save()
                     return
+                if entry in GENERAL[1]:
+                    # Fond animé, Vidéo d'introduction, Police : their own screens
+                    from include import cmenueditor    # pylint: disable=import-outside-toplevel
+                    cmenueditor.screens_choice(self.screen, self.keys, entry)
+                    continue
                 self.plate(next(plate for plate in PLATES if plate[0] == entry))
 
     def listen(self):
@@ -482,7 +500,7 @@ class ThemeEditor:
 
     def draw_first_page(self, entries, selected):
         '''
-        Two panels (menus, games) of buttons, the buttons at the bottom. Returns the zones
+        Three panels (menus, games, general) of buttons, the buttons at the bottom. Returns the zones
         '''
         screen = self.screen
         width, height = self.size
@@ -491,18 +509,29 @@ class ThemeEditor:
         self.banner()
         zones = {}
         index = 0
-        for number, (group, names) in enumerate(GROUPS):
-            panel = pygame.Rect(int(width * (1 + number * 7.25) / 16), int(height * 3.3 / 16),
-                                int(width * 6.75 / 16), int(height * 9.8 / 16))
+        # Three panels side by side ; the lines of the third with their value (as Modifier les écrans)
+        from include import cmenueditor    # pylint: disable=import-outside-toplevel
+        values, texts = cmenueditor.look_values(screen)
+        count = len(PANELS)
+        panel_w = 14.4 / count - 0.3
+        for number, (group, names) in enumerate(PANELS):
+            panel = pygame.Rect(int(width * (0.8 + number * (panel_w + 0.3)) / 16), int(height * 3.3 / 16),
+                                int(width * panel_w / 16), int(height * 9.8 / 16))
             pygame.draw.rect(screen.screen, (30, 30, 30), panel, border_radius=18)
             pygame.draw.rect(screen.screen, (140, 140, 140), panel, 2, border_radius=18)
             title = pygame.Rect(panel.x, panel.y + int(height * 0.2 / 16), panel.width, int(height * 0.9 / 16))
             screen.blit_text(self.translate(group), title.x, title.y, title.width, title.height, (255, 200, 0))
-            step = (panel.bottom - title.bottom - int(height * 0.3 / 16)) / len(names)
+            # A short panel (Général) : its lines not taller than those of the others
+            step = min((panel.bottom - title.bottom - int(height * 0.3 / 16)) / len(names), height * 1.6 / 16)
             for row, name in enumerate(names):
                 rect = pygame.Rect(panel.x + int(width * 0.4 / 16), int(title.bottom + row * step + step * 0.12),
                                    panel.width - int(width * 0.8 / 16), int(step * 0.76))
                 chosen = index == selected
+                if name in values:
+                    cmenueditor.value_item(screen, rect, texts[name], values[name], chosen)
+                    zones[index] = rect
+                    index += 1
+                    continue
                 pygame.draw.rect(screen.screen, (90, 80, 30) if chosen else (70, 70, 70), rect, border_radius=12)
                 if chosen:
                     pygame.draw.rect(screen.screen, CHOSEN, rect, 3, border_radius=12)

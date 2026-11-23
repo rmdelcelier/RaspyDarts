@@ -5427,6 +5427,9 @@ msgstr "Rueda o flechas: elegir - Validar: abrir o cambiar - Pulsación larga o 
 msgid "theme-group-menus"
 msgstr "Menús"
 
+msgid "theme-group-general"
+msgstr "General"
+
 msgid "theme-group-games"
 msgstr "Juegos"
 

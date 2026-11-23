@@ -1615,8 +1615,9 @@ class Editor:
 
 # Modifier les écrans : its two panels (as Personnaliser le thème)
 # A tuple : its items side by side on one line
+# Fond animé, Vidéo d'introduction and Police : in Personnaliser le thème (its panel Général)
 SCREENS_PANELS = (('edit-screens-panel-buttons', None), ('edit-screens-panel-theme',
-                  ('theme', 'theme-colors', 'animated-background', 'intro-video', 'font', ('theme-export', 'theme-import'))))
+                  ('theme', 'theme-colors', ('theme-export', 'theme-import'))))
 # Side by side : the one on the left, the one on the right
 PAIRS = {'theme-export': 'theme-import'}
 
@@ -1688,6 +1689,20 @@ def draw_screens_menu(screen, panels, selected):
     '''
     translate = screen.lang.translate
     width, height = screen.res['x'], screen.res['y']
+    values, texts = look_values(screen)
+    texts.update({name: translate(text) for name, text in SCREENS})
+    screen.display_background()
+    screen.menu_header(translate('edit-screens'))
+    return draw_screens_panels(screen, panels, selected, values, texts, width, height)
+
+
+def look_values(screen):
+    '''
+    The lines of the look of the theme with a value (theme, font, animated background, video of
+    introduction) : ({name : its value}, {name : its text}), for Modifier les écrans and
+    Personnaliser le thème
+    '''
+    translate = screen.lang.translate
     globals_ = screen.config.config['SectionGlobals']
     video = str(globals_.get('animated_background') or '')
     effect = str(globals_.get('animated_effect') or 'none')
@@ -1708,9 +1723,14 @@ def draw_screens_menu(screen, panels, selected):
              'animated-background': translate('animated-background'), 'font': translate('font'),
              'theme-export': translate('theme-export'), 'theme-import': translate('theme-import'),
              'intro-video': translate('intro-video')}
-    texts.update({name: translate(text) for name, text in SCREENS})
-    screen.display_background()
-    screen.menu_header(translate('edit-screens'))
+    return values, texts
+
+
+def draw_screens_panels(screen, panels, selected, values, texts, width, height):
+    '''
+    The two panels of Modifier les écrans and Retour ; their zones
+    '''
+    translate = screen.lang.translate
     zones = {}
     index = 0
     colorset = screen.colorset

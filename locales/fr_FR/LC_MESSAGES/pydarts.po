@@ -5498,6 +5498,9 @@ msgstr "Molette ou flèches : choisir - Valider : ouvrir ou changer - Appui long
 msgid "theme-group-menus"
 msgstr "Menus"
 
+msgid "theme-group-general"
+msgstr "Général"
+
 msgid "theme-group-games"
 msgstr "Jeux"
 

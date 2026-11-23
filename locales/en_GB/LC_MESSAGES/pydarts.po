@@ -5694,6 +5694,9 @@ msgstr "Knob or arrows: choose - Validate: open or change - Long press or Esc: b
 msgid "theme-group-menus"
 msgstr "Menus"
 
+msgid "theme-group-general"
+msgstr "General"
+
 msgid "theme-group-games"
 msgstr "Games"
 

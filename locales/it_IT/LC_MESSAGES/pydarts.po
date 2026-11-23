@@ -5489,6 +5489,9 @@ msgstr "Manopola o frecce: scegliere - Convalida: aprire o cambiare - Pressione 
 msgid "theme-group-menus"
 msgstr "Menu"
 
+msgid "theme-group-general"
+msgstr "Generale"
+
 msgid "theme-group-games"
 msgstr "Giochi"
 

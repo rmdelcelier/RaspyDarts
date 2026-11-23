@@ -5476,6 +5476,9 @@ msgstr "Draaiknop of pijlen: kiezen - Bevestigen: openen of wijzigen - Lang druk
 msgid "theme-group-menus"
 msgstr "Menu's"
 
+msgid "theme-group-general"
+msgstr "Algemeen"
+
 msgid "theme-group-games"
 msgstr "Spellen"
 
