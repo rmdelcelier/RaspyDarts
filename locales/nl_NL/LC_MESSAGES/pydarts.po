@@ -5570,7 +5570,7 @@ msgstr "Auto (stilstaand)"
 
 
 msgid "activity_corner"
-msgstr "Activiteitsvenster"
+msgstr "Informatiepop-up"
 
 msgid "activity-corner-top-right"
 msgstr "Rechtsboven"
@@ -5708,7 +5708,7 @@ msgid "netwait-background"
 msgstr "Op de achtergrond wachten"
 
 msgid "netwait-hint"
-msgstr "U kunt dit scherm verlaten: het activiteitsvenster neemt het over"
+msgstr "U kunt dit scherm verlaten: de informatiepop-up neemt het over"
 
 msgid "activity-netwait-master"
 msgstr "Spel {name}: {players} speler(s)"
@@ -6606,6 +6606,12 @@ msgstr "{name} verwijderd van RaspyHub"
 
 msgid "hub-remove-failed"
 msgstr "{name} kon niet van RaspyHub worden verwijderd ({error})"
+
+msgid "hub-news-published-short"
+msgstr "Thema {name} geaccepteerd"
+
+msgid "hub-news-refused-short"
+msgstr "Thema {name} geweigerd"
 
 msgid "hub-news-published"
 msgstr "Je thema {name} is geaccepteerd: het staat bij Downloaden van RaspyHub"

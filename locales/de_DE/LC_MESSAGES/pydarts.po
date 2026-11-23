@@ -5516,7 +5516,7 @@ msgstr "Auto (Standbild)"
 
 
 msgid "activity_corner"
-msgstr "Aktivitätsfenster"
+msgstr "Info-Popup"
 
 msgid "activity-corner-top-right"
 msgstr "Oben rechts"
@@ -5654,7 +5654,7 @@ msgid "netwait-background"
 msgstr "Im Hintergrund warten"
 
 msgid "netwait-hint"
-msgstr "Sie können diesen Bildschirm verlassen: das Aktivitätsfenster übernimmt"
+msgstr "Sie können diesen Bildschirm verlassen: das Info-Popup übernimmt"
 
 msgid "activity-netwait-master"
 msgstr "Spiel {name}: {players} Spieler"
@@ -6552,6 +6552,12 @@ msgstr "{name} von RaspyHub gelöscht"
 
 msgid "hub-remove-failed"
 msgstr "{name} konnte nicht von RaspyHub gelöscht werden ({error})"
+
+msgid "hub-news-published-short"
+msgstr "Thema {name} angenommen"
+
+msgid "hub-news-refused-short"
+msgstr "Thema {name} abgelehnt"
 
 msgid "hub-news-published"
 msgstr "Ihr Thema {name} wurde angenommen: es ist unter Von RaspyHub herunterladen"

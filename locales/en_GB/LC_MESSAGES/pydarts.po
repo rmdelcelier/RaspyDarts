@@ -5788,7 +5788,7 @@ msgstr "Auto (still)"
 
 
 msgid "activity_corner"
-msgstr "Activity window"
+msgstr "Information popup"
 
 msgid "activity-corner-top-right"
 msgstr "Top right"
@@ -5926,7 +5926,7 @@ msgid "netwait-background"
 msgstr "Wait in the background"
 
 msgid "netwait-hint"
-msgstr "You can leave this screen: the activity window takes over"
+msgstr "You can leave this screen: the information popup takes over"
 
 msgid "activity-netwait-master"
 msgstr "Game {name}: {players} player(s)"
@@ -6824,6 +6824,12 @@ msgstr "{name} deleted from RaspyHub"
 
 msgid "hub-remove-failed"
 msgstr "{name} could not be deleted from RaspyHub ({error})"
+
+msgid "hub-news-published-short"
+msgstr "Theme {name} accepted"
+
+msgid "hub-news-refused-short"
+msgstr "Theme {name} refused"
 
 msgid "hub-news-published"
 msgstr "Your theme {name} has been accepted: it is in Download from RaspyHub"

@@ -312,11 +312,17 @@ class Screen(pygame.Surface):
             self.hub_news_asked = True
             from include import cthemehub    # pylint: disable=import-outside-toplevel
             cthemehub.check_news(self)
-        if can_redraw and getattr(self, 'hub_news', None) and getattr(self, 'menu_shown', None)                 and getattr(self.rpi, 'capture', None) is None:
-            items, self.hub_news = self.hub_news, None
-            from include import cthemehub    # pylint: disable=import-outside-toplevel
-            cthemehub.show_news(self, items)
-            return True
+        # Their decisions : a window over a menu (drawn again after it), in the activity indicator
+        # on the other screens (a window would hide them), kept for after a game
+        if getattr(self, 'hub_news', None) and getattr(self.rpi, 'capture', None) is None:
+            animated = getattr(self, 'bganim', None)
+            if animated is not None and not animated.in_game:
+                items, self.hub_news = self.hub_news, None
+                from include import cthemehub    # pylint: disable=import-outside-toplevel
+                if can_redraw and getattr(self, 'menu_shown', None):
+                    cthemehub.show_news(self, items)
+                    return True
+                cthemehub.show_news_corner(self, items)
         if can_redraw and getattr(self, 'hub_return', None) and getattr(self, 'menu_shown', None)                 and getattr(self.rpi, 'capture', None) is None:
             self.hub_return = None
             from include import cthemehub    # pylint: disable=import-outside-toplevel

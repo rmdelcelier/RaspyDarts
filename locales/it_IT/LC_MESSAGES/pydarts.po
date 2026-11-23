@@ -5583,7 +5583,7 @@ msgstr "Auto (fissa)"
 
 
 msgid "activity_corner"
-msgstr "Finestra di attività"
+msgstr "Popup informativo"
 
 msgid "activity-corner-top-right"
 msgstr "In alto a destra"
@@ -5721,7 +5721,7 @@ msgid "netwait-background"
 msgstr "Attendere in background"
 
 msgid "netwait-hint"
-msgstr "Puoi lasciare questa schermata: la finestra di attività prende il testimone"
+msgstr "Puoi lasciare questa schermata: il popup informativo prende il testimone"
 
 msgid "activity-netwait-master"
 msgstr "Partita {name}: {players} giocatore/i"
@@ -6619,6 +6619,12 @@ msgstr "{name} eliminato da RaspyHub"
 
 msgid "hub-remove-failed"
 msgstr "Impossibile eliminare {name} da RaspyHub ({error})"
+
+msgid "hub-news-published-short"
+msgstr "Tema {name} accettato"
+
+msgid "hub-news-refused-short"
+msgstr "Tema {name} rifiutato"
 
 msgid "hub-news-published"
 msgstr "Il tuo tema {name} è stato accettato: è in Scarica da RaspyHub"

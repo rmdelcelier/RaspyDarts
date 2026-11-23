@@ -5521,7 +5521,7 @@ msgstr "Auto (fija)"
 
 
 msgid "activity_corner"
-msgstr "Ventana de actividad"
+msgstr "Ventana emergente de información"
 
 msgid "activity-corner-top-right"
 msgstr "Arriba a la derecha"
@@ -5659,7 +5659,7 @@ msgid "netwait-background"
 msgstr "Esperar en segundo plano"
 
 msgid "netwait-hint"
-msgstr "Puede salir de esta pantalla: la ventana de actividad toma el relevo"
+msgstr "Puede salir de esta pantalla: la ventana emergente de información toma el relevo"
 
 msgid "activity-netwait-master"
 msgstr "Partida {name}: {players} jugador(es)"
@@ -6557,6 +6557,12 @@ msgstr "{name} borrado de RaspyHub"
 
 msgid "hub-remove-failed"
 msgstr "No se ha podido borrar {name} de RaspyHub ({error})"
+
+msgid "hub-news-published-short"
+msgstr "Tema {name} aceptado"
+
+msgid "hub-news-refused-short"
+msgstr "Tema {name} rechazado"
 
 msgid "hub-news-published"
 msgstr "Tu tema {name} ha sido aceptado: está en Descargar desde RaspyHub"

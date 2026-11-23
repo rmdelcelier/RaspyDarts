@@ -6,7 +6,7 @@ top right by default), over the animated background or the background of the the
 
 Each task gives a function returning its state : None (finished, the line goes away), or a
 dict : text, fraction (0 to 1 ; None : waiting, an animation instead of a bar), final (its
-end said : shown a few seconds then gone). A task can be chosen (select : a function) : the
+end said : shown a few seconds then gone ; final_time : how many, FINAL_TIME by default). A task can be chosen (select : a function) : the
 indicator is then a button of the menus (see Screen.run_menu), reached with the wheel of a USB
 knob, the buttons, the arrows or a touch, framed when it is selected.
 """
@@ -73,7 +73,7 @@ class Activities:
                 value = None
             if value is not None and value.get('final'):
                 started = self.finals.setdefault(key, now)
-                if now - started > FINAL_TIME:
+                if now - started > value.get('final_time', FINAL_TIME):
                     value = None
             if value is None:
                 self.remove(key)
@@ -192,11 +192,13 @@ class Activities:
             room = item.width - 2 * radius
             if rendered.get_width() > room:
                 rendered = pygame.transform.smoothscale(rendered, (room, rendered.get_height()))
+            if state.get('final'):
+                # Its end said : no bar, the text in the middle
+                surface.blit(rendered, (item.x + radius, item.centery - rendered.get_height() // 2))
+                continue
             surface.blit(rendered, (item.x + radius, item.y + int(line * 0.08)))
             bar = pygame.Rect(item.x + radius, item.bottom - int(line * 0.32), item.width - 2 * radius, int(line * 0.16))
             fraction = state.get('fraction')
-            if state.get('final'):
-                continue
             pygame.draw.rect(surface, (70, 70, 70), bar, border_radius=bar.height // 2)
             if fraction is not None:
                 done = pygame.Rect(bar.x, bar.y, max(bar.height, int(bar.width * max(0.0, min(1.0, fraction)))), bar.height)

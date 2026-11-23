@@ -349,6 +349,8 @@ def upload(screen, draft, zip_path):
                          f"{answer.get('version')}, {answer.get('state')})")
         screen.message([translate(screen, 'hub-sent')], 4000, 'menu-ok', 'middle', 'big')
         award(screen, draft.data.get('player'))
+        # Its decision watched (said when it comes, wherever the borne is)
+        check_news(screen)
         return
     code = str(answer.get('error') or '')
     screen.logs.error(f"RaspyHub : theme {draft.data.get('name')} not sent (HTTP {status}, {code or outcome.get('error')} "
@@ -776,17 +778,52 @@ def show_news(screen, items):
     said(items)
 
 
+def news_short(screen, item):
+    '''
+    A decision in the activity indicator (a corner of the screen) : a few words
+    '''
+    name, state, _reason, _key = item
+    return translate(screen, f'hub-news-{state}-short').replace('{name}', name)
+
+
+def show_news_corner(screen, items):
+    '''
+    A screen which is not a menu (settings, Modifier les écrans...) : the decisions in the
+    activity indicator, a while, then marked as said (a window would hide the screen)
+    '''
+    for item in items:
+        text = news_short(screen, item)
+        screen.activities.add(f'hub-news-{item[3]}',
+                              lambda text=text: {'text': text, 'final': True, 'final_time': NEWS_CORNER_TIME})
+    said(items)
+
+
+# A theme of this borne waiting : the server asked again this often (seconds)
+WATCH_EVERY = 300
+NEWS_CORNER_TIME = 20
+_watching = threading.Lock()
+
+
 def check_news(screen):
     '''
-    At the start : the themes of this borne asked in the background (only when it sent one) ;
-    their decisions shown by the menus (Screen.idle_turn, screen.hub_news)
+    At the start, and after a theme is sent : the themes of this borne asked in the background
+    (only when it sent one), again every WATCH_EVERY while one waits for its decision ; the
+    decisions given to the screen (screen.hub_news), said wherever the borne is out of the
+    games (Screen.idle_turn)
     '''
-    if not has_sent():
+    if not has_sent() or not _watching.acquire(blocking=False):
         return
 
-    def ask():
-        themes = mine(screen.logs)
-        found = news(themes)
-        if found:
-            screen.hub_news = found
-    threading.Thread(target=ask, daemon=True).start()
+    def watch():
+        try:
+            while True:
+                themes = mine(screen.logs)
+                found = news(themes)
+                if found:
+                    screen.hub_news = found
+                if themes is not None and not any(theme.get('state') == 'pending' for theme in themes):
+                    return
+                time.sleep(WATCH_EVERY)
+        finally:
+            _watching.release()
+    threading.Thread(target=watch, daemon=True).start()

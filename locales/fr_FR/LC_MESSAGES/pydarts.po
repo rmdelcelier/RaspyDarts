@@ -5592,7 +5592,7 @@ msgstr "Auto (fixe)"
 
 
 msgid "activity_corner"
-msgstr "Fenêtre d'activité"
+msgstr "Popup d'information"
 
 msgid "activity-corner-top-right"
 msgstr "En haut à droite"
@@ -5730,7 +5730,7 @@ msgid "netwait-background"
 msgstr "Attendre en tâche de fond"
 
 msgid "netwait-hint"
-msgstr "Vous pouvez quitter cet écran : la fenêtre d'activité prend le relais"
+msgstr "Vous pouvez quitter cet écran : la popup d'information prend le relais"
 
 msgid "activity-netwait-master"
 msgstr "Partie {name} : {players} joueur(s)"
@@ -6628,6 +6628,12 @@ msgstr "{name} supprimé de RaspyHub"
 
 msgid "hub-remove-failed"
 msgstr "{name} n'a pas pu être supprimé de RaspyHub ({error})"
+
+msgid "hub-news-published-short"
+msgstr "Thème {name} accepté"
+
+msgid "hub-news-refused-short"
+msgstr "Thème {name} refusé"
 
 msgid "hub-news-published"
 msgstr "Votre thème {name} a été accepté : il est dans Télécharger depuis RaspyHub"
