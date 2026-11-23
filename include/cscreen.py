@@ -76,6 +76,8 @@ TAB_KEYS = ['tab', 'shake']
 VOLUME_UP_KEYS = ['+', 'BTN_PLUS', 'BTN_VOLUME_UP', 'VOLUME-UP', 'S14']
 VOLUME_DOWN_KEYS = ['-', 'BTN_MINUS', 'BTN_VOLUME_DOWN', 'VOLUME-DOWN', 'S8']
 VOLUME_MUTE = ['BTN_VOLUME_MUTE', 'VOLUME-MUTE', 'S7']
+# The volume by the target, out of the games : + 10 %, - 10 %, sound cut / back
+TARGET_VOLUME_KEYS = ('S14', 'S8', 'S7')
 
 # Leaving a game : without an answer in this time (ms), back to the game
 QUIT_GAME_TIME = 5000
@@ -2146,10 +2148,8 @@ class Screen(pygame.Surface):
             self.create_screen(False, self.rpi.newresolution)
         elif key == 'TOGGLEFULLSCREEN':    # Toggle fullscreen
             self.create_screen(True, False)
-        elif sound and key in VOLUME_UP_KEYS + VOLUME_DOWN_KEYS:
-            self.adjust_volume(key, False)
-        elif sound and key in VOLUME_MUTE:
-            self.adjust_volume(key, False)
+        elif sound and key in VOLUME_UP_KEYS + VOLUME_DOWN_KEYS + VOLUME_MUTE:
+            self.volume_key(key)
 
         return selected
 
@@ -2374,7 +2374,10 @@ class Screen(pygame.Surface):
                 selected = self.navigate(selected, key_pressed, nb_elements, 3, 3, sound=False, zero=zero)
             else:
                 selected = self.navigate(selected, key_pressed, nb_elements, 2, 2, sound=False, zero=zero)
-            
+            # + and - add and remove players here : the volume by the target only
+            if key_pressed in TARGET_VOLUME_KEYS:
+                self.volume_key(key_pressed)
+
             if key_pressed in shortcuts:
                 selected = int(key_pressed.replace('F', ''))
                 key_pressed = 'enter'
@@ -8400,6 +8403,9 @@ class Screen(pygame.Surface):
                 pressed = 'escape' if key in keys['back'] else key
                 button = next((button for button in everything
                                if pressed in [cmenus.key_name(k) for k in cmenus.as_list(button.get('shortcut'))]), None)
+                # Not a key of the menu : the volume (S14 / S8 / S7 of the target, buttons Volume)
+                if button is None and not any(key in keys[kind] for kind in keys) and self.volume_key(key):
+                    continue
             if button is None or button.get('unavailable'):
                 continue
             # The selection kept is the one of a button of the list (not Back at the bottom)
@@ -8856,6 +8862,9 @@ class Screen(pygame.Surface):
                 pressed = 'escape' if key in keys['back'] else key
                 button = next((button for button in everything
                                if pressed in [cmenus.key_name(k) for k in cmenus.as_list(button.get('shortcut'))]), None)
+                # Not a key of the menu : the volume (S14 / S8 / S7 of the target, buttons Volume)
+                if button is None and not any(key in keys[kind] for kind in keys) and self.volume_key(key):
+                    continue
             if button is None:
                 continue
             if button.get('unavailable'):
@@ -13710,6 +13719,25 @@ class Screen(pygame.Surface):
         while played_sound.get_busy():
              pygame.time.wait(100)
             
+    def volume_key(self, key):
+        '''
+        Out of the games, a key of the volume (S14 / S8 / S7 of the target, buttons Volume, + / -) :
+        the volume changed and kept in Volume (Personnalisation du jeu), the sound cut (S7) only
+        for now. False : not a key of the volume
+        '''
+        if key not in VOLUME_UP_KEYS + VOLUME_DOWN_KEYS + VOLUME_MUTE:
+            return False
+        before = self.sound_volume
+        self.adjust_volume(key, False)
+        if key not in VOLUME_MUTE and self.sound_volume != before:
+            try:
+                self.config.set_value('SectionGlobals', 'soundvolume', self.sound_volume)
+                self.config.write_file()
+                self.logs.info(f"Volume : {self.sound_volume} (kept)")
+            except Exception as error:    # pylint: disable=broad-except
+                self.logs.error(f"Volume : not kept ({error})")
+        return True
+
     def adjust_volume(self, key, backup=True):
         '''
         Set sound volume
