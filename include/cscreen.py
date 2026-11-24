@@ -1626,7 +1626,8 @@ class Screen(pygame.Surface):
             setters = {'Jo': 'set_jo_card_config', 'Re': 'set_jo_card_config', 'Jo416': 'set_jo_416_card_config',
                        'Ji': 'set_ji_card_config', 'Mm': 'set_ji_card_config', 'Ji2': 'set_ji2_card_config',
                        'Ji3': 'set_ji2_card_config', 'MMWVdarts': 'set_mmworks_vdartscard_config', 'GB': 'set_gb_card_config',
-                       'ED': 'set_ed900_card_config', 'Jt': 'set_jt_card_config', 'Jt2': 'set_jt2_card_config',
+                       'ED': 'set_ed900_card_config', 'Lk': 'set_linker_card_config', 'Lk+': 'set_linker_card_config',
+                       'Jt': 'set_jt_card_config', 'Jt2': 'set_jt2_card_config',
                        'Jiz': 'set_jiz_card_config', 'Ch': 'set_clk_card_config'}
             if card in setters:
                 getattr(self.config, setters[card])()
@@ -1769,6 +1770,8 @@ class Screen(pygame.Surface):
         if state.get('leds_ji') == 'yes':
             if card == 'MMWVdarts':
                 self.config.set_mmworks_leds_config()
+            elif card in ('Lk', 'Lk+'):
+                self.config.set_linker_leds_config()
             elif state.get('tire') is not None:
                 self.config.set_dartcab_leds_config(state['tire'])
             else:
@@ -7099,9 +7102,17 @@ class Screen(pygame.Surface):
             self.menu_header('animations-menu')
 
             index = 0
+            # Two columns (easier to read), in lines as the choice of the games : the first event
+            # on the left, the next one on its right, then the line below
+            rows = (nb_elements + 1) // 2
             for event in events:
                 index += 1
-                click_zones[event] = self.menu_item((index, nb_elements, selected), (None, f"event-{event}", BTN_CHOICE, None), align='Half')
+                side, row = (index - 1) % 2, (index + 1) // 2
+                # (menu_item takes a column as a run of items : its row given as its place, the
+                # row of the selected one when it is in the same column)
+                chosen_row = (selected + 1) // 2 if selected <= nb_elements and (selected - 1) % 2 == side else 0
+                click_zones[event] = self.menu_item((row, rows, chosen_row), (None, f"event-{event}", BTN_CHOICE, None),
+                                                    column=(side, rows, row))
                 shortcuts.append(event)
                 cursor[event] = index
 
@@ -7125,8 +7136,10 @@ class Screen(pygame.Surface):
             if clicked:
                 key = clicked
 
-            # Navigation
-            selected = self.navigate(selected, key, nb_elements, 1, 1, left_right=True)
+            # Navigation as on the screens of boxes in lines (the choice of the games) : right and
+            # left (and a knob) in reading order, to the next line at the end of one ; up and down
+            # from a line to the other, Retour under the last one
+            selected = self.navigate(selected, key, nb_elements, 1, 1, item_per_line=2, left_right=True)
             if selected <= nb_elements:
                 text = f"event-{shortcuts[selected - 1]}"
             else:

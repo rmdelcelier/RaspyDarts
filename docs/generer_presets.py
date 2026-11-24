@@ -23,6 +23,8 @@ CARDS = {
     'Jo': ('Cible ED110 7*10', 'JoCardConfig', False),
     'Jo416': ('Cible Pro 4*16', 'Jo416CardConfig', False),
     'Ch': ('La Chti Raspycard', 'ClkCardConfig', False),
+    'Lk': ('Linker', 'LinkerCardConfig', False),
+    'Lk+': ('Linker+', 'LinkerCardConfig', False),
     'Jt': ('Carte de Julien V1', 'JtCardConfig', False),
     'Jt2': ('Carte de Julien V2', 'Jt2CardConfig', False),
     'Mm': ('MM-Workshop DartCab', 'JiCardConfig', False),
@@ -33,7 +35,8 @@ CARDS = {
 GROUPS = [
     ('Cartes de Jimmy', ['Ji', 'Jiz', 'Ji3', 'Ji2', 'GB', 'ED']),
     ('Carte de Joffrey', ['Jo', 'Jo416']),
-    ('', ['Ch', 'Jt', 'Jt2', 'Mm', 'MMWVdarts', 'Re']),
+    ('Cartes de Julien', ['Jt', 'Jt2']),
+    ('', ['Ch', 'Lk', 'Lk+', 'Mm', 'MMWVdarts', 'Re']),
 ]
 
 
@@ -56,7 +59,7 @@ for code, (name, model, interior) in CARDS.items():
         'keys': config['KEYS'],
         'extended': {key: str(value) for key, value in config['EXTENDED'].items()},
         'interior': interior,
-        'target_leds': 'mmworks' if code == 'MMWVdarts' else 'ji',
+        'target_leds': {'MMWVdarts': 'mmworks', 'Lk': 'linker', 'Lk+': 'linker'}.get(code, 'ji'),
     }
 
 def po_labels(keys):
@@ -77,7 +80,8 @@ def po_labels(keys):
 data = {
     'groups': GROUPS,
     'cards': presets,
-    'target_leds': {'ji': cconfig.JiLedsConfig, 'mmworks': cconfig.MMWorkshopVdartsLedsConfig},
+    'target_leds': {'ji': cconfig.JiLedsConfig, 'mmworks': cconfig.MMWorkshopVdartsLedsConfig,
+                    'linker': cconfig.LinkerLedsConfig},
     # Boutons, lumieres et jouets de la carte d'extension, et leur broche par defaut
     'extender': {key: str(value) for key, value in extender_defaults().items()},
     'inputs': list(cconfig.DefaultConfig['Raspberry_BoardPinsIns']),

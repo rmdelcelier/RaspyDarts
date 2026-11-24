@@ -7387,7 +7387,7 @@ msgid "wizard-card-old"
 msgstr "Schede precedenti"
 
 msgid "wizard-card-old-sub"
-msgstr "Schede di Jimmy e di Joffrey"
+msgstr "Schede di Jimmy, di Joffrey e di Julien"
 
 msgid "wizard-card-help"
 msgstr "Frecce o tocco: scegliere; Invio: confermare; Esc: indietro"

@@ -7325,7 +7325,7 @@ msgid "wizard-card-old"
 msgstr "Placas antiguas"
 
 msgid "wizard-card-old-sub"
-msgstr "Placas de Jimmy y de Joffrey"
+msgstr "Placas de Jimmy, de Joffrey y de Julien"
 
 msgid "wizard-card-help"
 msgstr "Flechas o tocar: elegir; Intro: confirmar; Esc: volver"

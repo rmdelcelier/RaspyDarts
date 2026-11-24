@@ -7320,7 +7320,7 @@ msgid "wizard-card-old"
 msgstr "Ältere Platinen"
 
 msgid "wizard-card-old-sub"
-msgstr "Platinen von Jimmy und Joffrey"
+msgstr "Platinen von Jimmy, Joffrey und Julien"
 
 msgid "wizard-card-help"
 msgstr "Pfeile oder Berühren: wählen; Eingabe: bestätigen; Esc: zurück"

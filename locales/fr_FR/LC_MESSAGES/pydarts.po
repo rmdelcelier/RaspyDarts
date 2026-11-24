@@ -7049,7 +7049,7 @@ msgid "wizard-card-old"
 msgstr "Anciennes cartes"
 
 msgid "wizard-card-old-sub"
-msgstr "Cartes de Jimmy et de Joffrey"
+msgstr "Cartes de Jimmy, de Joffrey et de Julien"
 
 msgid "wizard-card-help"
 msgstr "Flèches ou toucher : choisir ; Entrée : valider ; Échap : revenir"

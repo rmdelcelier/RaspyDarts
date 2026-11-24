@@ -7590,7 +7590,7 @@ msgid "wizard-card-old"
 msgstr "Older boards"
 
 msgid "wizard-card-old-sub"
-msgstr "Jimmy's and Joffrey's boards"
+msgstr "Jimmy's, Joffrey's and Julien's boards"
 
 msgid "wizard-card-help"
 msgstr "Arrows or touch: choose; Enter: confirm; Escape: back"

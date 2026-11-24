@@ -740,6 +740,50 @@ Jt2CardConfig = {
     'EXTENDED': EXTENDED_CONFIG
     }
 
+# DartsBerry Linker and Linker+ (Julien) : the same wiring for both
+LinkerCardConfig = {
+    'CARD_NAME': 'Linker / Linker+',
+    'INPUT': {
+        'PIN_1': '17', 'PIN_2': '27', 'PIN_3': '22', 'PIN_4': '23', 'PIN_5': '24', 'PIN_6': '9', 'PIN_7': '25', 'PIN_8': '11',
+        'PIN_9': '8', 'PIN_10': '7', 'PIN_11': '', 'PIN_12': '', 'PIN_13': '', 'PIN_14': '', 'PIN_15': '', 'PIN_16': ''
+        },
+    'OUTPUT': {
+        'PIN_1': '20', 'PIN_2': '26', 'PIN_3': '19', 'PIN_4': '16', 'PIN_5': '13', 'PIN_6': '6', 'PIN_7': '5', 'PIN_8': '',
+        'PIN_9': '', 'PIN_10': '', 'PIN_11': '', 'PIN_12': ''
+        },
+    'KEYS': {
+        'S1': '713', 'S2': '919', 'S3': '1119', 'S4': '1113', 'S5': '2213', 'S6': '913',
+        'S7': '719', 'S8': '2219', 'S9': '1713', 'S10': '2413', 'S11': '2719', 'S12': '2713',
+        'S13': '2513', 'S14': '1719', 'S15': '2419', 'S16': '2319', 'S17': '2519', 'S18': '813',
+        'S19': '819', 'S20': '2313', 'D1': '76', 'D2': '926', 'D3': '1126', 'D4': '116',
+        'D5': '226', 'D6': '96', 'D7': '726', 'D8': '2226', 'D9': '176', 'D10': '246',
+        'D11': '2726', 'D12': '276', 'D13': '256', 'D14': '1726', 'D15': '2426', 'D16': '2326',
+        'D17': '2526', 'D18': '86', 'D19': '826', 'D20': '236', 'T1': '75', 'T2': '920',
+        'T3': '1120', 'T4': '115', 'T5': '225', 'T6': '95', 'T7': '720', 'T8': '2220',
+        'T9': '175', 'T10': '245', 'T11': '2720', 'T12': '275', 'T13': '255', 'T14': '1720',
+        'T15': '2420', 'T16': '2320', 'T17': '2520', 'T18': '85', 'T19': '820', 'T20': '235',
+        'SB': '2716', 'DB': '1716', 'PLAYERBUTTON': '', 'GAMEBUTTON': '', 'BACKUPBUTTON': '', 'EXTRABUTTON': '',
+        'MISSDART': ''
+        },
+    'EXTENDED': EXTENDED_CONFIG
+    }
+# The LED of the target of DartsBerry (Target LED)
+LinkerLedsConfig = {
+    'S1': '99,98,97,95,94,93,92', 'S2': '29,28,27,25,24,23,22', 'S3': '9,8,7,5,4,3,2', 'S4': '79,78,77,75,74,73,72', 'S5': '110,111,112,114,116,115,117', 'S6': '59,58,57,55,54,53,52',
+    'S7': '180,181,182,184,186,185,187', 'S8': '160,161,162,164,166,165,167', 'S9': '130,131,132,134,136,135,137', 'S10': '49,48,47,45,44,43,42', 'S11': '159,158,157,155,154,153,152', 'S12': '129,128,127,125,124,123,122',
+    'S13': '60,61,62,64,66,65,67', 'S14': '149,148,147,145,144,143,142', 'S15': '30,31,32,34,36,35,37', 'S16': '179,178,177,175,174,173,172', 'S17': '10,11,12,14,16,15,17', 'S18': '80,81,82,84,86,85,87',
+    'S19': '199,198,197,195,194,193,192', 'S20': '109,108,107,105,104,103,102', 'D1': '91,90', 'D2': '21,20', 'D3': '1,0', 'D4': '71,70',
+    'D5': '119,118', 'D6': '51,50', 'D7': '189,188', 'D8': '169,168', 'D9': '139,138', 'D10': '41,40',
+    'D11': '151,150', 'D12': '121,120', 'D13': '69,68', 'D14': '141,140', 'D15': '39,38', 'D16': '171,170',
+    'D17': '19,18', 'D18': '89,88', 'D19': '191,190', 'D20': '101,100', 'T1': '96', 'T2': '26',
+    'T3': '6', 'T4': '76', 'T5': '113', 'T6': '56', 'T7': '183', 'T8': '163',
+    'T9': '133', 'T10': '46', 'T11': '156', 'T12': '126', 'T13': '63', 'T14': '146',
+    'T15': '33', 'T16': '176', 'T17': '13', 'T18': '83', 'T19': '196', 'T20': '106',
+    'E1': '', 'E2': '', 'E3': '', 'E4': '', 'E5': '', 'E6': '',
+    'E7': '', 'E8': '', 'E9': '', 'E10': '', 'E11': '', 'E12': '',
+    'E13': '', 'E14': '', 'E15': '', 'E16': '', 'E17': '', 'E18': '',
+    'E19': '', 'E20': '', 'SB': '200,201,202', 'DB': '203'
+    }
 ED900Config = {
     'CARD_NAME': 'RaspyCard',
     'INPUT': {
@@ -1617,6 +1661,15 @@ class Config:
         self.set_config('SectionKeys', Jt2CardConfig['KEYS'])
         self.set_config('Raspberry', Jt2CardConfig['EXTENDED'])
 
+    def set_linker_card_config(self):
+        """
+        Linker or Linker+ (Julien) : its pins, its segments
+        """
+        self.set_config('Raspberry_BoardPinsIns', LinkerCardConfig['INPUT'])
+        self.set_config('Raspberry_BoardPinsOuts', LinkerCardConfig['OUTPUT'])
+        self.set_config('SectionKeys', LinkerCardConfig['KEYS'])
+        self.set_config('Raspberry', LinkerCardConfig['EXTENDED'])
+
     def set_ji_card_config(self):
         """
         Set Jimmy or Remi's card config
@@ -1703,6 +1756,12 @@ class Config:
         the quarters
         '''
         self.set_config('LEDTarget', DartcabLedsByTire.get(tire, JiLedsConfig))
+
+    def set_linker_leds_config(self):
+        """
+        The LED of the target of DartsBerry (with the Linker)
+        """
+        self.set_config('LEDTarget', LinkerLedsConfig)
 
     def set_mmworks_leds_config(self):
         """

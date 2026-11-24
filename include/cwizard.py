@@ -23,8 +23,10 @@ IMAGES = os.path.join(cpaths.ROOT_DIR, 'images', 'wizard')
 # The cards : name, maker, photo (images/wizard/<photo>.jpg) ; names as on the web site
 CARDS = {
     'Ch': ('La Chti Raspycard', 'Pascal (ChtiDarts)', 'carte-ch'),
+    'Lk': ('Linker', 'Julien', 'carte-linker'),
+    'Lk+': ('Linker+', 'Julien', 'carte-linker-plus'),
     'Jt': ('Carte de Julien V1', 'Julien', None),
-    'Jt2': ('Carte de Julien V2', 'Julien · DartsBerry Linker / Linker+', 'carte-jt2'),
+    'Jt2': ('Carte de Julien V2', 'Julien', None),
     'Mm': ('MM-Workshop DartCab', 'MM-Workshop', 'carte-mm'),
     'MMWVdarts': ('MM-Workshop VDarts', 'MM-Workshop', 'carte-mmwvdarts'),
     'Re': ('DartBoard', '', None),
@@ -37,8 +39,8 @@ CARDS = {
     'Jo': ('Cible ED110 7*10', 'Joffrey', None),
     'Jo416': ('Cible Pro 4*16', 'Joffrey', None),
 }
-CURRENT = ['Ch', 'Jt', 'Jt2', 'Mm', 'MMWVdarts', 'Re']
-OLD = ['Ji', 'Jiz', 'Ji3', 'Ji2', 'GB', 'ED', 'Jo', 'Jo416']
+CURRENT = ['Ch', 'Lk', 'Lk+', 'Mm', 'MMWVdarts', 'Re']
+OLD = ['Ji', 'Jiz', 'Ji3', 'Ji2', 'GB', 'ED', 'Jo', 'Jo416', 'Jt', 'Jt2']
 OTHER, OLD_TILE = 'Au', 'old'
 
 # The functions of the buttons on the segments of the target : the 4 directions where they
@@ -223,7 +225,7 @@ class Tiles:
 
 def choose_card(screen):
     '''
-    The interface card : its code (as the wizard knows them : Ch, Jt2, Ji...), 'Au' for another
+    The interface card : its code (as the wizard knows them : Ch, Lk, Ji...), 'Au' for another
     card (the first screen of the wizard : no Retour)
     '''
     translate = screen.lang.translate
