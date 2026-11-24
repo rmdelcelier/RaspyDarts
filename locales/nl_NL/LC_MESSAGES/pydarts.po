@@ -4721,7 +4721,28 @@ msgid "coins-badge-large"
 msgstr "Groot"
 
 msgid "coins-input-none"
-msgstr "Geen (te kiezen)"
+msgstr "Geen"
+
+msgid "coins-add-input"
+msgstr "Ingang om credits toe te voegen"
+
+msgid "coins-reset-input"
+msgstr "Ingang om de credits op 0 te zetten"
+
+msgid "coins-reset"
+msgstr "Credits op 0 zetten"
+
+msgid "coins-reset-ask"
+msgstr "Credits op 0 zetten (nog {n})?"
+
+msgid "input-length"
+msgstr "{min} tot {max} tekens"
+
+msgid "test-buttons-usb"
+msgstr "USB-toetsenblok"
+
+msgid "test-target-times"
+msgstr "{n} keer"
 
 msgid "coins-no-mcp"
 msgstr "Geen MCP-kaart gedetecteerd: de muntinworp wordt aangesloten op een MCP-ingang"

@@ -4604,7 +4604,28 @@ msgid "coins-badge-large"
 msgstr "Grande"
 
 msgid "coins-input-none"
-msgstr "Ninguna (seleccionar entrada)"
+msgstr "Ninguna"
+
+msgid "coins-add-input"
+msgstr "Entrada para añadir créditos"
+
+msgid "coins-reset-input"
+msgstr "Entrada para poner los créditos a 0"
+
+msgid "coins-reset"
+msgstr "Poner los créditos a 0"
+
+msgid "coins-reset-ask"
+msgstr "¿Poner los créditos a 0 (quedan {n})?"
+
+msgid "input-length"
+msgstr "De {min} a {max} caracteres"
+
+msgid "test-buttons-usb"
+msgstr "Teclado USB"
+
+msgid "test-target-times"
+msgstr "{n} veces"
 
 msgid "coins-no-mcp"
 msgstr "No se detectó placa MCP: el aceptador de monedas se conecta a la entrada MCP"

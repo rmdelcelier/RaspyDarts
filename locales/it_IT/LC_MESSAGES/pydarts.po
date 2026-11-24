@@ -4600,7 +4600,28 @@ msgid "coins-badge-large"
 msgstr "Grande"
 
 msgid "coins-input-none"
-msgstr "Nessuno (seleziona ingresso)"
+msgstr "Nessuno"
+
+msgid "coins-add-input"
+msgstr "Ingresso per aggiungere crediti"
+
+msgid "coins-reset-input"
+msgstr "Ingresso per azzerare i crediti"
+
+msgid "coins-reset"
+msgstr "Azzerare i crediti"
+
+msgid "coins-reset-ask"
+msgstr "Azzerare i crediti (ne restano {n})?"
+
+msgid "input-length"
+msgstr "Da {min} a {max} caratteri"
+
+msgid "test-buttons-usb"
+msgstr "Tastierino USB"
+
+msgid "test-target-times"
+msgstr "{n} volte"
 
 msgid "coins-no-mcp"
 msgstr "Nessuna scheda MCP rilevata: la gettoniera si collega a un ingresso MCP"

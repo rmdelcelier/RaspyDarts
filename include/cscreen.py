@@ -5193,6 +5193,11 @@ class Screen(pygame.Surface):
                     # Refused : the limits are shown (Enter seemed not to work)
                     self.message([f"{v_min} - {v_max}"], 1500, self.colorset['menu-ko'], 'middle', 'big')
                     self.restore_background()
+                if v_type == 'string':
+                    # Too short or too long : the length asked
+                    text = self.lang.translate('input-length').replace('{min}', str(v_min)).replace('{max}', str(v_max))
+                    self.message([text], 2000, self.colorset['menu-ko'], 'middle', 'big')
+                    self.restore_background()
             elif key in ESCAPE_KEYS:
                 self.restore_background()
                 self.reset_background()
@@ -6203,12 +6208,25 @@ class Screen(pygame.Surface):
 
     def test_target_menu(self):
         '''
-        Test target menu
+        Test de la cible : each segment touched kept on the screen until the next one replaces
+        it ; the same segment again : counted (S20 · 3 fois : a segment which keeps coming by
+        itself is stuck)
         '''
-        self.display_background()
-        self.menu_header('test-target', subtxt = 'test-target-msg')
-        self.update_screen()
+        last = {'text': None, 'count': 0}
 
+        def show(text=None, color='menu-ok'):
+            self.display_background()
+            self.menu_header('test-target', subtxt='test-target-msg')
+            if text:
+                if text == last['text']:
+                    last['count'] += 1
+                else:
+                    last['text'], last['count'] = text, 1
+                times = self.lang.translate('test-target-times').replace('{n}', str(last['count']))
+                self.message([f"{text} · {times}"], 0, self.colorset[color], 'middle', 'big', refresh=False)
+            self.update_screen()
+
+        show()
         while True:
             stroke = self.rpi.listen_inputs([],
                  ['PLAYERBUTTON', 'GAMEBUTTON', 'BACKUPBUTTON', 'EXTRABUTTON',
@@ -6225,58 +6243,67 @@ class Screen(pygame.Surface):
 
             if stroke == 'MISS':
                 # The shock sensor (or the key of a missed dart)
-                self.message([self.lang.translate('PIN_MISSDART')], 500, self.colorset['menu-ok'], 'middle', 'big')
-                self.display_background()
-                self.menu_header('test-target', subtxt = 'test-target-msg')
-                self.update_screen()
+                show(self.lang.translate('PIN_MISSDART'))
 
             # Only the result of the target is a list [code, message] : the name of a pin of the
             # extension ('B1'), a key... were cut in two and shown in red ('B1' : 1)
             if isinstance(stroke, list) and len(stroke) >= 2:
-                code = stroke[0]
-                message = stroke[1]
-
+                code, message = stroke[0], stroke[1]
                 if code == 0:
-                    self.play_sound(stroke[1])
-                    self.message([message], 200, self.colorset['menu-ok'], 'middle', 'big')
+                    self.play_sound(message)
+                    show(message)
                 else:
-                    self.message([message], 5000, self.colorset['menu-ko'], 'middle', 'big')
-
-                self.display_background()
-                self.menu_header('test-target', subtxt = 'test-target-msg')
-                self.update_screen()
+                    show(message, 'menu-ko')
 
     def test_buttons_menu(self):
         '''
-        Test buttons menu
+        Test des boutons : each button pressed shown with its function (B0 - Haut, GPIO -
+        Joueur suivant, Pavé USB - Droite), kept on the screen until the next one replaces it
         '''
-        self.display_background()
-        self.menu_header('test-buttons', subtxt = 'test-button-msg')
-        self.update_screen()
+        shown_text = None
 
+        def show(text):
+            self.display_background()
+            self.menu_header('test-buttons', subtxt='test-button-msg')
+            if text:
+                self.message([text], 0, self.colorset['menu-item-black'], 'middle', 'big', refresh=False)
+            self.update_screen()
+
+        show(None)
         while True:
-
             key_pressed = self.rpi.test_buttons()
 
             if key_pressed == 'nogpio':
                 self.message([self.lang.translate('nogpio')], 2000, self.colorset['menu-item-black'], 'middle', 'big')
                 return
-
             if key_pressed is False:
                 self.message(['timeout'], 1000, self.colorset['menu-item-black'], 'middle', 'big')
                 return
-
             if key_pressed == 'escape':
                 return
 
-            if isinstance(key_pressed, list) and len(key_pressed) > 0:
-                self.message([' / '.join(key_pressed)], 100, self.colorset['menu-item-black'], 'middle', 'big')
+            text = None
+            if isinstance(key_pressed, tuple):
+                # A button on a GPIO or a key of a USB pad : where it comes from and its function
+                source, name = key_pressed
+                function = str(name).replace('BTN_', 'PIN_', 1)
+                label = self.lang.translate(function)
+                label = str(name) if label == function else label
+                origin = self.lang.translate('test-buttons-usb') if source == 'usb' else 'GPIO'
+                text = f"{origin} - {label}"
+            elif isinstance(key_pressed, list) and key_pressed:
+                # The pins of the MCP and the function given to each (B0 - Haut)
+                functions = {str(pin[0]): name for name, pin in (getattr(self.rpi.gpio, 'buttons_list', None) or {}).items()}
+                text = ' / '.join(f"{pin} - {self.lang.translate(functions[pin])}" if pin in functions else pin
+                                  for pin in key_pressed)
                 if len(key_pressed) >= 3:
+                    show(text)
+                    pygame.time.wait(800)
                     return
-
-                self.display_background()
-                self.menu_header('test-buttons', subtxt = 'Appuyer sur escape, sur 3 boutons en même temps ou attendez 10 secondes pour quitter.')
-                self.update_screen()
+            # Drawn again only when it changes (a button held is read again and again)
+            if text and text != shown_text:
+                shown_text = text
+                show(text)
 
     def setup_buttons_menu(self, buttons, Defaults):
         '''
@@ -8489,6 +8516,9 @@ class Screen(pygame.Surface):
                 pressed = 'escape' if key in keys['back'] else key
                 button = next((button for button in everything
                                if pressed in [cmenus.key_name(k) for k in cmenus.as_list(button.get('shortcut'))]), None)
+                # Échap without any button of that key (a theme which gave none) : its button Retour
+                if button is None and pressed == 'escape':
+                    button = next((button for button in everything if button.get('action') == 'back'), None)
                 # Not a key of the menu : the volume (S14 / S8 / S7 of the target, buttons Volume)
                 if button is None and not any(key in keys[kind] for kind in keys) and self.volume_key(key):
                     continue
@@ -8948,6 +8978,9 @@ class Screen(pygame.Surface):
                 pressed = 'escape' if key in keys['back'] else key
                 button = next((button for button in everything
                                if pressed in [cmenus.key_name(k) for k in cmenus.as_list(button.get('shortcut'))]), None)
+                # Échap without any button of that key (a theme which gave none) : its button Retour
+                if button is None and pressed == 'escape':
+                    button = next((button for button in everything if button.get('action') == 'back'), None)
                 # Not a key of the menu : the volume (S14 / S8 / S7 of the target, buttons Volume)
                 if button is None and not any(key in keys[kind] for kind in keys) and self.volume_key(key):
                     continue
@@ -9854,14 +9887,36 @@ class Screen(pygame.Surface):
             return False
         return True
 
-    def coins_inputs(self, coins, current):
+    def coins_inputs(self, coins, settings, setting):
         '''
-        Inputs offered to the coin acceptor : the pins of the MCP not used by the buttons and
-        the toys (the GPIO of the Raspberry : all taken by the biggest wirings of a target)
+        Inputs offered to an input of the coin acceptor (its coins, its credits added, its reset) :
+        none, the pins of the MCP not used by the buttons and the toys, the GPIO of the Raspberry
+        still free (as Paramétrage des boutons et toys) ; not those of its other inputs
         '''
-        taken = {str(value).upper() for value in (self.config.config.get('Raspberry') or {}).values()}
-        return [(name, f'MCP {name}') for name in (getattr(coins.extender, 'all_io', None) or [])
-                if name not in taken or name == current]
+        from include import cplatform    # pylint: disable=import-outside-toplevel
+        current = str(settings.get(setting) or '').upper()
+        others = {str(settings.get(name) or '').upper() for name in ccoins.INPUTS if name != setting} - {''}
+        taken = {str(value).upper() for value in (self.config.config.get('Raspberry') or {}).values()} | others
+        choices = [('', 'coins-input-none')]
+        choices += [(name, name) for name in (getattr(coins.extender, 'all_io', None) or [])
+                    if name not in taken or name == current]
+        if cplatform.has_gpio():
+            busy = self.rpi.busy_gpio()
+            mine = self.rpi.gpio_number(current)
+            for pin in range(2, 28):
+                if (pin not in busy or pin == mine) and f'GPIO{pin}' not in others:
+                    choices.append((f'GPIO{pin}', f'GPIO {pin}'))
+        return choices
+
+    def coins_input_text(self, value):
+        '''
+        An input of the coin acceptor on its line : B3, GPIO 17, Aucune
+        '''
+        value = str(value or '').upper()
+        pin = self.rpi.gpio_number(value)
+        if pin is not None:
+            return f'GPIO {pin}'
+        return value or self.lang.translate('coins-input-none')
 
     def button_leds_menu(self):
         '''
@@ -10054,11 +10109,13 @@ class Screen(pygame.Surface):
         settings = json.loads(json.dumps(coins.settings))
         selected = 1
         while True:
-            source = str(settings.get('mcp') or '')
             types = settings.setdefault('types', {})
             price_text = lambda price: translate('coins-free') if int(price) == 0 else str(price)
+            # A row without value (None) : a button (Ajouter des crédits, Remettre à 0, mot de passe)
             rows = [('mode', 'coins-mode', translate(f"coins-mode-{settings.get('mode')}")),
-                    ('input', 'coins-input', f'MCP {source}' if source else translate('coins-input-none')),
+                    ('mcp', 'coins-input', self.coins_input_text(settings.get('mcp'))),
+                    ('add_input', 'coins-add-input', self.coins_input_text(settings.get('add_input'))),
+                    ('reset_input', 'coins-reset-input', self.coins_input_text(settings.get('reset_input'))),
                     ('credits', 'coins-credits-per-coin', str(settings.get('credits_per_coin'))),
                     ('players', 'coins-players-per-credit',
                      translate('coins-players-any') if int(settings.get('players_per_credit', 0)) == 0
@@ -10067,11 +10124,12 @@ class Screen(pygame.Surface):
                     ('local', 'coins-price-local', price_text(types.get('local', 1))),
                     ('network', 'coins-price-network', price_text(types.get('network', 1))),
                     ('games', 'coins-price-games', str(len(settings.get('games') or {}))),
-                    ('add', 'coins-add', ''),
                     ('count', 'coins-count', str(coins.state.get('coins', 0))),
                     ('position', 'coins-badge-position', translate(f"coins-badge-{settings.get('badge_position', 'top-right')}")),
                     ('size', 'coins-badge-size', translate(f"coins-badge-{settings.get('badge_size', 'medium')}")),
-                    ('password', 'coins-password-change', '')]
+                    ('add', 'coins-add', None),
+                    ('reset', 'coins-reset', None),
+                    ('password', 'coins-password-change', None)]
             nb_elements = len(rows)
             self.display_background()
             last = coins.last_coin
@@ -10082,7 +10140,8 @@ class Screen(pygame.Surface):
             half = (nb_elements + 1) // 2
             for index, (_name, label, value) in enumerate(rows, 1):
                 column = (0, half, index) if index <= half else (1, half, index - half)
-                click_zones[f'F{index}'] = self.menu_item((index, nb_elements, selected), (f'F{index}', label, BTN_DROPDOWN, value),
+                button = (f'F{index}', label, BTN_CHOICE, '') if value is None else (f'F{index}', label, BTN_DROPDOWN, value)
+                click_zones[f'F{index}'] = self.menu_item((index, nb_elements, selected), button,
                                                           align='Full', tabs=True, column=column)
             click_zones['escape'] = self.display_button(selected == nb_elements + 1, 'back', special='escape')
             click_zones['save'] = self.display_button(selected == nb_elements + 2, 'save', special='return')
@@ -10108,9 +10167,9 @@ class Screen(pygame.Surface):
                 return
             if key not in ENTER_KEYS or not 1 <= selected <= nb_elements:
                 continue
-            self.coins_change(coins, settings, rows[selected - 1][0], source)
+            self.coins_change(coins, settings, rows[selected - 1][0])
 
-    def coins_change(self, coins, settings, name, source):
+    def coins_change(self, coins, settings, name):
         '''
         A row of the screen of the coin acceptor changed (its list, a question...)
         '''
@@ -10121,14 +10180,10 @@ class Screen(pygame.Surface):
             chosen = choose([(mode, f'coins-mode-{mode}') for mode in ('off', 'games', 'time')], settings.get('mode'))
             if chosen != 'escape':
                 settings['mode'] = chosen
-        elif name == 'input':
-            inputs = self.coins_inputs(coins, source)
-            if not inputs:
-                self.message([translate('coins-no-mcp')], 3000, self.colorset['menu-ko'], 'middle', 'big')
-                return
-            chosen = choose(inputs, source)
+        elif name in ccoins.INPUTS:
+            chosen = choose(self.coins_inputs(coins, settings, name), str(settings.get(name) or '').upper())
             if chosen != 'escape':
-                settings['mcp'] = chosen
+                settings[name] = chosen
         elif name == 'credits':
             chosen = choose([(str(number), str(number)) for number in range(1, 11)], str(settings.get('credits_per_coin')))
             if chosen != 'escape':
@@ -10156,6 +10211,12 @@ class Screen(pygame.Surface):
             if chosen != 'escape':
                 coins.add(seconds=60 * int(chosen)) if timed else coins.add(credits=int(chosen))
                 self.logs.info(f"Coin acceptor : {chosen} {'minutes' if timed else 'credits'} given by hand")
+        elif name == 'reset':
+            # The credits (the time) left back to 0 at once
+            left = coins.left()
+            now = '0' if left is None else (f"{left[1] // 60} min" if left[0] == 'time' else str(left[1]))
+            if self.ask_yes_no(translate('coins-reset-ask').replace('{n}', now)):
+                coins.reset_credits()
         elif name == 'count':
             if self.ask_yes_no(translate('coins-count-reset')):
                 coins.reset_count()

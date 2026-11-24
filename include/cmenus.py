@@ -320,6 +320,7 @@ class Menus:
                 continue
             named = {self.button_id(button) for button in menu['buttons'] if isinstance(button, dict)}
             before = (data.get('menus', {}).get(name) or {}).get('buttons') or []
+            self.inherit_shortcuts(menu['buttons'], before)
             extra = [dict(button) for button in before if isinstance(button, dict) and
                      self.button_id(button) not in named and self.button_id(button) not in removed
                      and not named & set(REPLACES.get(self.button_id(button), ()))]
@@ -365,6 +366,30 @@ class Menus:
                 menu['buttons'].insert(at, button)
         self.logs.debug(f"Menus : {path} read in {(time.perf_counter() - started) * 1000:.0f} ms")
         return merge(data, content)
+
+    def inherit_shortcuts(self, buttons, before):
+        '''
+        A button of a file without shortcut (no key shortcut at all) : the one of the same button
+        in the files before (same id, else the only one with its action), unless another button of
+        the list has that key. A list written without any (a theme made by hand) kept Échap
+        (Retour, Quitter) and F4 (Divers : the way out of the exhibition mode) of the game ; a
+        shortcut removed in the editor is written empty (shortcut: []) and stays removed
+        '''
+        olds = [button for button in before if isinstance(button, dict) and button.get('shortcut')]
+        used = {key for button in buttons if isinstance(button, dict) for key in as_list(button.get('shortcut'))}
+        for button in buttons:
+            if not isinstance(button, dict) or 'shortcut' in button:
+                continue
+            old = next((other for other in olds if self.button_id(other) == self.button_id(button)), None)
+            if old is None and button.get('action'):
+                same = [other for other in olds if other.get('action') == button.get('action')]
+                old = same[0] if len(same) == 1 else None
+            if old is None:
+                continue
+            keys = [key for key in as_list(old.get('shortcut')) if key not in used]
+            if keys:
+                button['shortcut'] = keys[0] if len(keys) == 1 else keys
+                used.update(keys)
 
     @staticmethod
     def button_id(button):

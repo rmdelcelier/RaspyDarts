@@ -448,6 +448,13 @@ class Craspberry():
         for key, pin in self.pins.items():
             if not str(key).startswith('PIN_'):
                 used.add(int(pin))
+        # The inputs of the coin acceptor on a GPIO (Paramétrage > Monnayeur)
+        coins = getattr(self, 'coins', None)
+        if coins is not None:
+            for setting in ccoins.INPUTS:
+                pin = self.gpio_number(coins.settings.get(setting))
+                if pin is not None:
+                    used.add(pin)
         # An MCP board plugged, or inputs of one given to buttons : its I2C bus
         mcp_inputs = any(re.fullmatch(r'[A-D][0-7]', str(value or '').strip().upper()) for value in (self.buttons or {}).values())
         if mcp_inputs or getattr(getattr(self, 'gpio', None), 'mcp1', None) is not None:
@@ -905,12 +912,19 @@ class Craspberry():
                 return key_pressed
 
             key_pressed = self.read_buttons()
-            if key_pressed is None:
-                key_pressed = self.keyboard_mouse(['num', 'alpha', 'fx', 'arrows'],['enter', 'tab', 'backspace', 'left shift', 'escape', 'space', 'double-click', 'single-click', 'resize'],'menue')
-            else:
+            if key_pressed is not None:
                 self.logs.debug(f"Input debug (GPIO) : {key_pressed}")
                 pygame.time.set_timer(USEREVENT, 0)
-                return key_pressed
+                return ('gpio', key_pressed)
+            # The pads of USB (keys, knobs) : shown too, not left waiting (read after the test,
+            # they moved the selection of the screen before)
+            self.usb_pads.context = 'menus'
+            key_pressed = self.usb_pads.take()
+            if key_pressed:
+                self.logs.debug(f"Input debug (USB pad) : {key_pressed}")
+                pygame.time.set_timer(USEREVENT, 0)
+                return ('usb', key_pressed)
+            key_pressed = self.keyboard_mouse(['num', 'alpha', 'fx', 'arrows'],['enter', 'tab', 'backspace', 'left shift', 'escape', 'space', 'double-click', 'single-click', 'resize'],'menue')
 
             if key_pressed:
                 self.logs.debug(f"Input debug (pyGame) : {key_pressed}")

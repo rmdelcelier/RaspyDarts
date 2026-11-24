@@ -4599,7 +4599,28 @@ msgid "coins-badge-large"
 msgstr "Groß"
 
 msgid "coins-input-none"
-msgstr "Keine (Eingang wählen)"
+msgstr "Keine"
+
+msgid "coins-add-input"
+msgstr "Eingang zum Hinzufügen von Credits"
+
+msgid "coins-reset-input"
+msgstr "Eingang zum Zurücksetzen der Credits auf 0"
+
+msgid "coins-reset"
+msgstr "Credits auf 0 zurücksetzen"
+
+msgid "coins-reset-ask"
+msgstr "Credits auf 0 zurücksetzen (noch {n})?"
+
+msgid "input-length"
+msgstr "{min} bis {max} Zeichen"
+
+msgid "test-buttons-usb"
+msgstr "USB-Tastenfeld"
+
+msgid "test-target-times"
+msgstr "{n}-mal"
 
 msgid "coins-no-mcp"
 msgstr "Keine MCP-Karte erkannt: Münzprüfer wird an MCP-Eingang angeschlossen"

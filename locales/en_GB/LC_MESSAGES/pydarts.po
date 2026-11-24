@@ -4604,7 +4604,28 @@ msgid "coins-badge-large"
 msgstr "Large"
 
 msgid "coins-input-none"
-msgstr "None (select input)"
+msgstr "None"
+
+msgid "coins-add-input"
+msgstr "Input to add credits"
+
+msgid "coins-reset-input"
+msgstr "Input to reset the credits to 0"
+
+msgid "coins-reset"
+msgstr "Reset the credits to 0"
+
+msgid "coins-reset-ask"
+msgstr "Reset the credits to 0 ({n} left)?"
+
+msgid "input-length"
+msgstr "{min} to {max} characters"
+
+msgid "test-buttons-usb"
+msgstr "USB pad"
+
+msgid "test-target-times"
+msgstr "{n} times"
 
 msgid "coins-no-mcp"
 msgstr "No MCP board detected: coin acceptor plugs into MCP input"

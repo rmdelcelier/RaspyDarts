@@ -4743,7 +4743,28 @@ msgid "coins-badge-large"
 msgstr "Grande"
 
 msgid "coins-input-none"
-msgstr "Aucune (à choisir)"
+msgstr "Aucune"
+
+msgid "coins-add-input"
+msgstr "Entrée pour ajouter des crédits"
+
+msgid "coins-reset-input"
+msgstr "Entrée pour remettre les crédits à 0"
+
+msgid "coins-reset"
+msgstr "Remettre les crédits à 0"
+
+msgid "coins-reset-ask"
+msgstr "Remettre les crédits à 0 (il en reste {n}) ?"
+
+msgid "input-length"
+msgstr "De {min} à {max} caractères"
+
+msgid "test-buttons-usb"
+msgstr "Pavé USB"
+
+msgid "test-target-times"
+msgstr "{n} fois"
 
 msgid "coins-no-mcp"
 msgstr "Aucune carte MCP détectée : le monnayeur se branche sur une entrée MCP"

@@ -1140,7 +1140,9 @@ class Editor:
         title = f"{self.button_name(button)} · {self.translate('editor-shortcut')} : {self.shortcut_text(button)}"
         choice = self.screen.run_menu('editor_button', items + [back], items + [back], title=title).get('id')
         if choice == 'remove':
-            button.pop('shortcut', None)
+            # Written empty : a button without the key shortcut takes the one of the game again
+            # (cmenus.Menus.inherit_shortcuts)
+            button['shortcut'] = []
             self.changed = True
             return
         if choice != 'change':
@@ -1162,7 +1164,7 @@ class Editor:
                     '{button}', self.button_name(other['button']))
                 if not self.screen.ask_yes_no(question):
                     return
-                other['button'].pop('shortcut', None)
+                other['button']['shortcut'] = []
         button['shortcut'] = key
         self.changed = True
 
@@ -1480,7 +1482,7 @@ class Editor:
         # (one without shortcut : nothing to compare, other buttons may have none either)
         if button.get('shortcut') and button.get('shortcut') in {item['button'].get('shortcut') for item in self.items}:
             button = dict(button)
-            button.pop('shortcut')
+            button['shortcut'] = []
         widths = sorted(item['rect'].width for item in self.items) or [int(self.size[0] / 4)]
         heights = sorted(item['rect'].height for item in self.items) or [int(self.size[1] / 10)]
         rect = pygame.Rect(0, 0, widths[len(widths) // 2], heights[len(heights) // 2])
