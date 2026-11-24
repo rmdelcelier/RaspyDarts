@@ -4645,6 +4645,57 @@ msgstr "Inicio directo imposible"
 msgid "direct-play-listed"
 msgstr "Lista de favoritos"
 
+msgid "message_animation"
+msgstr "Animación de los mensajes"
+
+msgid "message-anim-sample"
+msgstr "Mensaje de ejemplo"
+
+msgid "message-anim-none"
+msgstr "Ninguna"
+
+msgid "message-anim-random"
+msgstr "Aleatoria"
+
+msgid "message-anim-fade"
+msgstr "Fundido"
+
+msgid "message-anim-slide"
+msgstr "Deslizar"
+
+msgid "message-anim-pop"
+msgstr "Rebote"
+
+msgid "message-anim-drop"
+msgstr "Caída"
+
+msgid "message-anim-stamp"
+msgstr "Sello"
+
+msgid "message-anim-wipe"
+msgstr "Barrido"
+
+msgid "message-anim-twist"
+msgstr "Giro"
+
+msgid "message-anim-shatter"
+msgstr "Añicos"
+
+msgid "message-anim-spin"
+msgstr "Peonza"
+
+msgid "message_background"
+msgstr "Fondo de los mensajes"
+
+msgid "message-bg-band"
+msgstr "Banda"
+
+msgid "message-bg-none"
+msgstr "Ninguno"
+
+msgid "message-bg-outline"
+msgstr "Letras con contorno"
+
 msgid "coins-no-mcp"
 msgstr "No se detectó placa MCP: el aceptador de monedas se conecta a la entrada MCP"
 

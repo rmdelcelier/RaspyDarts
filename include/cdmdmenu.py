@@ -117,7 +117,7 @@ def raspy2dmd_menu(screen, dispatcher):
         return
     from include import cgallery    # pylint: disable=import-outside-toplevel
     from include import cmenueditor    # pylint: disable=import-outside-toplevel
-    from include.cscreen import DOWN_KEYS, ENTER_KEYS, ESCAPE_KEYS, UP_KEYS    # pylint: disable=import-outside-toplevel
+    from include.cscreen import DOWN_KEYS, ENTER_KEYS, ESCAPE_KEYS, LEFT_KEYS, RIGHT_KEYS, UP_KEYS    # pylint: disable=import-outside-toplevel
     import qrcode    # pylint: disable=import-outside-toplevel
     unit_x, unit_y = screen.res['x'] / 16, screen.res['y'] / 16
     selected = 0
@@ -213,28 +213,12 @@ def raspy2dmd_menu(screen, dispatcher):
         clicked = screen.is_clicked(zones, key)
         if clicked is not False and clicked is not None:
             selected, key = clicked, 'enter'
-        kind = entries[selected][0]
-        same = [index for index, entry in enumerate(entries) if entry[0] == kind]
         if key in ESCAPE_KEYS or key == 'escape':
             return
-        if key in ('BTN_RIGHT',):
-            # The wheel of a knob : in the order of reading
-            selected = (selected + 1) % len(entries)
-        elif key in ('BTN_LEFT',):
-            selected = (selected - 1) % len(entries)
-        elif key in DOWN_KEYS:
-            position = same.index(selected)
-            selected = same[position + 1] if position + 1 < len(same) else len(entries) - 1
-        elif key in UP_KEYS:
-            position = same.index(selected)
-            if kind == 'back':
-                selected = [index for index, entry in enumerate(entries) if entry[0] == 'setting'][-1]
-            else:
-                selected = same[position - 1] if position > 0 else selected
-        elif key in ('left', 'right', 'S11', 'S6'):
-            if kind in ('setting', 'command'):
-                other = [index for index, entry in enumerate(entries) if entry[0] == ('command' if kind == 'setting' else 'setting')]
-                selected = other[min(same.index(selected), len(other) - 1)]
+        if key in UP_KEYS + DOWN_KEYS + LEFT_KEYS + RIGHT_KEYS:
+            # The closest line in the direction, as drawn (the settings, the commands, Retour) ;
+            # right and left (the wheel of a knob) : in the order of reading
+            selected = screen.spatial_step(list(zones.items()), selected, key)
         elif key in ENTER_KEYS + ['space']:
             kind, ident = entries[selected][0], entries[selected][1]
             if kind == 'back':

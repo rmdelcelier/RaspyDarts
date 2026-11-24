@@ -136,11 +136,14 @@ remove_block() {
 # afficher, ce qui supprime les images "dechirees" (moitie ancienne, moitie nouvelle)
 # pendant les animations. Rendu logiciel : celui par la carte graphique ne demarre pas
 # sur les Pi sans acceleration du serveur graphique.
+# --unredir-if-possible : le jeu plein ecran dessine directement sur l'ecran (sans
+# passer par picom : toutes les images des animations sont affichees, 60 par seconde,
+# au lieu de 30 au plus et de la moitie sur les gros messages ; mesure sur un Pi 3).
 patch_autostart() {
     [ -f "$1.origine" ] || cp "$1" "$1.origine"
     sed -i "/^@lxpanel-pi\$/d; /^@pcmanfm-pi\$/d; /^@picom /d; \#^/usr/local/bin/raspydarts-#d; \#^sh $PYDARTS/scripts/Intro.sh\$#d; \#^$PYDARTS/RaspyDarts.sh\$#d" "$1"
     {
-        echo "@picom --backend xrender --vsync"
+        echo "@picom --backend xrender --vsync --unredir-if-possible"
         echo "/usr/local/bin/raspydarts-audio"
         # En mode Buster, l'intro et le jeu sont lances par leurs services (plus tot)
         if [ "${BUSTER_MODE:-0}" != "1" ]; then

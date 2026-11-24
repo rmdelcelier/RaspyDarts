@@ -44,6 +44,7 @@ from include import ccamera
 from include import ccoins
 from include import cmenus
 from include import cfonts
+from include import cmessageanim
 from include import cmenustyle
 from include import cfavorites
 from include import cbganim
@@ -65,6 +66,7 @@ UP_KEYS = ['up', 'BTN_UP', 'S20']
 DOWN_KEYS = ['down', 'BTN_DOWN', 'S3']
 LEFT_KEYS = ['left', 'BTN_LEFT', 'S11']
 RIGHT_KEYS = ['right', 'BTN_RIGHT', 'S6']
+ARROW_KEYS = UP_KEYS + DOWN_KEYS + LEFT_KEYS + RIGHT_KEYS
 DIRECTION_KEYS = UP_KEYS + DOWN_KEYS + LEFT_KEYS + RIGHT_KEYS
 BACK_KEYS = ['backspace', 'BTN_BACK', 'S16']
 SAVE_KEYS = ['save', 'S2']    #BTN_NEXTPLAYER
@@ -992,18 +994,20 @@ class Screen(pygame.Surface):
         value = str(self.colorset.get(f'{family}-text-valign', 'Center') or 'Center').lower()
         return value if value in ('top', 'bottom') else 'center'
 
-    def blit_text2(self, text, rect, color=None, font=None, align='Center', valign='center', margin=True, divider=1.5, alpha=255, fit=None):
+    def blit_text2(self, text, rect, color=None, font=None, align='Center', valign='center', margin=True, divider=1.5, alpha=255, fit=None, outline=None):
         '''
         fit : the box whose height gives the size of the text (the text placed in rect, a part of it)
+        outline : the colour of an outline of the letters (Fond des messages : Contour)
         '''
         self.blit_text(text, rect[0], rect[1], rect[2], rect[3], color=color, dafont=font, align=align, valign=valign, margin=margin, divider=divider, Alpha=alpha,
-                       fit_height=None if fit is None else fit[3])
+                       fit_height=None if fit is None else fit[3], outline=outline)
         return rect
 
     #@debug
-    def blit_text(self, text, pos_x, pos_y, width, height, color=None, dafont=None, image=None, align='Center', valign='center', margin=True, divider=1.5, Alpha=255, game=None, fit_height=None):
+    def blit_text(self, text, pos_x, pos_y, width, height, color=None, dafont=None, image=None, align='Center', valign='center', margin=True, divider=1.5, Alpha=255, game=None, fit_height=None, render_only=False, outline=None):
         '''
-        Render text in a box, directly at best size
+        Render text in a box, directly at best size. render_only : not drawn, (the text
+        rendered, its place) returned (the animated messages)
         '''
         if text is None or text == '':
             return
@@ -1031,9 +1035,16 @@ class Screen(pygame.Surface):
 
         # Display Text
         # The size of the text : the one of its box (fit_height : the box its place is a part of)
-        scaled_text = self.scale_text(text, width - 2 * text_margin, (fit_height or height) - 2 * text_margin, divider=divider, dafont=dafont)
+        # The outline (its thickness : outline_size) taken from the room of the text
+        room = 2 * self.outline_size((fit_height or height) / divider) if outline is not None else 0
+        scaled_text = self.scale_text(text, width - 2 * text_margin - room, (fit_height or height) - 2 * text_margin - room, divider=divider, dafont=dafont)
         font_path = dafont if dafont == self.defaultfontpath else self.file_class.get_full_filename(dafont, 'fonts')
-        if image is None:
+        shown = text
+        thickness = 0
+        if image is None and outline is not None:
+            thickness = self.outline_size(scaled_text[0])
+            text = self.outlined_text(font_path, scaled_text[0], text, tuple(color), tuple(outline[:3]), thickness)
+        elif image is None:
             # Render text (the same texts at each dart : rendered once)
             text = self.rendered_text(font_path, scaled_text[0], text, tuple(color), Alpha)
         # Calculate place of text
@@ -1053,6 +1064,13 @@ class Screen(pygame.Surface):
         else:
             text_y = int(pos_y + scaled_text[2] + text_margin)
 
+        # The outline around the letters : the text drawn as many pixels higher and more left
+        text_x -= thickness
+        text_y -= thickness
+        if render_only:
+            # Also the font, its size and the text (the letters drawn one by one : spin)
+            return (text, (text_x, text_y), (font_path, scaled_text[0], shown, None if outline is None else tuple(outline[:3]))) \
+                if image is None else None
         if image != None:
             img = pygame.image.load(image).convert_alpha()
             img.set_alpha(Alpha)
@@ -1060,6 +1078,64 @@ class Screen(pygame.Surface):
         else:
             # Display text
             self.blit(text, [text_x, text_y])
+
+    @staticmethod
+    def outline_size(font_size):
+        '''
+        The thickness of the outline of letters of this size : a few pixels
+        '''
+        return max(2, int(font_size / 16))
+
+    @lru_cache(maxsize=32)
+    def outlined_text(self, font_path, size, text, color, outline, thickness):
+        '''
+        Text with an outline of its letters (never drawn on : shared) : the text in the colour of
+        the outline stamped all around (16 directions, two rings : no hole), the text over it
+        '''
+        font = self.font(font_path, size)
+        inside = font.render(text, True, color)
+        edge = font.render(text, True, outline)
+        surface = pygame.Surface((inside.get_width() + 2 * thickness, inside.get_height() + 2 * thickness), pygame.SRCALPHA)
+        for ring in (thickness, max(1, thickness // 2)):
+            for step in range(16):
+                angle = step * math.pi / 8
+                surface.blit(edge, (thickness + round(ring * math.cos(angle)), thickness + round(ring * math.sin(angle))),
+                             special_flags=pygame.BLEND_RGBA_MAX)
+        surface.blit(inside, (thickness, thickness))
+        return surface
+
+    def letter_surface(self, font_path, size, char, color, outline):
+        '''
+        One letter (the animation spin), outlined or not
+        '''
+        if outline is not None:
+            return self.outlined_text(font_path, size, char, tuple(color), tuple(outline), self.outline_size(size))
+        return self.font(font_path, size).render(char, True, color)
+
+    def message_style(self):
+        '''
+        Fond des messages : band, none, outline
+        '''
+        style = str(self.config.get_value('SectionGlobals', 'message_background', False) or 'band')
+        return style if style in ('band', 'none', 'outline') else 'band'
+
+    def message_text(self, style, bg_color):
+        '''
+        How the text of a message is drawn for its background : without strip, as high as it
+        (divider), outlined in the colour of the strip
+        '''
+        if style == 'band':
+            return {}
+        outline = bg_color if style == 'outline' and bg_color is not None and bg_color is not False else None
+        return {'divider': 1.1, 'outline': outline}
+
+    def draw_message(self, rect, bg_color, text, text_color, style):
+        '''
+        A message arrived : its strip (Bandeau) and its text
+        '''
+        if style == 'band':
+            self.new_blit_rect2(rect, bg_color)
+        self.blit_text2(text, rect, text_color, **self.message_text(style, bg_color))
 
     @lru_cache(maxsize=128)
     def rendered_text(self, font_path, size, text, color, alpha):
@@ -1228,7 +1304,10 @@ class Screen(pygame.Surface):
         self.save_background()
         self.display_background(image=True)
         band = self.validation_band(text)
+        # The arrows (a notch of a knob) do not answer : they gave the question up
         press = self.wait_touch()
+        while press in ARROW_KEYS:
+            press = self.wait_touch()
         # A touch (or a click) : on the band, it is validated ; elsewhere, given up
         if press in ENTER_KEYS or (isinstance(press, tuple) and band.collidepoint(press[0], press[1])):
             self.restore_background()
@@ -1239,7 +1318,7 @@ class Screen(pygame.Surface):
         self.reset_background()
         return False
 
-    def message(self, texts, wait=3000, color=None, pos_y=None, size=None, logo=None, refresh=True, bg_color=None):
+    def message(self, texts, wait=3000, color=None, pos_y=None, size=None, logo=None, refresh=True, bg_color=None, animate=True):
         '''
         Main UI messaging method - can display multiple phrases, mutiple sizes, multiple places
         '''
@@ -1285,24 +1364,35 @@ class Screen(pygame.Surface):
 
         # For each sentence in list
         for text in texts:
+            # Animation des messages : the message arrives with its effect, in a part of the
+            # time it stays, its strip twice as high (cmessageanim.SCALE)
+            elapsed = 0
+            effect = cmessageanim.choose(self.config.get_value('SectionGlobals', 'message_animation', False)) \
+                if animate and refresh and logo is None and text not in (None, '') and not getattr(self, 'competition', False) else None
+            strip = size if effect is None else min(size * cmessageanim.SCALE, self.res['y'] * cmessageanim.SCALE_MAX)
             # Calculate Y
             if pos_y is None or pos_y == 'bottom':
                 pos_y = self.res['y'] / 3 * 2
             if pos_y == 'fullbottom':
-                pos_y = self.res['y'] - (size / 2)
+                pos_y = self.res['y'] - (strip / 2)
             if pos_y == 'top':
                 pos_y = self.res['y'] / 3
             if pos_y == 'middle':
                 pos_y = self.res['y'] / 2
             # Calculate rect size and place
-            rect_y = int(pos_y - (size / 2))
+            rect_y = int(pos_y - (strip / 2))
             # Display rect
-            rect = pygame.Rect(rect_x, rect_y, width, size)
-            self.new_blit_rect2(rect, bg_color)
+            rect = pygame.Rect(rect_x, rect_y, width, strip)
+            # Fond des messages ; a message written over the one before (refresh False : the
+            # background not drawn again) keeps its strip, which hides the one before
+            style = self.message_style() if logo is None and refresh else 'band'
+            if effect is not None:
+                elapsed = self.animate_message(effect, rect, bg_color, text, text_color, style)
 
             if logo is None:
-                self.blit_text2(text, rect, text_color)
+                self.draw_message(rect, bg_color, text, text_color, style)
             else:
+                self.new_blit_rect2(rect, bg_color)
                 self.blit_text2('' , rect, text_color)
 
                 # Display LOGO
@@ -1316,11 +1406,62 @@ class Screen(pygame.Surface):
             if refresh:
                 # Update screen
                 self.update_screen()
-                # Optionnaly wait a few sec between each message
+                # Optionnaly wait a few sec between each message (the time of its arrival
+                # taken from it, the message staying at least HOLD once arrived)
+                hold = cmessageanim.HOLD if elapsed else 0
                 if wait is None:
-                    pygame.time.wait(self.blinktime)
+                    pygame.time.wait(max(hold, self.blinktime - elapsed))
                 elif wait > 0:
-                    pygame.time.wait(wait)    # Wait X millisecond
+                    pygame.time.wait(max(hold, wait - elapsed))    # Wait X millisecond
+
+    def animate_message(self, effect, rect, bg_color, text, text_color, style='band'):
+        '''
+        The arrival of a message with its effect (include/cmessageanim.py) ; the screen left
+        without it (drawn after as before). Its time (ms), 0 if not played
+        '''
+        try:
+            band = None
+            if style == 'band' and bg_color is not None and bg_color is not False:
+                band = self.rounded_box(abs(rect.width), abs(rect.height), (bg_color[0], bg_color[1], bg_color[2], self.alpha), 0, (0, 0, 0, 0))
+            rendered = self.blit_text(text, rect.x, rect.y, rect.width, rect.height, color=text_color, render_only=True,
+                                      **self.message_text(style, bg_color))
+            if band is None and rendered is None:
+                return 0
+            surface, place, letters = rendered if rendered is not None else (None, (0, 0), None)
+            animation = cmessageanim.Message(self, effect, rect, band, surface, place, text_color, letters)
+            seconds = animation.play()
+            self.logs.debug(f"Message {effect} : {animation.frames} images in {seconds * 1000:.0f} ms, sent to the screen in {animation.sent * 1000:.0f} ms")
+            return int(seconds * 1000)
+        except Exception as exception:    # pylint: disable=broad-except
+            self.logs.error(f"Animated message not played : {exception}")
+            return 0
+
+    def message_sample(self, effect):
+        '''
+        Personnalisation : an example of the animation of the messages, at the bottom of the
+        screen. Its rectangle
+        '''
+        # Under the list (it ends at 7/8 of the height at most)
+        size = int(self.res['y'] / 12)
+        rect = pygame.Rect(0, self.res['y'] - size - int(self.res['y'] / 100), self.res['x'], size)
+        text = self.lang.translate('message-anim-sample')
+        bg_color, text_color = self.colorset['message-bg'], self.colorset['message-text']
+        played = cmessageanim.choose(effect)
+        style = self.message_style()
+        if played is not None:
+            self.animate_message(played, rect, bg_color, text, text_color, style)
+        self.draw_message(rect, bg_color, text, text_color, style)
+        return rect.inflate(0, rect.height * 2 * max(max(room) for room in cmessageanim.ROOM.values())).clip(self.screen.get_rect())
+
+    def background_sample(self, style):
+        '''
+        Personnalisation : an example of the background of the messages (no animation). Its
+        rectangle
+        '''
+        size = int(self.res['y'] / 12)
+        rect = pygame.Rect(0, self.res['y'] - size - int(self.res['y'] / 100), self.res['x'], size)
+        self.draw_message(rect, self.colorset['message-bg'], self.lang.translate('message-anim-sample'), self.colorset['message-text'], style)
+        return rect
 
     def ribbon_message(self, texts, wait=3000, color=None, refresh=True, bg_color=None):
         '''
@@ -1967,7 +2108,13 @@ class Screen(pygame.Surface):
             if clicked:
                 key_pressed = clicked
 
-            selected = self.navigate(selected, key_pressed, 0, nb_boutons, nb_boutons)
+            # The buttons as drawn : Retour, Secouer, Continuer, Attendre en tâche de fond
+            if key_pressed in ARROW_KEYS and click_zones:
+                places = [(1, click_zones.get('escape')), (2, click_zones.get('shake')), (3, click_zones.get('continue')),
+                          (background_index, click_zones.get('background'))]
+                selected = self.spatial_step([place for place in places if place[1] is not None], selected, key_pressed)
+            else:
+                selected = self.navigate(selected, key_pressed, 0, nb_boutons, nb_boutons)
 
             # Analyse key
             # If the Master player pressed tab
@@ -2137,7 +2284,9 @@ class Screen(pygame.Surface):
         v_min = zero
 
         if key in DOWN_KEYS:
-            if zero < 0 and selected == nb_elements + add:
+            if zero < 0 and selected > nb_elements:
+                # Down from a button at the bottom : the tab shown (the first tab before, the
+                # list of the other one shown)
                 selected = tab
             elif zero < 0 and selected <= 0:
                 selected = 1
@@ -2170,7 +2319,9 @@ class Screen(pygame.Surface):
                 selected = tab
             elif item_per_line > 1:
                 if selected > nb_elements:
-                    selected -= 1
+                    # Up from a button at the bottom : the last line of the grid (it went to the
+                    # button on its left)
+                    selected = max(v_min, nb_elements)
                 else:
                     selected -= item_per_line
                     if selected < v_min and add > 0:
@@ -2228,6 +2379,35 @@ class Screen(pygame.Surface):
             self.volume_key(key)
 
         return selected
+
+    def zone_arrows(self, key, selected, click_zones, nb_elements, buttons=('escape', 'save'), tabs=()):
+        '''
+        The arrows on a screen of settings : its elements (zones F1... Fn : selected 1... n), its
+        buttons at the bottom (nb_elements + 1...), its tabs (zones F-1, F0... : selected -1,
+        0...), as drawn (spatial_step)
+        '''
+        places = [(index, click_zones.get(f'F{index}')) for index in range(1, nb_elements + 1)]
+        places += [(nb_elements + number, click_zones.get(name)) for number, name in enumerate(buttons, 1)]
+        places += [(tab, click_zones.get(f'F{tab}')) for tab in tabs]
+        return self.spatial_step(places, selected, key)
+
+    def spatial_step(self, items, current, key):
+        '''
+        The arrows on a screen of rectangles (items : [(selection, rect)], as drawn) : the
+        closest one in the direction (move_selection : up and down go around, right and left
+        in reading order, the next row at the end of one : a knob goes through the whole
+        screen). The selection unchanged for another key
+        '''
+        rects = {selection: tuple(pygame.Rect(rect)) for selection, rect in items if rect is not None}
+        if not rects:
+            return current
+        if current not in rects:
+            return next(iter(rects))
+        direction = 'up' if key in UP_KEYS else 'down' if key in DOWN_KEYS else             'left' if key in LEFT_KEYS else 'right' if key in RIGHT_KEYS else None
+        if direction is None:
+            return current
+        moved = self.move_selection(rects, current, direction)
+        return current if moved is None else moved
 
     @staticmethod
     def grid_step(cursor, selected, nb_elements, footers, key):
@@ -2446,6 +2626,12 @@ class Screen(pygame.Surface):
                 if part != '*':
                     key_pressed = part
                 part = None if part in ('+', '-') else part
+            elif zero == -1 and key_pressed in UP_KEYS and selected == 0:
+                # Sets is over Mode : up goes there (it went to the buttons at the bottom), down
+                # comes back
+                selected = -1
+            elif zero == -1 and key_pressed in DOWN_KEYS and selected == -1:
+                selected = 0
             elif btn_random:
                 selected = self.navigate(selected, key_pressed, nb_elements, 3, 3, sound=False, zero=zero)
             else:
@@ -4727,15 +4913,28 @@ class Screen(pygame.Surface):
             if files_list is None:
                 files_list = []
 
-            nb_elements = len(files_list)
-
-            index = 0
+            # The backups shown (12 at most, those of the game and of its updates) : the only ones
+            # counted (all the files were : the selection went on lines not shown)
+            backups = []
+            for backup in files_list:
+                if len(backups) >= 12:
+                    break
+                if backup[0].startswith('backup/raspydarts'):
+                    file_type = 'Full'
+                elif backup[0].startswith('backup/update'):
+                    file_type = 'Update'
+                else:
+                    continue
+                backups.append((backup[0], f"Version {backup[1]} du {backup[2][6::]}/{backup[2][4:6]}/{backup[2][0:4]} "
+                                           f"({backup[3][0:2]}h{backup[3][2::].split('.')[0]} - {file_type})"))
+            nb_elements = len(backups)
+            if not 1 <= selected <= nb_elements + 3:
+                selected = 1
 
             click_zones = {}
             shortcuts = []
-            backups = []
 
-            if nb_elements > 3:
+            if len(files_list) > 3:
                 addClean = True
                 add = 3
             else:
@@ -4750,21 +4949,9 @@ class Screen(pygame.Surface):
             # Titles
             self.menu_header('backups')
 
-            for backup in files_list:
-                index += 1
-                if index <= 12:
-                    if backup[0].startswith('backup/raspydarts'):
-                        file_type = 'Full'
-                    elif backup[0].startswith('backup/update'):
-                        file_type = 'Update'
-                    else:
-                        index -= 1
-                        continue
-
-                    backup_text = f"Version {backup[1]} du {backup[2][6::]}/{backup[2][4:6]}/{backup[2][0:4]} ({backup[3][0:2]}h{backup[3][2::].split('.')[0]} - {file_type})"
-                    backups.append((backup[0], backup_text))
-                    click_zones[f'F{index}'] = self.menu_item((index, nb_elements, selected), (f'F{index}', backup_text, BTN_CHOICE, None))
-                    shortcuts.append(f'F{index}')
+            for index, (_name, backup_text) in enumerate(backups, 1):
+                click_zones[f'F{index}'] = self.menu_item((index, nb_elements, selected), (f'F{index}', backup_text, BTN_CHOICE, None))
+                shortcuts.append(f'F{index}')
 
             # go back and next
             click_zones['escape'] = self.display_button(nb_elements + 1 == selected, 'back', special='escape')
@@ -4785,8 +4972,12 @@ class Screen(pygame.Surface):
             if clicked:
                 key_pressed = clicked
 
-            # Navigation
-            selected = self.navigate(selected, key_pressed, nb_elements, add, add, left_right=True)
+            # Navigation, as the screen shows it
+            if key_pressed in ARROW_KEYS:
+                selected = self.zone_arrows(key_pressed, selected, click_zones, nb_elements,
+                                            buttons=('escape', 'clean', 'backup') if addClean else ('escape', 'backup'))
+            else:
+                selected = self.navigate(selected, key_pressed, nb_elements, add, add, left_right=True)
 
             # Shotcuts
             if key_pressed in shortcuts:
@@ -4802,7 +4993,7 @@ class Screen(pygame.Surface):
                 os.system(f"{self.backupscript} b")
                 self.message(['backup-done'], wait = 2000)
 
-            elif nb_elements > 3 and (key_pressed in CLEAN_KEYS or (key_pressed in ENTER_KEYS and selected == nb_elements + 2)): # Clean backups
+            elif addClean and (key_pressed in CLEAN_KEYS or (key_pressed in ENTER_KEYS and selected == nb_elements + 2)): # Clean backups
                 response = self.wait_validation('backup-clean')
                 if response:
                     self.message(['cleaning'])
@@ -5717,8 +5908,11 @@ class Screen(pygame.Surface):
             if clicked:
                 key = clicked
 
-            # Navigation
-            selected = self.navigate(selected, key, nb_elements, 1, 2, left_right=True)
+            # Navigation, as the screen shows it (Enregistrer was out of reach of right and left)
+            if key in ARROW_KEYS:
+                selected = self.zone_arrows(key, selected, click_zones, nb_elements)
+            else:
+                selected = self.navigate(selected, key, nb_elements, 2, 2, left_right=True)
                 
             # Key analysis
             if key in ESCAPE_KEYS or (key in ENTER_KEYS and selected == nb_elements + 1):           
@@ -6037,15 +6231,14 @@ class Screen(pygame.Surface):
         nb_elements = 1
         key = ''
         while True:
-            if selected[0] <= 5:
-                Nmoy = 6
-            elif selected[0] > 4 and selected[0] < 18:
-                if key in UP_KEYS:
-                    Nmoy -= 1
-                elif key in DOWN_KEYS:
-                    Nmoy += 1
-            else:
-                Nmoy = 18
+            # The 9 lines shown (Nmoy - 5 to Nmoy + 3) : around the line chosen, whatever brought
+            # it there (only up and down moved them : right and left went to lines not shown)
+            if selected[0] <= 21:
+                if selected[0] < Nmoy - 5:
+                    Nmoy = selected[0] + 5
+                elif selected[0] > Nmoy + 3:
+                    Nmoy = selected[0] - 3
+            Nmoy = max(6, min(18, Nmoy))
 
             click_zones = {}
             shortcuts = {}
@@ -6151,9 +6344,18 @@ class Screen(pygame.Surface):
                 selected = [shortcuts[key][0], shortcuts[key][1]]
                 key = 'enter'
 
-            # Navigation (right and left : see grid_step)
+            # Navigation. A line has two places : its segments (1 : the 4 boxes chosen together)
+            # and Test (5). Right and left in reading order over all the lines, shown or not, then
+            # Retour, Enregistrer (they went through the 4 boxes of the segments, the screen
+            # unchanged, and only over the lines shown)
+            if selected[1] not in (1, 5):
+                selected[1] = 1
             if key in LEFT_KEYS + RIGHT_KEYS:
-                selected = self.grid_step(cursor, selected, nb_elements, 2, key)
+                places = [(line, column) for line in range(1, nb_elements + 1) for column in (1, 5)] + \
+                         [(nb_elements + 1, 1), (nb_elements + 2, 1)]
+                here = (selected[0], selected[1] if selected[0] <= nb_elements else 1)
+                position = places.index(here) if here in places else 0
+                selected = list(places[(position + (1 if key in RIGHT_KEYS else -1)) % len(places)])
             else:
                 selected = [self.navigate(selected[0], key, nb_elements, 2, 2), selected[1]]
 
@@ -6421,8 +6623,12 @@ class Screen(pygame.Surface):
             if clicked:
                 key = clicked
 
-            # Navigation
-            selected = self.navigate(selected, key, nb_elements, 3, 3, zero=-1, item_per_line=2 , left_right=True)
+            # Navigation, as the screen shows it (up from the first line went to the tab Extension 2,
+            # up from Réinitialiser to Retour)
+            if key in ARROW_KEYS:
+                selected = self.zone_arrows(key, selected, click_zones, nb_elements, buttons=('escape', 'reset', 'save'), tabs=(-1, 0))
+            else:
+                selected = self.navigate(selected, key, nb_elements, 3, 3, zero=-1, item_per_line=2, left_right=True)
 
             # Shortcuts
             if key in shortcuts:
@@ -7352,6 +7558,16 @@ class Screen(pygame.Surface):
                 option_type = 'dropdown'
                 option_values = cdirectplay.choices(self.lang.translate, self.favorites())
                 customization[option] = customization[option] or ''
+            elif option == 'message_background':
+                # Fond des messages : a strip, nothing, the letters outlined
+                option_type = 'dropdown'
+                option_values = [(value, f'message-bg-{value}') for value in ('band', 'none', 'outline')]
+                customization[option] = customization[option] or 'band'
+            elif option == 'message_animation':
+                # Animation des messages (include/cmessageanim.py)
+                option_type = 'dropdown'
+                option_values = [(value, f'message-anim-{value}') for value in cmessageanim.CHOICES]
+                customization[option] = customization[option] or cmessageanim.RANDOM
             elif option == 'preferedcategory':
                 option_type = 'dropdown'
                 option_values = [('classic', 'classic'), ('fun', 'fun'), ('sport', 'sport')]
@@ -7390,7 +7606,7 @@ class Screen(pygame.Surface):
             if option in ('pnj_time', 'nextplayer_sound_duration', 'nextplayer_music', 'releasedartstime', 'onscreenbuttons', 'keeporder', 'videos', \
                 'play_firstname', 'print_dartstroke', 'light_target', 'light_strip', 'waitevent_time', 'competition_mode', \
                 'illumination_mode', 'illumination_color', 'idle_light', 'idle_strip_color', 'idle_target_color',
-                'dmd_player_color'):
+                'dmd_player_color', 'message_animation', 'message_background'):
                 game_customization.append([option, customization[option], option_type, max_value, option_values, min_value, zero])
             else:
                 general_customization.append([option, customization[option], option_type, max_value, option_values, min_value, zero])
@@ -7505,12 +7721,11 @@ class Screen(pygame.Surface):
             if clicked:
                 key = clicked
 
-            # Navigation in menu. Right and left in reading order : the two tabs, the options, the
-            # buttons at the bottom (they went between the tabs, and opened an option)
-            if key in LEFT_KEYS + RIGHT_KEYS:
-                order = list(range(-1, nb_elements + 3))
-                position = order.index(selected) if selected in order else 0
-                selected = order[(position + (1 if key in RIGHT_KEYS else -1)) % len(order)]
+            # Navigation in menu, as the screen shows it (two columns) : up and down in a column
+            # to the tabs and the buttons at the bottom, right and left in reading order (they
+            # followed the list : right went down in the column)
+            if key in UP_KEYS + DOWN_KEYS + LEFT_KEYS + RIGHT_KEYS:
+                selected = self.zone_arrows(key, selected, click_zones, nb_elements, tabs=(-1, 0))
             else:
                 selected = self.navigate(selected, key, nb_elements, 2, 2, zero=-1, tab=tab)
 
@@ -7589,6 +7804,10 @@ class Screen(pygame.Surface):
                     preview = None
                     if selected_customization[selected - 1][0] == 'activity_corner':
                         preview = lambda corner: self.activities.sample(self.screen, corner)
+                    elif selected_customization[selected - 1][0] == 'message_animation':
+                        preview = self.message_sample
+                    elif selected_customization[selected - 1][0] == 'message_background':
+                        preview = self.background_sample
                     tmp = self.dropdown(self.res['x'] * 6 / 16, 3 * self.res_y_16,
                             selected_customization[selected - 1][4],
                             navigate=selected_customization[selected - 1][1], preview=preview)
@@ -9050,9 +9269,9 @@ class Screen(pygame.Surface):
             clicked = self.is_clicked(click_zones, key)
             if clicked:
                 key = clicked
-            if key in LEFT_KEYS:
+            if key in LEFT_KEYS + UP_KEYS:
                 selected = 1
-            elif key in RIGHT_KEYS:
+            elif key in RIGHT_KEYS + DOWN_KEYS:
                 selected = 2
             elif key == 'login' or (key in ENTER_KEYS and selected == 2):
                 return True
@@ -9304,16 +9523,15 @@ class Screen(pygame.Surface):
                     if 0 <= index < len(rooms) and joinable(rooms[index]):
                         self.lobby_game = dict(rooms[index])
                         return 'netjoin'
-                elif key in LEFT_KEYS and rooms:
-                    line = 0 if line is None else line
-                elif key in RIGHT_KEYS:
-                    line = None
-                elif key in UP_KEYS + DOWN_KEYS:
-                    move = -1 if key in UP_KEYS else 1
-                    if line is not None:
-                        line = (line + move) % len(rooms)
+                elif key in ARROW_KEYS:
+                    # As the screen shows it : the rooms and the column of the buttons (right and
+                    # left only went from one to the other : a knob never left Prêt à jouer)
+                    current = 'room|{}'.format(line) if line is not None else order[selected]
+                    moved = self.spatial_step(list(zones.items()), current, key)
+                    if moved.startswith('room|'):
+                        line = int(moved.split('|', 1)[1])
                     else:
-                        selected = (selected + move) % len(order)
+                        line, selected = None, order.index(moved)
 
     def error_report_screen(self, report, wait=60):
         '''
@@ -10162,7 +10380,11 @@ class Screen(pygame.Surface):
             if key in [f'F{index}' for index in range(1, nb_elements + 1)]:
                 selected = int(key[1:])
                 key = 'enter'
-            selected = self.navigate(selected, key, nb_elements, 2, 2, left_right=True)
+            # Two columns : the arrows as the screen shows it (right went down in the column)
+            if key in ARROW_KEYS:
+                selected = self.zone_arrows(key, selected, click_zones, nb_elements)
+            else:
+                selected = self.navigate(selected, key, nb_elements, 2, 2, left_right=True)
             if key in ESCAPE_KEYS or (key in ENTER_KEYS and selected == nb_elements + 1):
                 # The strip of the credits shown as it was (not saved)
                 coins.settings = coins.read(ccoins.SETTINGS, ccoins.DEFAULTS)
@@ -10336,6 +10558,9 @@ class Screen(pygame.Surface):
             if key in [f'F{index}' for index in range(-2, nb_elements + 1)]:
                 selected = int(key[1:])
                 key = 'enter' if selected > 0 else None
+            elif key in ARROW_KEYS:
+                # Two columns under the tabs : the arrows as the screen shows it
+                selected = self.zone_arrows(key, selected, click_zones, nb_elements, buttons=('escape',), tabs=(-2, -1, 0))
             else:
                 selected = self.navigate(selected, key, nb_elements, 1, 1, left_right=True, zero=-2, tab=tab)
             if key in ESCAPE_KEYS or (key in ENTER_KEYS and selected == nb_elements + 1):
@@ -10385,7 +10610,11 @@ class Screen(pygame.Surface):
             clicked = self.is_clicked(click_zones, key)
             if clicked:
                 key = clicked
-            selected = self.navigate(selected, key, nb_elements, 1, 2, left_right=True)
+            # The arrows as the screen shows it (Enregistrer was out of reach of right and left)
+            if key in ARROW_KEYS:
+                selected = self.zone_arrows(key, selected, click_zones, nb_elements)
+            else:
+                selected = self.navigate(selected, key, nb_elements, 2, 2, left_right=True)
 
             if key in ESCAPE_KEYS or (key in ENTER_KEYS and selected == nb_elements + 1):
                 return
@@ -10921,8 +11150,30 @@ class Screen(pygame.Surface):
                 elif key in UP_KEYS or key in DOWN_KEYS:
                     count = len(tracks) if column == 0 else len(self.MUSIC_ACTIONS)
                     selected[column] = (selected[column] + (-1 if key in UP_KEYS else 1)) % count
-                elif (key in LEFT_KEYS or key in RIGHT_KEYS) and tracks:
-                    column = 1 - column
+                elif key in LEFT_KEYS or key in RIGHT_KEYS:
+                    # Reading order by lines (a track, the command on its line, the next track...) :
+                    # a knob reaches every track and every command (they only went from a column
+                    # to the other)
+                    actions = len(self.MUSIC_ACTIONS)
+                    if not tracks:
+                        selected[1] = (selected[1] + (1 if key in RIGHT_KEYS else -1)) % actions
+                    elif key in RIGHT_KEYS and column == 0:
+                        row = selected[0] - first
+                        if row < actions:
+                            column, selected[1] = 1, row
+                        else:
+                            selected[0] = (selected[0] + 1) % len(tracks)
+                    elif key in RIGHT_KEYS:
+                        column, selected[0] = 0, (selected[0] + 1) % len(tracks)
+                    elif column == 1:
+                        column, selected[0] = 0, min(first + selected[1], len(tracks) - 1)
+                    else:
+                        before = (selected[0] - 1) % len(tracks)
+                        row = before - first
+                        if 0 <= row < actions and before < selected[0]:
+                            column, selected[0], selected[1] = 1, before, row
+                        else:
+                            selected[0] = before
                 elif key == 'VOLUME-UP':
                     player.action('volup')
                 elif key == 'VOLUME-DOWN':
@@ -11069,9 +11320,9 @@ class Screen(pygame.Surface):
             clicked = self.is_clicked(click_zones, key)
             if clicked:
                 key = clicked
-            if key in LEFT_KEYS:
+            if key in LEFT_KEYS + UP_KEYS:
                 selected = 1
-            elif key in RIGHT_KEYS:
+            elif key in RIGHT_KEYS + DOWN_KEYS:
                 selected = 2
             elif key == 'password' or (key in ENTER_KEYS and selected == 2):
                 # Empty : no password any more
@@ -11563,7 +11814,12 @@ class Screen(pygame.Surface):
                 game_list = {}
             # In case of a list containing something (or not)
             self.logs.debug(f"Received a list with {len(game_list)} games")
-            nb_elements = len(game_list) + 1    # Add first line
+            # The games on the lines 1... n (the titles on the line 0), Retour : n + 1. The
+            # selection was counted from 2 : Entrée joined the game above the one shown, a
+            # click on the first one the last one
+            nb_elements = len(game_list)
+            if not 1 <= selected <= nb_elements + 1:
+                selected = 1 if nb_elements else nb_elements + 1
 
             while True:
                 # Display basis
@@ -11572,19 +11828,19 @@ class Screen(pygame.Surface):
                         self.lang.translate('master-client-refresh'))
 
                 click_zones = {}
-                self.display_row(0, nb_elements, False, [('game-name', 4 / 16), \
+                self.display_row(0, nb_elements + 1, False, [('game-name', 4 / 16), \
                         ('game-type', 4 / 16), ('creator', 6 / 16), \
                         ('players', 2 / 16)], 3 / 4)
 
                 index = 0
                 for game in game_list:
-                    click_zones[f'select|{index}'] = self.display_row(1 + index, nb_elements, \
+                    click_zones[f'select|{index}'] = self.display_row(1 + index, nb_elements + 1, \
                             selected, [(game['GAMENAME'], 4 / 16), \
                             (game['GAMETYPE'].replace('_', ' '), 4 / 16), \
                             (game['GAMECREATOR'], 6 / 16), (str(game['PLAYERS']), 2 / 16)], 3 / 4)
                     index += 1
 
-                click_zones['escape'] = self.display_button(index + 2 == selected, 'back', special='escape')
+                click_zones['escape'] = self.display_button(nb_elements + 1 == selected, 'back', special='escape')
                 #click_zones['escape'] = self.display_button(index + 3 == selected, 'refresh', special='refresh')
 
                 self.update_screen()    # refresh screen
@@ -11607,18 +11863,17 @@ class Screen(pygame.Surface):
                     else:
                         key = clicked
 
-                # Navigation menu
-                # Avoid 1st line => titles
-                # Right and left too, in reading order ; left on the first one : the last button
-                moved = self.navigate(selected, key, nb_elements, 2, 2, left_right=True)
-                selected = moved if moved >= 2 else (nb_elements + 2 if key in LEFT_KEYS else 2)
+                # Navigation, as the screen shows it : the games, Retour
+                if key in ARROW_KEYS:
+                    places = [(number + 1, click_zones[f'select|{number}']) for number in range(nb_elements)]
+                    selected = self.spatial_step(places + [(nb_elements + 1, click_zones['escape'])], selected, key)
 
                 # Keyboard
                 if key in ESCAPE_KEYS or (key in ENTER_KEYS and selected == nb_elements + 1):
                     return 'escape'
 
-                if key in ENTER_KEYS and selected <= nb_elements:
-                    return game_list[selected-2]['GAMENAME']    # Header not counted
+                if key in ENTER_KEYS and 1 <= selected <= nb_elements:
+                    return game_list[selected - 1]['GAMENAME']
 
     def favorite_badge(self, rect, number):
         '''
@@ -12718,7 +12973,12 @@ class Screen(pygame.Surface):
 
             key_pressed = self.rpi.listen_inputs(['arrows'], ['escape', 'enter', 'TOGGLEFULLSCREEN', 'BACKUPBUTTON', 'GAMEBUTTON', 'single-click'])
 
-            selected = self.navigate(selected, key_pressed, 0, 1 + online + stats, 2)
+            # The buttons as drawn (up always gave the second one, down the first one)
+            if key_pressed in ARROW_KEYS:
+                places = [(1, click_zones.get('stats')), (1 + stats, click_zones.get('continue')), (2 + stats, click_zones.get('restart'))]
+                selected = self.spatial_step([place for place in places if place[1] is not None], selected, key_pressed)
+            else:
+                selected = self.navigate(selected, key_pressed, 0, 1 + online + stats, 2)
 
             # Analyse input (Mouse, keyboard and buttons)
             clicked = self.is_clicked(click_zones, key_pressed)
@@ -13803,13 +14063,25 @@ class Screen(pygame.Surface):
         '''
         Show the player icon on the top right of the screen
         '''
+        # A message as the others : Animation des messages (its strip 3 times as high), Fond des
+        # messages
+        effect = None if getattr(self, 'competition', False) else             cmessageanim.choose(self.config.get_value('SectionGlobals', 'message_animation', False))
         height = int(self.res['y'] / 10)
+        if effect is not None:
+            height = int(min(height * cmessageanim.SCALE, self.res['y'] * cmessageanim.SCALE_MAX))
         width = int(self.res['x'])
         pos_x = 0
         pos_y = int((self.res['y'] / 2) - (height / 2))
-        pygame.draw.rect(self.screen, self.colorset[color], (pos_x, pos_y, width, height), 0)
-
-        self.blit_text(txt, pos_x, pos_y, width, height)
+        rect = pygame.Rect(pos_x, pos_y, width, height)
+        style = self.message_style()
+        text_color = self.colorset['menu-text-white']
+        if effect is not None:
+            self.animate_message(effect, rect, self.colorset[color], txt, text_color, style)
+        if style == 'band':
+            pygame.draw.rect(self.screen, self.colorset[color], rect, 0)
+            self.blit_text(txt, pos_x, pos_y, width, height)
+        else:
+            self.blit_text2(txt, rect, text_color, **self.message_text(style, self.colorset[color]))
 
         self.update_screen()
 

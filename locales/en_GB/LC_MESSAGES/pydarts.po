@@ -4645,6 +4645,57 @@ msgstr "Direct launch not possible"
 msgid "direct-play-listed"
 msgstr "Favourites list"
 
+msgid "message_animation"
+msgstr "Animation of the messages"
+
+msgid "message-anim-sample"
+msgstr "Sample message"
+
+msgid "message-anim-none"
+msgstr "None"
+
+msgid "message-anim-random"
+msgstr "Random"
+
+msgid "message-anim-fade"
+msgstr "Fade"
+
+msgid "message-anim-slide"
+msgstr "Slide"
+
+msgid "message-anim-pop"
+msgstr "Pop"
+
+msgid "message-anim-drop"
+msgstr "Drop"
+
+msgid "message-anim-stamp"
+msgstr "Stamp"
+
+msgid "message-anim-wipe"
+msgstr "Wipe"
+
+msgid "message-anim-twist"
+msgstr "Twist"
+
+msgid "message-anim-shatter"
+msgstr "Shatter"
+
+msgid "message-anim-spin"
+msgstr "Spin"
+
+msgid "message_background"
+msgstr "Background of the messages"
+
+msgid "message-bg-band"
+msgstr "Strip"
+
+msgid "message-bg-none"
+msgstr "None"
+
+msgid "message-bg-outline"
+msgstr "Outlined letters"
+
 msgid "coins-no-mcp"
 msgstr "No MCP board detected: coin acceptor plugs into MCP input"
 

@@ -175,9 +175,9 @@ def pick_color(screen, keys, title, current, buttons, label, panel=None, hover=N
     hover(value) : the colour or the button gone to (a preview follows it) ; redraw() : the screen
     under it. Returns a colour, the name of a button, or 'back'
     '''
+    from include.cscreen import DOWN_KEYS, LEFT_KEYS, RIGHT_KEYS, UP_KEYS    # pylint: disable=import-outside-toplevel
     width, height = screen.screen.get_size()
     buttons = list(buttons) + ['back']
-    cells = len(PALETTE) + len(buttons)
     current = tuple(current[:3]) if isinstance(current, (tuple, list)) else current
     if current in PALETTE:
         selected = PALETTE.index(current)
@@ -236,15 +236,10 @@ def pick_color(screen, keys, title, current, buttons, label, panel=None, hover=N
             selected, key = hit, 'enter'
         if key in keys['escape']:
             return 'back'
-        if key in ('right', 'BTN_RIGHT', 'S6'):
-            selected = (selected + 1) % cells
-        elif key in ('left', 'BTN_LEFT', 'S11'):
-            selected = (selected - 1) % cells
-        elif key in ('down', 'BTN_DOWN', 'S3'):
-            selected = min(selected + columns, cells - 1) if selected < len(PALETTE) else 0
-        elif key in ('up', 'BTN_UP', 'S20'):
-            selected = selected - columns if columns <= selected < len(PALETTE) else \
-                (len(PALETTE) - columns if selected >= len(PALETTE) else cells - 1)
+        if key in UP_KEYS + DOWN_KEYS + LEFT_KEYS + RIGHT_KEYS:
+            # The closest colour or button in the direction, as drawn (from the buttons to the
+            # palette, the column was lost) ; right and left : in the order of reading
+            selected = screen.spatial_step(list(zones.items()), selected, key)
         elif key in keys['enter'] + ['space']:
             if selected < len(PALETTE):
                 return PALETTE[selected]
@@ -266,8 +261,8 @@ def slider_button(key, active, sliders):
     Valider does it ; Retour (or the knob held) cancels. Returns (done : 'ok', 'cancel' or None,
     the slider or button chosen, the change of the value : -1, 0, 1)
     '''
-    from include.cscreen import DOWN_KEYS, ENTER_KEYS, ESCAPE_KEYS, UP_KEYS    # pylint: disable=import-outside-toplevel
-    wheel = {'BTN_RIGHT': 1, 'S6': 1, 'BTN_LEFT': -1, 'S11': -1}
+    from include.cscreen import DOWN_KEYS, ENTER_KEYS, ESCAPE_KEYS, LEFT_KEYS, RIGHT_KEYS, UP_KEYS    # pylint: disable=import-outside-toplevel
+    wheel = {**{name: -1 for name in LEFT_KEYS}, **{name: 1 for name in RIGHT_KEYS}}
     count = sliders + 2
     if key in ESCAPE_KEYS:
         return 'cancel', active, 0
@@ -284,6 +279,39 @@ def slider_button(key, active, sliders):
             return None, active + 1, 0
         return ('ok' if active == sliders else 'cancel'), active, 0
     return None, active, 0
+
+
+def menu_button(screen):
+    '''
+    A button of the menus pressed now (poll_menu_buttons), else a dart of the target (S20, S3,
+    S11, S6 : the arrows of the menus, SB / DB : Valider), None if none ; without waiting. For
+    the windows which read the mouse themselves (the target did nothing there)
+    '''
+    rpi = screen.rpi
+    button = rpi.poll_menu_buttons()
+    if button or not getattr(rpi, 'target_enabled', False):
+        return button
+    try:
+        segment = rpi.read_target()
+    except Exception:    # pylint: disable=broad-except
+        return None
+    return segment if isinstance(segment, str) and segment else None
+
+
+def slider_key(event, active, sliders):
+    '''
+    The arrows of the keyboard in a window of sliders : up / down from a slider to the next,
+    then OK and Annuler (they were not reached) ; right / left on OK and Annuler : from one to
+    the other. Returns the slider or button chosen, None : an arrow for the value of a slider
+    '''
+    count = sliders + 2
+    if event.key == pygame.K_UP:
+        return (active - 1) % count
+    if event.key == pygame.K_DOWN:
+        return (active + 1) % count
+    if event.key in (pygame.K_LEFT, pygame.K_RIGHT) and active >= sliders:
+        return sliders + (active - sliders + 1) % 2
+    return None
 
 
 def fine_color(screen, title, before, panel=None, hover=None):
@@ -377,16 +405,15 @@ def fine_color(screen, title, before, panel=None, hover=None):
                 if event.key == pygame.K_ESCAPE:
                     return None
                 if event.key in (pygame.K_RETURN, pygame.K_KP_ENTER):
-                    return tuple(color)
-                if event.key == pygame.K_UP:
-                    active = (active - 1) % 3
-                elif event.key == pygame.K_DOWN:
-                    active = (active + 1) % 3
+                    return None if active == 4 else tuple(color)
+                moved = slider_key(event, active, 3)
+                if moved is not None:
+                    active = moved
                 elif event.key in (pygame.K_LEFT, pygame.K_RIGHT) and active < 3:
                     step = 1 if event.mod & pygame.KMOD_SHIFT else 5
                     color[active] = max(0, min(255, color[active] + (step if event.key == pygame.K_RIGHT else -step)))
-        # The buttons and the wheel of a knob (not the keyboard : read above)
-        button = screen.rpi.poll_menu_buttons()
+        # The buttons, the wheel of a knob and the target (not the keyboard : read above)
+        button = menu_button(screen)
         if button:
             done, active, change = slider_button(button, active, 3)
             if done == 'ok':
@@ -435,13 +462,8 @@ class ThemeEditor:
         video of introduction and the font in a third one (general), Quitter sans enregistrer and
         Enregistrer et quitter at the bottom ; a plate chosen, then this page again
         '''
+        from include.cscreen import DOWN_KEYS, LEFT_KEYS, RIGHT_KEYS, UP_KEYS    # pylint: disable=import-outside-toplevel
         entries = [name for _group, names in PANELS for name in names] + ['quit', 'save']
-        # The columns (the panels) : the index of their first entry and their length
-        starts, position = [], 0
-        for _group, names in PANELS:
-            starts.append((position, len(names)))
-            position += len(names)
-        plates = position
         selected = 0
         while True:
             zones = self.draw_first_page(entries, selected)
@@ -455,22 +477,10 @@ class ThemeEditor:
                 if self.changed and self.screen.ask_yes_no(self.translate('theme-save-question')):
                     self.save()
                 return
-            # The columns (the panels) of their own lengths, then the two buttons at the bottom.
-            # The wheel of a knob (BTN_LEFT / BTN_RIGHT) : every entry in the order of reading
-            column = next((number for number, (start, count) in enumerate(starts) if start <= selected < start + count), None)
-            if key in ('down', 'BTN_DOWN', 'BTN_RIGHT'):
-                selected = (selected + 1) % len(entries)
-            elif key in ('up', 'BTN_UP', 'BTN_LEFT'):
-                selected = (selected - 1) % len(entries)
-            elif key in ('right', 'left') and column is not None:
-                # The next panel (or the one before), at the same height
-                target = column + (1 if key == 'right' else -1)
-                if 0 <= target < len(starts):
-                    row = selected - starts[column][0]
-                    start, count = starts[target]
-                    selected = start + min(row, count - 1)
-            elif key in ('right', 'left') and selected >= plates:
-                selected = plates + 1 if selected == plates else plates
+            if key in UP_KEYS + DOWN_KEYS + LEFT_KEYS + RIGHT_KEYS:
+                # The closest entry in the direction, as drawn (the panels, the buttons at the
+                # bottom) ; right and left (the wheel of a knob) : in the order of reading
+                selected = self.screen.spatial_step(list(zones.items()), selected, key)
             elif key in self.keys['enter'] + ['space']:
                 entry = entries[selected]
                 if entry == 'quit':
@@ -548,10 +558,9 @@ class ThemeEditor:
         A plate : its mock-up and its tags ; arrows (or the knob) go from a tag to the next, Valider
         changes its colour, Retour goes back to the plates
         '''
+        from include.cscreen import DOWN_KEYS, LEFT_KEYS, RIGHT_KEYS, UP_KEYS    # pylint: disable=import-outside-toplevel
         name, drawer, left, right = plate
         tags = self.place_tags(left + right)
-        left = [tag for tag in tags if tag[3] == 'left']
-        right = [tag for tag in tags if tag[3] == 'right']
         selected = 0
         while True:
             self.redraw = lambda: self.draw_plate(name, drawer, tags, selected, update=False)
@@ -564,19 +573,10 @@ class ThemeEditor:
                 selected, key = hit, 'enter'
             if key in self.keys['escape']:
                 return
-            count = len(tags)
-            left_count = len(left)
-            if key in ('down', 'BTN_DOWN', 'right', 'BTN_RIGHT', 'S3', 'S6'):
-                if key in ('right', 'BTN_RIGHT', 'S6') and selected < left_count and right:
-                    # Right from the left column : the same height on the right one (a knob : the next)
-                    selected = min(left_count + selected, count - 1) if key == 'right' else (selected + 1) % count
-                else:
-                    selected = (selected + 1) % count
-            elif key in ('up', 'BTN_UP', 'left', 'BTN_LEFT', 'S20', 'S11'):
-                if key == 'left' and selected >= left_count:
-                    selected = min(selected - left_count, left_count - 1)
-                else:
-                    selected = (selected - 1) % count
+            if key in UP_KEYS + DOWN_KEYS + LEFT_KEYS + RIGHT_KEYS:
+                # The closest tag in the direction, as drawn on both sides of the mock-up (up and
+                # down followed the list) ; right and left (a knob) : in the order of reading
+                selected = self.screen.spatial_step(list(zones.items()), selected, key)
             elif key in self.keys['enter'] + ['space']:
                 self.choose(tags[selected][0])
 
@@ -1117,16 +1117,15 @@ class ThemeEditor:
                     if event.key == pygame.K_ESCAPE:
                         return None
                     if event.key in (pygame.K_RETURN, pygame.K_KP_ENTER):
-                        return tuple(values)
-                    if event.key == pygame.K_UP:
-                        active = (active - 1) % 4
-                    elif event.key == pygame.K_DOWN:
-                        active = (active + 1) % 4
+                        return None if active == 5 else tuple(values)
+                    moved = slider_key(event, active, 4)
+                    if moved is not None:
+                        active = moved
                     elif event.key in (pygame.K_LEFT, pygame.K_RIGHT) and active < 4:
                         step = 5 if event.mod & pygame.KMOD_SHIFT else 1
                         put(active, values[active] + (step if event.key == pygame.K_RIGHT else -step))
-            # The buttons and the wheel of a knob (not the keyboard : read above)
-            button = screen.rpi.poll_menu_buttons()
+            # The buttons, the wheel of a knob and the target (not the keyboard : read above)
+            button = menu_button(screen)
             if button:
                 done, active, change = slider_button(button, active, 4)
                 if done == 'ok':

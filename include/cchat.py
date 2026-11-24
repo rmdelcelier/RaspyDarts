@@ -408,12 +408,16 @@ def show(display):
     display._lobby_chat_unread = 0
     selected = None
     action_index = 0
+    # Where the arrows are : a button at the bottom (its name), 'logout', or 'player' (the list
+    # of the players : the one selected)
+    focus = None
     resolved = display._lobby_chat_resolved
     seen_events = display._lobby_chat_seen
     note = translate('online-chat-hint')
     # Buttons at the bottom, in this order (left / right go from one to the next)
     order = [name for name in ('write', 'quick', 'invite', 'accept', 'refuse', 'back') if name in buttons]
     keys = {buttons[name][0]: name for name in buttons if buttons[name][0]}
+    focus = order[0] if order else 'player'
     try:
         while True:
             for event in _new_events(display, client, seen_events):
@@ -456,7 +460,8 @@ def show(display):
             if 'logout' in buttons:
                 logout_rect = pygame.Rect(int(w*.76), int(h*.105), int(w*.21), int(h*.05))
                 zones['logout'] = logout_rect
-                draw_button(display, logout_rect, buttons['logout'], 'online_chat', colors['menu-buttons'])
+                draw_button(display, logout_rect, buttons['logout'], 'online_chat',
+                            colors['menu-selected'] if focus == 'logout' else colors['menu-buttons'])
             players_rect = pygame.Rect(int(w*.03), int(h*.18), int(w*.30), int(h*.55))
             display.new_blit_rect2(players_rect, colors['menu-header'], corners='All', border_radius=radius, alpha=255)
             # Text of a panel : menu-text ; of a button or of the line chosen : menu-text-black
@@ -468,6 +473,9 @@ def show(display):
                 zones['player|'+player['id']] = rect
                 if player['id'] == selected:
                     display.new_blit_rect2(rect, colors['menu-selected'], corners='All', border_radius=radius, alpha=255)
+                    if focus == 'player':
+                        # The arrows on the list : its frame
+                        pygame.draw.rect(display.screen, colors['menu-text-white'], rect, 3, border_radius=radius)
                 draw_line(display, player['name'], rect.inflate(-12, -8),
                           colors['menu-text-black'] if player['id'] == selected else colors['menu-text'])
             if not players:
@@ -516,7 +524,7 @@ def show(display):
                 rect = pygame.Rect(int(w*(.03+(i%3)*.32)), int(h*(.805+(i//3)*.08)), int(w*.30), int(h*.068))
                 zones[name] = rect
                 draw_button(display, rect, buttons[name], 'online_chat',
-                            colors['menu-selected'] if i == action_index else colors['menu-buttons'])
+                            colors['menu-selected'] if i == action_index and focus in (name, 'player') else colors['menu-buttons'])
             draw_line(display, translate('online-chat-keys'), pygame.Rect(int(w*.03), int(h*.955), int(w*.94), int(h*.04)),
                       colors['menu-text-white'])
             display.update_screen()
@@ -539,16 +547,33 @@ def show(display):
                 return
             if isinstance(key, str) and key.startswith('player|'):
                 selected = key.split('|', 1)[1]
+                focus = 'player'
                 continue
-            if key in UP_KEYS or key in DOWN_KEYS:
-                if ids:
-                    index = ids.index(selected) if selected in ids else 0
-                    selected = ids[(index + (-1 if key in UP_KEYS else 1)) % len(ids)]
-                continue
-            if key in LEFT_KEYS or key in RIGHT_KEYS:
-                action_index = (action_index + (-1 if key in LEFT_KEYS else 1)) % len(order)
+            if key in UP_KEYS + DOWN_KEYS + LEFT_KEYS + RIGHT_KEYS:
+                index = ids.index(selected) if selected in ids else None
+                step = -1 if key in UP_KEYS else 1
+                if focus == 'player' and key in UP_KEYS + DOWN_KEYS and index is not None and 0 <= index + step < len(ids)                         and 'player|' + ids[index + step] not in zones:
+                    # The list scrolled : the player above or under the 8 shown
+                    selected = ids[index + step]
+                    continue
+                # The closest one in the direction, as drawn (the players, Déconnexion, the two
+                # rows of buttons : they were gone through in a line) ; right and left (the wheel
+                # of a knob) : in the order of reading
+                current = 'player|' + selected if focus == 'player' and selected else focus
+                moved = display.spatial_step(list(zones.items()), current, key)
+                if moved.startswith('player|'):
+                    selected, focus = moved.split('|', 1)[1], 'player'
+                else:
+                    focus = moved
+                    if moved in order:
+                        action_index = order.index(moved)
                 continue
             if key in ENTER_KEYS:
+                if focus == 'logout':
+                    from include.caccount import logout
+                    logout(display)
+                    return
+                # On the list : the button chosen last (as Entrée did with the arrows on the list)
                 key = order[action_index]
             if key == 'back':
                 # Retour chosen, then validated

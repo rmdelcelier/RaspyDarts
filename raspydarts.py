@@ -278,6 +278,14 @@ except Exception as error:    # pylint: disable=broad-except
     logs.error(f"I2C : wiring not checked ({error})")
     i2c_change = None
 
+# The compositor of the desktop lets the game draw straight on the screen (picom
+# --unredir-if-possible : every frame of the animations shown) : the bornes installed before
+try:
+    from include import ccompositor
+    ccompositor.follow(logs)
+except Exception as error:    # pylint: disable=broad-except
+    logs.error(f"Compositor : not checked ({error})")
+
 # Manage raspberry gpio
 try:
     rpi = craspberry.Craspberry(logs, Config, config_target_leds, dispatcher, t_event=t_event)
@@ -1019,6 +1027,8 @@ try:
                         menu = 'gamecategory'
                 rpi.light_toys(['LIGHT_PLAYERS'], False)
 
+                # Mode Compétition : no animation, the messages too (include/cmessageanim.py)
+                display.competition = competition_mode
                 if competition_mode:
                     video_player.set_level(0)
                     image_player.set_level(0)

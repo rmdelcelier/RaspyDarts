@@ -4762,6 +4762,57 @@ msgstr "Direct starten niet mogelijk"
 msgid "direct-play-listed"
 msgstr "Favorietenlijst"
 
+msgid "message_animation"
+msgstr "Animatie van de berichten"
+
+msgid "message-anim-sample"
+msgstr "Voorbeeldbericht"
+
+msgid "message-anim-none"
+msgstr "Geen"
+
+msgid "message-anim-random"
+msgstr "Willekeurig"
+
+msgid "message-anim-fade"
+msgstr "Vervagen"
+
+msgid "message-anim-slide"
+msgstr "Schuiven"
+
+msgid "message-anim-pop"
+msgstr "Opveren"
+
+msgid "message-anim-drop"
+msgstr "Vallen"
+
+msgid "message-anim-stamp"
+msgstr "Stempel"
+
+msgid "message-anim-wipe"
+msgstr "Vegen"
+
+msgid "message-anim-twist"
+msgstr "Draaien"
+
+msgid "message-anim-shatter"
+msgstr "Scherven"
+
+msgid "message-anim-spin"
+msgstr "Tol"
+
+msgid "message_background"
+msgstr "Achtergrond van de berichten"
+
+msgid "message-bg-band"
+msgstr "Balk"
+
+msgid "message-bg-none"
+msgstr "Geen"
+
+msgid "message-bg-outline"
+msgstr "Omlijnde letters"
+
 msgid "coins-no-mcp"
 msgstr "Geen MCP-kaart gedetecteerd: de muntinworp wordt aangesloten op een MCP-ingang"
 

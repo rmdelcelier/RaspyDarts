@@ -4784,6 +4784,57 @@ msgstr "Lancement direct impossible"
 msgid "direct-play-listed"
 msgstr "Liste Favoris"
 
+msgid "message_animation"
+msgstr "Animation des messages"
+
+msgid "message-anim-sample"
+msgstr "Exemple de message"
+
+msgid "message-anim-none"
+msgstr "Aucune"
+
+msgid "message-anim-random"
+msgstr "Aléatoire"
+
+msgid "message-anim-fade"
+msgstr "Fondu"
+
+msgid "message-anim-slide"
+msgstr "Glissé"
+
+msgid "message-anim-pop"
+msgstr "Rebond"
+
+msgid "message-anim-drop"
+msgstr "Chute"
+
+msgid "message-anim-stamp"
+msgstr "Tampon"
+
+msgid "message-anim-wipe"
+msgstr "Balayage"
+
+msgid "message-anim-twist"
+msgstr "Vrille"
+
+msgid "message-anim-shatter"
+msgstr "Éclats"
+
+msgid "message-anim-spin"
+msgstr "Toupie"
+
+msgid "message_background"
+msgstr "Fond des messages"
+
+msgid "message-bg-band"
+msgstr "Bandeau"
+
+msgid "message-bg-none"
+msgstr "Aucun"
+
+msgid "message-bg-outline"
+msgstr "Contour des lettres"
+
 msgid "coins-no-mcp"
 msgstr "Aucune carte MCP détectée : le monnayeur se branche sur une entrée MCP"
 

@@ -4640,6 +4640,57 @@ msgstr "Direktstart nicht möglich"
 msgid "direct-play-listed"
 msgstr "Favoritenliste"
 
+msgid "message_animation"
+msgstr "Animation der Meldungen"
+
+msgid "message-anim-sample"
+msgstr "Beispielmeldung"
+
+msgid "message-anim-none"
+msgstr "Keine"
+
+msgid "message-anim-random"
+msgstr "Zufällig"
+
+msgid "message-anim-fade"
+msgstr "Überblenden"
+
+msgid "message-anim-slide"
+msgstr "Gleiten"
+
+msgid "message-anim-pop"
+msgstr "Aufploppen"
+
+msgid "message-anim-drop"
+msgstr "Fallen"
+
+msgid "message-anim-stamp"
+msgstr "Stempel"
+
+msgid "message-anim-wipe"
+msgstr "Wischen"
+
+msgid "message-anim-twist"
+msgstr "Wirbel"
+
+msgid "message-anim-shatter"
+msgstr "Splitter"
+
+msgid "message-anim-spin"
+msgstr "Kreisel"
+
+msgid "message_background"
+msgstr "Hintergrund der Meldungen"
+
+msgid "message-bg-band"
+msgstr "Band"
+
+msgid "message-bg-none"
+msgstr "Keiner"
+
+msgid "message-bg-outline"
+msgstr "Umrandete Buchstaben"
+
 msgid "coins-no-mcp"
 msgstr "Keine MCP-Karte erkannt: Münzprüfer wird an MCP-Eingang angeschlossen"
 

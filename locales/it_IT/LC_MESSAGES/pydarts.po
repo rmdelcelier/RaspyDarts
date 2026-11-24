@@ -4641,6 +4641,57 @@ msgstr "Avvio diretto impossibile"
 msgid "direct-play-listed"
 msgstr "Elenco preferiti"
 
+msgid "message_animation"
+msgstr "Animazione dei messaggi"
+
+msgid "message-anim-sample"
+msgstr "Messaggio di esempio"
+
+msgid "message-anim-none"
+msgstr "Nessuna"
+
+msgid "message-anim-random"
+msgstr "Casuale"
+
+msgid "message-anim-fade"
+msgstr "Dissolvenza"
+
+msgid "message-anim-slide"
+msgstr "Scorrimento"
+
+msgid "message-anim-pop"
+msgstr "Rimbalzo"
+
+msgid "message-anim-drop"
+msgstr "Caduta"
+
+msgid "message-anim-stamp"
+msgstr "Timbro"
+
+msgid "message-anim-wipe"
+msgstr "Tendina"
+
+msgid "message-anim-twist"
+msgstr "Vortice"
+
+msgid "message-anim-shatter"
+msgstr "Frammenti"
+
+msgid "message-anim-spin"
+msgstr "Trottola"
+
+msgid "message_background"
+msgstr "Sfondo dei messaggi"
+
+msgid "message-bg-band"
+msgstr "Fascia"
+
+msgid "message-bg-none"
+msgstr "Nessuno"
+
+msgid "message-bg-outline"
+msgstr "Lettere contornate"
+
 msgid "coins-no-mcp"
 msgstr "Nessuna scheda MCP rilevata: la gettoniera si collega a un ingresso MCP"
 

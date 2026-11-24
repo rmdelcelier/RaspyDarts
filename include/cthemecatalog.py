@@ -324,6 +324,14 @@ def remove(screen, theme):
     return False
 
 
+def bottom_button(zones):
+    '''
+    The button at the bottom the arrows go to from the list : Télécharger, else Supprimer (a
+    theme of this borne not online), else Retour
+    '''
+    return next(name for name in ('download', 'delete', 'back') if name in zones)
+
+
 def catalog_screen(screen):
     '''
     Télécharger depuis RaspyHub : the list of the themes, their captures, Télécharger
@@ -454,6 +462,13 @@ def catalog_screen(screen):
             focus, index = places[(here_at + WHEEL[key]) % len(places)]
             if focus == 'list' and index != selected:
                 selected, number, turned = index, 1, time.time()
+        elif key in LEFT_KEYS + RIGHT_KEYS and focus != 'list':
+            # The buttons at the bottom : from one to the next as drawn (Retour, Télécharger,
+            # Supprimer), round again ; the captures changed in the list only
+            buttons = sorted((name for name in ('back', 'download', 'delete') if name in zones), key=lambda name: zones[name][0])
+            if buttons:
+                at = buttons.index(focus) if focus in buttons else 0
+                focus = buttons[(at + (1 if key in RIGHT_KEYS else -1)) % len(buttons)]
         elif key in LEFT_KEYS:
             number = (number - 2) % count + 1
             turned = time.time()
@@ -461,23 +476,24 @@ def catalog_screen(screen):
             number = number % count + 1
             turned = time.time()
         elif key in DOWN_KEYS:
+            # The list, then the buttons at the bottom, then the top of the list again
             if focus == 'list' and selected + 1 < len(themes):
                 selected, number, turned = selected + 1, 1, time.time()
             elif focus == 'list':
-                focus = 'download'
-            elif focus == 'download':
-                focus = 'delete' if theme.get('id') in own else 'back'
-            elif focus == 'delete':
-                focus = 'back'
+                focus = bottom_button(zones)
+            else:
+                focus = 'list'
+                if selected != 0:
+                    selected, number, turned = 0, 1, time.time()
         elif key in UP_KEYS:
-            if focus == 'back':
-                focus = 'delete' if theme.get('id') in own else 'download'
-            elif focus == 'delete':
-                focus = 'download'
-            elif focus == 'download':
+            # The buttons at the bottom : back to the theme they are for ; the top of the list :
+            # the buttons at the bottom
+            if focus != 'list':
                 focus = 'list'
             elif selected > 0:
                 selected, number, turned = selected - 1, 1, time.time()
+            else:
+                focus = bottom_button(zones)
         elif key in ENTER_KEYS + ['space']:
             if focus == 'back':
                 return

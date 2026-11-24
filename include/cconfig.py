@@ -85,6 +85,12 @@ DefaultConfig['SectionGlobals'] = {
     # Lancement direct : at each start, this game or favorite at once (include/cdirectplay.py)
     'direct_play': False,
     'direct_play_game': '',
+    # Animation of the messages (include/cmessageanim.py) : none, random, fade, slide, pop,
+    # drop, stamp, wipe, twist, shatter
+    'message_animation': 'random',
+    # Background of the messages : band (a strip), none (the text alone), outline (the letters
+    # outlined in the colour of the strip) ; without strip, the text as high as the strip
+    'message_background': 'band',
     'check_for_updates': True,
     # Raspy2DMD : powered off with RaspyDarts (Quitter : « shutdwn| » sent, the one of this
     # machine stopped first) ; in a game, its texts in the colour of the player (« msgcolor »)
@@ -1466,6 +1472,10 @@ class Config:
         self.conf += "### Direct launch at each start : game:Cricket, fav:fav1 (main menu), list:2 (list Favoris)\n"
         self.conf += f"direct_play:{Global.get('direct_play', False)}\n"
         self.conf += f"direct_play_game:{Global.get('direct_play_game', '')}\n"
+        self.conf += "### Animation of the messages : none, random, fade, slide, pop, drop, stamp, wipe, twist, shatter\n"
+        self.conf += f"message_animation:{Global.get('message_animation', 'random')}\n"
+        self.conf += "### Background of the messages : band, none, outline (the letters outlined)\n"
+        self.conf += f"message_background:{Global.get('message_background', 'band')}\n"
         self.conf += "### Check for update available\n"
         self.conf += f"check_for_updates:{Global['check_for_updates']}\n"
         self.conf += "### Raspy2DMD : powered off with RaspyDarts ; its texts in the colour of the player in a game\n"

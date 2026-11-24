@@ -1620,8 +1620,6 @@ class Editor:
 # Fond animé, Vidéo d'introduction and Police : in Personnaliser le thème (its panel Général)
 SCREENS_PANELS = (('edit-screens-panel-buttons', None), ('edit-screens-panel-theme',
                   ('theme', 'theme-colors', ('theme-create', 'theme-delete'), ('theme-export', 'theme-import'))))
-# Side by side : the one on the left, the one on the right
-PAIRS = {'theme-export': 'theme-import', 'theme-create': 'theme-delete'}
 
 
 def screens_entries():
@@ -1645,7 +1643,6 @@ def screens_menu(screen, keys):
     '''
     # pylint: disable=import-outside-toplevel
     from include.cscreen import DOWN_KEYS, LEFT_KEYS, RIGHT_KEYS, UP_KEYS
-    translate = screen.lang.translate
     panels = screens_entries()
     entries = panels[0] + panels[1] + ['back']
     selected = 0
@@ -1656,28 +1653,13 @@ def screens_menu(screen, keys):
         clicked = screen.is_clicked(zones, key)
         if clicked is not False and clicked is not None:
             selected, key = clicked, 'enter'
-        first, second = len(panels[0]), len(panels[1])
         if key in keys['escape']:
             return
-        # The wheel of a knob (BTN_LEFT / BTN_RIGHT) : the lines in reading order, as in the
-        # other screens ; the arrows of a keyboard : from a panel to the other
-        if key == 'BTN_RIGHT':
-            selected = (selected + 1) % len(entries)
-        elif key == 'BTN_LEFT':
-            selected = (selected - 1) % len(entries)
-        elif key in DOWN_KEYS:
-            selected = (selected + 1) % len(entries)
-        elif key in UP_KEYS:
-            selected = (selected - 1) % len(entries)
-        elif key in RIGHT_KEYS and entries[selected] in PAIRS:
-            # Side by side : the one on the right
-            selected = entries.index(PAIRS[entries[selected]])
-        elif key in LEFT_KEYS and entries[selected] in PAIRS.values():
-            selected = entries.index(next(left for left, right in PAIRS.items() if right == entries[selected]))
-        elif key in RIGHT_KEYS and selected < first:
-            selected = first + min(selected, second - 1)
-        elif key in LEFT_KEYS and first <= selected < first + second:
-            selected = min(selected - first, first - 1)
+        if key in UP_KEYS + DOWN_KEYS + LEFT_KEYS + RIGHT_KEYS:
+            # The closest line in the direction, as drawn (the two panels, the buttons side by
+            # side of the second one, Retour) ; right and left (the wheel of a knob) : in the
+            # order of reading
+            selected = screen.spatial_step(list(zones.items()), selected, key)
         elif key in keys['enter'] + ['space']:
             name = entries[selected]
             if name == 'back':

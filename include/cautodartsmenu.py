@@ -266,7 +266,7 @@ def autodarts_menu(screen):
     if cautodarts.installing() and install_progress(screen, cautodarts.shared(screen.logs)) is False:
         return
     from include import cmenueditor    # pylint: disable=import-outside-toplevel
-    from include.cscreen import DOWN_KEYS, ENTER_KEYS, ESCAPE_KEYS, UP_KEYS    # pylint: disable=import-outside-toplevel
+    from include.cscreen import DOWN_KEYS, ENTER_KEYS, ESCAPE_KEYS, LEFT_KEYS, RIGHT_KEYS, UP_KEYS    # pylint: disable=import-outside-toplevel
     import qrcode    # pylint: disable=import-outside-toplevel
     reader = cautodarts.shared(screen.logs)
     settings = cautodarts.load()
@@ -377,26 +377,13 @@ def autodarts_menu(screen):
         if clicked is not False and clicked is not None:
             selected, key = clicked, 'enter'
         kind = entries[selected][0]
-        same = [index for index in usable if entries[index][0] == kind]
         if key in ESCAPE_KEYS or key == 'escape':
             return
-        if key in ('BTN_RIGHT',):
-            selected = usable[(usable.index(selected) + 1) % len(usable)]
-        elif key in ('BTN_LEFT',):
-            selected = usable[(usable.index(selected) - 1) % len(usable)]
-        elif key in DOWN_KEYS:
-            position = same.index(selected)
-            selected = same[position + 1] if position + 1 < len(same) else len(entries) - 1
-        elif key in UP_KEYS:
-            position = same.index(selected)
-            if kind == 'back':
-                selected = [index for index, entry in enumerate(entries) if entry[0] == 'setting'][-1]
-            else:
-                selected = same[position - 1] if position > 0 else selected
-        elif key in ('left', 'right', 'S11', 'S6'):
-            if kind in ('setting', 'command'):
-                other = [index for index in usable if entries[index][0] == ('command' if kind == 'setting' else 'setting')]
-                selected = other[min(same.index(selected), len(other) - 1)]
+        if key in UP_KEYS + DOWN_KEYS + LEFT_KEYS + RIGHT_KEYS:
+            # The closest line in the direction, as drawn (the settings, the commands, Retour ;
+            # the greyed ones left aside) ; right and left (the wheel of a knob) : in the order
+            # of reading
+            selected = screen.spatial_step(list(zones.items()), selected, key)
         elif key in ENTER_KEYS + ['space']:
             ident, value = entries[selected][1], entries[selected][3]
             if value == 'greyed':

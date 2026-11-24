@@ -403,7 +403,7 @@ def export_screen(screen):
     '''
     from include import cmenueditor    # pylint: disable=import-outside-toplevel
     from include import cautodartsmenu    # pylint: disable=import-outside-toplevel
-    from include.cscreen import DOWN_KEYS, ENTER_KEYS, ESCAPE_KEYS, UP_KEYS    # pylint: disable=import-outside-toplevel
+    from include.cscreen import DOWN_KEYS, ENTER_KEYS, ESCAPE_KEYS, LEFT_KEYS, RIGHT_KEYS, UP_KEYS    # pylint: disable=import-outside-toplevel
     theme = str(screen.config.get_value('SectionGlobals', 'colorset') or '')
     if not theme or not os.path.isdir(getattr(screen.file_class, 'theme_dir', '') or ''):
         screen.message([translate(screen, 'theme-export-none')], 2500, 'menu-ko', 'middle', 'big')
@@ -495,26 +495,13 @@ def export_screen(screen):
         if clicked is not False and clicked is not None:
             selected, key = clicked, 'enter'
         kind = entries[selected][0]
-        same = [index for index in usable if entries[index][0] == kind]
         if key in ESCAPE_KEYS or key == 'escape':
             return
-        if key in ('BTN_RIGHT',):
-            selected = usable[(usable.index(selected) + 1) % len(usable)]
-        elif key in ('BTN_LEFT',):
-            selected = usable[(usable.index(selected) - 1) % len(usable)]
-        elif key in DOWN_KEYS:
-            position = same.index(selected)
-            selected = same[position + 1] if position + 1 < len(same) else len(entries) - 1
-        elif key in UP_KEYS:
-            position = same.index(selected)
-            if kind == 'back':
-                selected = [index for index in usable if entries[index][0] == 'setting'][-1]
-            else:
-                selected = same[position - 1] if position > 0 else selected
-        elif key in ('left', 'right', 'S11', 'S6'):
-            if kind in ('setting', 'command'):
-                other = [index for index in usable if entries[index][0] == ('command' if kind == 'setting' else 'setting')]
-                selected = other[min(same.index(selected), len(other) - 1)]
+        if key in UP_KEYS + DOWN_KEYS + LEFT_KEYS + RIGHT_KEYS:
+            # The closest line in the direction, as drawn (the settings, the commands, Retour ;
+            # the greyed ones left aside) ; right and left (the wheel of a knob) : in the order
+            # of reading
+            selected = screen.spatial_step(list(zones.items()), selected, key)
         elif key in ENTER_KEYS + ['space']:
             ident, value = entries[selected][1], entries[selected][3]
             if value == 'greyed':
@@ -609,14 +596,16 @@ def choose_captures(screen, draft):
             selected, key = clicked, 'enter'
         if key in ESCAPE_KEYS or key == 'escape':
             return
-        if key in RIGHT_KEYS:
-            selected = min(len(names), selected + 1)
-        elif key in LEFT_KEYS:
-            selected = max(0, selected - 1)
-        elif key in DOWN_KEYS:
-            selected = min(len(names), selected + columns)
-        elif key in UP_KEYS:
-            selected = max(0, selected - columns) if selected < len(names) else len(names) - 1
+        if key in UP_KEYS + DOWN_KEYS + LEFT_KEYS + RIGHT_KEYS:
+            # The closest tile in the direction (move_selection : up and down go around, right
+            # and left in reading order), on all the captures as if none was scrolled away,
+            # Retour under the last row : the rows shown follow the selection
+            pitch = height + gap + 0.5 * unit_y
+            places = {index: (int(unit_x + (index % columns) * (width + gap)), int((index // columns) * pitch), width, height)
+                      for index in range(len(names))}
+            back = pygame.Rect(zones[len(names)])
+            places[len(names)] = (back.x, int(-(-len(names) // columns) * pitch), back.width, back.height)
+            selected = screen.spatial_step(list(places.items()), selected, key)
         elif key in ENTER_KEYS + ['space']:
             if selected == len(names):
                 return

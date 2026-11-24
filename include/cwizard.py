@@ -190,7 +190,8 @@ class Tiles:
         help_text = screen.lang.translate('wizard-card-help' if back else 'wizard-card-help-first')
         screen.blit_text(help_text, 0, int(screen.res_y * 0.92), screen.res_x, int(screen.res_y * 0.06), color=(170, 172, 180))
         # Retour, or Quitter on the first screen (the desktop, the shutdown or cancel)
-        zones['back' if back else 'quit'] = back_button(screen, label='wizard-back' if back else 'wizard-quit')
+        button = 'back' if back else 'quit'
+        zones[button] = back_button(screen, focused=selected == button, label='wizard-back' if back else 'wizard-quit')
         screen.update_screen()
         return zones, columns
 
@@ -201,7 +202,7 @@ class Tiles:
         '''
         from include import cscreen    # pylint: disable=import-outside-toplevel
         selected = initial
-        zones, columns = self.draw(selected, title, subtitle, back)
+        zones, _columns = self.draw(selected, title, subtitle, back)
         while True:
             # The inputs of the menus : keyboard, buttons of the cabinet, mouse and touch
             key = self.screen.rpi.listen_inputs(['arrows'], ['escape', 'enter', 'space', 'single-click', 'resize'])
@@ -213,14 +214,15 @@ class Tiles:
             if key in cscreen.ESCAPE_KEYS:
                 return BACK if back else QUIT
             if key in cscreen.ENTER_KEYS or key == 'space':
-                return self.entries[selected][0]
-            steps = [(cscreen.LEFT_KEYS, -1), (cscreen.RIGHT_KEYS, 1), (cscreen.UP_KEYS, -columns), (cscreen.DOWN_KEYS, columns)]
-            step = next((value for keys, value in steps if key in keys), None)
-            if step is None and key != 'resize':
+                return {'back': BACK, 'quit': QUIT}.get(selected) or self.entries[selected][0]
+            arrows = cscreen.UP_KEYS + cscreen.DOWN_KEYS + cscreen.LEFT_KEYS + cscreen.RIGHT_KEYS
+            if key not in arrows and key != 'resize':
                 continue
-            if step is not None:
-                selected = (selected + step) % len(self.entries)
-            zones, columns = self.draw(selected, title, subtitle, back)
+            if key in arrows:
+                # The closest tile in the direction, Retour (or Quitter) with them (the last row
+                # not full : the column was lost, the button never reached)
+                selected = self.screen.spatial_step(list(zones.items()), selected, key)
+            zones, _columns = self.draw(selected, title, subtitle, back)
 
 
 def choose_card(screen):
@@ -400,7 +402,7 @@ def ask(screen, title, question, choices, back=True, initial=0, escape=None):
                 rendered = label_font.render(line, True, text)
                 screen.screen.blit(rendered, rendered.get_rect(midtop=(rect.centerx, label_y)))
                 label_y += line_h
-        back_rect = back_button(screen) if back else None
+        back_rect = back_button(screen, focused=selected == BACK) if back else None
         screen.update_screen()
         return zones, back_rect
 
@@ -421,11 +423,10 @@ def ask(screen, title, question, choices, back=True, initial=0, escape=None):
                 return BACK
             continue
         if key in cscreen.ENTER_KEYS or key == 'space':
-            return choices[selected][0]
-        if key in cscreen.LEFT_KEYS or key in cscreen.UP_KEYS:
-            selected = (selected - 1) % len(choices)
-        elif key in cscreen.RIGHT_KEYS or key in cscreen.DOWN_KEYS:
-            selected = (selected + 1) % len(choices)
+            return BACK if selected == BACK else choices[selected][0]
+        if key in cscreen.UP_KEYS + cscreen.DOWN_KEYS + cscreen.LEFT_KEYS + cscreen.RIGHT_KEYS:
+            # The closest answer in the direction, Retour with them (it was reached by Escape only)
+            selected = screen.spatial_step(list(zones.items()) + [(BACK, back_rect)], selected, key)
         elif key != 'resize':
             continue
         zones, back_rect = draw()
@@ -567,35 +568,6 @@ def pick_pins(screen, title, item, names, others, initial=()):
         screen.update_screen()
         return zones
 
-    def move(step_x, step_y):
-        '''
-        The focus moved : along a row onto the next GPIO, from a row to the other, down from the
-        inner row onto Terminer, up from Terminer (or Retour) back on the connector
-        '''
-        if focus[0] != 'pin':
-            if step_y < 0:
-                focus[:] = ['pin', 11]
-            elif step_x:
-                focus[:] = ['back'] if focus[0] == 'finish' else (['finish'] if chosen else ['back'])
-            return
-        number = focus[1]
-        row = 0 if number % 2 == 0 else 1
-        column = (number - 1) // 2
-        if step_y:
-            if row == 1 and step_y > 0:
-                focus[:] = ['finish'] if chosen else ['back']
-                return
-            row = min(1, max(0, row + step_y))
-            candidates = [column + offset for distance in range(PIN_COLUMNS) for offset in (distance, -distance)]
-        else:
-            candidates = [column + step_x * distance for distance in range(1, PIN_COLUMNS)]
-        for candidate in candidates:
-            if 0 <= candidate < PIN_COLUMNS:
-                target = candidate * 2 + (2 if row == 0 else 1)
-                if isinstance(HEADER[target], int):
-                    focus[:] = ['pin', target]
-                    return
-
     def give(number):
         '''
         This pin for the wire of the moment : refused when taken ; True : all given
@@ -632,14 +604,11 @@ def pick_pins(screen, title, item, names, others, initial=()):
                 return chosen
             if focus[0] == 'pin' and give(focus[1]):
                 return chosen
-        elif key in cscreen.LEFT_KEYS:
-            move(-1, 0)
-        elif key in cscreen.RIGHT_KEYS:
-            move(1, 0)
-        elif key in cscreen.UP_KEYS:
-            move(0, -1)
-        elif key in cscreen.DOWN_KEYS:
-            move(0, 1)
+        elif key in cscreen.UP_KEYS + cscreen.DOWN_KEYS + cscreen.LEFT_KEYS + cscreen.RIGHT_KEYS:
+            # The closest GPIO or button drawn in the direction (the edges went nowhere, up from
+            # the buttons always onto pin 11) ; right and left in reading order : the outer row,
+            # the inner one, then Retour and Terminer
+            focus[:] = list(screen.spatial_step(list(zones.items()), tuple(focus), key))
         elif key != 'resize':
             continue
         zones = draw()
@@ -766,7 +735,8 @@ def setup_leds(screen, kind, taken, current):
     # The focus first on the output chosen, else on the first one free
     pins = [action for action, _label in rows[0][1]]
     free = [index for index, action in enumerate(pins) if not disabled('pin', action)]
-    focus = [0, pins.index(values['pin']) if values['pin'] in pins and not disabled('pin', values['pin']) else free[0]]
+    # (row, column) of a box, or 'back'
+    focus = (0, pins.index(values['pin']) if values['pin'] in pins and not disabled('pin', values['pin']) else free[0])
 
     def draw():
         screen.display_background()
@@ -803,7 +773,7 @@ def setup_leds(screen, kind, taken, current):
                 zones[(row_index, col_index)] = rect
                 off = disabled(row, action)
                 chosen = (row == 'pin' and values['pin'] == action) or (row == 'typ' and values['typ'] == action)
-                focused = focus == [row_index, col_index]
+                focused = focus == (row_index, col_index)
                 fill = (60, 62, 68) if not off else (34, 35, 38)
                 if chosen:
                     fill = accent
@@ -828,9 +798,26 @@ def setup_leds(screen, kind, taken, current):
                     pygame.draw.rect(surface, fill, rect, border_radius=12)
                 pygame.draw.rect(surface, (255, 255, 255) if focused else (90, 92, 100), rect, 5 if focused else 2, border_radius=12)
                 screen.blit_text(label, rect.x, rect.y, rect.width, rect.height, color=text if not off else (110, 110, 115))
-        zones['back'] = back_button(screen)
+        zones['back'] = back_button(screen, focused=focus == 'back')
         screen.update_screen()
         return zones
+
+    def reachable():
+        '''
+        The boxes the arrows go to, as drawn : not the outputs greyed (taken), nor the settings
+        without output, nor the bar and the number (Entrée does nothing on them : their - and +
+        change them) ; Retour with them
+        '''
+        items = []
+        for place, rect in zones.items():
+            if place != 'back':
+                row, items_of_row = rows[place[0]]
+                action = items_of_row[place[1]][0]
+                # (the box touched last kept : the arrows go on from it)
+                if (disabled(row, action) or action in ('bri', 'nbr')) and place != focus:
+                    continue
+            items.append((place, rect))
+        return items
 
     def act(row_index, col_index):
         '''
@@ -871,7 +858,7 @@ def setup_leds(screen, kind, taken, current):
                     continue
                 if hit == 'back':
                     return None
-                focus = list(hit)
+                focus = hit
                 row, items = rows[hit[0]]
                 if items[hit[1]][0] == 'bri':
                     # A touch on the bar : the brightness of this place (the knob comes there)
@@ -883,25 +870,15 @@ def setup_leds(screen, kind, taken, current):
             elif key in cscreen.ESCAPE_KEYS:
                 return None
             elif key in cscreen.ENTER_KEYS or key == 'space':
+                if focus == 'back':
+                    return None
                 if act(*focus):
                     break
-            elif key in cscreen.UP_KEYS or key in cscreen.DOWN_KEYS:
-                step = -1 if key in cscreen.UP_KEYS else 1
-                row_index = focus[0]
-                for _ in range(len(rows)):
-                    row_index = (row_index + step) % len(rows)
-                    if not all(disabled(rows[row_index][0], action) for action, _label in rows[row_index][1]):
-                        break
-                focus = [row_index, min(focus[1], len(rows[row_index][1]) - 1)]
-            elif key in cscreen.LEFT_KEYS or key in cscreen.RIGHT_KEYS:
-                row, items = rows[focus[0]]
-                step = -1 if key in cscreen.LEFT_KEYS else 1
-                if row == 'bri':
-                    act(focus[0], 0 if step < 0 else 2)
-                elif row == 'nbr':
-                    act(focus[0], 2 if step < 0 else 4)
-                else:
-                    focus[1] = (focus[1] + step) % len(items)
+            elif key in cscreen.UP_KEYS + cscreen.DOWN_KEYS + cscreen.LEFT_KEYS + cscreen.RIGHT_KEYS:
+                # The arrows move the selection between the boxes drawn, Entrée does what the box
+                # does (on Luminosité and Nombre, right and left changed the value and did not
+                # move ; up and down kept the number of the column ; Retour never reached)
+                focus = screen.spatial_step(reachable(), focus, key)
             elif key != 'resize':
                 continue
             zones = draw()
@@ -1031,7 +1008,8 @@ def draw_buttons(screen, assigned, detected, selected, found, blink=True):
         pygame.draw.rect(surface, accent if blink else (200, 140, 30), band, border_radius=band_h // 2)
         screen.blit_text(translate('btnwiz-detected').replace('{pin}', detected), band.x, band.y, band.width, band.height,
                          color=(10, 10, 12))
-    zones['back'] = back_button(screen)
+    # Retour : after Terminer in the order of the arrows
+    zones['back'] = back_button(screen, focused=selected == len(FUNCTIONS) + 1)
     screen.update_screen()
     return center, radius, zones
 
@@ -1174,10 +1152,14 @@ def learn_buttons(screen, outputs=(), gpio_pins=None):
                     return None
                 detected = None
             elif key in ('up', 'left'):
-                selected = (selected - 1) % (len(FUNCTIONS) + 1)
+                # Round the target, then Terminer (the bull), then Retour (it was reached by
+                # Escape only)
+                selected = (selected - 1) % (len(FUNCTIONS) + 2)
             elif key in ('down', 'right'):
-                selected = (selected + 1) % (len(FUNCTIONS) + 1)
+                selected = (selected + 1) % (len(FUNCTIONS) + 2)
             elif key == 'enter':
+                if selected == len(FUNCTIONS) + 1:
+                    return None
                 if selected == len(FUNCTIONS):
                     return assigned
                 if detected is not None:
