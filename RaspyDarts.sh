@@ -40,8 +40,10 @@ do
 	sudo kill -9 `ps -lef | grep 'Server.py' | sed -e 's/  */ /g' | cut -f4 -d' '` 2> /dev/null
 
 	started=$(date +%s)
-	python3 raspydarts.py > logs/raspydarts.log 2>&1
+	python3 raspydarts.py "$@" > logs/raspydarts.log 2>&1
 	status=$?
+	# Its arguments (a game launched at once : include/cdirectplay.py) for the first start only
+	set --
 	# Stopped by an error : the end of its log here too (everything else goes to the log only)
 	if [ $status -ne 0 ]
 	then

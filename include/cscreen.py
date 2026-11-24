@@ -7285,7 +7285,7 @@ class Screen(pygame.Surface):
             if option in ('endgamestats', 'bypass-stats', 'onscreenbuttons', 'fullscreen',
                     'keeporder', 'play_firstname', 'nextplayer_music', 'print_dartstroke', 'light_target', 'light_strip', 'idle_light',
                     'competition_mode', 'exhibition_mode', 'illumination_mode', 'fast_games_mode', 'only_favorites_games_mode', 'check_for_updates',
-                    'dmd_shutdown', 'dmd_player_color'):  
+                    'dmd_shutdown', 'dmd_player_color', 'direct_play'):  
                 option_type = 'check'
                 option_values = []
                 if customization[option] == 'False' or customization[option] is False:
@@ -7346,6 +7346,12 @@ class Screen(pygame.Surface):
             elif option == 'videos':
                 option_type = 'dropdown'
                 option_values = [('0', 'videos-none'), ('1', 'videos-special'), ('2', 'videos-all')]
+            elif option == 'direct_play_game':
+                # Lancement direct : a numbered favorite, one of the list Favoris, or a game
+                from include import cdirectplay    # pylint: disable=import-outside-toplevel
+                option_type = 'dropdown'
+                option_values = cdirectplay.choices(self.lang.translate, self.favorites())
+                customization[option] = customization[option] or ''
             elif option == 'preferedcategory':
                 option_type = 'dropdown'
                 option_values = [('classic', 'classic'), ('fun', 'fun'), ('sport', 'sport')]

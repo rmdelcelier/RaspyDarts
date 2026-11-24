@@ -4627,6 +4627,24 @@ msgstr "Teclado USB"
 msgid "test-target-times"
 msgstr "{n} veces"
 
+msgid "direct_play"
+msgstr "Inicio directo al arrancar (sin menús)"
+
+msgid "direct_play_game"
+msgstr "Juego o favorito del inicio directo"
+
+msgid "direct-play-none"
+msgstr "Ninguno"
+
+msgid "direct-play-favorite"
+msgstr "Favorito"
+
+msgid "direct-play-unknown"
+msgstr "Inicio directo imposible"
+
+msgid "direct-play-listed"
+msgstr "Lista de favoritos"
+
 msgid "coins-no-mcp"
 msgstr "No se detectó placa MCP: el aceptador de monedas se conecta a la entrada MCP"
 

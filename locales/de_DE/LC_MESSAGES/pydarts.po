@@ -4622,6 +4622,24 @@ msgstr "USB-Tastenfeld"
 msgid "test-target-times"
 msgstr "{n}-mal"
 
+msgid "direct_play"
+msgstr "Direktstart beim Hochfahren (ohne Menüs)"
+
+msgid "direct_play_game"
+msgstr "Spiel oder Favorit des Direktstarts"
+
+msgid "direct-play-none"
+msgstr "Keins"
+
+msgid "direct-play-favorite"
+msgstr "Favorit"
+
+msgid "direct-play-unknown"
+msgstr "Direktstart nicht möglich"
+
+msgid "direct-play-listed"
+msgstr "Favoritenliste"
+
 msgid "coins-no-mcp"
 msgstr "Keine MCP-Karte erkannt: Münzprüfer wird an MCP-Eingang angeschlossen"
 

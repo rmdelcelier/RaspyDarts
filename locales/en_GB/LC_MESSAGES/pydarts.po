@@ -4627,6 +4627,24 @@ msgstr "USB pad"
 msgid "test-target-times"
 msgstr "{n} times"
 
+msgid "direct_play"
+msgstr "Direct launch at start (no menus)"
+
+msgid "direct_play_game"
+msgstr "Game or favourite of the direct launch"
+
+msgid "direct-play-none"
+msgstr "None"
+
+msgid "direct-play-favorite"
+msgstr "Favourite"
+
+msgid "direct-play-unknown"
+msgstr "Direct launch not possible"
+
+msgid "direct-play-listed"
+msgstr "Favourites list"
+
 msgid "coins-no-mcp"
 msgstr "No MCP board detected: coin acceptor plugs into MCP input"
 

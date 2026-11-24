@@ -4744,6 +4744,24 @@ msgstr "USB-toetsenblok"
 msgid "test-target-times"
 msgstr "{n} keer"
 
+msgid "direct_play"
+msgstr "Direct starten bij het opstarten (zonder menu's)"
+
+msgid "direct_play_game"
+msgstr "Spel of favoriet van de directe start"
+
+msgid "direct-play-none"
+msgstr "Geen"
+
+msgid "direct-play-favorite"
+msgstr "Favoriet"
+
+msgid "direct-play-unknown"
+msgstr "Direct starten niet mogelijk"
+
+msgid "direct-play-listed"
+msgstr "Favorietenlijst"
+
 msgid "coins-no-mcp"
 msgstr "Geen MCP-kaart gedetecteerd: de muntinworp wordt aangesloten op een MCP-ingang"
 

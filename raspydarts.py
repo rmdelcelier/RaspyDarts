@@ -17,6 +17,11 @@ import sys
 for _unused in ('pkg_resources', 'numpy', 'dns', 'dns.resolver'):
     sys.modules.setdefault(_unused, None)
 
+# The command line : a game or a favorite launched at once (include/cdirectplay.py) ; --liste and
+# --aide printed, then the end (before anything else is loaded)
+from include import cdirectplay
+cli_request = cdirectplay.parse(sys.argv[1:])
+
 import datetime
 from time import sleep
 import os, os.path
@@ -610,10 +615,20 @@ local_players = Config.get_value('Favorites', 'firstnames', False, None, split='
 players_bank = Config.get_value('SectionAdvanced', 'localplayers', False, split=',')         # Local players
 selected_game = Config.get_value('SectionAdvanced', 'selectedgame', False, 'None')            # Selected game
 favorite_options = None    # Options of a favorite whose players are chosen at its launch
-if selected_game is not None and local_players is not None:
-    direct_play = Config.get_value('SectionAdvanced', 'directplay', False, False)            # By-passs menus, use dirstnames and selected_game parameters
-else:
-    direct_play = False
+# Direct launch, at this start only : the command line, else Personnalisation du jeu > Lancement
+# direct (its game or favorite, with Joueurs favoris), else the settings of before
+# (SectionAdvanced : directplay with prefered_game, or selectedgame)
+start_request = cli_request
+if start_request is None and bool(Config.get_value('SectionGlobals', 'direct_play', False, False)):
+    start_request = cdirectplay.from_setting(Config.get_value('SectionGlobals', 'direct_play_game', False, ''), local_players)
+if start_request is None and str(Config.get_value('SectionAdvanced', 'directplay', False, False)) in ('True', '1'):
+    old_game = Config.get_value('SectionAdvanced', 'prefered_game', False, '') or \
+        Config.get_value('SectionAdvanced', 'selectedgame', False, '')
+    if old_game and str(old_game) not in ('False', 'None'):
+        start_request = {'game': str(old_game), 'players': local_players, 'options': {}}
+# A game of the direct launch : (launch, players), taken by the block FAVORITE of the menus
+pending_launch = None
+direct_play = False
 pref_fun_game = Config.get_value('SectionAdvanced', 'preferedfungame', False, None)
 pref_classic_game = Config.get_value('SectionAdvanced', 'preferedclassicgame', False, None)
 pref_sport_game = Config.get_value('SectionAdvanced', 'preferedsportgame', False, None)
@@ -626,7 +641,7 @@ logs.debug(f"firstnames option is set to : {local_players}")
 logs.debug(f"localplayers option is set to : {players_bank}")
 logs.debug(f"local_players option is set to : {local_players}")
 logs.debug(f"selected_game option is set to : {selected_game}")
-logs.debug(f"direct_play option is set to : {direct_play}")
+logs.debug(f"direct launch : {start_request}")
 logs.debug(f"pref_fun_game option is set to : {pref_fun_game}")
 logs.debug(f"pref_sport_game option is set to : {pref_sport_game}")
 logs.debug(f"pref_classic_game option is set to : {pref_classic_game}")
@@ -805,54 +820,21 @@ try:
                 menu = 'connect'
 
         ###
-        ### DIRECT PLAY MODE (possibility to launch a game without passing thru menus).
-        ### Only available if it hasen't be disabled by any process
-        elif game_type == 'local' and local_players is not None and selected_game is not None and direct_play:
-            try:
-                Game = selected_game.replace(' ', '_')
-                menu = True
-                all_players = local_players
-                players_count = len(local_players)
-                # The colours of the players, as the menus read them
-                players_favorite_color = Config.get_players_color()
-                choosed_game = __import__(f"games.{Game}", fromlist=["games"])
-
-                # Merge config file options and default game options
-                default_game_options = choosed_game.OPTIONS
-
-                if debuglevel == 2:
-                    try:
-                        debug_game_options = choosed_game.DEBUG
-                    except:
-                        debug_game_options = {} #empty dictionary
-                    default_game_options.update(debug_game_options)
-                # Take config file Game options if they exists
-                config_game_options = Config.read_file(Game)
-                if not config_game_options: config_game_options = {}  # Default to empty dict
-
-                old_options = []
-                for config_game_option in config_game_options:
-                    option_found = False
-                    for default_game_option in default_game_options:
-                        if config_game_option == default_game_option:
-                            option_found = True
-                    if not option_found: #pas trouvé
-                        old_options.append(config_game_option) #Donc une ancienne option
-
-                if len(old_options) > 0:
-                    display.display_background()
-                    display.message([Lang.translate('options-old')], 5000, None, 'middle', 'big')
-                    for option in old_options: #Nettoyage
-                        del config_game_options[option]
-
-                game_options = default_game_options.copy()
-                game_options.update(config_game_options)
-                display.game_options = game_options
-                display.selected_game = Game
-                # Enable Direct Play mode
-                direct_play = True
-            except Exception as exception:
-                logs.error(f"Unable launch Direct Play mode. Error was {exception}")
+        ### DIRECT LAUNCH (include/cdirectplay.py) : a game or a favorite without the menus, at
+        ### the start (command line, Lancement direct) ; through the block FAVORITE below
+        elif game_type == 'local' and start_request is not None:
+            request, start_request = start_request, None
+            outcome = cdirectplay.resolve(request, display.favorites(), lambda name: Config.read_file(f"game-{name}") or {})
+            logs.info(f"Direct launch {request} : {outcome[:2]}")
+            if outcome[0] == 'favorite':
+                display.menu_target = ('favorite', outcome[1])
+                menu = 'players'
+            elif outcome[0] == 'game':
+                pending_launch = (outcome[1], outcome[2])
+                menu = 'players'
+            else:
+                logs.error(f"Direct launch : {outcome[1]}")
+                display.message([f"{Lang.translate('direct-play-unknown')} ({outcome[1]})"], 3000, 'menu-ko', 'middle', 'big')
                 menu = 'gametype'
         else:
             menu = 'gametype'
@@ -934,10 +916,17 @@ try:
             # FAVORITE (favorite:fav1 in the main menu) : its game at once, with its options and
             # players (no players, list of games nor options)
             ########
-            if menu == 'players' and game_type == 'local' and display.menu_target is not None                     and display.menu_target[0] == 'favorite':
-                name = display.menu_target[1]
-                display.menu_target = None
-                launch = display.favorite_launch(name, local_players)
+            if menu == 'players' and game_type == 'local' and (pending_launch is not None or (display.menu_target is not None
+                                                                                             and display.menu_target[0] == 'favorite')):
+                if pending_launch is not None:
+                    # A game of the direct launch : as a favorite (its options, its players or
+                    # the screen of the players)
+                    launch, pending_launch = pending_launch, None
+                    name = launch[0]['game']
+                else:
+                    name = display.menu_target[1]
+                    display.menu_target = None
+                    launch = display.favorite_launch(name, local_players)
                 menu = 'mainmenu' if skip_main else 'gametype'
                 if launch is not None and launch[1] is None:
                     # Its players chosen first : then its game with its options at once
@@ -966,9 +955,10 @@ try:
                             selected_game = Game
                             display.selectedgame = Game
                             logs.info(f"Favorite {name} : {Game}, players {local_players}")
-                            if favorite['options']:
+                            if favorite['options'] or favorite.get('direct'):
                                 # Options of the game, those of the favorite over them (the ones
-                                # the game does not know any more are left)
+                                # the game does not know any more are left ; a direct launch :
+                                # those of the game, or saved for it, no screen of options)
                                 game_options = dict(choosed_game.OPTIONS)
                                 game_options.update({option: value for option, value in favorite['options'].items()
                                                      if option in game_options})

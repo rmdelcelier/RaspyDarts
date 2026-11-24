@@ -82,6 +82,9 @@ DefaultConfig['SectionGlobals'] = {
     'illumination_color': 'white',    
     'fast_games_mode': False,
     'only_favorites_games_mode': False,
+    # Lancement direct : at each start, this game or favorite at once (include/cdirectplay.py)
+    'direct_play': False,
+    'direct_play_game': '',
     'check_for_updates': True,
     # Raspy2DMD : powered off with RaspyDarts (Quitter : « shutdwn| » sent, the one of this
     # machine stopped first) ; in a game, its texts in the colour of the player (« msgcolor »)
@@ -1460,6 +1463,9 @@ class Config:
         self.conf += f"fast_games_mode:{Global['fast_games_mode']}\n"
         self.conf += "### Only favorites games mode\n"
         self.conf += f"only_favorites_games_mode:{Global['only_favorites_games_mode']}\n"
+        self.conf += "### Direct launch at each start : game:Cricket, fav:fav1 (main menu), list:2 (list Favoris)\n"
+        self.conf += f"direct_play:{Global.get('direct_play', False)}\n"
+        self.conf += f"direct_play_game:{Global.get('direct_play_game', '')}\n"
         self.conf += "### Check for update available\n"
         self.conf += f"check_for_updates:{Global['check_for_updates']}\n"
         self.conf += "### Raspy2DMD : powered off with RaspyDarts ; its texts in the colour of the player in a game\n"
@@ -1519,7 +1525,7 @@ class Config:
         self.conf += f"target-bgcolor2:{Advanced['target-bgcolor2']}\n"
         self.conf += f"target-bgcolor3:{Advanced['target-bgcolor3']}\n"
         self.conf += f"target-bgbrightness:{Advanced['target-bgbrightness']}\n"
-        self.conf += "### Direct play : both prefered_game and firstnames must be filled\n"
+        self.conf += "### Direct play of before (now : direct_play of SectionGlobals) : prefered_game and firstnames\n"
         self.conf += f"directplay:{Advanced['directplay']}\n"
         self.conf += f"prefered_game:{Advanced['prefered_game']}\n"
         self.conf += "### Prefered Games\n"

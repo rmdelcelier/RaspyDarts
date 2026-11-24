@@ -4623,6 +4623,24 @@ msgstr "Tastierino USB"
 msgid "test-target-times"
 msgstr "{n} volte"
 
+msgid "direct_play"
+msgstr "Avvio diretto all'accensione (senza menu)"
+
+msgid "direct_play_game"
+msgstr "Gioco o preferito dell'avvio diretto"
+
+msgid "direct-play-none"
+msgstr "Nessuno"
+
+msgid "direct-play-favorite"
+msgstr "Preferito"
+
+msgid "direct-play-unknown"
+msgstr "Avvio diretto impossibile"
+
+msgid "direct-play-listed"
+msgstr "Elenco preferiti"
+
 msgid "coins-no-mcp"
 msgstr "Nessuna scheda MCP rilevata: la gettoniera si collega a un ingresso MCP"
 

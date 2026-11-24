@@ -4766,6 +4766,24 @@ msgstr "Pavé USB"
 msgid "test-target-times"
 msgstr "{n} fois"
 
+msgid "direct_play"
+msgstr "Lancement direct au démarrage (sans les menus)"
+
+msgid "direct_play_game"
+msgstr "Jeu ou favori du lancement direct"
+
+msgid "direct-play-none"
+msgstr "Aucun"
+
+msgid "direct-play-favorite"
+msgstr "Favori"
+
+msgid "direct-play-unknown"
+msgstr "Lancement direct impossible"
+
+msgid "direct-play-listed"
+msgstr "Liste Favoris"
+
 msgid "coins-no-mcp"
 msgstr "Aucune carte MCP détectée : le monnayeur se branche sur une entrée MCP"
 
