@@ -25,6 +25,13 @@ CHOSEN = (255, 200, 0)
 ARROW = (255, 200, 0)
 # Background of a mock-up without its own colour
 MOCKUP_BACKGROUND = (40, 40, 44)
+# The colours of backgrounds (boxes, strips, cells) which can be Transparente : (r, g, b, 0),
+# the box not drawn (its colour kept where it is drawn otherwise)
+# (not those which colour texts too : menu-ok, menu-ko, game-headers, menu-shortcut...)
+TRANSPARENT_ALLOWED = ('menu-buttons', 'menu-item-black', 'menu-item-white', 'menu-selected', 'menu-inactive',
+                       'menu-alternate', 'message-bg', 'description-bg', 'bob27-bg', 'bg-darts-nb',
+                       'bg-darts-nb-header', 'bg-round-nb', 'bg-round-nb-header', 'game-table', 'game-alt-headers',
+                       'game-inactive')
 # Palette : rows of 6
 PALETTE = [(255, 255, 255), (214, 214, 214), (160, 160, 160), (100, 100, 100), (48, 48, 48), (0, 0, 0),
            (255, 0, 0), (194, 1, 1), (128, 0, 0), (255, 128, 0), (255, 215, 0), (255, 255, 0),
@@ -451,9 +458,18 @@ class ThemeEditor:
 
     def color(self, tag):
         value = self.work.get(tag)
+        if self.transparent(tag):
+            return None
         if isinstance(value, (tuple, list)) and len(value) >= 3:
             return tuple(int(part) for part in value[:3])
         return None
+
+    def transparent(self, tag):
+        '''
+        The colour of this tag chosen Transparente : (r, g, b, 0)
+        '''
+        value = self.work.get(tag)
+        return isinstance(value, (tuple, list)) and len(value) >= 4 and value[3] == 0
 
     # ------------------------------------------------------------------ main loop
     def run(self):
@@ -578,6 +594,8 @@ class ThemeEditor:
                 # down followed the list) ; right and left (a knob) : in the order of reading
                 selected = self.screen.spatial_step(list(zones.items()), selected, key)
             elif key in self.keys['enter'] + ['space']:
+                if selected == 'back':
+                    return
                 self.choose(tags[selected][0])
 
     def place_tags(self, points):
@@ -677,6 +695,8 @@ class ThemeEditor:
         pygame.draw.rect(screen.screen, (0, 0, 0), help_rect)
         screen.blit_text(self.translate('theme-help'), help_rect.x, help_rect.y, help_rect.width, help_rect.height,
                          (255, 255, 255))
+        # Retour : back to the plates (Échap only before)
+        zones['back'] = pygame.Rect(screen.display_button(selected == 'back', 'back', special='escape'))
         if update:
             screen.update_screen()
         return zones
@@ -701,7 +721,15 @@ class ThemeEditor:
             self.screen.screen.blit(text, text.get_rect(center=rect.center))
             return
         color = self.color(tag)
-        if color is None:
+        if self.transparent(tag):
+            # Transparente : a checkerboard
+            side = max(3, rect.height // 4)
+            for row in range(0, rect.height, side):
+                for col in range(0, rect.width, side):
+                    shade = (200, 200, 200) if (row // side + col // side) % 2 == 0 else (110, 110, 110)
+                    pygame.draw.rect(self.screen.screen, shade, (rect.x + col, rect.y + row, min(side, rect.width - col), min(side, rect.height - row)))
+            pygame.draw.rect(self.screen.screen, (255, 255, 255), rect, 1)
+        elif color is None:
             pygame.draw.rect(self.screen.screen, (30, 30, 30), rect)
             pygame.draw.line(self.screen.screen, (200, 0, 0), rect.topleft, rect.bottomright, 2)
         else:
@@ -980,7 +1008,8 @@ class ThemeEditor:
         if tag in POSITION_TAGS:
             chosen = screen.dropdown(screen.res['x'] * 6 / 16, 3 * screen.res_y_16,
                                      [['set', self.translate('theme-position-set')],
-                                      ['origin', self.translate('theme-origin-value')]], navigate='set')
+                                      ['origin', self.translate('theme-origin-value')],
+                                      ['escape', self.translate('back')]], navigate='set')
             if chosen == 'origin':
                 self.set(tag, 'origin')
             elif chosen == 'set':
@@ -993,6 +1022,7 @@ class ThemeEditor:
             if tag in RADIUS_TAGS:
                 values.append(['max', self.translate('theme-round-max')])
             values.append(['origin', self.translate('theme-origin-value')])
+            values.append(['escape', self.translate('back')])
             chosen = screen.dropdown(screen.res['x'] * 6 / 16, 3 * screen.res_y_16, values,
                                      navigate='max' if self.work.get(tag) == 'max' else 'value')
             if chosen in ('origin', 'max'):
@@ -1008,6 +1038,7 @@ class ThemeEditor:
             choices = SHORTCUT_CHOICES if tag in SHORTCUT_TAGS else (VALIGN_CHOICES if tag in VALIGN_TAGS else ALIGN_CHOICES)
             values = [[str(index), self.translate(text)] for index, (_value, text) in enumerate(choices)]
             values.append(['origin', self.translate('theme-origin-value')])
+            values.append(['escape', self.translate('back')])
             current = next((str(index) for index, (value, _text) in enumerate(choices) if value == self.work.get(tag)), None)
             chosen = screen.dropdown(screen.res['x'] * 6 / 16, 3 * screen.res_y_16, values, navigate=current)
             if chosen == 'escape':
@@ -1150,10 +1181,17 @@ class ThemeEditor:
         The palette of a tag : a colour, Réglage fin (red, green, blue), Couleur d'origine du
         thème, Aucune (if it can be None). Returns the colour, None (Aucune), 'origin', or 'back'
         '''
-        buttons = ['fine', 'origin'] + (['none'] if tag in NONE_ALLOWED else [])
-        chosen = pick_color(self.screen, self.keys, tag, self.color(tag), buttons,
+        buttons = ['fine', 'origin'] + (['none'] if tag in NONE_ALLOWED else []) + \
+            (['transparent'] if tag in TRANSPARENT_ALLOWED else [])
+        current = 'transparent' if self.transparent(tag) else self.color(tag)
+        chosen = pick_color(self.screen, self.keys, tag, current, buttons,
                             lambda name: self.translate(f'theme-{name}'),
                             redraw=lambda: self.redraw() if getattr(self, 'redraw', None) is not None else None)
+        if chosen == 'transparent':
+            # Its colour kept under it (where its box is drawn otherwise than as a box)
+            value = self.work.get(tag)
+            base = tuple(int(part) for part in value[:3]) if isinstance(value, (tuple, list)) and len(value) >= 3 else (0, 0, 0)
+            return base + (0,)
         return None if chosen == 'none' else chosen
 
     # ------------------------------------------------------------------ saving

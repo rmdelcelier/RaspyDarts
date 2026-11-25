@@ -67,6 +67,14 @@ DOWN_KEYS = ['down', 'BTN_DOWN', 'S3']
 LEFT_KEYS = ['left', 'BTN_LEFT', 'S11']
 RIGHT_KEYS = ['right', 'BTN_RIGHT', 'S6']
 ARROW_KEYS = UP_KEYS + DOWN_KEYS + LEFT_KEYS + RIGHT_KEYS
+
+
+def see_through(color):
+    '''
+    A colour of the theme chosen Transparente (Personnaliser le thème) : (r, g, b, 0). Its boxes
+    are not drawn ; drawn elsewhere, its first three parts : the colour it had
+    '''
+    return isinstance(color, (tuple, list)) and len(color) >= 4 and color[3] == 0
 DIRECTION_KEYS = UP_KEYS + DOWN_KEYS + LEFT_KEYS + RIGHT_KEYS
 BACK_KEYS = ['backspace', 'BTN_BACK', 'S16']
 SAVE_KEYS = ['save', 'S2']    #BTN_NEXTPLAYER
@@ -876,6 +884,8 @@ class Screen(pygame.Surface):
             return
         if Alpha is None:
             Alpha = self.alpha
+        if see_through(color):
+            Alpha = 0
         if not border_color:
             border_color = self.colorset['menu-border']
 
@@ -1421,7 +1431,7 @@ class Screen(pygame.Surface):
         '''
         try:
             band = None
-            if style == 'band' and bg_color is not None and bg_color is not False:
+            if style == 'band' and bg_color is not None and bg_color is not False and not see_through(bg_color):
                 band = self.rounded_box(abs(rect.width), abs(rect.height), (bg_color[0], bg_color[1], bg_color[2], self.alpha), 0, (0, 0, 0, 0))
             rendered = self.blit_text(text, rect.x, rect.y, rect.width, rect.height, color=text_color, render_only=True,
                                       **self.message_text(style, bg_color))
@@ -2817,6 +2827,8 @@ class Screen(pygame.Surface):
                 background_color = self.colorset['menu-selected']
             if alpha is None:
                 alpha = self.alpha
+            if see_through(background_color):
+                alpha = 0
             color = (background_color[0], background_color[1], background_color[2], alpha)
 
         top_left = 0
@@ -2870,6 +2882,8 @@ class Screen(pygame.Surface):
         Rectangle of a color with a transparency (never drawn on : shared). The cells of the
         game screens are the same at each dart : created once
         '''
+        if see_through(color):
+            alpha = 0
         if width * height > self.ROUNDED_BOX_KEPT:
             return self.new_filled_rect(width, height, color, alpha)
         return self.kept_filled_rect(width, height, color, alpha)
@@ -2940,6 +2954,8 @@ class Screen(pygame.Surface):
             return
         if Alpha is None:
             Alpha = 225    # Half transparency
+        if see_through(background_color):
+            Alpha = 0
         if border_radius is None:
             if self.colorset['border-radius'] == 'max':
                 border_radius = int(height / 2)
@@ -3074,8 +3090,15 @@ class Screen(pygame.Surface):
             self.blit_text(f'{int(minimum / diviser)}', bar.x, bar.y - self.res_y_8, self.res_y_8, self.res_y_8, text_color, align='Left')
         self.blit_text(str(int(maximum / diviser)), bar.x + bar.width - self.res_y_8, bar.y - self.res_y_8, self.res_y_8, self.res_y_8, text_color, align='Right')
 
+        # Retour and Valider under it (Échap and Entrée only before)
+        button_h = int(self.res_y / 16)
+        button_w = int(width / 3)
+        buttons_y = pos_y + height + 2 * border_size + int(button_h / 3)
+        buttons = {'back': pygame.Rect(pos_x, buttons_y, button_w, button_h),
+                   'ok': pygame.Rect(pos_x + width - button_w, buttons_y, button_w, button_h)}
+
         rect = pygame.Rect((pos_x - border_size, pos_y - border_size, width + 2 * border_size \
-                    , height + 2 * border_size))
+                    , height + 2 * border_size + int(button_h * 2) + border_size))
 
         sub = self.screen.subsurface(rect)
         screenshot = pygame.Surface((rect.width, rect.height))
@@ -3088,6 +3111,7 @@ class Screen(pygame.Surface):
             dot_x = bar.x + int(bar.width / 100 * value_offset)
             click_zones[f'S{segment}'] = (dot_x - int(width / 2), bar.y, width, bar.height)
 
+        focus = 'slider'
         while True:
             self.blit(screenshot, (rect.x, rect.y))
             value_offset = 100 * ((value - minimum) / (maximum - minimum))
@@ -3097,14 +3121,35 @@ class Screen(pygame.Surface):
             pygame.draw.circle(self.screen, dot_color, (dot_x, dot_y), margin)
 
             self.blit_text(f"{(value / diviser):.1f}".replace('.0', ''), bar.centerx - self.res_y_16, bar.top - self.res_y_8, self.res_y_8, self.res_y_8, text_color)
+            # A dark band behind the buttons : what is under them (a mock-up) does not show through
+            backdrop = pygame.Rect(rect.x, buttons_y - int(button_h / 4), rect.width, rect.bottom - buttons_y + int(button_h / 4))
+            self.new_blit_rect2(backdrop, (20, 20, 20), corners='All', border_radius=self.get_radius(int(backdrop.height / 2)), alpha=255)
+            for name, button in buttons.items():
+                chosen = focus == name
+                self.new_blit_rect2(button, self.colorset['menu-selected'] if chosen else self.colorset['menu-buttons'],
+                                    corners='All', border_radius=self.get_radius(int(button.height / 2)), alpha=255)
+                self.blit_text2(self.lang.translate('back' if name == 'back' else 'validate'), button,
+                                self.colorset['menu-text-white'] if chosen else self.colorset['menu-text-black'])
 
             self.update_screen((rect))
             # Read input
             key_pressed = self.rpi.listen_inputs(['arrows'], ['PLAYERBUTTON', 'BACKUPBUTTON', 'GAMEBUTTON', 'EXTRABUTTON', 'VOLUME-UP', 'VOLUME-DOWN', 'escape', 'enter', 'space', 'single-click'], context='editing')
 
-            clicked = self.is_clicked(click_zones, key_pressed)
+            clicked = self.is_clicked(click_zones, key_pressed) or self.is_clicked(buttons, key_pressed)
+            if clicked in buttons:
+                focus, key_pressed = clicked, 'enter'
 
-            if key_pressed in LEFT_KEYS:
+            if key_pressed in DOWN_KEYS and focus == 'slider':
+                focus = 'ok'
+            elif key_pressed in UP_KEYS + DOWN_KEYS and focus != 'slider':
+                focus = 'slider'
+            elif key_pressed in UP_KEYS:
+                focus = 'ok'
+            elif key_pressed in LEFT_KEYS + RIGHT_KEYS and focus != 'slider':
+                focus = 'back' if focus == 'ok' else 'ok'
+            elif key_pressed in ENTER_KEYS and focus == 'back':
+                return 'escape'
+            elif key_pressed in LEFT_KEYS:
                 value = max(minimum, int(value - step))
             elif key_pressed in RIGHT_KEYS:
                 value = min(maximum, int(value + step))

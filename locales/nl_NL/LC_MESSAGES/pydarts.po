@@ -5535,6 +5535,9 @@ msgstr "Kleur van het thema"
 msgid "theme-none"
 msgstr "Geen"
 
+msgid "theme-transparent"
+msgstr "Transparant"
+
 msgid "theme-red"
 msgstr "Rood"
 

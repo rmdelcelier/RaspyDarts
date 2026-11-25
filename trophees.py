@@ -760,7 +760,7 @@ class CategorySelectionScreen:
         while running:
             self.screen.fill((20, 24, 33))
 
-            title_text = title_font.render(tr("{player} - CHOISIR UNE CATEGORIE", player=self.current_player), True, (255, 255, 255))
+            title_text = shrink(title_font.render(tr("{player} - CHOISIR UNE CATEGORIE", player=self.current_player), True, (255, 255, 255)), width - int(40 * scale))
             title_rect = title_text.get_rect(center=(width // 2, int(50 * scale)))
             self.screen.blit(title_text, title_rect)
 
@@ -798,8 +798,15 @@ class CategorySelectionScreen:
             back_rect = draw_button(self.screen, (int(30 * scale), height - int(62 * scale), int(180 * scale), int(44 * scale)),
                                     tr("Retour"), footer_font)
             footer_text = footer_font.render(tr("HAUT / BAS (S20/S3) pour naviguer | ENTRÉE (Bull) ou toucher pour valider | ÉCHAP pour retour"), True, (150, 150, 150))
-            footer_rect = footer_text.get_rect(center=(width // 2, height - int(40 * scale)))
-            self.screen.blit(footer_text, footer_rect)
+            # Right of Retour, smaller if needed ; else over it (centred on the screen, a wide
+            # font went over Retour)
+            room = pygame.Rect(back_rect.right + int(20 * scale), back_rect.y, width - back_rect.right - int(50 * scale), back_rect.height)
+            footer_rect = fit_text(footer_text, room)
+            if footer_rect is None:
+                footer_rect = fit_text(footer_text, pygame.Rect(int(30 * scale), back_rect.y - back_rect.height - int(8 * scale),
+                                                                width - int(60 * scale), back_rect.height), smallest=0.3)
+            if footer_rect is not None:
+                self.screen.blit(pygame.transform.smoothscale(footer_text, footer_rect.size), footer_rect)
 
             pygame.display.flip()
 
@@ -909,7 +916,7 @@ class TrophiesScreen:
             try:
                 self.screen.fill((20, 24, 33))
 
-                title_text = title_font.render(f"{self.current_player} - {tr(self.category).upper()}", True, (255, 255, 255))
+                title_text = shrink(title_font.render(f"{self.current_player} - {tr(self.category).upper()}", True, (255, 255, 255)), width - int(40 * scale))
                 title_rect = title_text.get_rect(center=(width // 2, int(45 * scale)))
                 self.screen.blit(title_text, title_rect)
 
@@ -990,9 +997,14 @@ class TrophiesScreen:
                 if self.total_pages > 1:
                     page_info = tr("Page {0} / {1} (GAUCHE / DROITE ou S11 / S6)", self.current_page + 1, self.total_pages)
                     page_surf = footer_font.render(page_info, True, (200, 200, 100))
-                    page_rect = page_surf.get_rect(center=(width // 2, button_y + button_h // 2))
-                    self.screen.blit(page_surf, page_rect)
                     button_w = int(150 * scale)
+                    # Between Retour and the buttons of the pages, smaller if needed (a wide font
+                    # pushed « < Page » over Retour)
+                    side = button_w + int(20 * scale)
+                    room = pygame.Rect(back_rect.right + int(20 * scale) + side, button_y,
+                                       width - int(30 * scale) - side - (back_rect.right + int(20 * scale) + side), button_h)
+                    page_rect = fit_text(page_surf, room, smallest=0.2) or pygame.Rect(room.centerx, room.centery, 1, 1)
+                    self.screen.blit(pygame.transform.smoothscale(page_surf, page_rect.size), page_rect)
                     if self.current_page > 0:
                         previous_rect = draw_button(self.screen, (page_rect.x - button_w - int(20 * scale), button_y, button_w, button_h),
                                                     tr("< Page"), footer_font)
@@ -1001,7 +1013,11 @@ class TrophiesScreen:
                                                 tr("Page >"), footer_font)
                 else:
                     footer_surface = footer_font.render(tr("ÉCHAP (ou bouton retour) pour retourner aux catégories"), True, (150, 150, 150))
-                    self.screen.blit(footer_surface, footer_surface.get_rect(center=(width // 2, button_y + button_h // 2)))
+                    # Right of Retour, smaller if needed (never on it)
+                    room = pygame.Rect(back_rect.right + int(20 * scale), button_y, width - back_rect.right - int(50 * scale), button_h)
+                    footer_rect = fit_text(footer_surface, room, smallest=0.3)
+                    if footer_rect is not None:
+                        self.screen.blit(pygame.transform.smoothscale(footer_surface, footer_rect.size), footer_rect)
 
                 pygame.display.flip()
 
@@ -1059,6 +1075,34 @@ class TrophiesScreen:
 
 
 # --- ÉCRAN 2 : AFFICHAGE DES STATISTIQUES ---
+def shrink(surface, max_width, max_height=None):
+    '''
+    A text rendered no wider than max_width (nor higher than max_height) : smaller as a whole,
+    not squeezed (a wide font went over its neighbours)
+    '''
+    factor = min(1.0, max(1, max_width) / max(1, surface.get_width()))
+    if max_height is not None:
+        factor = min(factor, max(1, max_height) / max(1, surface.get_height()))
+    if factor >= 1.0:
+        return surface
+    return pygame.transform.smoothscale(surface, (max(1, int(surface.get_width() * factor)), max(1, int(surface.get_height() * factor))))
+
+
+def fit_text(surface, room, smallest=0.6):
+    '''
+    Where a text rendered goes in a room : centred, smaller as a whole if it does not hold (not
+    under smallest of its size : None, too small to be read there)
+    '''
+    if room.width <= 0 or room.height <= 0:
+        return None
+    factor = min(1.0, room.width / max(1, surface.get_width()), room.height / max(1, surface.get_height()))
+    if factor < smallest:
+        return None
+    rect = pygame.Rect(0, 0, max(1, int(surface.get_width() * factor)), max(1, int(surface.get_height() * factor)))
+    rect.center = room.center
+    return rect
+
+
 class StatisticsScreen:
     def __init__(self, screen, current_player, rpi=None):
         self.screen = screen
@@ -1227,10 +1271,16 @@ class StatisticsScreen:
         game_font = cfonts.font(int(19 * scale))
         button_font = cfonts.font(int(19 * scale))
 
-        def blit_parts(parts, x, y, font):
-            # A line of texts of several colours, side by side
-            for text, color in parts:
-                surface = font.render(text, True, color)
+        def blit_parts(parts, x, y, font, max_x=None):
+            # A line of texts of several colours, side by side ; smaller as a whole when it goes
+            # over max_x
+            surfaces = [font.render(text, True, color) for text, color in parts]
+            total = sum(surface.get_width() for surface in surfaces)
+            factor = 1.0 if max_x is None or total <= max_x - x else max(0.1, (max_x - x) / max(1, total))
+            for surface in surfaces:
+                if factor < 1.0:
+                    surface = pygame.transform.smoothscale(surface, (max(1, int(surface.get_width() * factor)),
+                                                                     max(1, int(surface.get_height() * factor))))
                 self.screen.blit(surface, (x, y))
                 x += surface.get_width()
             return x
@@ -1245,8 +1295,14 @@ class StatisticsScreen:
 
             # Title, its number of trophies beside it
             title_surf = title_font.render(tr("STATISTIQUES DE : {player}", player=self.current_player.upper()), True, (255, 255, 255))
-            self.screen.blit(title_surf, (margin, int(12 * scale)))
             sub_surf = small_title_font.render("  " + tr("(Trophées : {0}/{1})", unlocked_count, total_trophies_count), True, (180, 190, 210))
+            # Both on the width of the screen (a wide font cut the title)
+            room = width - 2 * margin
+            if title_surf.get_width() + sub_surf.get_width() > room:
+                share = room / (title_surf.get_width() + sub_surf.get_width())
+                title_surf = shrink(title_surf, int(title_surf.get_width() * share))
+                sub_surf = shrink(sub_surf, int(sub_surf.get_width() * share))
+            self.screen.blit(title_surf, (margin, int(12 * scale)))
             self.screen.blit(sub_surf, (margin + title_surf.get_width(),
                                         int(12 * scale) + (title_surf.get_height() - sub_surf.get_height()) // 2))
 
@@ -1265,7 +1321,7 @@ class StatisticsScreen:
                 by = top_y + (idx // g_cols) * (g_box_h + gap)
                 pygame.draw.rect(self.screen, (30, 35, 45), (bx, by, g_box_w, g_box_h), border_radius=8)
                 pygame.draw.rect(self.screen, (60, 70, 90), (bx, by, g_box_w, g_box_h), 1, border_radius=8)
-                lbl_surf = label_font.render(tr(label), True, (180, 180, 180))
+                lbl_surf = shrink(label_font.render(tr(label), True, (180, 180, 180)), g_box_w - int(20 * scale))
                 self.screen.blit(lbl_surf, (bx + int(10 * scale), by + int(8 * scale)))
                 # The number in big at the bottom right, its percentage before it
                 val_surf = value_font.render(str(main_val), True, (0, 220, 120))
@@ -1282,7 +1338,7 @@ class StatisticsScreen:
             border_color = (70, 90, 120)
             pygame.draw.rect(self.screen, (25, 30, 40), (panel_x, top_y, panel_w, top_h), border_radius=8)
             pygame.draw.rect(self.screen, border_color, (panel_x, top_y, panel_w, top_h), 1, border_radius=8)
-            panel_title = panel_title_font.render(tr("CLASSEMENTS"), True, (255, 200, 50))
+            panel_title = shrink(panel_title_font.render(tr("CLASSEMENTS"), True, (255, 200, 50)), panel_w - int(12 * scale))
             self.screen.blit(panel_title, (panel_x + (panel_w - panel_title.get_width()) // 2, top_y + int(6 * scale)))
             columns_y = top_y + panel_title.get_height() + int(12 * scale)
             col_w = panel_w // 4
@@ -1292,7 +1348,7 @@ class StatisticsScreen:
                 c_x = panel_x + col_index * col_w
                 pygame.draw.rect(self.screen, (32, 38, 50), (c_x, columns_y, col_w, top_y + top_h - columns_y))
                 pygame.draw.rect(self.screen, border_color, (c_x, columns_y, col_w, top_y + top_h - columns_y), 1)
-                t_surf = rank_font.render(tr(title), True, (200, 200, 220))
+                t_surf = shrink(rank_font.render(tr(title), True, (200, 200, 220)), col_w - int(8 * scale))
                 self.screen.blit(t_surf, (c_x + (col_w - t_surf.get_width()) // 2, columns_y + int(6 * scale)))
                 line_y = columns_y + t_surf.get_height() + int(12 * scale)
                 pygame.draw.line(self.screen, border_color, (c_x + 4, line_y), (c_x + col_w - 4, line_y), 1)
@@ -1300,8 +1356,7 @@ class StatisticsScreen:
                 for i, row_data in enumerate(data_list[:3]):
                     item_surf = rank_font.render(f"{i + 1}. {row_data[0]} ({row_data[val_idx]})", True,
                                                  podium_colors[i] if i < 3 else (150, 220, 255))
-                    if item_surf.get_width() > col_w - int(12 * scale):
-                        item_surf = pygame.transform.smoothscale(item_surf, (col_w - int(12 * scale), item_surf.get_height()))
+                    item_surf = shrink(item_surf, col_w - int(12 * scale))
                     self.screen.blit(item_surf, (c_x + int(6 * scale), int(line_y + int(8 * scale) + step * i)))
 
             draw_mini_top("+ de Parties", top_games, 1, 0)
@@ -1330,7 +1385,7 @@ class StatisticsScreen:
                 pygame.draw.rect(self.screen, (90, 100, 130), (box_x, box_y, box_w, box_h), 2, border_radius=8)
                 text_x = box_x + int(12 * scale)
                 line_y = box_y + int(8 * scale)
-                self.screen.blit(game_title_font.render(game.upper(), True, (255, 200, 50)), (text_x, line_y))
+                self.screen.blit(shrink(game_title_font.render(game.upper(), True, (255, 200, 50)), box_w - int(24 * scale)), (text_x, line_y))
                 line_y += game_title_font.get_linesize()
 
                 p_jouees = self.stats.get(f"parties_jouees_{game}", 0)
@@ -1339,7 +1394,7 @@ class StatisticsScreen:
                 vic_color = (0, 220, 120) if victoires > defaites else ((255, 80, 80) if victoires < defaites else (210, 210, 210))
                 grey = (210, 210, 210)
                 blit_parts([(tr("Parties : {0}", p_jouees) + "  •  " + tr("Victoires : "), grey), (str(victoires), vic_color),
-                            ("  •  " + tr("Défaites : {0}", defaites), grey)], text_x, line_y, game_font)
+                            ("  •  " + tr("Défaites : {0}", defaites), grey)], text_x, line_y, game_font, box_x + box_w - int(12 * scale))
                 line_y += game_font.get_linesize()
 
                 parts = []
@@ -1351,7 +1406,7 @@ class StatisticsScreen:
                     ppd_val = average_ppd(self.stats, game_lower)
                     parts += [(tr("PPD : "), grey), (f"{ppd_val:.2f}".replace('.', ','), (0, 220, 255)), ("  •  ", grey)]
                 parts += [(tr("Meilleur joueur : "), grey), (f"{best_player_by_game.get(game, '-')}", (0, 220, 255))]
-                blit_parts(parts, text_x, line_y, game_font)
+                blit_parts(parts, text_x, line_y, game_font, box_x + box_w - int(12 * scale))
             self.screen.set_clip(None)
 
             # --- Buttons : Retour, and the scrolling when the games go over ---
@@ -1362,7 +1417,12 @@ class StatisticsScreen:
                 down_rect = draw_button(self.screen, (width - margin - arrow_w, buttons_y, arrow_w, buttons_h), "▼", button_font)
                 up_rect = draw_button(self.screen, (down_rect.x - gap - arrow_w, buttons_y, arrow_w, buttons_h), "▲", button_font)
             hint_surf = pct_font.render(tr("Échap : retour  |  Haut / Bas ou S20 / S3 : défiler  |  toucher les boutons"), True, (150, 150, 170))
-            self.screen.blit(hint_surf, hint_surf.get_rect(center=(width // 2, buttons_y + buttons_h // 2)))
+            # Between the buttons, smaller if needed (the games are over them) ; never on them :
+            # centred on the line, a wide font went over Retour
+            room = pygame.Rect(back_rect.right + gap, buttons_y, (up_rect.x if up_rect else width - margin) - gap - back_rect.right - gap, buttons_h)
+            hint_rect = fit_text(hint_surf, room, smallest=0.35)
+            if hint_rect is not None:
+                self.screen.blit(pygame.transform.smoothscale(hint_surf, hint_rect.size), hint_rect)
 
             pygame.display.flip()
 
@@ -1546,7 +1606,7 @@ class PlayerSelectionScreen:
 
             self.screen.fill((20, 24, 33))
 
-            title_text = title_font.render(tr("CHOISIR UN JOUEUR"), True, (255, 255, 255))
+            title_text = shrink(title_font.render(tr("CHOISIR UN JOUEUR"), True, (255, 255, 255)), width - int(40 * scale))
             title_rect = title_text.get_rect(center=(width // 2, int(45 * scale)))
             self.screen.blit(title_text, title_rect)
 
@@ -1593,7 +1653,7 @@ class PlayerSelectionScreen:
                 ]
 
                 for h_text, h_x in headers:
-                    h_surf = bold_font.render(h_text, True, (255, 200, 50))
+                    h_surf = shrink(bold_font.render(h_text, True, (255, 200, 50)), int(180 * scale))
                     self.screen.blit(h_surf, (h_x - h_surf.get_width() // 2, start_y + int(10 * scale)))
 
                 row_y = start_y + int(48 * scale)
@@ -1621,7 +1681,7 @@ class PlayerSelectionScreen:
                     pygame.draw.rect(self.screen, border_color, r_rect, border_w, border_radius=6)
 
                     name_color = (255, 255, 255) if is_highlighted else (210, 215, 225)
-                    name_surf = bold_font.render(player_name.upper(), True, name_color)
+                    name_surf = shrink(bold_font.render(player_name.upper(), True, name_color), int(200 * scale))
                     self.screen.blit(name_surf, (col_name_center - name_surf.get_width() // 2, row_y + (row_height - name_surf.get_height()) // 2))
 
                     p_content = next((v for k, v in all_data.items() if k.strip().lower() == player_name.strip().lower()), {})
@@ -1776,7 +1836,7 @@ class PlayerSelectionScreen:
                 name_cricket = level_text(NAMES_LEVELS.get(lvl_cricket, "Débutant"))
                 name_mickey = level_text(NAMES_LEVELS.get(lvl_mickey, "Débutant"))
 
-                info_title = confirm_font.render(tr("TABLEAU DES NIVEAUX - PROFIL DE {player}", player=player_target.upper()), True, (255, 220, 50))
+                info_title = shrink(confirm_font.render(tr("TABLEAU DES NIVEAUX - PROFIL DE {player}", player=player_target.upper()), True, (255, 220, 50)), box_w - int(30 * scale))
                 self.screen.blit(info_title, info_title.get_rect(center=(box_x + box_w // 2, box_y + int(25 * scale))))
 
                 sub_title_font = cfonts.font(int(15 * scale), bold=True) if hasattr(cfonts, 'font') else pygame.font.Font(None, 18)
@@ -1800,16 +1860,16 @@ class PlayerSelectionScreen:
                 pygame.draw.rect(self.screen, (0, 220, 255), frame_rect1, 2, border_radius=8)
                 pygame.draw.rect(self.screen, (0, 220, 255), frame_rect2, 2, border_radius=8)
 
-                head1 = sub_title_font.render(tr("Points Par Flèche (PPD)"), True, (0, 220, 255))
-                head2 = sub_title_font.render(tr("Mark Per Round (MPR)"), True, (0, 220, 255))
+                head1 = shrink(sub_title_font.render(tr("Points Par Flèche (PPD)"), True, (0, 220, 255)), block_w)
+                head2 = shrink(sub_title_font.render(tr("Mark Per Round (MPR)"), True, (0, 220, 255)), block_w)
 
                 self.screen.blit(head1, (main_col1_x + (block_w - head1.get_width()) // 2, box_y + int(60 * scale)))
                 self.screen.blit(head2, (main_col2_x + (block_w - head2.get_width()) // 2, box_y + int(60 * scale)))
 
-                subhead_hoone = tiny_font.render(f"Ho-one - {tr("Nv")} {lvl_hoone} : {user_ppd_hoone:.2f} - {name_hoone}", True, (255, 200, 50))
-                subhead_hs = tiny_font.render(f"Highscore - {tr("Nv")} {lvl_hs} : {user_ppd_hs:.2f} - {name_hs}", True, (255, 200, 50))
-                subhead_cricket = tiny_font.render(f"Cricket - {tr("Nv")} {lvl_cricket} : {user_mpr_cricket:.2f} - {name_cricket}", True, (255, 200, 50))
-                subhead_mickey = tiny_font.render(f"Mickey - {tr("Nv")} {lvl_mickey} : {user_mpr_mickey:.2f} - {name_mickey}", True, (255, 200, 50))
+                subhead_hoone = shrink(tiny_font.render(f"Ho-one - {tr("Nv")} {lvl_hoone} : {user_ppd_hoone:.2f} - {name_hoone}", True, (255, 200, 50)), sub_col_w - int(6 * scale))
+                subhead_hs = shrink(tiny_font.render(f"Highscore - {tr("Nv")} {lvl_hs} : {user_ppd_hs:.2f} - {name_hs}", True, (255, 200, 50)), sub_col_w - int(6 * scale))
+                subhead_cricket = shrink(tiny_font.render(f"Cricket - {tr("Nv")} {lvl_cricket} : {user_mpr_cricket:.2f} - {name_cricket}", True, (255, 200, 50)), sub_col_w - int(6 * scale))
+                subhead_mickey = shrink(tiny_font.render(f"Mickey - {tr("Nv")} {lvl_mickey} : {user_mpr_mickey:.2f} - {name_mickey}", True, (255, 200, 50)), sub_col_w - int(6 * scale))
 
                 col_hoone_x = main_col1_x
                 col_hs_x = main_col1_x + sub_col_w + col_gap
@@ -1856,7 +1916,9 @@ class PlayerSelectionScreen:
                         rank_title = level_text(NAMES_LEVELS.get(lvl, "Amateur"))
 
                         line_str = f"{lvl_label} {seuil_str} {rank_title}"
-                        line_txt = small_font.render(line_str, True, (255, 255, 255) if not is_current else (255, 230, 100))
+                        # Room left by the logo at the end of the line
+                        line_txt = shrink(small_font.render(line_str, True, (255, 255, 255) if not is_current else (255, 230, 100)),
+                                          sub_col_w - int(40 * scale))
 
                         text_y = r_box.y + (r_box.height - line_txt.get_height()) // 2
                         self.screen.blit(line_txt, (r_box.x + int(6 * scale), text_y))
@@ -2044,10 +2106,15 @@ class PlayerSelectionScreen:
             else:
                 footer_y = height - int(35 * scale)
             footer_text = footer_font.render(footer_text_str, True, (150, 150, 150))
-            if footer_text.get_width() > width - int(40 * scale):
-                footer_text = pygame.transform.smoothscale(footer_text, (width - int(40 * scale), footer_text.get_height()))
-            footer_rect = footer_text.get_rect(center=(width // 2, footer_y))
-            self.screen.blit(footer_text, footer_rect)
+            # Over the buttons, its bottom above them (its middle was set : a high font went on
+            # them), as wide as the screen allows (smaller as a whole, not squeezed)
+            if screen_state == "NORMAL":
+                room = pygame.Rect(int(20 * scale), buttons_y - int(6 * scale) - int(34 * scale), width - int(40 * scale), int(34 * scale))
+            else:
+                room = pygame.Rect(int(20 * scale), height - int(52 * scale), width - int(40 * scale), int(34 * scale))
+            footer_rect = fit_text(footer_text, room, smallest=0.3)
+            if footer_rect is not None:
+                self.screen.blit(pygame.transform.smoothscale(footer_text, footer_rect.size), footer_rect)
 
             pygame.display.flip()
 

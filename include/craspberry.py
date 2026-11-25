@@ -25,8 +25,14 @@ from . import cusbpads
 from . import ccoins
 
 MAX_GPIO = 27
-LAST_GPIO = None
-COUNT_GPIO = 0
+# A button on a GPIO of the Raspberry : once per press (it came back every 86 ms while held :
+# Ordinateur switched on and off as many times, its state left to chance). Those which move
+# or set something repeat when held, as a key of a keyboard
+GPIO_REPEAT = ('PIN_UP', 'PIN_DOWN', 'PIN_LEFT', 'PIN_RIGHT', 'PIN_PLUS', 'PIN_MINUS', 'PIN_VOLUME_UP', 'PIN_VOLUME_DOWN')
+GPIO_REPEAT_DELAY = 0.5
+GPIO_REPEAT_RATE = 0.15
+# Held longer : stuck (left aside until released)
+GPIO_STUCK = 10
 # pylint: disable=no-member
 USEREVENT = pygame.USEREVENT
 # Events telling that the content of the window must be sent again (names depend on the
@@ -845,11 +851,8 @@ class Craspberry():
 
     def read_buttons(self):
         """
-        Read GPIO (Button's)
+        Read GPIO (Button's) : a button once when pressed (GPIO_REPEAT : again when held)
         """
-        global COUNT_GPIO
-        global LAST_GPIO
-
         gpio_read = None
         p_key = None
         for key in list(self.pins):
@@ -871,21 +874,23 @@ class Craspberry():
                     p_key = key
 
 
-        if gpio_read is not None:
-            if gpio_read == LAST_GPIO:
-                COUNT_GPIO += 1
-                if COUNT_GPIO > 30:
-                    self.banned_gpio = gpio_read
-                    self.logs.warning(f"Gpio {gpio_read} is banned !")
-                else:
-                    return gpio_read.replace('PIN_','BTN_')
-            elif self.banned_gpio is None:
-                LAST_GPIO = gpio_read
-                return gpio_read.replace('PIN_','BTN_')
-        elif p_key is None:
-            LAST_GPIO = None
-            COUNT_GPIO = 0
-            self.banned_gpio = None
+        now = time.monotonic()
+        if gpio_read is None:
+            if p_key is None:
+                self.banned_gpio = None
+            self.gpio_held = None
+            return None
+        if gpio_read != getattr(self, 'gpio_held', None):
+            # Pressed now : given once
+            self.gpio_held, self.gpio_since, self.gpio_next = gpio_read, now, now + GPIO_REPEAT_DELAY
+            return gpio_read.replace('PIN_', 'BTN_')
+        if now - self.gpio_since > GPIO_STUCK:
+            self.banned_gpio, self.gpio_held = gpio_read, None
+            self.logs.warning(f"Gpio {gpio_read} is banned (held {GPIO_STUCK} s) !")
+            return None
+        if gpio_read in GPIO_REPEAT and now >= self.gpio_next:
+            self.gpio_next = now + GPIO_REPEAT_RATE
+            return gpio_read.replace('PIN_', 'BTN_')
         return None
 
     def test_buttons(self):
