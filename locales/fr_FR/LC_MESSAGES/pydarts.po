@@ -1777,6 +1777,9 @@ msgstr "MPR"
 msgid "Cricket-enculette"
 msgstr "L'enculette"
 
+msgid "Cricket-showhit"
+msgstr "Afficher le segment touché"
+
 msgid "Cricket-noscore"
 msgstr "No Score"
 

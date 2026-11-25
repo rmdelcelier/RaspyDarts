@@ -1771,6 +1771,9 @@ msgstr "MPR"
 msgid "Cricket-enculette"
 msgstr "Vaste volgorde"
 
+msgid "Cricket-showhit"
+msgstr "Geraakt segment tonen"
+
 msgid "Cricket-noscore"
 msgstr "No Score"
 

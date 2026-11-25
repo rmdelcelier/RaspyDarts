@@ -20,7 +20,7 @@ HEADERS = ['20', '19', '18', '17', '16', '15', 'B']
 #        'Teaming': False, 'optionteamscore': False, 'optionhandicap': False, 'mpr': False, 'colorised': False}
         
 OPTIONS = {'theme': 'default', 'display': 'classic', 'max_round': 20, 'optioncrazy': False, 'optioncutthroat': False, 'enculette': False, 'noscore' : False, 'drinkscore': 200,
-        'Teaming': False, 'optionteamscore': False, 'optionhandicap': False, 'mpr': False, 'colorised': False}
+        'Teaming': False, 'optionteamscore': False, 'optionhandicap': False, 'mpr': False, 'colorised': False, 'showhit': False}
       
 # Options with a list of values (the screen of the options : a dropdown) : value, its text
 OPTION_CHOICES = {'display': [('horizontal', 'cricket-display-horizontal'), ('classic', 'cricket-display-classic')]}
@@ -88,6 +88,9 @@ class Game(cgame.Game):
             
         self.noscore = options['noscore']
         self.enculette = options['enculette']  # Option L'Enculette
+        # Afficher le segment touché : the segment of each dart shown big on the screen (the
+        # setting of Personnalisation du jeu too) ; not by default, whatever the display
+        self.show_segment = str(options.get('showhit', False)).strip().lower() in ('true', '1', 'yes', 'oui')
         # Display : classic (the one of always, by default : the players in columns, the hits
         # drawn on the dart), or horizontal (the players in lines)
         self.display_mode = options.get('display', 'classic')

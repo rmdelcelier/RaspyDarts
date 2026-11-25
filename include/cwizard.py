@@ -71,7 +71,11 @@ def keys_of_events(screen):
     or a position (x, y) clicked
     '''
     found = []
-    for event in pygame.event.get():
+    events = pygame.event.get()
+    # The fingers read here : said to the reading of the inputs (the pointer stays hidden)
+    if hasattr(screen, 'finger_seen'):
+        screen.finger_seen(events)
+    for event in events:
         if event.type == pygame.KEYDOWN:
             names = {pygame.K_UP: 'up', pygame.K_DOWN: 'down', pygame.K_LEFT: 'left', pygame.K_RIGHT: 'right',
                      pygame.K_RETURN: 'enter', pygame.K_KP_ENTER: 'enter', pygame.K_SPACE: 'enter',

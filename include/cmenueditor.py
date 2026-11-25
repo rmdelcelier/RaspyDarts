@@ -526,7 +526,10 @@ class Editor:
         '''
         width, height = self.size
         positions, released = [], False
-        for event in pygame.event.get((pygame.MOUSEMOTION, pygame.MOUSEBUTTONUP, pygame.FINGERMOTION, pygame.FINGERUP)):
+        events = pygame.event.get((pygame.MOUSEMOTION, pygame.MOUSEBUTTONUP, pygame.FINGERMOTION, pygame.FINGERUP))
+        # The finger read here : said to the reading of the inputs (the pointer stays hidden)
+        self.screen.finger_seen(events)
+        for event in events:
             if event.type in (pygame.FINGERMOTION, pygame.FINGERUP):
                 positions.append((int(event.x * width), int(event.y * height)))
                 released = released or event.type == pygame.FINGERUP

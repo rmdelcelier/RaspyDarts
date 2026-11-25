@@ -1754,6 +1754,9 @@ msgstr "MPR"
 msgid "Cricket-enculette"
 msgstr "Strenge Reihenfolge"
 
+msgid "Cricket-showhit"
+msgstr "Getroffenes Segment anzeigen"
+
 msgid "Cricket-noscore"
 msgstr "No Score"
 

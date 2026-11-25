@@ -33,6 +33,13 @@ GPIO_REPEAT_DELAY = 0.5
 GPIO_REPEAT_RATE = 0.15
 # Held longer : stuck (left aside until released)
 GPIO_STUCK = 10
+# A mouse event this soon after a finger : the one the system makes for the finger (s). The
+# system moves its pointer again 0.75 s after a finger is lifted (measured)
+FINGER_MOUSE = 2.0
+# A motion of the mouse shows the pointer if no finger comes within this time (s) : under X11
+# each touch first moves the pointer of the system, as a mouse not marked as a touch, just
+# before the finger (measured with a touchscreen : the same millisecond)
+POINTER_DELAY = 0.3
 # pylint: disable=no-member
 USEREVENT = pygame.USEREVENT
 # Events telling that the content of the window must be sent again (names depend on the
@@ -1202,14 +1209,32 @@ class Craspberry():
         # stay for the next call (pygame.event.get() took them all : keys typed
         # together, or during the name of the player, were lost)
         events = iter(pygame.event.poll, pygame.event.Event(pygame.NOEVENT))
+        # A motion of the mouse without a finger after it : a mouse, its pointer shown
+        # (several motions : a mouse moved ; one alone, the system placing its pointer : when the
+        # window opens, at a touch)
+        pending = getattr(self, 'pointer_pending', None)
+        if pending is not None and time.monotonic() - pending > POINTER_DELAY:
+            self.pointer_pending = None
+            if getattr(self, 'pointer_motions', 0) >= 2:
+                pygame.mouse.set_visible(True)
 
         # Look for events
         for event in events:
             # A field reached by a finger opens the keyboard on the screen (see
             # Screen.input_value_item) ; a key or a click of the mouse does not
+            # A finger : the pointer hidden. Under X11 a touch moves the pointer of the system too :
+            # its motion and its click come as those of a mouse (not marked as touches) just after
+            # the finger, and showed the pointer (the keyboard on the screen, a touch on a button)
+            if event.type in (pygame.FINGERDOWN, pygame.FINGERMOTION, pygame.FINGERUP):
+                self.last_finger = time.monotonic()
+                self.pointer_pending = None
+                if event.type == pygame.FINGERDOWN:
+                    pygame.mouse.set_visible(False)
+            from_finger = event.type in (pygame.MOUSEMOTION, pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP) and \
+                (getattr(event, 'touch', False) or time.monotonic() - getattr(self, 'last_finger', 0) < FINGER_MOUSE)
             if event.type == pygame.FINGERDOWN:
                 self.last_input_touch = True
-            elif event.type == pygame.KEYDOWN or (event.type == pygame.MOUSEBUTTONDOWN and not getattr(event, 'touch', False)):
+            elif event.type == pygame.KEYDOWN or (event.type == pygame.MOUSEBUTTONDOWN and not from_finger):
                 self.last_input_touch = False
 
             if event.type == USEREVENT:
@@ -1305,7 +1330,7 @@ class Craspberry():
             # A touch on a touchscreen comes twice : as a click simulated by SDL (touch=True),
             # often at the position of the touch before, then as a finger. Both were clicks :
             # the wrong one could press a button of the next screen. The finger only
-            elif event.type == pygame.MOUSEBUTTONDOWN and getattr(event, 'touch', False):
+            elif event.type == pygame.MOUSEBUTTONDOWN and from_finger:
                 continue
             # Case of MOUSE BUTTON PRESSED
             elif (event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.FINGERDOWN):
@@ -1324,8 +1349,11 @@ class Craspberry():
                         # elsewhere (a pointer moved by a jump, without motion read before)
                         position = event.pos
                     return position
-            elif event.type == pygame.MOUSEMOTION and not getattr(event, 'touch', False):
-                pygame.mouse.set_visible(True)
+            elif event.type == pygame.MOUSEMOTION and not from_finger:
+                # Shown if no finger follows (see POINTER_DELAY)
+                if getattr(self, 'pointer_pending', None) is None:
+                    self.pointer_pending, self.pointer_motions = time.monotonic(), 0
+                self.pointer_motions += 1
         # Everything above failed, return -1 (0 is a valid char)
         return None
 

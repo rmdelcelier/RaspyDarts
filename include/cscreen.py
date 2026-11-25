@@ -5132,6 +5132,16 @@ class Screen(pygame.Surface):
                 keys[(rect.x, rect.y, rect.w, rect.h)] = name
         return panel, keys
 
+    def finger_seen(self, events):
+        '''
+        Events of a finger read here, not by the reading of the inputs : said to it (the motion of
+        the pointer the system makes after a finger does not show the pointer)
+        '''
+        if any(event.type in (pygame.FINGERDOWN, pygame.FINGERMOTION, pygame.FINGERUP) for event in events) \
+                and getattr(self, 'rpi', None) is not None:
+            self.rpi.last_finger = time.monotonic()
+            self.rpi.pointer_pending = None
+
     @staticmethod
     def touch_position(event):
         '''
@@ -5155,7 +5165,9 @@ class Screen(pygame.Surface):
         ups = (pygame.FINGERUP, pygame.MOUSEBUTTONUP)
         end = time.monotonic() + self.KEY_HOLD
         while time.monotonic() < end:
-            if pygame.event.get(ups):
+            lifted = pygame.event.get(ups)
+            if lifted:
+                self.finger_seen(lifted)
                 return None
             time.sleep(0.02)
         variants = [variant.upper() if shift else variant for variant in variants]
@@ -5189,6 +5201,7 @@ class Screen(pygame.Surface):
             while time.monotonic() < end:
                 for event in pygame.event.get((pygame.FINGERMOTION, pygame.FINGERUP, pygame.FINGERDOWN,
                                                pygame.MOUSEMOTION, pygame.MOUSEBUTTONUP, pygame.MOUSEBUTTONDOWN)):
+                    self.finger_seen([event])
                     if getattr(event, 'touch', False):
                         # The click simulated by SDL for a finger : the finger is read
                         continue

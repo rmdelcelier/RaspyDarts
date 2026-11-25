@@ -168,6 +168,24 @@ def browse(screen, title, current, extra, kinds, previews, folder, root, selecte
         key = screen.rpi.listen_inputs(['arrows'], ['escape', 'enter', 'space', 'single-click', 'PLAYERBUTTON',
                                                     'BACKUPBUTTON', 'GAMEBUTTON'])
         clicked = screen.is_clicked(zones, key)
+        if isinstance(key, tuple) and isinstance(clicked, int) and not isinstance(clicked, bool):
+            # A line pressed : slid, the list follows the finger (a touch only chose a line : the
+            # lines of the edge were touched one by one to go further)
+            # The top of the list follows the finger line by line, the line chosen in the middle of
+            # what is shown (the list centred on the line chosen moved 2 lines for 6 slid)
+            state = {'top': first_row(selected, len(entries)), 'selected': selected}
+
+            def scroll(delta):
+                state['top'] = max(0, min(state['top'] + delta, max(0, len(entries) - ROWS)))
+                state['selected'] = max(0, min(len(entries) - 1, state['top'] + ROWS // 2))
+                # Without the preview while it moves (an image took up to 1 s)
+                previews['fast'], previews['top'] = True, state['top']
+                draw(screen, title, folder, entries, state['selected'], previews, translate)
+                previews['fast'], previews['top'] = False, None
+
+            if slide(screen, key, int(screen.res['y'] / 16 * 0.9) + 4, scroll):
+                selected = state['selected']
+                continue
         # (False : no click ; 0 : the first line)
         if clicked == 'escape':
             key = 'escape'
@@ -219,6 +237,47 @@ def browse(screen, title, current, extra, kinds, previews, folder, root, selecte
                 return entry['path']
             elif entry['kind'] == 'extra':
                 return entry['path']
+
+
+# A press moved this far (pixels) : a slide, not a touch
+SLIDE_START = 14
+
+
+def slide(screen, start, step, scroll):
+    '''
+    A press on the list followed until it is lifted : moved, the list scrolled by scroll(lines) as
+    it goes (the finger up : the next lines). True if it slid, False : a touch
+    '''
+    height = screen.screen.get_height()
+    moved, done = False, 0
+    end = time.monotonic() + 15
+    while time.monotonic() < end:
+        for event in pygame.event.get((pygame.FINGERMOTION, pygame.FINGERUP, pygame.MOUSEMOTION, pygame.MOUSEBUTTONUP)):
+            # The finger read here : said to the reading of the inputs (the pointer stays hidden)
+            screen.finger_seen([event])
+            if getattr(event, 'touch', False):
+                continue
+            if event.type == pygame.MOUSEMOTION and not event.buttons[0]:
+                continue
+            y = event.y * height if event.type in (pygame.FINGERMOTION, pygame.FINGERUP) else event.pos[1]
+            distance = start[1] - y
+            if moved or abs(distance) >= SLIDE_START:
+                moved = True
+                lines = int(round(distance / max(1, step)))
+                if lines != done:
+                    scroll(lines - done)
+                    done = lines
+            if event.type in (pygame.FINGERUP, pygame.MOUSEBUTTONUP):
+                return moved
+        time.sleep(0.01)
+    return moved
+
+
+def first_row(selected, count):
+    '''
+    The first line shown : the line selected in the middle of the ROWS shown
+    '''
+    return max(0, min(min(selected, count - 1) - ROWS // 2, count - ROWS))
 
 
 def icon(kind, size, icons):
@@ -278,7 +337,7 @@ def draw(screen, title, folder, entries, selected, previews, translate):
     zones = {}
     # The list
     picking = previews.get('pick') and folder is not None
-    top = max(0, min(min(selected, len(entries) - 1) - ROWS // 2, len(entries) - ROWS))
+    top = previews.get('top') if previews.get('top') is not None else first_row(selected, len(entries))
     unit_x, unit_y = res_x / 16, res_y / 16
     line_h = int(unit_y * 0.9)
     for row, index in enumerate(range(top, min(top + ROWS, len(entries)))):
@@ -309,6 +368,11 @@ def draw(screen, title, folder, entries, selected, previews, translate):
     # The preview
     box = pygame.Rect(int(8.5 * unit_x), int(3.2 * unit_y), int(6.5 * unit_x), int(8.8 * unit_y))
     screen.new_blit_rect2(box, colorset['menu-buttons'], corners='All', border_radius=int(unit_y / 4))
+    if previews.get('fast'):
+        # The list sliding : the preview comes back when the finger is lifted
+        zones['escape'] = screen.display_button(bool(previews.get('back')), 'back', special='escape')
+        screen.update_screen()
+        return zones
     entry = entries[selected] if selected < len(entries) else None
     if picking:
         # « Choisir ce dossier » : over Back, in the middle of the list
