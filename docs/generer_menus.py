@@ -28,7 +28,7 @@ ASSETS = os.path.join(DOCS, 'assets')
 EXAMPLE_THEMES = os.path.join(ROOT, '.raspydarts_example', 'themes')
 LANGUAGES = {'fr': 'fr_FR', 'en': 'en_GB', 'de': 'de_DE', 'es': 'es_ES', 'it': 'it_IT', 'nl': 'nl_NL'}
 # Personnaliser le theme (include/cthemeeditor.py) : ce que le configurateur en reprend
-THEME_EDITOR = ('PLATES', 'GROUPS', 'NONE_ALLOWED', 'SHORTCUT_TAGS', 'SHORTCUT_CHOICES', 'ALIGN_TAGS', 'ALIGN_CHOICES',
+THEME_EDITOR = ('PLATES', 'GROUPS', 'NONE_ALLOWED', 'TRANSPARENT_ALLOWED', 'SHORTCUT_TAGS', 'SHORTCUT_CHOICES', 'ALIGN_TAGS', 'ALIGN_CHOICES',
                 'VALIGN_TAGS', 'VALIGN_CHOICES', 'POSITION_TAGS', 'SHAPE_TAGS', 'RADIUS_TAGS', 'SHAPE_LIMITS', 'PALETTE',
                 'PERSO_NAME')
 # Taille des vignettes (le plus grand cote) : fonds, logos
@@ -68,7 +68,9 @@ def theme_editor():
         plates.append({'name': name, 'tags': tags, 'points': [[tag, x, y] for tag, x, y in list(left) + list(right)],
                        'drawing': drawings[_drawer]})
     return {'plates': plates, 'mockup': MOCKUP_FORMAT, 'groups': [[name, list(names)] for name, names in values['GROUPS']],
-            'noneAllowed': list(values['NONE_ALLOWED']), 'shortcutTags': list(values['SHORTCUT_TAGS']),
+            'noneAllowed': list(values['NONE_ALLOWED']),
+            # Transparente : (r, g, b, 0) dans Colorset_perso.cfg, la case non dessinee
+            'transparentAllowed': list(values['TRANSPARENT_ALLOWED']), 'shortcutTags': list(values['SHORTCUT_TAGS']),
             'shortcutChoices': [list(item) for item in values['SHORTCUT_CHOICES']],
             'alignTags': list(values['ALIGN_TAGS']), 'alignChoices': [list(item) for item in values['ALIGN_CHOICES']],
             'valignTags': list(values['VALIGN_TAGS']), 'valignChoices': [list(item) for item in values['VALIGN_CHOICES']],
