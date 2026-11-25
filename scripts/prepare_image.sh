@@ -18,8 +18,8 @@
 #     chosen in Imager for each card are applied at its first start
 #   - Firefox, guide and books of Raspberry Pi OS ; translations of the system other than the
 #     languages of the game, documentation of the packages (not put back by the updates)
-#   - identity : machine-id (the SSH keys are made again at the first start :
-#     regenerate_ssh_host_keys.service, ConditionFirstBoot), key of the VNC server, histories,
+#   - identity : machine-id, SSH keys of the server (removed here, made again at the first start
+#     by regenerate_ssh_host_keys.service, ConditionFirstBoot), key of the VNC server, histories,
 #     caches, known SSH hosts
 # Refused : a card where Raspy2DMD is installed (the image compressed went over the 2 GiB of a
 # file of a GitHub release : 2989 MB with it, 03/11/2026) ; it is installed from the game.
@@ -191,11 +191,24 @@ fi
 run systemctl enable rpi-resize.service
 
 step "Identite de la machine (refaite au 1er demarrage de chaque carte)"
-say "   machine-id vide : nouvel identifiant et nouvelles cles SSH au 1er demarrage"
+say "   machine-id vide : nouvel identifiant au 1er demarrage"
 if [ $APPLY -eq 1 ]; then
     echo uninitialized > /etc/machine-id
     rm -f /var/lib/dbus/machine-id
 fi
+# SSH keys of the server removed HERE : regenerate_ssh_host_keys.service of Raspberry Pi OS runs
+# « rm -f /etc/ssh/ssh_host_*_key* » without a shell, systemd does not expand the * and nothing is
+# removed ; then « ssh-keygen -A » only makes the missing keys. Seen on 23/11/2026 by Raspy2DMD
+# (same preparation) : every card made from the image had the keys of the image. Missing, they
+# are made at the first start of each card
+say "   cles SSH du serveur retirees : refaites au 1er demarrage (regenerate_ssh_host_keys.service, ssh-keygen -A)"
+for key in /etc/ssh/ssh_host_*_key /etc/ssh/ssh_host_*_key.pub; do
+    [ -e "$key" ] || continue
+    remove "$key"
+done
+systemctl cat regenerate_ssh_host_keys.service >/dev/null 2>&1 \
+    && say "   regenerate_ssh_host_keys.service present" \
+    || say "   ATTENTION : regenerate_ssh_host_keys.service absent, les cles SSH ne seraient pas refaites (SSH inaccessible)"
 if [ -f /root/.vnc/private.key ]; then
     say "   cle du serveur VNC : refaite au 1er demarrage"
     run rm -f /root/.vnc/private.key
