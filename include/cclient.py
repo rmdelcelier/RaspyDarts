@@ -241,14 +241,19 @@ class Client():
         return data['VERSION']
 
     #@debug
-    def send_local_players(self, players):
+    def send_local_players(self, players, capacity=None):
         """
         Send list of players
         """
-        self.send({'GAMENAME': self.gamename, 'REQUEST': 'READY', 'PLAYERSNAMES': players})
+        request = {'GAMENAME': self.gamename, 'REQUEST': 'READY', 'PLAYERSNAMES': players}
+        if capacity is not None:
+            request['MAXPLAYERS'] = capacity
+        self.send(request)
         data = {}
         while 'REQUEST' not in data:
             data = self.receive()
+            if not isinstance(data, dict):
+                return {'REQUEST': 'ROOMREFUSED', 'MESSAGE': 'Le serveur ne répond pas.'}
         return data
 
     #@debug
@@ -446,7 +451,7 @@ class MasterClient():
         self.connexion.sendall(json.dumps(message).encode('UTF-8'))
 
     #@debug
-    def send_game_info(self, host, alias, port, game_name, gametype, creator, number_of_players, nb_sets):
+    def send_game_info(self, host, alias, port, game_name, gametype, creator, number_of_players, nb_sets, capacity=None):
         """
         Send game infos
         """
@@ -457,7 +462,7 @@ class MasterClient():
 
         self.send({'REQUEST': 'CREATION', 'SERVERIP': ip, 'SERVERPORT': port, \
                 'GAMENAME': game_name, 'GAMETYPE': gametype, 'GAMECREATOR': creator, \
-                'PLAYERS': number_of_players, 'NBSETS': nb_sets})
+                'PLAYERS': number_of_players, 'NBSETS': nb_sets, 'MAXPLAYERS': capacity})
 
     #@debug
     def join_game(self, game, number_of_players):

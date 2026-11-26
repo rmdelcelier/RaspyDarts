@@ -12,9 +12,15 @@ def count(value):
         return 0
 
 
+def capacity(room):
+    value = count(room.get('MAXPLAYERS'))
+    return value if 2 <= value <= 12 else 2
+
+
 def joinable(room):
-    return (not room.get('LOBBY_LIVE') and count(room.get('PLAYERS')) == 1
-            and bool(room.get('GAMENAME')))
+    return (not room.get('LOBBY_LIVE') and 0 < count(room.get('PLAYERS')) < capacity(room)
+            and str(room.get('STATUS', 'OPEN')).upper() in ('', 'OPEN')
+            and not room.get('CHTIENCOURS') and bool(room.get('GAMENAME')))
 
 
 def active_rooms(host):
@@ -68,7 +74,7 @@ def label(room, index, translate):
         return '{:02d}  {} | {} | {}'.format(index+1,game,versus,translate('online-room-playing'))
     creator=str(room.get('GAMECREATOR','?'))[:22]
     status=translate('online-room-join' if joinable(room) else 'online-room-full')
-    return '{:02d}  {} | {} | {}/2 | {}'.format(index+1,game,creator,count(room.get('PLAYERS')),status)
+    return '{:02d}  {} | {} | {}/{} | {}'.format(index+1,game,creator,count(room.get('PLAYERS')),capacity(room),status)
 
 
 def color(room, selected=False):
