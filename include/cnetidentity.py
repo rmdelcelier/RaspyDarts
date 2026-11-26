@@ -93,7 +93,7 @@ def network_players(display, players_bank=None, players_color=None, colors_avail
     if ensure_session(display, prompt=False) is None:
         display.message([display.lang.translate('online-chat-impossible')], wait=1800)
         return 1, 'escape', False
-    label = '{:03d} · {}'.format(user['id'], user['username'])
+    label = user['username']
     display.message([display.lang.translate('online-network-player') + ' ' + label], wait=1000)
     # Guests with the account : it stays the first player, checked by the server
     sets, selected, _, _colors = display.players_menu([label], context='netcreate', bank=players_bank, sets=None,

@@ -175,7 +175,7 @@ def login_dialog(display):
                 # Connexion valide, conservation limitée à la mémoire.
                 pass
             user = result.get('user') or {}
-            display.message([translate('online-logged-in').format(name='{:03d} · {}'.format(user.get('id', 0), user.get('username', name)))],
+            display.message([translate('online-logged-in').format(name=user.get('username', name))],
                             2000, display.colorset['menu-ok'])
             return result
         if error is None:
