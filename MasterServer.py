@@ -38,6 +38,7 @@ class CMasterServer:
 #
     def __main__(self):
         self.color = {}
+        self.room_capacities = {}
         #self.Games=[]-deprecated
         i=0
         pl=1
@@ -92,7 +93,13 @@ class CMasterServer:
                     self.Logs.Log("DEBUG","Hu hu ! We received a creation notice :) from {}. We put it in storage.".format(cxid))
                     del Ddata['REQUEST']
                     Ddata['STATUS']='OPEN'
+                    capacity = Ddata.pop('MAXPLAYERS', None)
                     self.db.insert_game(Ddata)
+                    key = Ddata['GAMENAME']
+                    if type(capacity) is int and 2 <= capacity <= 12:
+                        self.room_capacities[key] = capacity
+                    else:
+                        self.room_capacities.pop(key, None)
                     if self.Config.GetValue('Server','notifications')=='1':
                         # Notify people that a game is available (by email)
                         try:
@@ -116,7 +123,17 @@ class CMasterServer:
                 elif req == 'LIST':
                     self.Logs.Log("DEBUG","Hu hu ! We received a listing request :) from {}. Let send it.".format(cxid))
                     #time.sleep( 30 )
-                    gamelist=self.db.get_games()
+                    rows = self.db.get_games()
+                    open_names = {row.get('GAMENAME') for row in rows}
+                    self.room_capacities = {
+                        k: v for k, v in self.room_capacities.items()
+                        if k in open_names
+                    }
+                    gamelist = [
+                        dict(row, MAXPLAYERS=self.room_capacities[row['GAMENAME']])
+                        if row.get('GAMENAME') in self.room_capacities else row
+                        for row in rows
+                    ]
                     if (len(gamelist)==0):
                         self.Logs.Log("DEBUG","List is empty. Sending notice of emptiness")
                         r={'RESPONSE':'EMPTY'}
@@ -129,9 +146,11 @@ class CMasterServer:
                 elif req == 'LAUNCH' or req == 'REMOVAL':
                     self.Logs.Log("DEBUG","Hurry ! We received a launching request ! from {} for game {}. Let archive it.".format(cxid,Ddata['GAMENAME']))
                     self.db.remove_game(Ddata['GAMENAME'])
+                    self.room_capacities.pop(Ddata['GAMENAME'], None)
                 elif req == 'CANCEL':
                     self.Logs.Log("DEBUG","Ho ! We received a cancel request (delete) from {} for game {}. Let delete it.".format(cxid,Ddata['GAMENAME']))
                     self.db.delete_game(Ddata['GAMENAME'])
+                    self.room_capacities.pop(Ddata['GAMENAME'], None)
                 elif req == 'GETVERSION':
                     self.Logs.Log("DEBUG","Someone is interested by the size of our dart. Sending {}".format(self.Config.pyDartsVersion))
                     d={'REQUEST':'VERSION','VERSION':self.Config.pyDartsVersion}
