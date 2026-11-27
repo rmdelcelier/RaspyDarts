@@ -1127,7 +1127,41 @@ try:
                 logs.debug("Join {} remote game".format(netgamename))
                 serverversion = net_client.get_server_version(netgamename)
                 display.version_check(serverversion)
-                net_status = net_client.join2(netgamename)
+                room_private = False
+                pin = None
+                if game_type == 'netcreate':
+                    privacy = display.room_privacy()
+                    if privacy not in ('public', 'private'):
+                        net_client.connexion.close()
+                        menu = 'gametype'
+                        continue
+                    room_private = privacy == 'private'
+                    if room_private:
+                        pin = display.room_pin()
+                        if pin is None:
+                            net_client.connexion.close()
+                            menu = 'gametype'
+                            continue
+                elif (display.lobby_game or {}).get('PRIVATE') is True:
+                    pin = display.room_pin(hidden=True)
+                    if pin is None:
+                        net_client.connexion.close()
+                        menu = 'gametype'
+                        continue
+                net_status = net_client.join2(netgamename, pin, 'create' if game_type == 'netcreate' else 'join')
+                while net_status in ('PINREQUIRED', 'PINWRONG'):
+                    if net_status == 'PINWRONG':
+                        display.message(['Code incorrect'], wait=1500)
+                    pin = display.room_pin(hidden=True)
+                    if pin is None:
+                        break
+                    net_status = net_client.join2(netgamename, pin, 'join')
+                pin = None
+                if net_status not in ('YOUAREMASTER', 'YOUARESLAVE'):
+                    display.message(['Trop de tentatives : attendez 5 minutes' if net_status == 'PINLOCKED' else 'Salon indisponible ou connexion annulée'], wait=2000)
+                    net_client.close_host()
+                    net_status, menu = None, 'gametype'
+                    continue
                 logs.debug("net_status = {}".format(net_status))
                 # If you are master go to the game selector
                 if net_status == 'YOUAREMASTER' and stats_screen != 'startagain':
@@ -1621,7 +1655,7 @@ try:
                 try:  # Check if it is the right place
                     logs.debug(f"Sending game info to master server {servername}:{masterserverport}")
                     NetMasterClient.connect_master(servername, masterserverport)
-                    NetMasterClient.send_game_info(servername, serveralias, serverport, netgamename, Game.replace(' ', '_'), config_globals['netgamecreator'], players_count, nb_sets, room_capacity)
+                    NetMasterClient.send_game_info(servername, serveralias, serverport, netgamename, Game.replace(' ', '_'), (display.online_session() or {}).get('user', {}).get('username') or config_globals['netgamecreator'], players_count, nb_sets, room_capacity, room_private)
                     NetMasterClient.close_connection()
                 except Exception as exception:
                     logs.warning(f"Unable to reach Master Server {servername} on port {masterserverport}. Error was : {exception}")

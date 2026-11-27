@@ -19,7 +19,7 @@ def capacity(room):
 
 def joinable(room):
     return (not room.get('LOBBY_LIVE') and 0 < count(room.get('PLAYERS')) < capacity(room)
-            and str(room.get('STATUS', 'OPEN')).upper() in ('', 'OPEN')
+            and str(room.get('STATUS', 'OPEN')).upper() in ('', 'OPEN', '1')
             and not room.get('CHTIENCOURS') and bool(room.get('GAMENAME')))
 
 
