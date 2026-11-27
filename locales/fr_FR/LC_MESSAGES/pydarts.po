@@ -6623,6 +6623,18 @@ msgstr "Le thème n'a pas pu être préparé (voir le journal)"
 msgid "hub-too-big"
 msgstr "Le thème fait {size} Mo : RaspyHub en accepte {limit} au plus (essayez sans vidéos ni sons)"
 
+msgid "hub-no-space"
+msgstr "Pas assez de place sur la carte pour préparer le thème ({size} Mo, {free} Mo libres)"
+
+msgid "capture-preparing"
+msgstr "Préparation"
+
+msgid "hub-too-big-light"
+msgstr "Même sans vidéos ni sons, le thème fait {size} Mo : RaspyHub en accepte {limit} au plus (images trop lourdes)"
+
+msgid "hub-media-too-big"
+msgstr "Ses vidéos et sons ({size} Mo) dépassent les {limit} Mo acceptés par RaspyHub : le thème partira sans eux"
+
 msgid "hub-no-player"
 msgstr "Aucun joueur sur la borne"
 

@@ -6,6 +6,8 @@ import time
 
 from threading import Thread
 from threading import Event
+from threading import Lock
+from threading import Timer
 
 # Mqtt
 import paho.mqtt.client as mqtt
@@ -37,6 +39,64 @@ BASE = None
 def apply_base():
     if BASE:
         animation(None, BASE, True)
+
+
+# In a game : the segments to hit (goal:...), those blinking (blink:...) and the background of the
+# target (Background) set by the game are kept, and lit again after an animation of an event
+# (Joueur suivant, a dart...) which put them out : several animations in a row for an event
+# ended in the dark (or the segments of the game lit, then put out by the next animation).
+# Lit again when no message came for RESTORE_DELAY after the end of the animation (a next one
+# already waiting comes first) ; nogoal (end of a turn, nothing to hit) and off forget them
+GOAL = None
+BLINK = None
+BG = False
+RESTORE_DELAY = 0.25
+LOCK = Lock()
+MESSAGES = 0
+# Messages which set the state, not an animation to light again after
+STATE = ('goal', 'blink:', 'nogoal', 'Background', 'off', 'quit', 'base:', 'leds', 'reload', 'brightness')
+
+
+def keep_state(msg):
+    '''
+    The state of the game given by a message (before it is shown)
+    '''
+    global GOAL, BLINK, BG
+    # off as the game sends it : off,,, (its animation in the events)
+    name = msg.split(',')[0]
+    if msg.startswith('goal:'):
+        GOAL = msg[5:] or None
+    elif msg.startswith('blink:'):
+        BLINK = msg
+    elif msg == 'nogoal':
+        GOAL = BLINK = None
+    elif name == 'Background':
+        BG = True
+    elif name in ('off', 'quit'):
+        GOAL = BLINK = None
+        BG = False
+
+
+def restore(expected):
+    '''
+    The segments of the game lit again, if no message came since the end of the animation
+    '''
+    global SON
+    with LOCK:
+        if MESSAGES != expected or not (GOAL or BLINK):
+            return
+        print(f"[DEBUG] TargetLeds_Server : segments of the game lit again", flush=True)
+        try:
+            if BG:
+                CStrip.Background()
+            if GOAL:
+                CStrip.Segment(50, None, 3, GOAL, False)
+            if BLINK:
+                t_event.clear()
+                SON = Thread(target=animation, args=(t_event, BLINK, True))
+                SON.start()
+        except Exception as error:    # pylint: disable=broad-except
+            print(f"[ERROR] TargetLeds_Server : segments not lit again ({error})", flush=True)
 
 
 def animation(t_event, msg, restoring=False):
@@ -220,10 +280,19 @@ def animation(t_event, msg, restoring=False):
     if BASE and not restoring and not msg.startswith('quit') and (t_event is None or not t_event.is_set()):
         apply_base()
 
+    # The segments of the game put out by this animation : lit again (see GOAL)
+    if (GOAL or BLINK) and not restoring and not msg.startswith(STATE) and (t_event is None or not t_event.is_set()):
+        Timer(RESTORE_DELAY, restore, args=(MESSAGES,)).start()
+
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
-    global SON
+    global SON, MESSAGES
     message = msg.payload.decode().replace(' ','')
+    # Waits for the segments being lit again (restore), then no more of it for an older animation
+    with LOCK:
+        MESSAGES += 1
+    if message != 'ack':
+        keep_state(message.replace('thread:', '').replace('ack:', ''))
 
     try:
         if SON.is_alive():

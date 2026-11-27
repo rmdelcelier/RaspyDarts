@@ -51,6 +51,16 @@ def hub_dir(theme):
     return os.path.join(cpaths.user_dir(), 'raspyhub', 'export', theme)
 
 
+def notice(screen, text):
+    '''
+    A refusal shown until a button, a key or a touch : a long text went before it could be read
+    '''
+    screen.message([text], 0, 'menu-ko', 'middle', 'big')
+    pygame.time.wait(500)
+    pygame.event.clear()
+    screen.wait_touch()
+
+
 def limits(logs):
     '''
     The limits of the server (size of the zip, captures, lengths) ; LIMITS when it cannot be read
@@ -262,14 +272,39 @@ def send(screen, draft):
         screen.message([translate(screen, 'theme-export-none')], 2500, 'menu-ko', 'middle', 'big')
         return
     media_size = sum(cthemefiles.folder_size(os.path.join(theme_dir, name)) for name in cthemefiles.MEDIA)
+    # Checked before the zip (about the size of the files : images, videos and sounds are already
+    # compressed) : a theme of 1 Go was zipped for minutes before being refused
+    limit = most['max_zip_mb'] * 1024 ** 2
+    light = cthemefiles.folder_size(theme_dir) - media_size
+    if light > limit:
+        notice(screen, translate(screen, 'hub-too-big-light').replace('{size}', f"{light / 1048576:.0f}")
+               .replace('{limit}', str(most['max_zip_mb'])))
+        return
     media = False
-    if media_size > 0:
+    if media_size > 0 and light + media_size > limit:
+        # With its videos and sounds it would be refused : sent without them, said first
+        text = (translate(screen, 'hub-media-too-big').replace('{size}', f"{media_size / 1048576:.0f}")
+                .replace('{limit}', str(most['max_zip_mb'])))
+        if not screen.wait_validation(text):
+            return
+    elif media_size > 0:
         answer = screen.ask_yes_no(translate(screen, 'theme-export-media').replace('{size}', f"{media_size / 1048576:.0f}"),
                                    translate(screen, 'hub-media-explain').replace('{limit}', str(most['max_zip_mb'])),
                                    cancel=True)
         if answer is None:
             return
         media = bool(answer)
+    # The zip is written on the card first : room for it (and some left for the system)
+    import shutil    # pylint: disable=import-outside-toplevel
+    needed = light + (media_size if media else 0)
+    try:
+        free = shutil.disk_usage(draft.folder if os.path.isdir(draft.folder) else cpaths.user_dir()).free
+    except OSError:
+        free = needed * 2
+    if free < needed + 300 * 1024 ** 2:
+        notice(screen, translate(screen, 'hub-no-space').replace('{size}', f"{needed / 1048576:.0f}")
+               .replace('{free}', f"{free / 1048576:.0f}"))
+        return
     folder = os.path.join(draft.folder, 'envoi')
     try:
         for name in os.listdir(folder):
@@ -293,28 +328,96 @@ def send(screen, draft):
         return
     size = os.path.getsize(export.target)
     if size > most['max_zip_mb'] * 1024 ** 2:
-        screen.message([translate(screen, 'hub-too-big').replace('{size}', f"{size / 1048576:.0f}")
-                        .replace('{limit}', str(most['max_zip_mb']))], 4000, 'menu-ko', 'middle', 'big')
+        notice(screen, translate(screen, 'hub-too-big').replace('{size}', f"{size / 1048576:.0f}")
+               .replace('{limit}', str(most['max_zip_mb'])))
         return
     upload(screen, draft, export.target)
+
+
+class MultipartStream:
+    '''
+    The body of the sending (multipart/form-data) read piece by piece : requests with files=
+    makes it whole in memory, a theme of 1 Go and more did not fit in a Raspberry. Its length
+    known (Content-Length), sent at the pace of read() ; sent : the bytes read (progress)
+    '''
+    CHUNK = 256 * 1024
+
+    def __init__(self, fields, files):
+        self.boundary = f"----RaspyDarts{os.urandom(12).hex()}"
+        self.parts = []
+        crlf = '\r\n'
+        for name, value in fields.items():
+            self.parts.append((f'--{self.boundary}{crlf}Content-Disposition: form-data; name="{name}"{crlf}{crlf}'
+                               f'{value}{crlf}').encode('utf-8'))
+        for field, filename, path, kind in files:
+            self.parts.append((f'--{self.boundary}{crlf}Content-Disposition: form-data; name="{field}"; '
+                               f'filename="{filename}"{crlf}Content-Type: {kind}{crlf}{crlf}').encode('utf-8'))
+            self.parts.append(path)
+            self.parts.append(crlf.encode('ascii'))
+        self.parts.append(f'--{self.boundary}--{crlf}'.encode('utf-8'))
+        self.total = sum(os.path.getsize(part) if isinstance(part, str) else len(part) for part in self.parts)
+        self.sent = 0
+        self.index = 0
+        self.handle = None
+        self.buffer = b''
+
+    def __len__(self):
+        return self.total
+
+    def content_type(self):
+        return f'multipart/form-data; boundary={self.boundary}'
+
+    def read(self, size=-1):
+        size = self.CHUNK if size is None or size < 0 else size
+        out = b''
+        while len(out) < size and self.index < len(self.parts):
+            part = self.parts[self.index]
+            if isinstance(part, str):
+                if self.handle is None:
+                    self.handle = open(part, 'rb')
+                data = self.handle.read(size - len(out))
+                if data:
+                    out += data
+                    continue
+                self.handle.close()
+                self.handle = None
+                self.index += 1
+            else:
+                if not self.buffer:
+                    self.buffer = part
+                take = self.buffer[:size - len(out)]
+                self.buffer = self.buffer[len(take):]
+                out += take
+                if not self.buffer:
+                    self.index += 1
+        self.sent += len(out)
+        return out
+
+    def close(self):
+        if self.handle is not None:
+            self.handle.close()
+            self.handle = None
 
 
 def post(draft, zip_path, version, outcome):
     '''
     The theme sent (in a thread) : outcome gets status (the HTTP code, 0 : not reached), answer
-    (the JSON of the server) or error
+    (the JSON of the server) or error ; outcome['body'] : the body being sent (its progress)
     '''
-    files = []
+    body = None
     try:
         import requests    # pylint: disable=import-outside-toplevel
         from include import cupdate    # pylint: disable=import-outside-toplevel
         fields = {'machine_id': cupdate.machine_id(), 'name': str(draft.data.get('name') or '').strip(),
                   'author': str(draft.data.get('author') or '').strip(), 'raspydarts_version': version,
                   'accept_terms': '1'}
-        files.append(('theme', (os.path.basename(zip_path), open(zip_path, 'rb'), 'application/zip')))
-        for name in draft.sent():
-            files.append(('captures', (name, open(os.path.join(draft.folder, name), 'rb'), 'image/jpeg')))
-        answer = requests.post(API, data=fields, files=files, headers={'X-API-Key': API_KEY}, timeout=(10, 600))
+        files = [('theme', os.path.basename(zip_path), zip_path, 'application/zip')]
+        files += [('captures', name, os.path.join(draft.folder, name), 'image/jpeg') for name in draft.sent()]
+        body = MultipartStream(fields, files)
+        outcome['body'] = body
+        # The read time : the answer of the server, once everything is sent (it checks the zip)
+        answer = requests.post(API, data=body, headers={'X-API-Key': API_KEY, 'Content-Type': body.content_type(),
+                                                        'Content-Length': str(len(body))}, timeout=(10, 900))
         outcome['status'] = answer.status_code
         try:
             outcome['answer'] = answer.json()
@@ -324,8 +427,8 @@ def post(draft, zip_path, version, outcome):
         outcome['status'] = 0
         outcome['error'] = str(error)
     finally:
-        for _field, (_name, handle, _kind) in files:
-            handle.close()
+        if body is not None:
+            body.close()
 
 
 def upload(screen, draft, zip_path):
@@ -338,7 +441,9 @@ def upload(screen, draft, zip_path):
     started = time.time()
     worker.start()
     while worker.is_alive():
-        screen.message([translate(screen, 'hub-sending').replace('{seconds}', str(int(time.time() - started)))],
+        body = outcome.get('body')
+        percent = f" · {int(body.sent * 100 / max(1, len(body)))} %" if body is not None else ''
+        screen.message([translate(screen, 'hub-sending').replace('{seconds}', str(int(time.time() - started))) + percent],
                        0, None, 'middle', 'big')
         worker.join(0.5)
     status, answer = outcome.get('status', 0), outcome.get('answer') or {}

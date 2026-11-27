@@ -715,10 +715,14 @@ display.show()
 
 def publish_goals():
     '''
-    The segments to hit (and to blink) set by the game, to the LED of the target and the strip
+    The segments to hit (and to blink) set by the game, to the LED of the target and the strip.
+    The server of the target keeps them and lights them again after an animation (Joueur
+    suivant, a dart) ; none : it forgets those of before (nogoal)
     '''
     if rpi.target_leds != '':
         dispatcher.publish('goal', rpi.target_leds, limit=['TARGET', 'STRIP', 'OTHER'])
+    else:
+        dispatcher.publish('nogoal', limit=['TARGET'])
     if rpi.target_leds_blink != '':
         dispatcher.publish('blink', rpi.target_leds_blink, limit=['TARGET', 'STRIP', 'OTHER'])
 
@@ -1958,6 +1962,10 @@ try:
                 # If the player is allowed to play
                 if pre_dart != 4 and player_launch <= game.nb_darts:
 
+                    # PRESSURE / NOPRESSURE (Cricket, Ho One, Ch'ti 501, Mickey : at each dart) : their
+                    # animations (nopressure : off on the target, by default) put out the segments
+                    # lit with the name of the player ; lit again below
+                    pressure_sent = False
                     try :
                         # For Simon game
                         logs.debug("POSTPRE")
@@ -1965,16 +1973,18 @@ try:
                             logs.debug(f"POSTPRE : {element}")
                             if element == 'PRESSURE':
                                 dispatcher.publish('pressure', limit=['TARGET', 'STRIP', 'OTHER', 'LIGHT', 'STROBE'])
+                                pressure_sent = True
                             if element == 'NOPRESSURE':
                                 dispatcher.publish('nopressure', limit=['TARGET', 'STRIP', 'OTHER', 'LIGHT', 'STROBE'])
+                                pressure_sent = True
 
                     except:
                         pass
 
                     # The target lit first, then the board drawn (about 100 ms on a Pi 3) : the
                     # segments to hit shown as soon as the game expects them (already with the
-                    # name at the start of a turn)
-                    if not turn_lit:
+                    # name at the start of a turn, and again after the events of the pressure)
+                    if not turn_lit or pressure_sent:
                         light_turn(players[actual_player])
 
                     # Display board
@@ -2732,6 +2742,8 @@ try:
                             rpi.light_toys(['LIGHT_LASER'])
                         # dont show/play next player if a player is not allowed to play
                         if pre_dart != 4:
+                            # The segments of this player : not lit again after the animations
+                            dispatcher.publish('nogoal', limit=['TARGET'])
                             dispatcher.publish('nextplayer', players[actual_player].name, limit=['TARGET', 'STRIP', 'OTHER', 'LIGHT', 'STROBE'])
                             if handler['announcement'] is not None:
                                 logs.debug(f"announcement {handler['announcement']} ({handler['speech_speed']})")

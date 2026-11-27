@@ -88,6 +88,10 @@ def generate(screen, folder, logs, progress=None):
     written = []
     # Not the addresses of the borne on the pages (Screen.menu_of_files)
     screen.capturing = True
+    # The DMD : « Préparation », not the menus and games gone through
+    dmd = getattr(screen, 'dmd', None)
+    if dmd is not None:
+        dmd.hold(screen.lang.translate('capture-preparing'))
     try:
         for index, (name, kind) in enumerate(PAGES):
             if progress is not None:
@@ -95,6 +99,8 @@ def generate(screen, folder, logs, progress=None):
             written += page(screen, rpi, name, kind, folder, logs)
     finally:
         screen.capturing = False
+        if dmd is not None:
+            dmd.release()
     logs.info(f"Captures of the pages : {', '.join(written) or 'none'}")
     return written
 

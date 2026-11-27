@@ -28,6 +28,9 @@ class Cdmd():
         # GIF, its background sent (None : out of a game)
         self.score_settings = None
         self.background = None
+        # A text kept on the display while the game works behind (captures of the pages of a
+        # theme : « Préparation », not the names of the menus and games it goes through)
+        self.held = None
 
     def init_insults(self):
         """
@@ -57,7 +60,20 @@ class Cdmd():
         """
         Send message using event class
         """
+        if self.held is not None and msg != self.held:
+            return
         self.event.publish(msg, limit="DMD")
+
+    def hold(self, text):
+        """
+        This text alone on the display until release() (the others not sent meanwhile)
+        """
+        self.held = None
+        self.send_text(text)
+        self.held = f'msg|{text}' if len(text) <= 22 else f'msgmove|{text}|left'
+
+    def release(self):
+        self.held = None
 
     def shutdown(self, enabled=True):
         """

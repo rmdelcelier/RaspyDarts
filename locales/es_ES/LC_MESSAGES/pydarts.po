@@ -6552,6 +6552,18 @@ msgstr "No se pudo preparar el tema (ver el registro)"
 msgid "hub-too-big"
 msgstr "El tema ocupa {size} MB: RaspyHub acepta {limit} como máximo (pruebe sin vídeos ni sonidos)"
 
+msgid "hub-no-space"
+msgstr "No hay espacio suficiente en la tarjeta para preparar el tema ({size} MB, {free} MB libres)"
+
+msgid "capture-preparing"
+msgstr "Preparación"
+
+msgid "hub-too-big-light"
+msgstr "Incluso sin vídeos ni sonidos, el tema ocupa {size} MB: RaspyHub acepta {limit} como máximo (imágenes demasiado pesadas)"
+
+msgid "hub-media-too-big"
+msgstr "Sus vídeos y sonidos ({size} MB) superan los {limit} MB que acepta RaspyHub: el tema se enviará sin ellos"
+
 msgid "hub-no-player"
 msgstr "Ningún jugador en la máquina"
 

@@ -6,7 +6,7 @@ new issue on GitHub filled with it (the account of whoever scans it : no secret 
 
 Kept in the report : what happened (crash or error, its type, its message, the end of its
 trace with the files of the game only), the version, the Raspberry, the system, the game
-played. Never a name, an address or a password : the paths are cut at the folder of the game.
+played, the theme. Never a name, an address or a password : the paths are cut at the folder of the game.
 Shown once : renamed before being shown (a crash on that screen does not show it again).
 """
 import json
@@ -39,6 +39,21 @@ def os_codename():
     except OSError:
         pass
     return platform.system()
+
+
+def theme():
+    '''
+    Theme of the borne (colorset of raspydarts.cfg) : many errors come from its files
+    '''
+    for name in ('raspydarts.cfg', 'pydarts.cfg'):
+        try:
+            with open(os.path.join(os.path.expanduser('~'), '.raspydarts', name), encoding='utf-8') as file:
+                for line in file:
+                    if line.startswith('colorset:'):
+                        return line.split(':', 1)[1].strip()
+        except OSError:
+            continue
+    return ''
 
 
 def model():
@@ -85,6 +100,7 @@ def record(kind, version, exc_info=None, context='', game=''):
                   'os': os_codename(),
                   'python': platform.python_version(),
                   'game': str(game or ''),
+                  'theme': theme(),
                   'context': str(context or ''),
                   'error': f"{error_type.__name__ if error_type else '?'}: {str(error)[:300]}",
                   'trace': frames(trace) if trace else []}
@@ -129,6 +145,8 @@ def issue_url(report):
                  f"- Système : {report.get('os', '')} (Python {report.get('python', '')})"]
         if report.get('game'):
             lines.append(f"- Jeu : {report['game']}")
+        if report.get('theme'):
+            lines.append(f"- Thème : {report['theme']}")
         if report.get('context'):
             lines.append(f"- Moment : {report['context']}")
         lines += ['', '```', error] + trace + ['```', '',

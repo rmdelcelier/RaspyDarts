@@ -14231,7 +14231,10 @@ class Screen(pygame.Surface):
         Espeak vocal synthetiser (untested on windows)
         '''
         try:
-            volume = self.sound_volume
+            # espeak : amplitude 0 to 200 (100 by default : the voice about 7 dB under the sounds of
+            # the game, measured -22 LUFS against -12 to -17) ; 180 at the full volume : -17 LUFS,
+            # its peaks under 0 dBFS (200 went over)
+            volume = round(int(self.sound_volume) * 1.8 * self.sound_multiplier)
             if speed is not None:
                 pass
             elif self.random_speed:

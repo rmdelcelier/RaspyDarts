@@ -6547,6 +6547,18 @@ msgstr "Das Thema konnte nicht vorbereitet werden (siehe Protokoll)"
 msgid "hub-too-big"
 msgstr "Das Thema hat {size} MB: RaspyHub nimmt höchstens {limit} an (ohne Videos und Töne versuchen)"
 
+msgid "hub-no-space"
+msgstr "Nicht genug Platz auf der Karte, um das Thema vorzubereiten ({size} MB, {free} MB frei)"
+
+msgid "capture-preparing"
+msgstr "Vorbereitung"
+
+msgid "hub-too-big-light"
+msgstr "Auch ohne Videos und Töne hat das Thema {size} MB: RaspyHub nimmt höchstens {limit} an (Bilder zu groß)"
+
+msgid "hub-media-too-big"
+msgstr "Seine Videos und Töne ({size} MB) überschreiten die {limit} MB von RaspyHub: das Thema wird ohne sie gesendet"
+
 msgid "hub-no-player"
 msgstr "Kein Spieler auf dem Automaten"
 

@@ -1424,15 +1424,15 @@ class Editor:
             # The version, deleted before
             if not any(item['button'].get('version') for item in self.items):
                 choices.append((self.translate('editor-version'), {'id': VERSION_ID, 'version': True}))
+            # The panel of the players online (include/cscreen.py online_players_panel)
+            if 'online_players' not in actions:
+                choices.append((self.translate('online-players-panel'),
+                                {'id': 'online-players', 'action': 'online_players', 'text': 'online-players-panel'}))
         # The band of the title, deleted before (or never there) : with the title of always
         if not any(item['button'].get('title') for item in self.items):
             text = cmenus.Menus(self.screen.logs, None, None).menu(self.name).get('title') or 'game-type-menu'
             choices.append((self.translate('editor-title-band'),
                             {'id': TITLE_ID, 'title': True, 'text': self.title_text_value(text)}))
-            # The panel of the players online (include/cscreen.py online_players_panel)
-            if 'online_players' not in actions:
-                choices.append((self.translate('online-players-panel'),
-                                {'id': 'online-players', 'action': 'online_players', 'text': 'online-players-panel'}))
         return choices
 
     def choose_game(self):

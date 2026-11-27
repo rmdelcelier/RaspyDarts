@@ -6601,6 +6601,18 @@ msgstr "Het thema kon niet worden voorbereid (zie het logboek)"
 msgid "hub-too-big"
 msgstr "Het thema is {size} MB: RaspyHub aanvaardt maximaal {limit} (probeer zonder video's en geluiden)"
 
+msgid "hub-no-space"
+msgstr "Niet genoeg ruimte op de kaart om het thema voor te bereiden ({size} MB, {free} MB vrij)"
+
+msgid "capture-preparing"
+msgstr "Voorbereiding"
+
+msgid "hub-too-big-light"
+msgstr "Zelfs zonder video's en geluiden is het thema {size} MB: RaspyHub aanvaardt maximaal {limit} (afbeeldingen te zwaar)"
+
+msgid "hub-media-too-big"
+msgstr "De video's en geluiden ({size} MB) gaan over de {limit} MB die RaspyHub aanvaardt: het thema wordt zonder verzonden"
+
 msgid "hub-no-player"
 msgstr "Geen speler op de kast"
 
