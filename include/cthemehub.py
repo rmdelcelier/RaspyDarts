@@ -33,8 +33,10 @@ EXTRA_MOST = 6
 API = 'https://raspystats.raspyhub.fr/api/v1/raspydarts/themes'
 API_KEY = 'raspydarts_themes_2026'
 HUB_HOST = 'raspystats.raspyhub.fr'
-# The limits of the server (GET .../limits) : these ones when it cannot be read
-LIMITS = {'max_zip_mb': 50, 'max_unzipped_mb': 400, 'min_captures': 3, 'max_captures': 9, 'max_capture_mb': 5,
+# The limits of the server (GET .../limits) : these ones when it cannot be read. max_zip_mb : sent
+# in one request (zip and captures) ; beyond, up to max_chunked_zip_mb, the zip is sent in pieces of
+# chunk_mb (Cloudflare refuses a request over 100 Mio) ; max_unzipped_mb : the theme unzipped
+LIMITS = {'max_zip_mb': 50, 'max_chunked_zip_mb': 50, 'chunk_mb': 95, 'max_unzipped_mb': 400, 'min_captures': 3, 'max_captures': 9, 'max_capture_mb': 5,
           'uploads_per_day': 5, 'name_max': 40, 'author_max': 40}
 TROPHY = 'CREATION_ARTISTIQUE'
 # The refusals of the server shown in the language of the borne (the others : its message, in French)
@@ -274,22 +276,23 @@ def send(screen, draft):
     media_size = sum(cthemefiles.folder_size(os.path.join(theme_dir, name)) for name in cthemefiles.MEDIA)
     # Checked before the zip (about the size of the files : images, videos and sounds are already
     # compressed) : a theme of 1 Go was zipped for minutes before being refused
-    limit = most['max_zip_mb'] * 1024 ** 2
+    biggest = max(most['max_zip_mb'], most.get('max_chunked_zip_mb') or 0)
+    limit = biggest * 1024 ** 2
     light = cthemefiles.folder_size(theme_dir) - media_size
     if light > limit:
         notice(screen, translate(screen, 'hub-too-big-light').replace('{size}', f"{light / 1048576:.0f}")
-               .replace('{limit}', str(most['max_zip_mb'])))
+               .replace('{limit}', str(biggest)))
         return
     media = False
     if media_size > 0 and light + media_size > limit:
         # With its videos and sounds it would be refused : sent without them, said first
         text = (translate(screen, 'hub-media-too-big').replace('{size}', f"{media_size / 1048576:.0f}")
-                .replace('{limit}', str(most['max_zip_mb'])))
+                .replace('{limit}', str(biggest)))
         if not screen.wait_validation(text):
             return
     elif media_size > 0:
         answer = screen.ask_yes_no(translate(screen, 'theme-export-media').replace('{size}', f"{media_size / 1048576:.0f}"),
-                                   translate(screen, 'hub-media-explain').replace('{limit}', str(most['max_zip_mb'])),
+                                   translate(screen, 'hub-media-explain').replace('{limit}', str(biggest)),
                                    cancel=True)
         if answer is None:
             return
@@ -327,11 +330,13 @@ def send(screen, draft):
         screen.message([translate(screen, 'hub-zip-failed')], 3000, 'menu-ko', 'middle', 'big')
         return
     size = os.path.getsize(export.target)
-    if size > most['max_zip_mb'] * 1024 ** 2:
+    if size > limit:
         notice(screen, translate(screen, 'hub-too-big').replace('{size}', f"{size / 1048576:.0f}")
-               .replace('{limit}', str(most['max_zip_mb'])))
+               .replace('{limit}', str(biggest)))
         return
-    upload(screen, draft, export.target)
+    # Beyond max_zip_mb : in pieces
+    chunk = int(most.get('chunk_mb') or 95) * 1024 ** 2 if size > most['max_zip_mb'] * 1024 ** 2 else None
+    upload(screen, draft, export.target, chunk)
 
 
 class MultipartStream:
@@ -414,7 +419,7 @@ def post(draft, zip_path, version, outcome):
         files = [('theme', os.path.basename(zip_path), zip_path, 'application/zip')]
         files += [('captures', name, os.path.join(draft.folder, name), 'image/jpeg') for name in draft.sent()]
         body = MultipartStream(fields, files)
-        outcome['body'] = body
+        outcome['progress'] = lambda: (body.sent, len(body))
         # The read time : the answer of the server, once everything is sent (it checks the zip)
         answer = requests.post(API, data=body, headers={'X-API-Key': API_KEY, 'Content-Type': body.content_type(),
                                                         'Content-Length': str(len(body))}, timeout=(10, 900))
@@ -431,18 +436,144 @@ def post(draft, zip_path, version, outcome):
             body.close()
 
 
-def upload(screen, draft, zip_path):
+class Piece:
+    """
+    A piece of the zip, read from its file at the pace of the sending (not held in memory)
+    """
+
+    def __init__(self, path, offset, length):
+        self.handle = open(path, 'rb')
+        self.handle.seek(offset)
+        self.left = self.length = length
+        self.sent = 0
+
+    def __len__(self):
+        return self.length
+
+    def read(self, size=-1):
+        size = self.left if size is None or size < 0 else min(size, self.left)
+        data = self.handle.read(size)
+        self.left -= len(data)
+        self.sent += len(data)
+        return data
+
+    def close(self):
+        self.handle.close()
+
+
+def json_of(answer):
+    try:
+        return answer.json()
+    except ValueError:
+        return {}
+
+
+def post_in_pieces(draft, zip_path, version, outcome, chunk):
+    """
+    A big theme sent in pieces (API .../uploads : Cloudflare refuses a request over 100 Mio) :
+    opened with its size and its sha256, each piece sent (after a cut : again, from what the
+    server has), then finished with the fields and the captures. outcome as post()
+    """
+    import hashlib    # pylint: disable=import-outside-toplevel
+    body = None
+    try:
+        import requests    # pylint: disable=import-outside-toplevel
+        from include import cupdate    # pylint: disable=import-outside-toplevel
+        machine = cupdate.machine_id()
+        headers = {'X-API-Key': API_KEY}
+        size = os.path.getsize(zip_path)
+        state = {'received': 0, 'piece': None}
+        outcome['progress'] = lambda: (state['received'] + (state['piece'].sent if state['piece'] else 0), size)
+        digest = hashlib.sha256()
+        with open(zip_path, 'rb') as source:
+            for block in iter(lambda: source.read(1024 * 1024), b''):
+                digest.update(block)
+        answer = requests.post(f"{API}/uploads", json={'machine_id': machine, 'size': size, 'sha256': digest.hexdigest()},
+                               headers=headers, timeout=(10, 60))
+        if answer.status_code != 201:
+            outcome['status'], outcome['answer'] = answer.status_code, json_of(answer)
+            return
+        opened = answer.json()
+        upload_id = opened['upload_id']
+        chunk = min(chunk, int(opened.get('chunk_size') or chunk))
+        state['received'] = int(opened.get('received') or 0)
+        failures = 0
+        while state['received'] < size:
+            piece = Piece(zip_path, state['received'], min(chunk, size - state['received']))
+            state['piece'] = piece
+            try:
+                answer = requests.put(f"{API}/uploads/{upload_id}",
+                                      params={'machine_id': machine, 'offset': state['received']}, data=piece,
+                                      headers=dict(headers, **{'Content-Type': 'application/octet-stream',
+                                                               'Content-Length': str(len(piece))}),
+                                      timeout=(10, 900))
+                reply = json_of(answer)
+            except Exception as error:    # pylint: disable=broad-except
+                answer, reply = None, {'error': str(error)}
+            finally:
+                piece.close()
+                state['piece'] = None
+            if answer is not None and answer.status_code in (200, 409) and 'received' in reply:
+                # Sent (200), or the server had another offset (409 bad_offset) : from what it has
+                state['received'] = int(reply['received'])
+                if answer.status_code == 200:
+                    failures = 0
+                continue
+            if answer is not None and answer.status_code not in (400, 500, 502, 503, 504):
+                outcome['status'], outcome['answer'] = answer.status_code, reply
+                return
+            # A cut (or a piece arrived incomplete) : what the server has, then the piece again
+            failures += 1
+            if failures > 5:
+                outcome['status'], outcome['error'] = 0, reply.get('error') or 'pieces not sent'
+                return
+            time.sleep(min(30, 2 ** failures))
+            try:
+                known = requests.get(f"{API}/uploads/{upload_id}", params={'machine_id': machine}, headers=headers,
+                                     timeout=(10, 60))
+                if known.status_code == 200:
+                    state['received'] = int(json_of(known).get('received', state['received']))
+                elif known.status_code == 404:
+                    outcome['status'], outcome['answer'] = 404, json_of(known)
+                    return
+            except Exception:    # pylint: disable=broad-except
+                pass
+        # Finished : the fields and the captures, without the zip
+        fields = {'machine_id': machine, 'name': str(draft.data.get('name') or '').strip(),
+                  'author': str(draft.data.get('author') or '').strip(), 'raspydarts_version': version,
+                  'accept_terms': '1'}
+        body = MultipartStream(fields, [('captures', name, os.path.join(draft.folder, name), 'image/jpeg')
+                                        for name in draft.sent()])
+        answer = requests.post(f"{API}/uploads/{upload_id}/finish", data=body,
+                               headers=dict(headers, **{'Content-Type': body.content_type(),
+                                                        'Content-Length': str(len(body))}),
+                               timeout=(10, 900))
+        outcome['status'], outcome['answer'] = answer.status_code, json_of(answer)
+    except Exception as error:    # pylint: disable=broad-except
+        outcome['status'] = 0
+        outcome['error'] = str(error)
+    finally:
+        if body is not None:
+            body.close()
+
+
+def upload(screen, draft, zip_path, chunk=None):
     '''
     Envoyer : the theme and its captures sent to the API, the time shown ; sent : kept in the
     draft (id, version, date), the trophy to its player
     '''
     outcome = {}
-    worker = threading.Thread(target=post, args=(draft, zip_path, theme_version(screen), outcome), daemon=True)
+    if chunk:
+        worker = threading.Thread(target=post_in_pieces, args=(draft, zip_path, theme_version(screen), outcome, chunk),
+                                  daemon=True)
+    else:
+        worker = threading.Thread(target=post, args=(draft, zip_path, theme_version(screen), outcome), daemon=True)
     started = time.time()
     worker.start()
     while worker.is_alive():
-        body = outcome.get('body')
-        percent = f" · {int(body.sent * 100 / max(1, len(body)))} %" if body is not None else ''
+        progress = outcome.get('progress')
+        done, total = progress() if progress is not None else (0, 0)
+        percent = f" · {int(done * 100 / total)} %" if total else ''
         screen.message([translate(screen, 'hub-sending').replace('{seconds}', str(int(time.time() - started))) + percent],
                        0, None, 'middle', 'big')
         worker.join(0.5)
