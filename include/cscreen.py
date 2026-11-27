@@ -2075,7 +2075,30 @@ class Screen(pygame.Surface):
             self.message([self.lang.translate('config-noMCP')], 3000, None, 'middle', 'big', bg_color='menu-ko')
             return None
 
-    def starting(self, NetClient, NetStatus, local_players, netgamename, game):
+    def room_privacy(self):
+        items = [dict(id='public', action='privacy', text='Public'),
+                 dict(id='private', action='privacy', text='Privé'),
+                 dict(id='back', action='back', text='back', footer='left', shortcut='escape')]
+        return self.run_menu('online_room_privacy', items, items, title='Type de salon', columns=2).get('id')
+
+    def room_pin(self, hidden=False):
+        while True:
+            value = self.input_value_item('string', '', 4, 4, text='Code du salon (4 chiffres)', hidden=hidden)
+            if value == 'escape' or value is False:
+                return None
+            if isinstance(value, str) and len(value) == 4 and value.isascii() and value.isdigit():
+                return value
+            self.message(['Saisissez exactement 4 chiffres'], 1500)
+
+    def room_capacity(self, counts):
+        items = [dict(id=str(n), action='capacity', text=f'{n} joueurs') for n in counts]
+        items.append(dict(id='back', action='back', text='back', footer='left', shortcut='escape'))
+        choice = self.run_menu('online_room_capacity', items, items,
+                               title='Nombre de places du salon', columns=2).get('id')
+        return int(choice) if choice is not None and str(choice).isdigit() else None
+
+
+    def starting(self, NetClient, NetStatus, local_players, netgamename, game, allowed=None):
         '''
         Display Players engaged in a network game menu. Its wait can go on in the background
         (include/cnetwait.py : returns 'background') ; resumed from it : the game launched, given
@@ -2107,6 +2130,9 @@ class Screen(pygame.Surface):
         old_nb_players = nb_players
         Rdy = NetClient.send_local_players(local_players)    # Send name of local players, and wait for game to be launched
         while True:
+            if Rdy.get("REQUEST") == "ROOMREFUSED":
+                self.message([Rdy.get("MESSAGE", "Salon indisponible")], wait=2500)
+                return -2
             # Listen for keyboard
             key_pressed = self.rpi.listen_inputs(['arrows', 'fx'],
                             ['escape', 'PLAYERBUTTON', 'BACKUPBUTTON', 'TOGGLEFULLSCREEN', 'GAMEBUTTON',
@@ -2150,6 +2176,9 @@ class Screen(pygame.Surface):
 
             # If the Master pressed enter
             if nb_players > nb_local_players and NetStatus == 'YOUAREMASTER' and ((key_pressed in ENTER_KEYS and selected == 3) or key_pressed in CONTINUE_KEYS):
+                if allowed is not None and not allowed(nb_players):
+                    self.message([self.lang.translate('bad-numberofplayers')], wait=2200)
+                    continue
                 self.message([self.lang.translate('Ready to kick ass ?')], 0, None, 'middle', 'big')
                 # He is ok to launch the game. Tell it to server
                 data = {'REQUEST': 'LAUNCH', 'GAMENAME': NetClient.gamename}
@@ -9508,7 +9537,16 @@ class Screen(pygame.Surface):
                     zones['room|{}'.format(index)] = zone
                     self.new_blit_rect2(zone, colors[color(rooms[index], line == index)], corners='All',
                                         border_radius=radius, alpha=255)
-                    draw_line(self, label(rooms[index], index, translate), zone.inflate(-18, -8), colors['menu-text-black'])
+                    text_zone = zone.inflate(-18, -8)
+                    if rooms[index].get('PRIVATE') is True:
+                        size = max(8, min(text_zone.h, 28))
+                        x, y = text_zone.x, text_zone.centery - size // 2
+                        ink = colors['menu-text-black']
+                        pygame.draw.arc(self.screen, ink, pygame.Rect(x+size//4,y,size//2,size*2//3), 0, 3.14159, max(1,size//9))
+                        pygame.draw.rect(self.screen, ink, pygame.Rect(x+size//8,y+size//2,size*3//4,size//2), border_radius=2)
+                        text_zone.x += size+5
+                        text_zone.w -= size+5
+                    draw_line(self, label(rooms[index], index, translate), text_zone, colors['menu-text-black'])
                 if state['status'] == 'online-connected' and not rooms:
                     draw_line(self, translate('online-no-room'), pygame.Rect(int(w*.07), int(h*.28), int(w*.66), int(h*.035)),
                               colors['menu-text'])

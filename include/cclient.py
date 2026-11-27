@@ -241,14 +241,19 @@ class Client():
         return data['VERSION']
 
     #@debug
-    def send_local_players(self, players):
+    def send_local_players(self, players, capacity=None):
         """
         Send list of players
         """
-        self.send({'GAMENAME': self.gamename, 'REQUEST': 'READY', 'PLAYERSNAMES': players})
+        request = {'GAMENAME': self.gamename, 'REQUEST': 'READY', 'PLAYERSNAMES': players}
+        if capacity is not None:
+            request['MAXPLAYERS'] = capacity
+        self.send(request)
         data = {}
         while 'REQUEST' not in data:
             data = self.receive()
+            if not isinstance(data, dict):
+                return {'REQUEST': 'ROOMREFUSED', 'MESSAGE': 'Le serveur ne répond pas.'}
         return data
 
     #@debug
@@ -266,13 +271,13 @@ class Client():
         """
         Send a message
         """
-        self.logs.debug(f"Sending to game server : {message}... ")
+        self.logs.debug(f"Sending to game server : {message.get('REQUEST')}... ")
         message = json.dumps(message) # Converting to JSON
         message = f"{message}{delimiter}" # Append delimiter
         message = message.encode('UTF-8')# Encoding in byte format - utf-8
         try:
             send_len = self.connexion.sendall(message) # UTF-8 encoding and send
-            self.logs.debug(f"Send {message} / len(message)={len(message)}")
+            self.logs.debug(f"Sent {len(message)} bytes")
             error = self.ack() # Wait for ACK for each message
             if error is not None:
                 return error
@@ -361,12 +366,17 @@ class Client():
         return None
 
     #@debug
-    def join2(self, game):
+    def join2(self, game, pin=None, mode=None):
         """
         Join a game (json version)
         """
         self.gamename =  game
-        self.send({'REQUEST': 'JOIN', 'GAMENAME':  game})
+        request = {'REQUEST': 'JOIN', 'GAMENAME': game}
+        if pin is not None:
+            request['ROOMPIN'] = pin
+        if mode is not None:
+            request['ROOMMODE'] = mode
+        self.send(request)
         # The server should return one of the following
         data = {}
         while "NETSTATUS" not in data and data != 'TIMEOUT':
@@ -374,6 +384,8 @@ class Client():
         # Return
         if data == 'TIMEOUT':
             return 'TIMEOUT'
+        if mode == 'create' and pin is not None and data.get('PRIVATE') is not True:
+            return 'PRIVACYUNSUPPORTED'
         return str(data['NETSTATUS'])
 
 
@@ -446,7 +458,7 @@ class MasterClient():
         self.connexion.sendall(json.dumps(message).encode('UTF-8'))
 
     #@debug
-    def send_game_info(self, host, alias, port, game_name, gametype, creator, number_of_players, nb_sets):
+    def send_game_info(self, host, alias, port, game_name, gametype, creator, number_of_players, nb_sets, capacity=None, private=False):
         """
         Send game infos
         """
@@ -457,7 +469,7 @@ class MasterClient():
 
         self.send({'REQUEST': 'CREATION', 'SERVERIP': ip, 'SERVERPORT': port, \
                 'GAMENAME': game_name, 'GAMETYPE': gametype, 'GAMECREATOR': creator, \
-                'PLAYERS': number_of_players, 'NBSETS': nb_sets})
+                'PLAYERS': number_of_players, 'NBSETS': nb_sets, 'MAXPLAYERS': capacity, 'PRIVATE': private})
 
     #@debug
     def join_game(self, game, number_of_players):

@@ -1088,6 +1088,31 @@ try:
             ########
             # If network, connect to server
             if game_type in ('netjoin', 'netcreate') and menu == 'connect':
+                if game_type == 'netjoin' and display.lobby_game is not None:
+                    # Room chosen in the online games
+                    netgamename = str(display.lobby_game.get('GAMENAME'))
+                    logs.debug(f"Join the room {netgamename} chosen on {servername}")
+                elif game_type == 'netjoin':
+                    logs.debug(f"Get remote game list on {servername}:{masterserverport}")
+                    netgamename = display.net_game_list(NetMasterClient, players_count, servername, masterserverport)
+                    if netgamename == 'escape':
+                        menu = 'gametype'
+                else:
+                    netgamename = f'game{random.randint(10000, 99999)}'
+
+            ########
+            # NET CONNECTION
+            ########
+            # If network, connect to server
+            if game_type in ('netjoin', 'netcreate') and menu == 'connect':
+                if game_type == 'netjoin' and display.lobby_game is not None:
+                    from include.crooms import capacity, count
+                    room = display.lobby_game
+                    free = max(0, capacity(room) - count(room.get('PLAYERS')))
+                    if players_count > free:
+                        display.message([f'Places disponibles : {free}. Votre groupe : {players_count}.'], wait=2500)
+                        menu = 'gametype'
+                        continue
                 logs.debug("Net game requested.")
                 releasedartstime = 0 # In case of online game, force the SOLO MODE OFF from config (players must push PLAYERBUTTON every rounds, mandatory)
                 try:
@@ -1106,7 +1131,41 @@ try:
                 logs.debug("Join {} remote game".format(netgamename))
                 serverversion = net_client.get_server_version(netgamename)
                 display.version_check(serverversion)
-                net_status = net_client.join2(netgamename)
+                room_private = False
+                pin = None
+                if game_type == 'netcreate':
+                    privacy = display.room_privacy()
+                    if privacy not in ('public', 'private'):
+                        net_client.connexion.close()
+                        menu = 'gametype'
+                        continue
+                    room_private = privacy == 'private'
+                    if room_private:
+                        pin = display.room_pin()
+                        if pin is None:
+                            net_client.connexion.close()
+                            menu = 'gametype'
+                            continue
+                elif (display.lobby_game or {}).get('PRIVATE') is True:
+                    pin = display.room_pin(hidden=True)
+                    if pin is None:
+                        net_client.connexion.close()
+                        menu = 'gametype'
+                        continue
+                net_status = net_client.join2(netgamename, pin, 'create' if game_type == 'netcreate' else 'join')
+                while net_status in ('PINREQUIRED', 'PINWRONG'):
+                    if net_status == 'PINWRONG':
+                        display.message(['Code incorrect'], wait=1500)
+                    pin = display.room_pin(hidden=True)
+                    if pin is None:
+                        break
+                    net_status = net_client.join2(netgamename, pin, 'join')
+                pin = None
+                if net_status not in ('YOUAREMASTER', 'YOUARESLAVE'):
+                    display.message(['Trop de tentatives : attendez 5 minutes' if net_status == 'PINLOCKED' else 'Salon indisponible ou connexion annulée'], wait=2000)
+                    net_client.close_host()
+                    net_status, menu = None, 'gametype'
+                    continue
                 logs.debug("net_status = {}".format(net_status))
                 # If you are master go to the game selector
                 if net_status == 'YOUAREMASTER' and stats_screen != 'startagain':
@@ -1577,6 +1636,21 @@ try:
 
 
             if net_status == 'YOUAREMASTER' and menu == 'net3':
+                allowed_counts = getattr(choosed_game, 'check_players_allowed', lambda n: True)
+                choices = [n for n in range(max(2, players_count + 1), 13) if allowed_counts(n)]
+                room_capacity = display.room_capacity(choices) if choices else None
+                if room_capacity is None:
+                    net_client.leave_game(netgamename, local_players, net_status)
+                    net_client.close_host()
+                    net_status, menu = None, 'gametype'
+                    continue
+                result = net_client.send_local_players(local_players, room_capacity)
+                if result.get('REQUEST') != 'PLAYERSNAMES' or result.get('MAXPLAYERS') != room_capacity:
+                    display.message(['Le serveur de jeu doit être mis à jour.'], wait=2500)
+                    net_client.leave_game(netgamename, local_players, net_status)
+                    net_client.close_host()
+                    net_status, menu = None, 'gametype'
+                    continue
                 # MasterPlayer send game info to server
                 # Send Game info (gamename and selected options - can be merged)
                 net_client.send_game(Game.replace(' ', '_'))
@@ -1585,7 +1659,7 @@ try:
                 try:  # Check if it is the right place
                     logs.debug(f"Sending game info to master server {servername}:{masterserverport}")
                     NetMasterClient.connect_master(servername, masterserverport)
-                    NetMasterClient.send_game_info(servername, serveralias, serverport, netgamename, Game.replace(' ', '_'), config_globals['netgamecreator'], players_count, nb_sets)
+                    NetMasterClient.send_game_info(servername, serveralias, serverport, netgamename, Game.replace(' ', '_'), (display.online_session() or {}).get('user', {}).get('username') or config_globals['netgamecreator'], players_count, nb_sets, room_capacity, room_private)
                     NetMasterClient.close_connection()
                 except Exception as exception:
                     logs.warning(f"Unable to reach Master Server {servername} on port {masterserverport}. Error was : {exception}")
@@ -1612,7 +1686,22 @@ try:
                 if net_status == 'YOUARESLAVE' and display.net_wait is None:
                     Game = net_client.get_game()
                 # Display starting page with a few game info
-                all_players = display.starting(net_client, net_status, local_players, netgamename, Game.replace(' ', '_'))
+                all_players = display.starting(net_client, net_status, local_players, netgamename, Game.replace(' ', '_'),
+                                               getattr(choosed_game, 'check_players_allowed', lambda n: True) if net_status == 'YOUAREMASTER' else None)
+                if all_players == -2:
+                    # READY was rejected: no player names were added by this connection.
+                    net_client.close_host()
+                    try:
+                        NetMasterClient.connect_master(servername, masterserverport)
+                        if net_status == 'YOUAREMASTER':
+                            NetMasterClient.cancel_game(netgamename)
+                        else:
+                            NetMasterClient.leave_game(netgamename, len(local_players))
+                        NetMasterClient.close_connection()
+                    except Exception as error:
+                        logs.warning(f"Unable to refresh room count: {error}")
+                    net_status, menu = None, 'gametype'
+                    continue
                 if all_players == 'background':
                     # The wait goes on in the background, followed by the activity indicator : the
                     # menus meanwhile ; the main menu gives it back (netresume)
